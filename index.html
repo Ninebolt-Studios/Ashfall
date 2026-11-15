@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261115205341';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261115211712';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -122,7 +122,7 @@ window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() 
   color-scheme: dark;
 }
 [hidden] { display: none !important; }
-html, body { height: 100%; overflow: hidden; }
+html, body { height: 100%; overflow: hidden; position: fixed; inset: 0; width: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--body); -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: none; overscroll-behavior: none; }
 #view { position: fixed; inset: 0; display: block; width: 100%; height: 100%; }
 button { font-family: inherit; }
@@ -2342,7 +2342,16 @@ function showMenu(which) {
   try { if (document.pointerLockElement) document.exitPointerLock(); } catch (e) {}
   setLobby();
 }
+// iPad: the keyboard or a stray swipe can leave the page shifted up, hiding the top of the HUD. Snap it back.
+function fixViewport() {
+  try { if (document.activeElement && document.activeElement.blur && /INPUT|TEXTAREA/.test(document.activeElement.tagName)) document.activeElement.blur(); } catch (e) {}
+  const se = document.scrollingElement || document.documentElement;
+  if (window.scrollX || window.scrollY || se.scrollTop || document.body.scrollTop) { window.scrollTo(0, 0); se.scrollTop = 0; document.body.scrollTop = 0; }
+}
+window.addEventListener('orientationchange', () => setTimeout(fixViewport, 300));
+if (window.visualViewport) window.visualViewport.addEventListener('resize', () => { if (state === 'play') setTimeout(fixViewport, 100); });
 function hideMenu() {
+  fixViewport();
   const ns=document.getElementById('netstat'); if(ns)ns.hidden=true;
   $('menu').hidden = true; $('hud').hidden = false;
   const tdm = mode === 'tdm';
@@ -3298,7 +3307,7 @@ function loop() {
   stepSnow(dt);
   if (state === 'play') { stepMissile(dt); if (scanT > 0) scanT = Math.max(0, scanT - dt); updStreak(); }
   if (state === 'play' || (state === 'paused' && mode === 'tdm')) fx(dt);
-  radarT -= dt; if (state === 'play' && S.radar && radarT <= 0) { radarT = 0.1; drawRadar(); }
+  radarT -= dt; if (state === 'play' && S.radar && radarT <= 0) { radarT = 0.1; drawRadar(); if (window.scrollY || (document.scrollingElement && document.scrollingElement.scrollTop)) fixViewport(); }
   renderer.render(scene, camera);
 }
 
