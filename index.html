@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261115211712';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261115212133';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -122,7 +122,9 @@ window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() 
   color-scheme: dark;
 }
 [hidden] { display: none !important; }
-html, body { height: 100%; overflow: hidden; position: fixed; inset: 0; width: 100%; }
+html, body { height: var(--app-h, 100%); overflow: hidden; position: fixed; top: 0; left: 0; right: 0; width: 100%; }
+/* --app-h is the height you can actually see (iPad Chrome/Safari toolbars change it), set from JS */
+#view, #hud, #menu { bottom: auto !important; height: var(--app-h, 100%) !important; }
 body { background: var(--bg); color: var(--ink); font-family: var(--body); -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: none; overscroll-behavior: none; }
 #view { position: fixed; inset: 0; display: block; width: 100%; height: 100%; }
 button { font-family: inherit; }
@@ -861,13 +863,20 @@ const camera = new THREE.PerspectiveCamera(72, 1, 0.05, 900);
 camera.rotation.order = 'YXZ';
 scene.add(camera);
 let baseFov = 72, DPR_MAX = 1.5, dpr = 1.5;
+function appH() { const vv = window.visualViewport; return Math.round(Math.min(window.innerHeight, vv ? vv.height : window.innerHeight)); }
+function setAppH() { document.documentElement.style.setProperty('--app-h', appH() + 'px'); }
 function resize() {
-  const w = window.innerWidth, h = window.innerHeight;
+  setAppH();
+  const w = window.innerWidth, h = appH();
   renderer.setSize(w, h, false);
   camera.aspect = w / h; baseFov = S.fov + (w < h ? 12 : 0);
   camera.updateProjectionMatrix();
 }
 window.addEventListener('resize', resize);
+if (window.visualViewport) window.visualViewport.addEventListener('resize', resize);
+window.addEventListener('orientationchange', () => setTimeout(resize, 300));
+document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(resize, 100); });
+setAppH();
 
 const hemi = new THREE.HemisphereLight(0xd6e6ff, 0x8a7458, 0.85);
 scene.add(hemi);
@@ -1732,7 +1741,7 @@ function drawScope(optic, t){
   const magnified = optic === 'scope' || optic === 'sniper';
   const show = optic && optic !== 'irons' && t > 0.3 && P.alive && state === 'play';
   if (!show){ if (scopeKey){ scv.style.opacity = 0; scopeKey = ''; } return false; }
-  const ds = Math.min(window.devicePixelRatio || 1, 2), w = window.innerWidth, h = window.innerHeight;
+  const ds = Math.min(window.devicePixelRatio || 1, 2), w = window.innerWidth, h = appH();
   if (scv.width !== Math.round(w*ds) || scv.height !== Math.round(h*ds)){ scv.width = Math.round(w*ds); scv.height = Math.round(h*ds); scopeKey=''; }
   scv.style.opacity = clamp((t - 0.3) / 0.4, 0, 1).toFixed(2);
   const key = optic + w + 'x' + h;
@@ -2352,7 +2361,7 @@ function fixViewport() {
 window.addEventListener('orientationchange', () => setTimeout(fixViewport, 300));
 if (window.visualViewport) window.visualViewport.addEventListener('resize', () => { if (state === 'play') setTimeout(fixViewport, 100); });
 function hideMenu() {
-  fixViewport();
+  fixViewport(); resize();
   const ns=document.getElementById('netstat'); if(ns)ns.hidden=true;
   $('menu').hidden = true; $('hud').hidden = false;
   const tdm = mode === 'tdm';
@@ -3200,7 +3209,7 @@ function stepPlayer(dt) {
   }
   const onTarget = !!assist && assist.ang < Math.atan2(assist.r * 1.1, assist.d);
   hud.cross.classList.toggle('lock', onTarget);
-  const spr = currentSpread(), gap = 3 + Math.tan(spr) / Math.tan(camera.fov * Math.PI / 360) * window.innerHeight / 2;
+  const spr = currentSpread(), gap = 3 + Math.tan(spr) / Math.tan(camera.fov * Math.PI / 360) * appH() / 2;
   hud.cross.style.setProperty('--gap', gap.toFixed(1) + 'px');
   const optic = W().optic;
   hud.cross.style.opacity = (1 - P.adsT * (optic !== 'irons' ? 1 : 0.6)).toFixed(2);
