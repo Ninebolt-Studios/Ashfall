@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v37)](https://gaayyynesss.github.io/Seige/?v=37)
+## ▶️ [PLAY NOW — latest version (v38)](https://gaayyynesss.github.io/Seige/?v=38)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=37
+**Latest:** https://gaayyynesss.github.io/Seige/?v=38
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v37** | https://gaayyynesss.github.io/Seige/?v=37 | Season 2 and later: 650 XP per battle-pass tier (Season 1 stays 1,000) |
+| **v38** | https://gaayyynesss.github.io/Seige/?v=37 | Season 2 and later: 650 XP per battle-pass tier (Season 1 stays 1,000) |
+| v37 | https://gaayyynesss.github.io/Seige/?v=37 | Fix: on iPad the top of the screen (health, score bar, minimap) could get cut off after typing or swiping; the game now snaps back into place |
 | v36 | https://gaayyynesss.github.io/Seige/?v=36 | **Better camos:** every camo on the gun now uses exactly the colors on its swatch, with real patterns (tiger stripes, digital pixels, carbon weave, galaxy stars, lava cracks, diamond facets); new richer colors for Dune, Jungle, Frost, Blood, Cobalt and Gold |
 | v35 | https://gaayyynesss.github.io/Seige/?v=35 | **Blackjack table** in the Shop (game coins only), **new detailed soldiers** (knees, shaped arms, gear, smoother animation), **Ultra graphics** setting, and a 60 FPS guard on every graphics level |
 | v32 | https://gaayyynesss.github.io/Seige/?v=32 | Back to 1,000 XP per tier; Season 1 runs until Nov 19 and weekly seasons start Nov 20; Season 2 Premium code **`SCYTHE26`** (works from Nov 20) and the **SC-7 Scythe** premium SMG |
