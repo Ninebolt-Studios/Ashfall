@@ -4,16 +4,18 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v33)](https://gaayyynesss.github.io/Seige/?v=33)
+## ▶️ [PLAY NOW — latest version (v37)](https://gaayyynesss.github.io/Seige/?v=37)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=33
+**Latest:** https://gaayyynesss.github.io/Seige/?v=37
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v33** | https://gaayyynesss.github.io/Seige/?v=33 | Season 2 and later: 650 XP per battle-pass tier (Season 1 stays 1,000) |
+| **v37** | https://gaayyynesss.github.io/Seige/?v=37 | Season 2 and later: 650 XP per battle-pass tier (Season 1 stays 1,000) |
+| v36 | https://gaayyynesss.github.io/Seige/?v=36 | **Better camos:** every camo on the gun now uses exactly the colors on its swatch, with real patterns (tiger stripes, digital pixels, carbon weave, galaxy stars, lava cracks, diamond facets); new richer colors for Dune, Jungle, Frost, Blood, Cobalt and Gold |
+| v35 | https://gaayyynesss.github.io/Seige/?v=35 | **Blackjack table** in the Shop (game coins only), **new detailed soldiers** (knees, shaped arms, gear, smoother animation), **Ultra graphics** setting, and a 60 FPS guard on every graphics level |
 | v32 | https://gaayyynesss.github.io/Seige/?v=32 | Back to 1,000 XP per tier; Season 1 runs until Nov 19 and weekly seasons start Nov 20; Season 2 Premium code **`SCYTHE26`** (works from Nov 20) and the **SC-7 Scythe** premium SMG |
 | v31 | https://gaayyynesss.github.io/Seige/?v=31 | Battle pass tiers now take 400 XP each (was 1,000) |
 | v30 | https://gaayyynesss.github.io/Seige/?v=30 | **Weekly seasons** (75 tiers, new colors + map decorations each week, Christmas season), **daily rewards & challenges**, **kill streaks** (Map Scan at 10, Missile at 30), match coin bonuses, Team Battle to 100, bigger maps, shop daily item and bad-luck protection |
@@ -93,8 +95,11 @@ Crates hold shop-only operator skins (Sand Viper, Midnight, Royal Guard, Neon Ru
 | 6 | Dec 18–24 | **Christmas:** snow on every map, decorated trees with presents, snowmen, candy canes | added the day before | added the day before |
 | 7 | Dec 25–31 | **Christmas & New Year:** Christmas decorations with gold | added the day before | added the day before |
 
+## Blackjack
+The **Shop** tab has a blackjack table that uses **game coins only** (never real money). Bet 10–250 coins, then **Hit**, **Stand** or **Double**. Blackjack pays 3:2, the dealer stands on 17, and a tie (push) gives your bet back.
+
 ## Battle pass & skins
-Each season has a free battle pass with Season 1 has 50 tiers of **1,000 XP**, and every season from Season 2 has **75 tiers of 650 XP**, with coins every 5 tiers. Earn XP by getting eliminations, finishing and winning matches, and surviving Holdout waves. Ranking up unlocks **weapon camos** and **titles**. All **operator skins are free** to equip from the start on the **Loadout** tab; titles are equipped there too. Progress is saved on your device and travels with your backup code.
+Each season has a free battle pass. Season 1 has 50 tiers of **1,000 XP**, and every season from Season 2 has **75 tiers of 650 XP**, with coins every 5 tiers. Earn XP by getting eliminations, finishing and winning matches, and surviving Holdout waves. Ranking up unlocks **weapon camos** and **titles**. All **operator skins are free** to equip from the start on the **Loadout** tab; titles are equipped there too. Progress is saved on your device and travels with your backup code.
 
 ### Premium pass
 An optional **Premium Pass** unlocks 3 exclusive operator skins (Gold Rush, Obsidian, Prism), the **VIP** title, and **+25% XP**. **Each season has its own Premium code and its own premium weapon**, earned by reaching the season's final tier with Premium: the **VX-9 Tempest** rifle in Season 1 and the **SC-7 Scythe** SMG in Season 2. Skins, the VIP title and weapons you earn stay yours after the season ends. Enter the code on the **Pass** tab. (The codes are set by the game's creator in `PREMIUM_CODES` in index.html.)
@@ -133,7 +138,7 @@ Headshots deal about double damage and leg hits deal less. Damage drops off at l
 - **Your leaderboards:** the **Career** tab lists your 10 best battles and your 10 best Drone Holdout runs. They save on your device and travel with your backup code.
 
 ## Settings
-Open the **Settings** tab to change look and aiming sensitivity, aim assist, auto-fire, the left-handed touch layout, graphics quality, field of view, camera motion, the frame-rate counter, volume, crosshair color and size, and the minimap. Pick **Low** quality if the game feels slow on an older device.
+Open the **Settings** tab to change look and aiming sensitivity, graphics quality (**Low, Medium, High or Ultra**; every level holds 60 FPS by lowering resolution and then shadow detail only when needed), aim assist, auto-fire, the left-handed touch layout, field of view, camera motion, the frame-rate counter, volume, crosshair color and size, and the minimap. Pick **Low** quality if the game feels slow on an older device.
 
 ## Notes
 - Online play connects players directly to each other. On some strict networks, such as certain school or cellular networks, two players may not be able to connect. When that happens, each player still gets a full match against bots.

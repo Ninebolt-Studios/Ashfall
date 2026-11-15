@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261113213830';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261115205341';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -382,6 +382,20 @@ button { font-family: inherit; }
 .ditem .dn { font: 700 18px var(--display); letter-spacing: .1em; text-transform: uppercase; }
 .ditem .btn[disabled] { opacity: .45; cursor: not-allowed; }
 .crate .pity { font-size: 12px; color: #ffb02e; }
+.bj { display: grid; gap: 10px; margin-top: 14px; padding: 14px 16px; background: radial-gradient(ellipse at top, rgba(30,90,50,.55), rgba(10,40,22,.85)); border: 1px solid rgba(242,200,75,.45); }
+.bj .bjh { display: grid; gap: 2px; }
+.bj .bjrow { display: grid; gap: 6px; }
+.bj .bjrow b { color: var(--ink); margin-left: 6px; font-family: var(--mono); }
+.bj .cards { display: flex; gap: 6px; min-height: 76px; flex-wrap: wrap; }
+.bj .card { width: 52px; height: 74px; border-radius: 6px; background: #f6f2e8; color: #1a1a1a; display: grid; place-items: center; font: 700 20px var(--display); box-shadow: 0 2px 6px rgba(0,0,0,.4); position: relative; animation: bjin .25s ease-out; }
+.bj .card.red { color: #c0262a; }
+.bj .card small { position: absolute; top: 3px; left: 5px; font-size: 12px; }
+.bj .card.back { background: repeating-linear-gradient(45deg, #7a1c1c 0 6px, #5a1010 6px 12px); border: 3px solid #f6f2e8; }
+@keyframes bjin { from { transform: translateY(-10px); opacity: 0; } to { transform: none; opacity: 1; } }
+.bj .bjmsg { font: 700 16px var(--display); letter-spacing: .08em; text-transform: uppercase; color: #f2c84b; min-height: 20px; }
+.bj .bjctl { display: flex; gap: 6px; flex-wrap: wrap; }
+.bj .bjctl .btn[aria-pressed="true"] { border-color: #f2c84b; color: #f2c84b; }
+.bj .btn[disabled] { opacity: .4; }
 #reveal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: rgba(8,9,7,.88); padding: 16px; }
 #reveal[hidden] { display: none; }
 #reveal .rv { width: min(380px, 100%); display: grid; gap: 10px; justify-items: center; text-align: center; padding: 22px 18px; background: var(--panel); border: 2px solid var(--line); }
@@ -576,6 +590,14 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
       </div>
       <div class="ditem" id="dailyItem"></div>
       <div class="crates" id="crateList"></div>
+      <div class="bj" id="bjBox">
+        <div class="bjh"><span class="label">Blackjack table · game coins only</span><span class="pmsg">Beat the dealer without going over 21. Blackjack pays 3:2, dealer stands on 17. Max bet ◎ 250.</span></div>
+        <div class="bjrow"><span class="label">Dealer <b id="bjDv"></b></span><div class="cards" id="bjD"></div></div>
+        <div class="bjrow"><span class="label">You <b id="bjPv"></b></span><div class="cards" id="bjP"></div></div>
+        <div class="bjmsg" id="bjMsg">Pick a bet and tap Deal.</div>
+        <div class="bjctl" id="bjBet"><button class="btn ghost" data-bet="10" type="button">10</button><button class="btn ghost" data-bet="25" type="button">25</button><button class="btn ghost" data-bet="50" type="button">50</button><button class="btn ghost" data-bet="100" type="button">100</button><button class="btn ghost" data-bet="250" type="button">250</button><button class="btn go" id="bjDeal" type="button">Deal</button></div>
+        <div class="bjctl" id="bjAct" hidden><button class="btn go" id="bjHit" type="button">Hit</button><button class="btn ghost" id="bjStand" type="button">Stand</button><button class="btn ghost" id="bjDbl" type="button">Double</button></div>
+      </div>
       <h3 class="subh">Crate collection</h3>
       <div class="skins" id="crateItems"></div>
     </section>
@@ -664,27 +686,27 @@ const SKINS = {
 };
 const CAMOS = {
   none:   { name: 'Factory', c: [0xffffff, 0xffffff, 0xffffff] },
-  sand:   { name: 'Dune', c: [0xe8d2a8, 0xf0dcb4, 0xffffff] },
-  jungle: { name: 'Jungle', c: [0x9fbf88, 0xa8c890, 0xffffff] },
-  arctic: { name: 'Frost', c: [0xe8f0ff, 0xf4f8ff, 0xd8e4f0] },
-  blood:  { name: 'Blood', c: [0xc85a50, 0xd06a60, 0xffffff] },
-  cobalt: { name: 'Cobalt', c: [0x6f8ce0, 0x7a96e8, 0xc8d4ff] },
-  gold:   { name: 'Gold', c: [0xe0b850, 0xe8c060, 0xf0c860], metal: true },
+  sand:   { name: 'Dune', c: [0xd9bf8c, 0xa8875a, 0x6e5a3c] },
+  jungle: { name: 'Jungle', c: [0x5a7a3a, 0x2e4220, 0x8aa860] },
+  arctic: { name: 'Frost', c: [0xeef4fa, 0xb8c8d8, 0x7a8ea4] },
+  blood:  { name: 'Blood', c: [0x8a1c18, 0x3a0806, 0xc8463a] },
+  cobalt: { name: 'Cobalt', c: [0x2a4aa8, 0x101c48, 0x6a8ce8] },
+  gold:   { name: 'Gold', c: [0xe0b850, 0x8a6418, 0xfff0a0], metal: true, pat: 'facets' },
   // weapon mastery camos: unlocked separately on each gun by levelling that gun
-  tiger:   { name: 'Tiger', c: [0xe0902a, 0x2a1a0c, 0xe0902a], lvl: 3 },
-  digital: { name: 'Digital', c: [0x6c7c8c, 0x2e3a46, 0x9aa8b6], lvl: 5 },
-  carbon:  { name: 'Carbon', c: [0x5a5f68, 0x24262b, 0x7a808a], lvl: 7 },
-  dragon:  { name: 'Dragon', c: [0xc8341c, 0x3a0a06, 0xe86a2a], lvl: 9 },
-  diamond: { name: 'Diamond', c: [0xc8ecff, 0x6aa8d0, 0xf0faff], lvl: 10, metal: true },
+  tiger:   { name: 'Tiger', c: [0xe0902a, 0x2a1a0c, 0xf4c070], lvl: 3, pat: 'stripes' },
+  digital: { name: 'Digital', c: [0x6c7c8c, 0x2e3a46, 0x9aa8b6], lvl: 5, pat: 'pixel' },
+  carbon:  { name: 'Carbon', c: [0x5a5f68, 0x24262b, 0x7a808a], lvl: 7, pat: 'carbon' },
+  dragon:  { name: 'Dragon', c: [0xc8341c, 0x3a0a06, 0xe86a2a], lvl: 9, pat: 'cracks' },
+  diamond: { name: 'Diamond', c: [0xc8ecff, 0x6aa8d0, 0xf0faff], lvl: 10, metal: true, pat: 'facets' },
   // shop crate camos (work on every gun)
   olive:   { name: 'Olive Drab', c: [0x6a7040, 0x3a4020, 0x8a9058], crate: 'common' },
   rust:    { name: 'Rust', c: [0x9a4a20, 0x3a1a08, 0xc8743a], crate: 'common' },
-  zebra:   { name: 'Zebra', c: [0xe8e8e8, 0x141414, 0xf4f4f4], crate: 'rare' },
+  zebra:   { name: 'Zebra', c: [0xe8e8e8, 0x141414, 0xf4f4f4], crate: 'rare', pat: 'stripes' },
   bubble:  { name: 'Bubblegum', c: [0xff8ac8, 0x8a2a6a, 0xffc0e0], crate: 'rare' },
-  neonc:   { name: 'Neon', c: [0x22ff88, 0x062a14, 0x9cffc8], crate: 'epic' },
-  galaxy:  { name: 'Galaxy', c: [0x5a2aa0, 0x0a0618, 0x9a6aff], crate: 'epic' },
-  lava:    { name: 'Lava', c: [0xff6a1a, 0x2a0802, 0xffb040], crate: 'legendary', metal: true },
-  aurora:  { name: 'Aurora', c: [0x2affc0, 0x1a0a3a, 0xa06aff], crate: 'legendary', metal: true, only: 'vault' },
+  neonc:   { name: 'Neon', c: [0x22ff88, 0x062a14, 0x9cffc8], crate: 'epic', pat: 'pixel' },
+  galaxy:  { name: 'Galaxy', c: [0x5a2aa0, 0x0a0618, 0x9a6aff], crate: 'epic', pat: 'stars' },
+  lava:    { name: 'Lava', c: [0xff6a1a, 0x2a0802, 0xffb040], crate: 'legendary', metal: true, pat: 'cracks' },
+  aurora:  { name: 'Aurora', c: [0x2affc0, 0x1a0a3a, 0xa06aff], crate: 'legendary', metal: true, only: 'vault', pat: 'stars' },
 };
 const SW = v => '#' + ((v == null ? 0x4d5a68 : v) >>> 0).toString(16).padStart(6, '0');
 const BP_S1 = { 2: ['title', 'Recruit'], 3: ['camo', 'sand'], 5: ['title', 'Marksman'], 8: ['camo', 'jungle'], 10: ['title', 'Veteran'],
@@ -856,17 +878,25 @@ Object.assign(sun.shadow.camera, { left: -60, right: 60, top: 60, bottom: -60, n
 sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.03;
 scene.add(sun); scene.add(sun.target);
 
+let perfLvl = 0; // 60 FPS guard: 0 = full quality, 1 = smaller shadow map, 2 = no shadows
+const fogMul = () => S.quality === 'ultra' ? 1.35 : 1;
 function applyQuality() {
   const q = S.quality;
-  DPR_MAX = Math.min(window.devicePixelRatio || 1, q === 'high' ? 2 : q === 'medium' ? 1.5 : 1);
-  dpr = DPR_MAX; renderer.setPixelRatio(dpr);
-  const sh = q !== 'low', size = q === 'high' ? 2048 : 1024;
+  DPR_MAX = Math.min(window.devicePixelRatio || 1, q === 'ultra' ? 2.5 : q === 'high' ? 2 : q === 'medium' ? 1.5 : 1);
+  dpr = DPR_MAX; renderer.setPixelRatio(dpr); perfLvl = 0;
+  applyShadows();
+  if (curMap && MAPS[curMap]) scene.fog.far = MAPS[curMap].fogF * fogMul();
+  resize();
+}
+function applyShadows() {
+  const q = S.quality, sh = q !== 'low' && perfLvl < 2;
+  let size = q === 'ultra' ? 4096 : q === 'high' ? 2048 : 1024; if (perfLvl >= 1) size = Math.max(512, size / 2);
+  sun.shadow.radius = q === 'ultra' ? 3 : 1;
   if (sun.shadow.mapSize.x !== size) { sun.shadow.mapSize.set(size, size); if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; } }
   if (renderer.shadowMap.enabled !== sh) {
     renderer.shadowMap.enabled = sh;
     scene.traverse(o => { if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => { m.needsUpdate = true; }); });
   }
-  resize();
 }
 
 /* ---------- procedural textures ---------- */
@@ -1194,7 +1224,7 @@ function buildMap(id) {
   clearMap(); curMap = id;
   const m = MAPS[id];
   ground.material = M[THEME.snowGround ? 'snow' : m.ground];
-  scene.fog.color.setHex(m.fog); scene.fog.near = m.fogN; scene.fog.far = m.fogF; scene.background.setHex(m.fog);
+  scene.fog.color.setHex(m.fog); scene.fog.near = m.fogN; scene.fog.far = m.fogF * fogMul(); scene.background.setHex(m.fog);
   sky.material.color.setHex(m.sky);
   sun.color.setHex(m.sun[0]); sun.intensity = m.sun[1]; sun.position.set(m.sunPos[0], m.sunPos[1], m.sunPos[2]);
   hemi.color.setHex(m.hemi[0]); hemi.groundColor.setHex(m.hemi[1]); hemi.intensity = m.hemi[2];
@@ -1263,11 +1293,42 @@ const GM_BASE = { metal: GM.metal.metalness, poly: GM.poly.metalness, fde: GM.fd
 // textures are near-black, and any colour multiplied by black stays black.)
 const GM_ORIG = { metal: GM.metal.map, poly: GM.poly.map, fde: GM.fde.map };
 const camoGunCache = {};
+// Gun camo textures use exactly the three colors shown on the camo's swatch, in a pattern that suits it
 function camoGunTex(k) {
   if (camoGunCache[k]) return camoGunCache[k];
-  const c = CAMOS[k].c, hx = v => '#' + (v >>> 0).toString(16).padStart(6, '0');
-  const shade = (v, f) => hx((Math.round(((v >> 16) & 255) * f) << 16) | (Math.round(((v >> 8) & 255) * f) << 8) | Math.round((v & 255) * f));
-  return (camoGunCache[k] = camo(hx(c[0]), [shade(c[0], 0.62), hx(c[1]), shade(c[1], 0.42)]));
+  const d = CAMOS[k], hx = v => '#' + ((v === 0xffffff ? 0x555a5e : v) >>> 0).toString(16).padStart(6, '0');
+  const [a, b, c] = d.c.map(hx);
+  let sd = 0; for (const ch of k) sd = (sd * 31 + ch.charCodeAt(0)) >>> 0;
+  const r = () => { sd = (sd * 1664525 + 1013904223) >>> 0; return sd / 4294967296; };
+  const tex = canvasTex(256, 256, (g, s) => {
+    const wrap = fn => { for (const ox of [-s, 0, s]) for (const oy of [-s, 0, s]) fn(ox, oy); };
+    g.fillStyle = a; g.fillRect(0, 0, s, s);
+    const pat = d.pat || 'blob';
+    if (pat === 'blob') { // woodland camo: big organic shapes, then smaller ones on top
+      [[b, 14, 22, 30], [c, 18, 12, 20]].forEach(([col, n, r0, rv]) => { for (let i = 0; i < n; i++) { const x = r() * s, y = r() * s, parts = 3 + (r() * 4 | 0), pts = []; for (let p = 0; p < parts; p++) pts.push([x + (r() - .5) * 40, y + (r() - .5) * 30, r0 + r() * rv]);
+        g.fillStyle = col; wrap((ox, oy) => pts.forEach(([px, py, pr]) => { g.beginPath(); g.ellipse(px + ox, py + oy, pr, pr * (0.55 + r() * 0.4), r() * 3, 0, 7); g.fill(); })); } });
+    } else if (pat === 'stripes') { // tiger / zebra: wavy tapered stripes
+      g.fillStyle = b; for (let i = 0; i < 11; i++) { const y0 = i * s / 11 + r() * 8, w = 6 + r() * 9; wrap((ox, oy) => { g.beginPath(); g.moveTo(ox - 10, y0 + oy); for (let x = 0; x <= s + 20; x += 16) g.lineTo(x + ox, y0 + oy + Math.sin(x / 30 + i) * 10 + (r() - .5) * 4); for (let x = s + 20; x >= -10; x -= 16) g.lineTo(x + ox, y0 + oy + Math.sin(x / 30 + i) * 10 + w * (0.4 + Math.sin(x / 50 + i * 2) * 0.6)); g.fill(); }); }
+      g.globalAlpha = 0.35; g.fillStyle = c; for (let i = 0; i < 30; i++) { g.beginPath(); g.ellipse(r() * s, r() * s, 10 + r() * 20, 4 + r() * 6, r() * 3, 0, 7); g.fill(); } g.globalAlpha = 1;
+    } else if (pat === 'pixel') { // digital: blocky pixel clusters
+      const px = 8; for (let y = 0; y < s; y += px) for (let x = 0; x < s; x += px) { const n = Math.sin(x * 0.045 + Math.sin(y * 0.03) * 2) + Math.sin(y * 0.05 + x * 0.01) + (r() - .5) * 0.9; if (n > 0.6) { g.fillStyle = b; g.fillRect(x, y, px, px); } else if (n < -0.7) { g.fillStyle = c; g.fillRect(x, y, px, px); } }
+    } else if (pat === 'carbon') { // carbon fibre weave
+      const t = 16; for (let y = 0; y < s; y += t) for (let x = 0; x < s; x += t) { const h = ((x + y) / t) % 2 === 0, gr = g.createLinearGradient(x, y, h ? x + t : x, h ? y : y + t); gr.addColorStop(0, b); gr.addColorStop(0.5, c); gr.addColorStop(1, b); g.fillStyle = gr; g.fillRect(x + 1, y + 1, t - 2, t - 2); }
+    } else if (pat === 'stars') { // galaxy / aurora: nebula clouds and stars
+      g.fillStyle = b; g.fillRect(0, 0, s, s);
+      for (let i = 0; i < 14; i++) { const x = r() * s, y = r() * s, rad = 30 + r() * 50; wrap((ox, oy) => { const gr = g.createRadialGradient(x + ox, y + oy, 0, x + ox, y + oy, rad); gr.addColorStop(0, i % 2 ? a : c); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.globalAlpha = 0.7; g.fillRect(x + ox - rad, y + oy - rad, rad * 2, rad * 2); }); }
+      g.globalAlpha = 1; g.fillStyle = '#ffffff'; for (let i = 0; i < 160; i++) { const sz = r() < 0.9 ? 1 : 2; g.fillRect(r() * s, r() * s, sz, sz); }
+    } else if (pat === 'cracks') { // lava / dragon: dark crust with glowing veins
+      g.fillStyle = b; g.fillRect(0, 0, s, s);
+      g.lineCap = 'round'; for (let i = 0; i < 26; i++) { let x = r() * s, y = r() * s; const pts = [[x, y]]; for (let k2 = 0; k2 < 6; k2++) { x += (r() - .5) * 50; y += (r() - .5) * 50; pts.push([x, y]); }
+        [[a, 5], [c, 2]].forEach(([col, w]) => { g.strokeStyle = col; g.lineWidth = w; wrap((ox, oy) => { g.beginPath(); pts.forEach(([px, py], j) => j ? g.lineTo(px + ox, py + oy) : g.moveTo(px + ox, py + oy)); g.stroke(); }); }); }
+    } else if (pat === 'facets') { // gold / diamond: faceted triangles
+      const t = 32; for (let y = 0; y < s; y += t) for (let x = 0; x < s; x += t) [[0, 0, t, 0, 0, t], [t, 0, t, t, 0, t]].forEach(tri => { const v = r(); g.fillStyle = v < 0.4 ? a : v < 0.75 ? b : c; g.beginPath(); g.moveTo(x + tri[0], y + tri[1]); g.lineTo(x + tri[2], y + tri[3]); g.lineTo(x + tri[4], y + tri[5]); g.fill(); });
+      g.strokeStyle = 'rgba(255,255,255,0.25)'; g.lineWidth = 1; for (let i = 0; i <= s; i += t) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i, s); g.moveTo(0, i); g.lineTo(s, i); g.moveTo(i, 0); g.lineTo(i - s, s); g.moveTo(i + s, 0); g.lineTo(i, s); g.stroke(); }
+    }
+    grain(g, s, s, 2500, 0.08);
+  });
+  return (camoGunCache[k] = tex);
 }
 function applyCamo(force) {
   const k = force || camoOf(P.w), c = CAMOS[k];
@@ -1861,27 +1922,69 @@ function skinMats(team, sk) {
 }
 const BOT_SKINS = ['std', 'std', 'desert', 'forest', 'urban', 'arctic', 'crimson', 'shadow'];
 function botSkin(id) { let h = 0; for (const ch of String(id)) h = (h * 31 + ch.charCodeAt(0)) | 0; return BOT_SKINS[Math.abs(h) % BOT_SKINS.length]; }
+// detailed soldier geometry (shared by every soldier)
+const SG2 = { box: new THREE.BoxGeometry(1, 1, 1), cyl: new THREE.CylinderGeometry(1, 1, 1, 10), sph: new THREE.SphereGeometry(1, 14, 10),
+  helm: new THREE.SphereGeometry(1, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2) };
+const strapMat = new THREE.MeshStandardMaterial({ color: 0x1e1f1a, roughness: 0.9 });
+const gloveMat = new THREE.MeshStandardMaterial({ color: 0x23211d, roughness: 0.75 });
+const padMat = new THREE.MeshStandardMaterial({ color: 0x2a2b26, roughness: 0.6 });
+const _up = new THREE.Vector3(0, 1, 0);
 function makeSoldier(team, ent) {
   const SM = skinMats(team, (ent && ent.sk) || 'std');
   const g = new THREE.Group();
   const flashMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false });
   const bandMat = new THREE.MeshBasicMaterial({ color: TEAM_COL[team] });
-  const add = (geo, mat, x, y, z, part = 'body', parent = g) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.userData.ent = ent; m.userData.part = part; m.castShadow = true; parent.add(m); return m; };
-  add(SG.torso, SM.torso, 0, 1.15, 0); add(SG.vest, SM.vest, 0, 1.22, 0); add(SG.pouch, SM.vest, 0, 1.0, -0.2); add(SG.pack, SM.vest, 0, 1.2, 0.24);
-  add(SG.head, faceMat, 0, 1.62, 0, 'head'); const helm = add(SG.helmet, SM.helm, 0, 1.7, 0.01, 'head'); helm.scale.set(1, 0.85, 1.08);
-  add(SG.goggles, gogMat, 0, 1.68, -0.135, 'head');
-  const hipL = new THREE.Group(), hipR = new THREE.Group();
-  hipL.position.set(-0.13, 0.84, 0); hipR.position.set(0.13, 0.84, 0); g.add(hipL, hipR);
-  add(SG.leg, SM.torso, 0, -0.39, 0, 'leg', hipL); add(SG.leg, SM.torso, 0, -0.39, 0, 'leg', hipR);
-  add(SG.boot, bootMat, 0, -0.78, -0.04, 'leg', hipL); add(SG.boot, bootMat, 0, -0.78, -0.04, 'leg', hipR);
-  const armR = add(SG.arm, SM.torso, 0.33, 1.2, -0.18); armR.rotation.x = -1.25;
-  const armL = add(SG.arm, SM.torso, -0.2, 1.2, -0.3); armL.rotation.set(-1.35, 0, 0.45);
-  const band = add(SG.band, bandMat, 0.33, 1.3, -0.08); band.rotation.x = -1.25;
-  add(SG.gun, sGunMat, 0.15, 1.25, -0.55);
+  const mk = (geo, mat, parent, x, y, z, sx, sy, sz, part = 'body', shadow = true) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.scale.set(sx, sy, sz); m.userData.ent = ent; m.userData.part = part; m.castShadow = shadow; parent.add(m); return m; };
+  // limb segment between two points (in the parent's space)
+  const seg = (parent, a, b, w, mat, part = 'body', shadow = true) => { const pa = new THREE.Vector3(...a), pb = new THREE.Vector3(...b), d = pb.clone().sub(pa), L = d.length();
+    const m = mk(SG2.box, mat, parent, (pa.x + pb.x) / 2, (pa.y + pb.y) / 2, (pa.z + pb.z) / 2, w, L, w, part, shadow); m.quaternion.setFromUnitVectors(_up, d.normalize()); return m; };
+  // upper body pivots at the hips so it can lean and breathe
+  const up = new THREE.Group(); up.position.y = 0.92; g.add(up);
+  mk(SG2.box, SM.torso, up, 0, 0.29, 0, 0.48, 0.56, 0.27);                       // torso
+  mk(SG2.box, SM.vest, up, 0, 0.33, 0, 0.53, 0.4, 0.35);                         // plate carrier
+  [-0.13, 0, 0.13].forEach(x => mk(SG2.box, SM.vest, up, x, 0.2, -0.2, 0.11, 0.15, 0.06, 'body', false)); // magazine pouches
+  mk(SG2.box, strapMat, up, 0, 0.55, -0.15, 0.4, 0.05, 0.04, 'body', false);     // collar strap
+  mk(SG2.box, strapMat, up, 0, 0.03, 0, 0.46, 0.08, 0.3);                        // belt
+  [-0.2, 0.2].forEach(x => mk(SG2.box, SM.vest, up, x, 0.03, 0.04, 0.08, 0.12, 0.14, 'body', false)); // belt pouches
+  mk(SG2.box, SM.vest, up, 0, 0.3, 0.24, 0.36, 0.44, 0.17);                      // backpack
+  const roll = mk(SG2.cyl, SM.torso, up, 0, 0.56, 0.24, 0.07, 0.38, 0.07, 'body', false); roll.rotation.z = Math.PI / 2; // bedroll
+  mk(SG2.cyl, strapMat, up, 0.13, 0.78, 0.3, 0.007, 0.5, 0.007, 'body', false);  // radio antenna
+  mk(SG2.cyl, faceMat, up, 0, 0.6, 0, 0.075, 0.12, 0.075, 'head');               // neck
+  mk(SG2.sph, faceMat, up, 0, 0.72, 0, 0.125, 0.145, 0.13, 'head');              // head (balaclava)
+  mk(SG2.helm, SM.helm, up, 0, 0.76, 0.01, 0.165, 0.15, 0.18, 'head');           // helmet
+  mk(SG2.cyl, SM.helm, up, 0, 0.765, 0.01, 0.17, 0.025, 0.185, 'head', false);   // helmet rim
+  mk(SG2.box, strapMat, up, 0, 0.84, -0.15, 0.06, 0.05, 0.05, 'head', false);    // NVG mount
+  [-1, 1].forEach(sd => { const e = mk(SG2.cyl, padMat, up, sd * 0.14, 0.71, 0, 0.055, 0.05, 0.055, 'head', false); e.rotation.z = Math.PI / 2; }); // ear protection
+  mk(SG2.box, gogMat, up, 0, 0.75, -0.115, 0.2, 0.06, 0.05, 'head', false);      // goggles
+  // arms holding the rifle
+  const shR = [0.29, 0.47, 0], elR = [0.3, 0.24, -0.16], hR = [0.13, 0.31, -0.36];
+  const shL = [-0.29, 0.47, 0], elL = [-0.25, 0.27, -0.3], hL = [0.06, 0.34, -0.62];
+  mk(SG2.sph, SM.vest, up, shR[0], shR[1], shR[2], 0.1, 0.08, 0.1, 'body', false); mk(SG2.sph, SM.vest, up, shL[0], shL[1], shL[2], 0.1, 0.08, 0.1, 'body', false);
+  seg(up, shR, elR, 0.12, SM.torso); seg(up, elR, hR, 0.1, SM.torso); seg(up, shL, elL, 0.12, SM.torso); seg(up, elL, hL, 0.1, SM.torso);
+  mk(SG2.sph, gloveMat, up, hR[0], hR[1], hR[2], 0.065, 0.065, 0.075, 'body', false); mk(SG2.sph, gloveMat, up, hL[0], hL[1], hL[2], 0.065, 0.065, 0.075, 'body', false);
+  const band = seg(up, [0.295, 0.4, -0.04], [0.297, 0.34, -0.08], 0.135, bandMat, 'body', false); // team armband
+  // rifle
+  mk(SG2.box, sGunMat, up, 0.11, 0.37, -0.42, 0.07, 0.1, 0.4);
+  mk(SG2.box, sGunMat, up, 0.11, 0.38, -0.7, 0.065, 0.075, 0.2, 'body', false);
+  const brl = mk(SG2.cyl, sGunMat, up, 0.11, 0.38, -0.92, 0.018, 0.26, 0.018, 'body', false); brl.rotation.x = Math.PI / 2;
+  const mag = mk(SG2.box, sGunMat, up, 0.11, 0.25, -0.45, 0.05, 0.17, 0.08, 'body', false); mag.rotation.x = 0.25;
+  mk(SG2.box, sGunMat, up, 0.11, 0.35, -0.13, 0.055, 0.11, 0.2, 'body', false);
+  mk(SG2.box, gogMat, up, 0.11, 0.45, -0.45, 0.04, 0.05, 0.09, 'body', false);
+  // legs with knees
+  const hipL = new THREE.Group(), hipR = new THREE.Group(), kneeL = new THREE.Group(), kneeR = new THREE.Group();
+  hipL.position.set(-0.12, 0.9, 0); hipR.position.set(0.12, 0.9, 0); g.add(hipL, hipR);
+  [[hipL, kneeL], [hipR, kneeR]].forEach(([hip, knee]) => {
+    mk(SG2.box, SM.torso, hip, 0, -0.22, 0, 0.19, 0.46, 0.21, 'leg');            // thigh
+    mk(SG2.box, strapMat, hip, 0, -0.18, 0.11, 0.12, 0.12, 0.05, 'leg', false); // thigh pouch
+    knee.position.y = -0.44; hip.add(knee);
+    mk(SG2.box, padMat, knee, 0, 0, -0.1, 0.15, 0.12, 0.06, 'leg', false);      // knee pad
+    mk(SG2.box, SM.torso, knee, 0, -0.2, 0, 0.16, 0.4, 0.18, 'leg');            // shin
+    mk(SG2.box, bootMat, knee, 0, -0.41, -0.04, 0.18, 0.13, 0.3, 'leg');        // boot
+  });
   const mark = new THREE.Mesh(SG.mark, new THREE.MeshBasicMaterial({ color: TEAM_COL[team], toneMapped: false })); mark.position.y = 2.2; mark.raycast = () => {}; g.add(mark);
   const fl = new THREE.Mesh(new THREE.BoxGeometry(0.66, 1.9, 0.5), flashMat); fl.position.y = 0.95; fl.raycast = () => {}; g.add(fl);
   scene.add(g);
-  return { g, hipL, hipR, mark, flashMat, bandMat, flashT: 0 };
+  return { g, up, hipL, hipR, kneeL, kneeR, mark, flashMat, bandMat, flashT: 0, band };
 }
 function removeEnt(e) { scene.remove(e.v.g); e.v.flashMat.dispose(); e.v.bandMat.dispose(); T.ents.delete(e.id); }
 function nameOf(id) { if (!id) return 'Someone'; if (id === myPeer) return playerName; if (BOT_NAMES[id]) return BOT_NAMES[id]; return T.names[id] || 'Someone'; }
@@ -2074,8 +2177,10 @@ function renderEnts(dt) {
     e.ry += (e.jy - e.ry) * k; e.rc += (e.c - e.rc) * k;
     const sp = Math.hypot(e.rx - ox, e.rz - oz) / Math.max(dt, 1e-3);
     e.walk += sp * dt * 2.2;
-    const sw = Math.sin(e.walk) * Math.min(1, sp / 3) * 0.6;
+    const mv = Math.min(1, sp / 3), sw = Math.sin(e.walk) * mv * 0.6;
     v.hipL.rotation.x = sw; v.hipR.rotation.x = -sw;
+    v.kneeL.rotation.x = -Math.max(0, Math.sin(e.walk + 1.6)) * mv * 0.9 - e.rc * 0.6; v.kneeR.rotation.x = -Math.max(0, Math.sin(e.walk + 1.6 + Math.PI)) * mv * 0.9 - e.rc * 0.6;
+    v.up.rotation.x = -Math.min(1, sp / 7) * 0.14 + Math.sin(now / 900 + e.walk * 0.1) * 0.012; v.up.rotation.z = Math.sin(e.walk) * mv * 0.03;
     v.g.position.set(e.rx, e.ry + Math.abs(Math.sin(e.walk)) * 0.03 * Math.min(1, sp / 3), e.rz);
     v.g.scale.y = 1 - e.rc * 0.28;
     v.g.rotation.y = e.ryaw; v.g.visible = e.alive;
@@ -2414,7 +2519,7 @@ $('rvEquip').addEventListener('click', () => {
   $('rvEquip').hidden = true; $('rvMsg').textContent = 'Equipped.'; renderSkins();
 });
 function renderShop() {
-  updCoins();
+  updCoins(); bjRender(BJ.live);
   { const it = dailyShopItem(), own = itemOwned(it), price = DAILY_PRICE[it.r], box = $('dailyItem');
     const ms = 864e5 - Date.now() % 864e5;
     box.innerHTML = '<span class="dv">' + itemVisual(it) + '</span><div style="display:grid;gap:3px"><span class="label">Daily item · new in ' + Math.floor(ms / 36e5) + 'h ' + Math.floor(ms / 6e4) % 60 + 'm</span><span class="dn"></span><span class="pmsg"></span></div><button class="btn go" type="button"></button>';
@@ -2476,6 +2581,54 @@ $('dailyClaim').addEventListener('click', () => {
   store.set('daily', DAILY); const amt = DAILY_COINS[Math.min(DAILY.streak, 7) - 1]; addCoins(amt); try { sfx.head(); } catch (e) {}
   renderDaily();
 });
+/* ---------- blackjack (game coins only) ---------- */
+const BJ = { bet: 25, shoe: [], p: [], d: [], live: false, dbl: false };
+const BJ_MAX = 250;
+function bjShoe() { const s = []; for (let k = 0; k < 6; k++) for (const su of ['♠', '♥', '♦', '♣']) for (const r of ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']) s.push({ r, su }); for (let i = s.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [s[i], s[j]] = [s[j], s[i]]; } return s; }
+function bjDraw() { if (BJ.shoe.length < 60) BJ.shoe = bjShoe(); return BJ.shoe.pop(); }
+function bjVal(h) { let v = 0, a = 0; for (const c of h) { v += c.r === 'A' ? 11 : 'JQK'.includes(c.r) || c.r === '10' ? 10 : +c.r; if (c.r === 'A') a++; } while (v > 21 && a) { v -= 10; a--; } return v; }
+const bjBJ = h => h.length === 2 && bjVal(h) === 21;
+function bjRender(hide) {
+  const draw = (el, h, hideSecond) => { el.textContent = ''; h.forEach((c, i) => { const d = document.createElement('div'); if (hideSecond && i === 1) d.className = 'card back'; else { d.className = 'card' + ('♥♦'.includes(c.su) ? ' red' : ''); d.innerHTML = '<small></small><span></span>'; d.children[0].textContent = c.r; d.children[1].textContent = c.su; } el.appendChild(d); }); };
+  draw($('bjD'), BJ.d, hide); draw($('bjP'), BJ.p, false);
+  $('bjDv').textContent = BJ.d.length ? (hide ? '?' : bjVal(BJ.d)) : ''; $('bjPv').textContent = BJ.p.length ? bjVal(BJ.p) : '';
+  $('bjBet').hidden = BJ.live; $('bjAct').hidden = !BJ.live;
+  $('bjBet').querySelectorAll('[data-bet]').forEach(b => { b.setAttribute('aria-pressed', String(+b.dataset.bet === BJ.bet)); b.disabled = +b.dataset.bet > WALLET.coins; });
+  $('bjDeal').disabled = WALLET.coins < BJ.bet; $('bjDeal').textContent = WALLET.coins < BJ.bet ? 'Need ◎ ' + BJ.bet : 'Deal · ◎ ' + BJ.bet;
+  $('bjDbl').disabled = !(BJ.live && BJ.p.length === 2 && WALLET.coins >= BJ.bet);
+}
+function bjEnd(msg, payout) {
+  BJ.live = false;
+  if (payout > 0) { WALLET.coins += payout; saveWallet(); }
+  updCoins(); $('bjMsg').textContent = msg; bjRender(false);
+  { const sc = $('shopCoins'); if (sc) sc.textContent = WALLET.coins.toLocaleString(); }
+  try { payout > BJ.bet * (BJ.dbl ? 2 : 1) ? sfx.head() : payout > 0 ? sfx.hit() : sfx.empty(); } catch (e) {}
+}
+function bjSettle() {
+  const stake = BJ.bet * (BJ.dbl ? 2 : 1), pv = bjVal(BJ.p);
+  if (pv > 21) return bjEnd('Bust! You lose ◎ ' + stake, 0);
+  while (bjVal(BJ.d) < 17) BJ.d.push(bjDraw());
+  const dv = bjVal(BJ.d);
+  if (dv > 21) return bjEnd('Dealer busts! You win ◎ ' + stake, stake * 2);
+  if (pv > dv) return bjEnd('You win ◎ ' + stake + '!', stake * 2);
+  if (pv === dv) return bjEnd('Push — your ◎ ' + stake + ' bet is returned', stake);
+  return bjEnd('Dealer wins. You lose ◎ ' + stake, 0);
+}
+$('bjBet').addEventListener('click', ev => { const b = ev.target.closest('[data-bet]'); if (!b || BJ.live) return; BJ.bet = Math.min(BJ_MAX, +b.dataset.bet); bjRender(false); });
+$('bjDeal').addEventListener('click', () => {
+  if (BJ.live || WALLET.coins < BJ.bet) return;
+  WALLET.coins -= BJ.bet; saveWallet(); updCoins(); BJ.dbl = false; BJ.live = true;
+  BJ.p = [bjDraw(), bjDraw()]; BJ.d = [bjDraw(), bjDraw()];
+  if (bjBJ(BJ.p) || bjBJ(BJ.d)) {
+    if (bjBJ(BJ.p) && bjBJ(BJ.d)) return bjEnd('Both blackjack — push', BJ.bet);
+    if (bjBJ(BJ.p)) return bjEnd('BLACKJACK! You win ◎ ' + Math.floor(BJ.bet * 1.5), BJ.bet + Math.floor(BJ.bet * 1.5));
+    return bjEnd('Dealer has blackjack. You lose ◎ ' + BJ.bet, 0);
+  }
+  $('bjMsg').textContent = 'Hit or stand?'; bjRender(true);
+});
+$('bjHit').addEventListener('click', () => { if (!BJ.live) return; BJ.p.push(bjDraw()); if (bjVal(BJ.p) >= 21) return bjSettle(); $('bjMsg').textContent = 'Hit or stand?'; bjRender(true); });
+$('bjStand').addEventListener('click', () => { if (BJ.live) bjSettle(); });
+$('bjDbl').addEventListener('click', () => { if (!BJ.live || BJ.p.length !== 2 || WALLET.coins < BJ.bet) return; WALLET.coins -= BJ.bet; saveWallet(); updCoins(); BJ.dbl = true; BJ.p.push(bjDraw()); bjSettle(); });
 function renderPass() {
   $('premInfo').innerHTML = 'Each season has its own Premium code. Premium unlocks 3 exclusive operator skins — Gold Rush, Obsidian, Prism — plus the VIP title and +25% battle-pass XP for the season. Reach tier ' + BP_TIERS + ' with Premium to earn this season\'s weapon' + (PREM_W ? ': the <b>' + WEAPONS[PREM_W].name + '</b>.' : '.') + ' Skins, title and weapons you earn stay yours.';
   const pw = $('premWho'); if (pw) { pw.textContent = BP.premium ? 'Premium active ✓ — all premium skins and the VIP title are unlocked, with +25% XP.' : 'Not active. Enter a premium code to unlock the exclusive skins, VIP title and +25% XP.'; }
@@ -2561,7 +2714,7 @@ const SETTINGS_UI = [
     { k: 'lefty', type: 'toggle', label: 'Left-handed touch layout', hint: 'Buttons on the left, joystick on the right' },
   ] },
   { sec: 'Graphics', items: [
-    { k: 'quality', type: 'choice', label: 'Quality', options: [['low', 'Low'], ['medium', 'Medium'], ['high', 'High']], hint: 'Low turns off shadows and lowers resolution for the smoothest frame rate' },
+    { k: 'quality', type: 'choice', label: 'Quality', options: [['low', 'Low'], ['medium', 'Medium'], ['high', 'High'], ['ultra', 'Ultra']], hint: 'Ultra adds sharper, softer-edged shadows, higher resolution and a longer view distance. Every level holds 60 FPS by lowering resolution, then shadow detail, only when needed' },
     { k: 'fov', type: 'range', label: 'Field of view', min: 60, max: 95, step: 1, fmt: v => v + '°' },
     { k: 'motion', type: 'toggle', label: 'Camera motion', hint: 'Head bob, weapon sway, lean and screen shake' },
     { k: 'fps', type: 'toggle', label: 'Show frame rate' },
@@ -3112,7 +3265,7 @@ function fx(dt) {
 
 /* ---------- main loop ---------- */
 const clock = new THREE.Clock();
-let menuT = 0, radarT = 0, ftAvg = 16, resT = 0, fpsT = 0, fpsN = 0;
+let menuT = 0, radarT = 0, ftAvg = 16, resT = 0, fpsT = 0, fpsN = 0, perfCool = 0, goodN = 0;
 function loop() {
   requestAnimationFrame(loop);
   const raw = clock.getDelta(), dt = Math.min(raw, 0.05);
@@ -3120,8 +3273,18 @@ function loop() {
   if (fpsT > 0.5) { if (S.fps) hud.fps.textContent = Math.round(fpsN / fpsT) + ' FPS'; fpsT = 0; fpsN = 0; }
   if (state === 'play') {
     ftAvg += (Math.min(raw, 0.1) * 1000 - ftAvg) * 0.05; resT += raw;
-    const floor = S.uncap ? DPR_MAX : (S.quality === 'high' ? Math.min(DPR_MAX, 1.5) : Math.min(DPR_MAX, 1));
-    if (!S.uncap && resT > 1.2) { resT = 0; if (ftAvg > 26 && dpr > floor) { dpr = Math.max(floor, dpr - 0.15); renderer.setPixelRatio(dpr); resize(); } else if (ftAvg < 15 && dpr < DPR_MAX) { dpr = Math.min(DPR_MAX, dpr + 0.15); renderer.setPixelRatio(dpr); resize(); } }
+    // 60 FPS guard: if frames take longer than ~18 ms, lower resolution first, then shadow detail; win them back when there is headroom
+    const floor = Math.min(DPR_MAX, S.quality === 'ultra' || S.quality === 'high' ? 1 : 0.8);
+    perfCool -= raw;
+    if (!S.uncap && resT > 1) {
+      resT = 0;
+      if (ftAvg > 18.2) { goodN = 0; perfCool = 8;
+        if (dpr > floor + 0.01) { dpr = Math.max(floor, dpr - 0.15); renderer.setPixelRatio(dpr); resize(); }
+        else if (perfLvl < 2 && S.quality !== 'low') { perfLvl++; applyShadows(); } }
+      else if (ftAvg < 17.3 && perfCool <= 0 && ++goodN >= 3) { goodN = 0;
+        if (perfLvl > 0) { perfLvl--; applyShadows(); }
+        else if (dpr < DPR_MAX) { dpr = Math.min(DPR_MAX, dpr + 0.1); renderer.setPixelRatio(dpr); resize(); } }
+    }
     else if (S.uncap && dpr !== DPR_MAX) { dpr = DPR_MAX; renderer.setPixelRatio(dpr); resize(); }
     stepPlayer(dt);
     if (mode === 'siege') stepSiege(dt); else netTick(dt);
