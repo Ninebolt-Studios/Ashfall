@@ -595,7 +595,7 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
         <div class="prow" id="premRedeem"><input type="text" id="premCode" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Premium code" aria-label="Premium code"><button class="btn go" id="premBtn" type="button">Redeem</button></div>
       </div>
       <div class="bp-tiers" id="bpTiers"></div>
-      <p class="tip">A new season starts every week with a new color scheme and map decorations. Everything you unlock stays yours. Earn XP: 50 per elimination, 15 bonus for a headshot finish, 80 for finishing a match, 150 more for a win, 30 per Holdout wave, plus daily challenges on the Play tab. Season 1 has 50 tiers; from Season 2 every season has 75 tiers, with coins every 5 tiers. Premium pass adds +25% XP. Progress saves on this device and travels with your backup code.</p>
+      <p class="tip">A new season starts every week with a new color scheme and map decorations. Everything you unlock stays yours. Earn XP: 50 per elimination, 15 bonus for a headshot finish, 80 for finishing a match, 150 more for a win, 30 per Holdout wave, plus daily challenges on the Play tab. Season 1 has 50 tiers of 1,000 XP; from Season 2 every season has 75 tiers of 650 XP, with coins every 5 tiers. Premium pass adds +25% XP. Progress saves on this device and travels with your backup code.</p>
     </section>
 
     <section class="pane" id="pane-career" hidden>
@@ -687,7 +687,6 @@ const CAMOS = {
   aurora:  { name: 'Aurora', c: [0x2affc0, 0x1a0a3a, 0xa06aff], crate: 'legendary', metal: true, only: 'vault' },
 };
 const SW = v => '#' + ((v == null ? 0x4d5a68 : v) >>> 0).toString(16).padStart(6, '0');
-const BP_XP = 1000;
 const BP_S1 = { 2: ['title', 'Recruit'], 3: ['camo', 'sand'], 5: ['title', 'Marksman'], 8: ['camo', 'jungle'], 10: ['title', 'Veteran'],
   12: ['title', 'Hardened'], 14: ['camo', 'arctic'], 17: ['title', 'Breacher'], 20: ['title', 'Ghost Walker'], 21: ['camo', 'blood'], 25: ['title', 'Warlord'],
   28: ['title', 'Vanguard'], 30: ['camo', 'cobalt'], 33: ['title', 'Reaper'], 36: ['title', 'Juggernaut'], 40: ['title', 'Apex Operator'],
@@ -720,6 +719,8 @@ function seasonTheme(n) {
   return Object.assign({}, base, { name: base.name + ' ' + n, camoName: base.camoName + ' ' + n });
 }
 const SEASON = seasonNum(), THEME = seasonTheme(SEASON);
+const seasonXP = n => n <= 1 ? 1000 : 650; // XP per battle-pass tier: Season 1 = 1000, Season 2 and later = 650
+const BP_XP = seasonXP(SEASON);
 for (const n of new Set([...Object.keys(SEASONS).map(Number), SEASON])) { const t = seasonTheme(n); if (!t.camo) continue; CAMOS['s' + n] = { name: t.camoName, c: t.camo, metal: !!t.metal, season: n }; }
 function seasonRewards(n) {
   if (n <= 1) return BP_S1;
@@ -738,11 +739,11 @@ const BP = Object.assign({ xp: 0, premium: false, season: 1, owned: [] }, store.
 if (!Array.isArray(BP.owned)) BP.owned = [];
 if (SEASON === 1 && BP.season === 2) {
   // v30/v31 started Season 2 a week early: give Season 1 back with the XP from before plus anything earned since
-  BP.xp = (BP.last && BP.last.s === 1 ? (BP.last.tier - 1) * BP_XP : 0) + (+BP.xp || 0); BP.season = 1; delete BP.last; store.set('pass', BP);
+  BP.xp = (BP.last && BP.last.s === 1 ? (BP.last.tier - 1) * seasonXP(1) : 0) + (+BP.xp || 0); BP.season = 1; delete BP.last; store.set('pass', BP);
 }
 if (BP.season !== SEASON) {
   // new season: keep everything earned last season, then reset the pass
-  const oS = +BP.season || 1, oT = Math.min(seasonTiers(oS), 1 + Math.floor((+BP.xp || 0) / BP_XP));
+  const oS = +BP.season || 1, oT = Math.min(seasonTiers(oS), 1 + Math.floor((+BP.xp || 0) / seasonXP(oS)));
   for (const [t, r] of Object.entries(seasonRewards(oS))) if (+t <= oT && r[0] !== 'coins') { const k = r[0] + ':' + r[1]; if (!BP.owned.includes(k)) BP.owned.push(k); }
   if (BP.premium && oT >= seasonTiers(oS)) for (const [k, w] of Object.entries(WEAPONS_PREMIUM)) if (w === oS && !BP.owned.includes('weapon:' + k)) BP.owned.push('weapon:' + k);
   if (BP.premium) { if (!BP.owned.includes('premium:' + oS)) BP.owned.push('premium:' + oS); BP.premium = false; } // each season needs its own Premium code
