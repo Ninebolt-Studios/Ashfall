@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116190417';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116191312';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -454,6 +454,9 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 .friend.on .dot { background: var(--heal); box-shadow: 0 0 8px var(--heal); }
 .friend .fs { font-size: 12px; color: var(--dim); }
 .friend button { background: none; border: 0; color: var(--dim); font-size: 18px; cursor: pointer; padding: 2px 6px; }
+/* gift notice */
+.gift { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 12px; background: linear-gradient(120deg, rgba(70,230,255,.22), rgba(26,28,23,.8) 60%); border: 1px solid rgba(70,230,255,.5); }
+.gift > span { font-size: 36px; } .gift b { font: 700 20px var(--display); letter-spacing: .1em; text-transform: uppercase; color: #9ef0ff; } .gift > div { display: grid; gap: 2px; flex: 1; }
 /* ranked */
 .rankbox { display: flex; gap: 14px; align-items: center; padding: 12px 16px; background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; }
 .rankbox .rb { font-size: 44px; }
@@ -596,6 +599,39 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 #nadeBtn { --ring: #8bd17c; } #nadeBtn svg { width: 26px; height: 26px; } #nadeBtn small { font: 700 12px var(--mono); color: #c8f0b8; margin-top: -2px; }
 #nadeBtn.off { opacity: .4; filter: grayscale(1); }
 .tbtn.ks { --ring: #ff9a5a; } .tbtn.ks svg { width: 30px; height: 30px; color: #ffd0a0; }
+/* ---------- v66 calling cards + MVP screen ---------- */
+.ccard { position: relative; display: flex; align-items: center; gap: 12px; width: min(340px, 86vw); height: 66px; padding: 0 14px 0 8px; border-radius: 12px; overflow: hidden; color: #fff; box-shadow: 0 8px 26px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.18); }
+.ccard::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.05), rgba(0,0,0,.5)); pointer-events: none; }
+.ccard .cem { position: relative; z-index: 1; flex: none; width: 52px; height: 52px; display: grid; place-items: center; font-size: 30px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, rgba(255,255,255,.28), rgba(0,0,0,.55)); box-shadow: 0 0 0 2px rgba(255,255,255,.55), 0 4px 12px rgba(0,0,0,.5); }
+.ccard .cnm { position: relative; z-index: 1; display: grid; line-height: 1.1; text-shadow: 0 2px 6px #000; min-width: 0; }
+.ccard .cnm small { font: 700 11px var(--display); letter-spacing: .24em; color: rgba(255,255,255,.85); }
+.ccard .cnm b { font: 700 24px var(--display); letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ccard.big { width: min(460px, 90vw); height: 92px; } .ccard.big .cem { width: 72px; height: 72px; font-size: 42px; } .ccard.big .cnm b { font-size: 34px; }
+.ccard.killer .cnm small { color: #ff9a8a; } .ccard.victim .cnm small { color: #9ef0a0; }
+#cardPop { position: absolute; left: 50%; bottom: calc(150px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); pointer-events: none; }
+#cardPop.show { animation: cardIn .35s cubic-bezier(.2,1.3,.4,1); }
+@keyframes cardIn { from { opacity: 0; transform: translate(-50%, 30px) scale(.9); } to { opacity: 1; transform: translate(-50%, 0); } }
+.ccprev { margin: 6px 0 10px; }
+.ccgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; margin: 6px 0 12px; }
+.cctile { display: grid; gap: 4px; padding: 8px; text-align: left; border-radius: 12px; background: rgba(26,28,23,.72); border: 1px solid rgba(255,255,255,.1); color: var(--ink); cursor: pointer; }
+.cctile.sel { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; } .cctile.lock .ccsw, .cctile.lock .ccem { filter: saturate(.5) brightness(.75); }
+.cctile .ccsw { height: 38px; border-radius: 8px; } .cctile .ccem { height: 38px; display: grid; place-items: center; font-size: 28px; }
+.cctile .ccl { font: 700 12px var(--display); letter-spacing: .08em; text-transform: uppercase; } .cctile .ccp { font: 600 11px var(--mono); color: var(--dim); } .cctile.lock .ccp { color: #f2c84b; }
+#mvpFull { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; background: radial-gradient(circle, rgba(40,30,10,.85), rgba(6,6,8,.96) 70%); pointer-events: auto; overflow: hidden; }
+#mvpFull .rays { position: absolute; width: 220vmax; height: 220vmax; left: 50%; top: 50%; margin: -110vmax 0 0 -110vmax; background: repeating-conic-gradient(rgba(242,200,75,.13) 0 6deg, transparent 6deg 18deg); animation: spin 14s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+#mvpFull .mvpIn { position: relative; display: grid; gap: 10px; justify-items: center; text-align: center; padding: 16px; }
+#mvpFull .mvpT { font: 700 clamp(44px, 9vw, 86px) var(--display); letter-spacing: .2em; color: #f2c84b; text-shadow: 0 0 30px rgba(242,200,75,.6), 0 4px 0 #6a4a08; }
+#mvpFull img { height: min(26vh, 200px); filter: drop-shadow(0 10px 20px rgba(0,0,0,.7)); }
+#mvpFull .mvpPlay { font: 700 18px var(--display); letter-spacing: .1em; color: #fff; background: rgba(0,0,0,.45); padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(242,200,75,.5); max-width: 90vw; }
+#mvpFull .mvpSt { font: 600 14px var(--mono); color: var(--ink); }
+#mvpFull .mvpTap { font: 600 11px var(--display); letter-spacing: .2em; color: var(--dim); text-transform: uppercase; }
+#mvpFull.go .mvpT { animation: mvpT .7s cubic-bezier(.2,1.4,.4,1) both; } #mvpFull.go #mvpCard { animation: slideL .6s .25s cubic-bezier(.2,1.2,.4,1) both; }
+#mvpFull.go img { animation: rise .7s .45s ease-out both; } #mvpFull.go .mvpPlay { animation: fadeUp .5s .8s both; } #mvpFull.go .mvpSt { animation: fadeUp .5s 1s both; }
+@keyframes mvpT { from { opacity: 0; transform: scale(2.2); letter-spacing: .6em; } to { opacity: 1; transform: none; } }
+@keyframes slideL { from { opacity: 0; transform: translateX(-60vw); } to { opacity: 1; transform: none; } }
+@keyframes rise { from { opacity: 0; transform: translateY(40px) scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 </style>
 
 <div id="oddsBox" hidden><div class="ob"><div class="obh"><span class="rvname" id="oddsTitle"></span><button class="btn ghost" id="oddsClose" type="button">Close</button></div><div class="pmsg" id="oddsNote"></div><div id="oddsList"></div></div></div>
@@ -626,6 +662,8 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
   <div id="dmgDir"><i></i></div>
   <div id="netstat" hidden></div>
   <div id="banner"></div>
+  <div id="cardPop" hidden></div>
+  <div id="mvpFull" hidden><div class="rays"></div><div class="mvpIn"><span class="mvpT">MATCH MVP</span><div id="mvpCard"></div><img id="mvpSkin" alt=""><div class="mvpPlay" id="mvpPlay"></div><div class="mvpSt" id="mvpSt"></div><span class="mvpTap">Tap to continue</span></div></div>
   <div id="killcam" hidden><span id="kcName">KILL CAM</span></div>
   <div id="mvp" hidden><span class="label">Match MVP</span><b id="mvpName"></b><span id="mvpStats"></span><span id="mvpYou"></span></div>
   <div id="vote" hidden><span class="vt" id="voteTitle">Vote for the next map</span><div class="vrow" id="voteRow"></div></div>
@@ -686,6 +724,7 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
           </div>
           <span class="pmsg" id="partyMsg">Make a party and send the code to a friend. Party members duel each other and play on the same team in Team Battle.</span>
         </div>
+        <div class="gift" id="giftNote" hidden><span>🎁</span><div><b>VX-9 Tempest unlocked!</b><span class="pmsg">You were so close on the Season 1 pass that the Tempest rifle is yours. Equip it on the Loadout tab.</span></div><button class="btn go" id="giftOk" type="button">Nice!</button></div>
         <div class="rankbox" id="rankBox"><span class="rb" id="rkBadge">🥉</span><div style="display:grid;gap:4px;flex:1"><span class="label">Your rank</span><b id="rkName">Bronze</b><span class="rbar"><i id="rkFill"></i></span><span class="pmsg" id="rkNext"></span></div></div>
         <div class="daily" id="dailyBox">
           <div class="dhead"><span class="label">Daily</span><span class="pmsg" id="dailyReset"></span></div>
@@ -753,6 +792,10 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
       <div class="perks" id="wcList"></div>
       <h3 class="subh" id="perkHead">Perks</h3>
       <div id="perkRows"></div>
+      <h3 class="subh">Calling card</h3>
+      <div class="ccprev" id="ccPrev"></div>
+      <span class="label">Banners</span><div class="ccgrid" id="bnList"></div>
+      <span class="label">Emblems</span><div class="ccgrid em" id="emList"></div>
       <h3 class="subh">Operator skin</h3>
       <div class="skins" id="skinList"></div>
       <h3 class="subh" id="camoHead">Weapon camo</h3>
@@ -998,12 +1041,44 @@ if (BP.season !== SEASON) {
   if (BP.xp > 0) BP.last = { s: oS, tier: oT };
   BP.xp = 0; BP.season = SEASON; store.set('pass', BP);
 }
+// Season 2 started early, so anyone who finished Season 1 at tier 49+ gets the Season 1 reward rifle
+if (BP.last && BP.last.s === 1 && BP.last.tier >= 49 && !BP.owned.includes('weapon:vx')) { BP.owned.push('weapon:vx'); BP.vxGift = 1; store.set('pass', BP); }
+const giftTempest = () => { if (!BP.owned.includes('weapon:vx')) BP.owned.push('weapon:vx'); BP.vxGift = 1; store.set('pass', BP); };
 // coins (10 per elimination) and items won from shop crates
 const WALLET = Object.assign({ coins: 0, skins: [], camos: [] }, store.get('wallet', {}));
 if (!Array.isArray(WALLET.skins)) WALLET.skins = []; if (!Array.isArray(WALLET.camos)) WALLET.camos = [];
 if (!WALLET.pity || typeof WALLET.pity !== 'object') WALLET.pity = {};
 const saveWallet = () => store.set('wallet', WALLET);
-const FRIENDS = (Array.isArray(store.get('friends', [])) ? store.get('friends', []) : []).filter(x => typeof x === 'string').slice(0, 30);
+// ---- calling cards: a banner + an emblem shown with your name (unlocked with coins) ----
+const BANNERS = {
+  basic:   { n: 'Field Gray', p: 0, css: 'linear-gradient(120deg,#3a3f44,#23272b)' },
+  dusk:    { n: 'Dusk', p: 150, css: 'linear-gradient(120deg,#f2a93b,#7a2a4a 60%,#2a1a3a)' },
+  ocean:   { n: 'Deep Ocean', p: 150, css: 'linear-gradient(120deg,#0a3a6a,#062038 60%,#04101c)' },
+  forest:  { n: 'Woodland', p: 250, css: 'radial-gradient(circle at 20% 40%,#5a7a3a 0 12%,transparent 13%),radial-gradient(circle at 70% 70%,#2e4220 0 16%,transparent 17%),radial-gradient(circle at 55% 25%,#3a5a2a 0 10%,transparent 11%),#44602e' },
+  tiger:   { n: 'Tiger', p: 400, css: 'repeating-linear-gradient(115deg,#e0902a 0 18px,#2a1a0c 18px 26px,#e0902a 26px 40px)' },
+  carbon:  { n: 'Carbon', p: 400, css: 'repeating-linear-gradient(45deg,#2a2c30 0 6px,#16181b 6px 12px),#202226' },
+  arctic:  { n: 'Arctic', p: 400, css: 'linear-gradient(120deg,#eaf4ff,#9ac8e8 50%,#5a8ab0)' },
+  neon:    { n: 'Neon Grid', p: 700, css: 'linear-gradient(#0000 95%,#2ee6c8 95%) 0 0/22px 22px,linear-gradient(90deg,#0000 95%,#ff3ad0 95%) 0 0/22px 22px,#0a0a1a' },
+  flames:  { n: 'Flames', p: 700, css: 'radial-gradient(ellipse at 30% 120%,#ffd040,#ff6a1a 35%,#a01a08 60%,#2a0604 85%)' },
+  blood:   { n: 'Blood Moon', p: 700, css: 'radial-gradient(circle at 80% 30%,#ff4a3a 0 14%,#6a0a08 15% 40%,#1a0404 80%)' },
+  galaxy:  { n: 'Galaxy', p: 1200, css: 'radial-gradient(circle at 25% 40%,#9a6aff55,transparent 35%),radial-gradient(circle at 75% 60%,#ff4ac855,transparent 35%),radial-gradient(1px 1px at 10% 20%,#fff,transparent),radial-gradient(1px 1px at 60% 80%,#fff,transparent),radial-gradient(1px 1px at 85% 15%,#fff,transparent),#0a0618' },
+  gold:    { n: 'Gold Rush', p: 1500, css: 'linear-gradient(120deg,#8a6418,#f2d070 35%,#c8962a 55%,#fff0a0 75%,#8a6418)' },
+  diamond: { n: 'Diamond', p: 2000, css: 'conic-gradient(from 30deg at 30% 50%,#c8ecff,#6aa8d0,#f0faff,#9ac8e8,#c8ecff)' },
+  inferno: { n: 'Inferno', p: 2500, css: 'repeating-radial-gradient(circle at 50% 140%,#ff5a1a 0 8px,#2a0602 8px 16px)' },
+  champion:{ n: 'Champion', p: 3000, css: 'linear-gradient(120deg,#2a1a00,#f2c84b 30%,#2a1a00 31%,#2a1a00 60%,#f2c84b 61%,#2a1a00 90%)' } };
+const EMBLEMS = { star: { n: 'Star', p: 0, e: '⭐' }, skull: { n: 'Skull', p: 150, e: '💀' }, wolf: { n: 'Wolf', p: 250, e: '🐺' }, eagle: { n: 'Eagle', p: 250, e: '🦅' }, snake: { n: 'Viper', p: 300, e: '🐍' },
+  bolt: { n: 'Lightning', p: 300, e: '⚡' }, fire: { n: 'Fire', p: 400, e: '🔥' }, target: { n: 'Bullseye', p: 400, e: '🎯' }, shield: { n: 'Shield', p: 500, e: '🛡️' }, scorpion: { n: 'Scorpion', p: 600, e: '🦂' },
+  joker: { n: 'Joker', p: 800, e: '🃏' }, nuke: { n: 'Hazard', p: 1000, e: '☢️' }, dragon: { n: 'Dragon', p: 1500, e: '🐉' }, gem: { n: 'Gem', p: 2000, e: '💎' }, crown: { n: 'Crown', p: 3000, e: '👑' } };
+if (!Array.isArray(WALLET.banners)) WALLET.banners = []; if (!Array.isArray(WALLET.emblems)) WALLET.emblems = [];
+const IDN = Object.assign({ bn: 'basic', em: 'star' }, store.get('ident', {}));
+if (!BANNERS[IDN.bn]) IDN.bn = 'basic'; if (!EMBLEMS[IDN.em]) IDN.em = 'star';
+const ownsBanner = k => BANNERS[k] && (BANNERS[k].p === 0 || WALLET.banners.includes(k)), ownsEmblem = k => EMBLEMS[k] && (EMBLEMS[k].p === 0 || WALLET.emblems.includes(k));
+function hashPick(str, obj) { let h = 0; for (const c of String(str)) h = (h * 31 + c.charCodeAt(0)) | 0; const k = Object.keys(obj); return k[Math.abs(h) % k.length]; }
+function cardEl(name, bn, em, sub, cls = '') {
+  const d = document.createElement('div'); d.className = 'ccard ' + cls; d.style.background = (BANNERS[bn] || BANNERS.basic).css;
+  d.innerHTML = '<span class="cem"></span><div class="cnm"><small></small><b></b></div>';
+  d.querySelector('.cem').textContent = (EMBLEMS[em] || EMBLEMS.star).e; d.querySelector('small').textContent = sub || ''; d.querySelector('b').textContent = name; return d;
+}const FRIENDS = (Array.isArray(store.get('friends', [])) ? store.get('friends', []) : []).filter(x => typeof x === 'string').slice(0, 30);
 // ---- ranked: rank points (RP) go up when you win a ranked match and down when you lose ----
 const RANKS = [{ n: 'Bronze', i: '🥉', min: 0, c: '#c8844a' }, { n: 'Silver', i: '🥈', min: 300, c: '#c8ccd4' }, { n: 'Gold', i: '🥇', min: 700, c: '#f2c84b' }, { n: 'Platinum', i: '💠', min: 1200, c: '#5fe3d0' }, { n: 'Diamond', i: '💎', min: 1800, c: '#8ab8ff' }];
 const RANK = Object.assign({ rp: 0, best: 0, w: 0, l: 0 }, store.get('rank', {}));
@@ -2241,7 +2316,7 @@ function nadeBlast(x, y, z) {
 function onMyKill(head) {
   if (performance.now() - (P.nadeT || 0) < 400) { C.nadeKills = (C.nadeKills || 0) + 1; saveC(); }
   if (mode === 'tdm') { adNote(true); try { sfx.killc(); } catch (e) {} }
-  P.streak = (P.streak || 0) + 1; if (P.streak > (C.bestStreak || 0)) { C.bestStreak = P.streak; saveC(); }
+  P.streak = (P.streak || 0) + 1; P.mBestStreak = Math.max(P.mBestStreak || 0, P.streak); if (P.streak > (C.bestStreak || 0)) { C.bestStreak = P.streak; saveC(); }
   dailyProgress('kills', 1); if (head) dailyProgress('heads', 1); dailyProgress('streak', P.streak, true);
   const need = ksNeed();
   if (!P.ks) P.ks = { scan: 0, msl: 0 };
@@ -2830,6 +2905,16 @@ function onDeath(victim, killer, vteam) {
   if (gg) ggKill(victim, killer);
   else if (T.sc[winner] >= SCORE_LIMIT) { T.win = winner; T.winT = 5; }
 }
+function identOf(id, name) { // calling card for any player or bot
+  if (id === myPeer) return { n: playerName, bn: IDN.bn, em: IDN.em };
+  const h = (T.humans || []).find(x => !x.me && (x.peer === id || (name && String(x.pr.n || '') === name)));
+  if (h && BANNERS[h.pr.bn]) return { n: String(h.pr.n || name || 'Player').slice(0, 16), bn: h.pr.bn, em: EMBLEMS[h.pr.em] ? h.pr.em : 'star' };
+  const nm = name || nameOf(id); return { n: nm, bn: hashPick(nm + 'b', BANNERS), em: hashPick(nm + 'e', EMBLEMS) };
+}
+function popCard(id, name, sub, cls, ms) {
+  const box = $('cardPop'); box.textContent = ''; const c = identOf(id, name); box.appendChild(cardEl(c.n, c.bn, c.em, sub, cls)); box.hidden = false; box.classList.remove('show'); void box.offsetWidth; box.classList.add('show');
+  clearTimeout(popCard.t); if (ms) popCard.t = setTimeout(() => { box.hidden = true; }, ms);
+}
 function showMVP() {
   const st = T.st || {}, rows = Object.entries(st).filter(([, v]) => Array.isArray(v)).map(([id, v]) => ({ id, k: +v[0] || 0, d: +v[1] || 0 }));
   let best = gg && T.ggWin ? rows.find(r => nameOf(r.id) === T.ggWin) : null;
@@ -2842,8 +2927,26 @@ function showMVP() {
   $('mvpStats').textContent = best.k + ' eliminations · ' + best.d + ' deaths · K/D ' + kd(best);
   $('mvpYou').textContent = best.id === myPeer ? 'That\'s you! +100 coin MVP bonus' : 'You: ' + me.k + ' / ' + me.d + ' · K/D ' + kd(me);
   if (best.id === myPeer) { addCoins(100); C.mvps = (C.mvps || 0) + 1; saveC(); }
-  $('mvp').hidden = false;
+  // full-screen MVP moment with the best play
+  const c = identOf(best.id), mf = $('mvpFull'), card = $('mvpCard'); card.textContent = ''; card.appendChild(cardEl(c.n, c.bn, c.em, best.id === myPeer ? 'THAT\'S YOU!' : TEAM_NAME[tm] || 'MVP', 'big'));
+  const sk = best.id === myPeer ? mySkin : (T.ents.get(best.id) || {}).sk || (BOT_NAMES[best.id] ? botSkin(best.id) : 'std');
+  $('mvpSkin').src = SKINPREV[sk] || SKINPREV.std || ''; $('mvpSkin').hidden = !$('mvpSkin').src;
+  let play = '';
+  if (best.id === myPeer && P.killLog && P.killLog.length) {
+    let bestN = 1, bi = 0, bj = 0; const L = P.killLog;
+    for (let i = 0, j = 0; j < L.length; j++) { while (L[j].t - L[i].t > 8000) i++; if (j - i + 1 > bestN) { bestN = j - i + 1; bi = i; bj = j; } }
+    const secs = ((L[bj].t - L[bi].t) / 1000).toFixed(1), gunN = WEAPONS[L[bj].w] ? WEAPONS[L[bj].w].name : 'gun';
+    play = bestN >= 2 ? '🎬 BEST PLAY · ' + (bestN >= 5 ? 'RAMPAGE' : bestN === 4 ? 'QUAD KILL' : bestN === 3 ? 'TRIPLE KILL' : 'DOUBLE KILL') + ' · ' + bestN + ' eliminations in ' + secs + 's with the ' + gunN : '🎬 BEST PLAY · ' + (P.mBestStreak || 1) + '-elimination streak';
+    if ((P.mBestStreak || 0) >= 5) play += ' · longest streak ' + P.mBestStreak;
+  } else play = '🎬 BEST PLAY · Top fragger with ' + best.k + ' eliminations';
+  $('mvpPlay').textContent = play;
+  $('mvpSt').textContent = best.k + ' eliminations · ' + best.d + ' deaths · K/D ' + kd(best) + (best.id === myPeer ? ' · +100 coin MVP bonus' : '');
+  mf.hidden = false; mf.classList.remove('go'); void mf.offsetWidth; mf.classList.add('go');
+  try { tone(392, 0.25, 'triangle', 0.12); tone(523, 0.25, 'triangle', 0.12, null, 0.2); tone(659, 0.25, 'triangle', 0.12, null, 0.4); tone(784, 0.6, 'triangle', 0.14, null, 0.6); } catch (e) {}
+  clearTimeout(showMVP.t); showMVP.t = setTimeout(() => { mf.hidden = true; $('mvp').hidden = false; }, 4200);
 }
+$('mvpFull').addEventListener('click', () => { $('mvpFull').hidden = true; $('mvp').hidden = false; });
+$('mvpFull').addEventListener('touchstart', ev => { ev.stopPropagation(); $('mvpFull').hidden = true; $('mvp').hidden = false; }, { passive: true });
 function ggKill(victim, killer) {
   if (!killer || killer === victim) return;
   const lv = T.gg[killer] = (T.gg[killer] || 0) + 1;
@@ -2859,7 +2962,8 @@ function showFeed(list) {
     k.className = 't-' + (e.kt === 'r' ? 'r' : 'b'); v.className = 't-' + (e.vt === 'r' ? 'r' : 'b');
     k.textContent = String(e.k || '?'); v.textContent = String(e.v || '?');
     row.append(k, '  ✕  ', v);
-    if (e.ki === myPeer) { const hd = !!(P.lastHead && performance.now() - P.lastHead < 1500); row.classList.add('me'); P.kills++; C.kills++; saveC(); updHud(); addXP(50 + (hd ? 15 : 0)); addWeaponKill(); addCoins(10 + (hd ? 5 : 0)); onMyKill(hd); }
+    if (e.ki === myPeer) { popCard(null, String(e.v || ''), 'ELIMINATED', 'victim', 1600); (P.killLog = P.killLog || []).push({ t: performance.now(), w: P.w });
+      const hd = !!(P.lastHead && performance.now() - P.lastHead < 1500); row.classList.add('me'); P.kills++; C.kills++; saveC(); updHud(); addXP(50 + (hd ? 15 : 0)); addWeaponKill(); addCoins(10 + (hd ? 5 : 0)); onMyKill(hd); }
     hud.feed.prepend(row);
     while (hud.feed.children.length > 4) hud.feed.lastChild.remove();
     setTimeout(() => row.remove(), 6000);
@@ -2880,6 +2984,7 @@ function takeDamage(dmg, src) {
     C.deaths++; saveC();
     if (T.isHost) onDeath(myPeer, src, P.team);
     hud.death.hidden = false;
+    if (src) popCard(src, null, 'KILLED BY', 'killer', 0);
   }
   updHud();
 }
@@ -2890,9 +2995,10 @@ function respawnPlayer() {
   if (P.w !== want) equip(want); else { P.ammo = magOf(P.w); P.reloading = 0; }
   P.nades = nadesPerLife(); updNade();
   Object.assign(P, { hp: 100, alive: true, prot: 1.5, lastHurt: 99, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, slideT: 0, slideCd: 0, vault: null });
-  hud.death.hidden = true; updHud();
+  hud.death.hidden = true; updHud(); { const cp = $('cardPop'); if (cp && cp.querySelector('.killer')) cp.hidden = true; }
 }
 function newMatchLocal() {
+  P.killLog = []; P.mBestStreak = 0; $('mvpFull').hidden = true;
   P.ks = { scan: 0, msl: 0 }; updKS();
   if (gg) { T.gg = {}; T.ggWin = ''; T.sc = { b: 0, r: 0 }; }
   P.kills = 0; P.matchDeaths = 0; P.streak = 0; P.mCoins = 0; scanT = 0; respawnPlayer();
@@ -3104,13 +3210,14 @@ function netTick(dt) {
     T.sendT = 0.05; T.beat = (T.beat + 1) % 1000;
     const keys = Object.keys(T.myDm);
     if (keys.length > 24) keys.forEach(k => { if (!BOT_NAMES[k] && !hs.some(h => h.peer === k)) delete T.myDm[k]; });
-    const pr = { n: playerName, tm: P.team, x: r2(P.pos.x), z: r2(P.pos.z), y: r2(P.yaw), p: r2(P.pitch), j: r2(P.jy), c: P.crouch || P.slideT > 0 ? 1 : 0, h: Math.round(P.hp), a: P.alive ? 1 : 0, d: P.deaths, kb: P.killer || null, sh: P.shots, dm: T.myDm, mv: T.win ? (myVote || null) : null, sk: mySkin, pt: party || null, rk: rankIdx(), t: T.beat };
+    const pr = { n: playerName, tm: P.team, x: r2(P.pos.x), z: r2(P.pos.z), y: r2(P.yaw), p: r2(P.pitch), j: r2(P.jy), c: P.crouch || P.slideT > 0 ? 1 : 0, h: Math.round(P.hp), a: P.alive ? 1 : 0, d: P.deaths, kb: P.killer || null, sh: P.shots, dm: T.myDm, mv: T.win ? (myVote || null) : null, sk: mySkin, pt: party || null, rk: rankIdx(), bn: IDN.bn, em: IDN.em, t: T.beat };
     if (T.isHost) Object.assign(pr, { hb: T.bots.map(b => [b.id, r2(b.x), r2(b.z), r2(b.yaw), Math.round(b.hp), b.alive ? 1 : 0, b.shots]), hd: T.hd, hk: T.hk, sc: [T.sc.b, T.sc.r], ep: T.ep, w: T.win || null, wt: r2(T.winT), kf: T.kf, mp: curMap, st: T.st });
     else Object.assign(pr, { hb: null, hd: null, hk: null, sc: null, ep: null, w: null, wt: null, kf: null, mp: null, st: null });
     troom.presence(pr).catch(() => {});
   }
 }
 function resetTDM() {
+  $('mvpFull').hidden = true; $('cardPop').hidden = true;
   if (ranked && mode === 'tdm' && !T.win && (P.kills || P.matchDeaths)) rankResult(false, true); // quitting a ranked match counts as a loss
   ranked = false; T.rankDelta = 0;
   $('mvp').hidden = true; $('killcam').hidden = true;
@@ -3127,7 +3234,7 @@ function resetTDM() {
 /* ---------- online lobby ---------- */
 function setLobby() {
   if (!room) return;
-  room.presence({ n: playerName, st: state === 'play' || state === 'paused' ? (ranked ? 'ranked' : gg ? 'gg' : mode) : 'menu', rk: rankIdx() }).catch(() => {});
+  room.presence({ n: playerName, st: state === 'play' || state === 'paused' ? (ranked ? 'ranked' : gg ? 'gg' : mode) : 'menu', rk: rankIdx(), bn: IDN.bn, em: IDN.em }).catch(() => {});
 }
 function renderOnline() {
   const el = $('online');
@@ -3161,7 +3268,7 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () =>
 function showMenu(which) {
   menuMode = which;
   $('menu').hidden = false; $('hud').hidden = true;
-  if (which === 'main') { renderDaily(); renderRank(); }
+  if (which === 'main') { renderDaily(); renderRank(); showGift(); }
   try { renderChip(); } catch (e) {}
   $('playMain').hidden = which !== 'main'; $('playPause').hidden = which !== 'pause'; $('playOver').hidden = which !== 'over';
   $('tabPlay').textContent = which === 'pause' ? 'Match' : 'Play';
@@ -3287,8 +3394,20 @@ function renderPerks() {
     rows.appendChild(g);
   }
 }
+function renderIdent() {
+  const pv = $('ccPrev'); pv.textContent = ''; pv.appendChild(cardEl(playerName, IDN.bn, IDN.em, 'Your calling card · ◎ ' + WALLET.coins.toLocaleString()));
+  const tile = (box, own, sel, label, price, html, onTap) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'cctile' + (sel ? ' sel' : '') + (own ? '' : ' lock');
+    b.innerHTML = html + '<span class="ccl"></span><span class="ccp"></span>'; b.querySelector('.ccl').textContent = label; b.querySelector('.ccp').textContent = sel ? 'Equipped' : own ? 'Tap to equip' : '◎ ' + price.toLocaleString(); b.addEventListener('click', onTap); box.appendChild(b); };
+  const buy = (list, k, price, name) => { if (WALLET.coins < price) { banner('NOT ENOUGH COINS', 'You need ◎ ' + price.toLocaleString() + ' for ' + name, 2); return false; } WALLET.coins -= price; list.push(k); saveWallet(); updCoins(); try { sfx.head(); } catch (e) {} return true; };
+  const bl = $('bnList'); bl.textContent = '';
+  for (const [k, b] of Object.entries(BANNERS)) tile(bl, ownsBanner(k), IDN.bn === k, b.n, b.p, '<span class="ccsw" style="background:' + b.css + '"></span>', () => {
+    if (!ownsBanner(k) && !buy(WALLET.banners, k, b.p, b.n)) return; IDN.bn = k; store.set('ident', IDN); renderIdent(); try { setLobby(); } catch (e) {} });
+  const el = $('emList'); el.textContent = '';
+  for (const [k, m] of Object.entries(EMBLEMS)) tile(el, ownsEmblem(k), IDN.em === k, m.n, m.p, '<span class="ccem">' + m.e + '</span>', () => {
+    if (!ownsEmblem(k) && !buy(WALLET.emblems, k, m.p, m.n)) return; IDN.em = k; store.set('ident', IDN); renderIdent(); try { setLobby(); } catch (e) {} });
+}
 function renderSkins() {
-  renderPerks();
+  renderPerks(); renderIdent();
   const sb = $('skinList'), cb = $('camoList'); if (!sb) return; sb.textContent = ''; cb.textContent = '';
   for (const [k, d] of Object.entries(SKINS)) {
     const locked = !bpOwned('skin', k), pressed = mySkin === k;
@@ -3578,6 +3697,7 @@ $('partyCopy').addEventListener('click', () => { const b = $('partyCopy'); try {
 $('premBtn').addEventListener('click', () => {
   const v = ($('premCode').value || '').trim().toUpperCase();
   if (!v) return;
+  if (v === 'TEMPEST49') { giftTempest(); $('premCode').value = ''; $('premWho').textContent = 'Gift code accepted: the VX-9 Tempest is yours. Equip it on the Loadout tab.'; banner('VX-9 TEMPEST UNLOCKED', 'Gift code accepted', 3); renderLoadout(); showGift(); return; }
   if (v === premiumCode(SEASON).toUpperCase()) { BP.premium = true; store.set('pass', BP); if (!myTitle) { myTitle = 'VIP'; store.set('title', myTitle); } banner(bpTier() >= BP_TIERS && PREM_W ? WEAPONS[PREM_W].name.toUpperCase() + ' UNLOCKED' : 'PREMIUM UNLOCKED', bpTier() >= BP_TIERS ? 'Premium active, and you already reached tier ' + BP_TIERS + '. It is in your Loadout.' : 'Exclusive skins + VIP title + 25% XP', 3); renderPass(); renderLoadout(); }
   else { $('premWho').textContent = 'That code was not recognised. Check it and try again.'; }
 });
@@ -3657,7 +3777,7 @@ function renderSettings() {
   }
 }
 $('resetSettings').addEventListener('click', () => { Object.assign(S, DEF); saveS(); renderSettings(); applyQuality(); applySettings(); });
-const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank', 'friends'];
+const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank', 'friends', 'ident'];
 function makeBackup() {
   const data = {}; for (const k of ACCT_KEYS) { const v = store.get(k, null); if (v !== null) data[k] = v; }
   try { return 'DL1.' + btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/=+$/, ''); } catch (e) { return ''; }
@@ -3850,6 +3970,8 @@ async function startTDM(isDuel, isRanked) {
   if (duel) banner(TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? 'Rival found · first to ' + SCORE_LIMIT : 'Waiting for a rival — share code “' + (matchCode || 'open') + '”. First to ' + SCORE_LIMIT + '.', 4);
   else banner((ranked ? 'RANKED · ' + rankBadge(rankIdx()) + ' ' : '') + TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest' : 'No other players online · bots fill every slot', 3);
 }
+function showGift() { const g = $('giftNote'); if (g) g.hidden = BP.vxGift !== 1; }
+$('giftOk').addEventListener('click', () => { BP.vxGift = 2; store.set('pass', BP); showGift(); showTab('loadout'); });
 function renderRank() {
   const i = rankIdx(), r = RANKS[i], nx = RANKS[i + 1];
   $('rkBadge').textContent = r.i; $('rkName').textContent = r.n + ' · ' + RANK.rp + ' RP'; $('rkName').style.color = r.c;
