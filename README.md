@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v51)](https://gaayyynesss.github.io/Seige/?v=51)
+## ▶️ [PLAY NOW — latest version (v52)](https://gaayyynesss.github.io/Seige/?v=52)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=51
+**Latest:** https://gaayyynesss.github.io/Seige/?v=52
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v51** | https://gaayyynesss.github.io/Seige/?v=51 | **Sound & music:** menu music (fades out in matches, own volume slider), every gun has its own sound, footsteps change with the ground (snow, sand, hard ground), and a kill-confirm sound |
+| **v52** | https://gaayyynesss.github.io/Seige/?v=52 | **Realistic guns:** all 12 guns rebuilt with real shapes (angled grips, shaped stocks, curved/straight/drum mags, round barrels with muzzle brakes, vented rails, holo sights, bolt handle, revolver cylinder, pump shotgun). **Real bullets:** glowing rounds in flight, brass shell casings that eject and bounce, and bullet holes where shots hit |
+| v51 | https://gaayyynesss.github.io/Seige/?v=51 | **Sound & music:** menu music (fades out in matches, own volume slider), every gun has its own sound, footsteps change with the ground (snow, sand, hard ground), and a kill-confirm sound |
 | v50 | https://gaayyynesss.github.io/Seige/?v=50 | **Stats card** on the Career tab (rank, K/D, win rate, best weapon, favorite map and more) and a **friends list**: add friends by callsign and see when they're online and what they're playing |
 | v49 | https://gaayyynesss.github.io/Seige/?v=49 | **Ranked mode:** ranked Team Battle with rank points and 5 ranks (Bronze → Silver → Gold → Platinum → Diamond), a rank card on the Play tab, rank badges on the scoreboard, and bots that get tougher as you climb |
 | v48 | https://gaayyynesss.github.io/Seige/?v=48 | Battle pass tiers now take **599 XP** each from Season 2 on (was 650). XP you already earned this season counts toward the new tiers |
