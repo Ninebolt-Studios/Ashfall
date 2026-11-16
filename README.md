@@ -4,16 +4,18 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v52)](https://gaayyynesss.github.io/Seige/?v=52)
+## ▶️ [PLAY NOW — latest version (v54)](https://gaayyynesss.github.io/Seige/?v=54)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=52
+**Latest:** https://gaayyynesss.github.io/Seige/?v=54
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v52** | https://gaayyynesss.github.io/Seige/?v=52 | **Realistic guns:** all 12 guns rebuilt with real shapes (angled grips, shaped stocks, curved/straight/drum mags, round barrels with muzzle brakes, vented rails, holo sights, bolt handle, revolver cylinder, pump shotgun). **Real bullets:** glowing rounds in flight, brass shell casings that eject and bounce, and bullet holes where shots hit |
+| **v54** | https://gaayyynesss.github.io/Seige/?v=54 | **Weapon levels up to 100** with 4 new mastery camos (Platinum lv 25, Obsidian Flame lv 50, Damascus lv 75, Dark Matter lv 100), and you can now **climb onto crates, sandbags and low walls** (tap JUMP next to them) and stand, walk and jump on top |
+| v53 | https://gaayyynesss.github.io/Seige/?v=53 | **Aim assist slider** (0–100% strength in Settings) and a **UI remake**: tabs with icons, glassy rounded cards, accent headers and focus glow on the menus; rounded health/ammo cards, glowing minimap ring and glass touch buttons in matches |
+| v52 | https://gaayyynesss.github.io/Seige/?v=52 | **Realistic guns:** all 12 guns rebuilt with real shapes (angled grips, shaped stocks, curved/straight/drum mags, round barrels with muzzle brakes, vented rails, holo sights, bolt handle, revolver cylinder, pump shotgun). **Real bullets:** glowing rounds in flight, brass shell casings that eject and bounce, and bullet holes where shots hit |
 | v51 | https://gaayyynesss.github.io/Seige/?v=51 | **Sound & music:** menu music (fades out in matches, own volume slider), every gun has its own sound, footsteps change with the ground (snow, sand, hard ground), and a kill-confirm sound |
 | v50 | https://gaayyynesss.github.io/Seige/?v=50 | **Stats card** on the Career tab (rank, K/D, win rate, best weapon, favorite map and more) and a **friends list**: add friends by callsign and see when they're online and what they're playing |
 | v49 | https://gaayyynesss.github.io/Seige/?v=49 | **Ranked mode:** ranked Team Battle with rank points and 5 ranks (Bronze → Silver → Gold → Platinum → Diamond), a rank card on the Play tab, rank badges on the scoreboard, and bots that get tougher as you climb |
@@ -173,7 +175,7 @@ An optional **Premium Pass** unlocks 3 exclusive operator skins (Gold Rush, Obsi
 
 Plus a sidearm, a battle rifle, a compact PDW and a hand cannon.
 
-**Weapon levels:** every gun levels up (1–10) from its own eliminations. Leveling a gun unlocks **Tiger, Digital, Carbon, Dragon and Diamond** camos for that gun, and each gun remembers its own camo. Each weapon has its own scope or red-dot sight when you aim down the sights.
+**Weapon levels:** every gun levels up (**1–100**) from its own eliminations (level 10 = 110 eliminations, level 50 = 1,878, level 100 = 6,788). Leveling a gun unlocks **Tiger (3), Digital (5), Carbon (7), Dragon (9), Diamond (10), Platinum (25), Obsidian Flame (50), Damascus (75) and Dark Matter (100)** camos for that gun, and each gun remembers its own camo. Each weapon has its own scope or red-dot sight when you aim down the sights.
 
 Headshots deal about double damage and leg hits deal less. Damage drops off at long range.
 
@@ -185,7 +187,7 @@ Headshots deal about double damage and leg hits deal less. Damage drops off at l
 | Shoot | Hold **FIRE** (slide to aim while shooting) | Left click |
 | Aim down sights | Tap **AIM** (tap again to stop; drag from it to look) | Right click |
 | Crouch | **CROUCH** | C |
-| Jump | **JUMP** | Space |
+| Jump / climb | **JUMP** (next to a crate, sandbags or a low wall it climbs you on top; thin cover is vaulted over) | Space |
 | Reload | **RELOAD** | R |
 | Throw grenade | **NADE** | G |
 | Use Map Scan / Missile | **SCAN** / **MISSILE** (appear when earned) | Z / X |
@@ -215,7 +217,7 @@ Bots are **Adaptive** by default. The game watches your recent eliminations and 
 - **Kill confirm:** a short ding when you get an elimination.
 
 ## Settings
-Open the **Settings** tab to change look and aiming sensitivity, graphics quality (**Low, Medium, High or Ultra**; every level holds 60 FPS by lowering resolution and then shadow detail only when needed), aim assist, auto-fire, the left-handed touch layout, field of view, camera motion, the frame-rate counter, volume, crosshair color and size, and the minimap. Pick **Low** quality if the game feels slow on an older device.
+Open the **Settings** tab to change look and aiming sensitivity, **aim assist strength** (0% = off up to 100%), graphics quality (**Low, Medium, High or Ultra**; every level holds 60 FPS by lowering resolution and then shadow detail only when needed), aim assist, auto-fire, the left-handed touch layout, field of view, camera motion, the frame-rate counter, volume, crosshair color and size, and the minimap. Pick **Low** quality if the game feels slow on an older device.
 
 ## Notes
 - Online play connects players directly to each other. On some strict networks, such as certain school or cellular networks, two players may not be able to connect. When that happens, each player still gets a full match against bots.
