@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116163702';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116163801';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -999,7 +999,7 @@ const rankBadge = i => RANKS[Math.max(0, Math.min(RANKS.length - 1, i | 0))].i;
 // ---- perks (3 slots) and wildcards ----
 const PERKS = [
   { id: 'salvager', t: 1, i: '🦅', n: 'Salvager', d: 'Enemies you eliminate drop a supply box. Walk over it to refill your magazine and get a grenade.' },
-  { id: 'toughskin', t: 1, i: '💗', n: 'Tough Skin', d: 'Health starts coming back after 3 seconds instead of 5, and faster.' },
+  { id: 'toughskin', t: 1, i: '💗', n: 'Tough Skin', d: 'Health starts coming back after 4.5 seconds instead of 7, and heals faster.' },
   { id: 'quickdraw', t: 1, i: '⚡', n: 'Quickdraw', d: 'Aim down sights 40% faster.' },
   { id: 'fleetfoot', t: 2, i: '👟', n: 'Fleetfoot', d: 'Move 8% faster and sprint longer.' },
   { id: 'fasthands', t: 2, i: '🔄', n: 'Fast Hands', d: 'Reload 25% faster.' },
@@ -2929,7 +2929,7 @@ function netTick(dt) {
     if (P.respawn <= 0 && !T.win) respawnPlayer();
   } else {
     P.prot = Math.max(0, P.prot - dt); P.lastHurt += dt;
-    if (P.lastHurt > (hasPerk('toughskin') ? 3 : 5) && P.hp < 100) { P.hp = Math.min(100, P.hp + (hasPerk('toughskin') ? 20 : 12) * dt); if (T.frame % 10 === 0) updHud(); }
+    if (P.lastHurt > (hasPerk('toughskin') ? 4.5 : 7) && P.hp < 100) { P.hp = Math.min(100, P.hp + (hasPerk('toughskin') ? 10 : 6) * dt); if (T.frame % 10 === 0) updHud(); }
   }
   $('scB').textContent = T.sc.b; $('scR').textContent = T.sc.r;
   updBoard(dt);
