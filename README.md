@@ -4,16 +4,19 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v39)](https://gaayyynesss.github.io/Seige/?v=39)
+## ▶️ [PLAY NOW — latest version (v42)](https://gaayyynesss.github.io/Seige/?v=42)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=39
+**Latest:** https://gaayyynesss.github.io/Seige/?v=42
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v39** | https://gaayyynesss.github.io/Seige/?v=39 | Season 2 and later: 650 XP per battle-pass tier (Season 1 stays 1,000) |
+| **v42** | https://gaayyynesss.github.io/Seige/?v=42 | Season 2 and later: 650 XP per battle-pass tier (Season 1 stays 1,000) |
+| v41 | https://gaayyynesss.github.io/Seige/?v=41 | Slightly smarter bots: they notice you a bit faster, check where they last saw you, back off and strafe when hurt, roam the whole bigger map, and aim a touch better at range |
+| v40 | https://gaayyynesss.github.io/Seige/?v=40 | **Kill streak buttons** (use Map Scan / Missile when you want), **perks & wildcards** (Salvager supply drops and 8 more perks, 4 wildcards), **14 new crate items**, a **refreshed UI**, and **much bigger maps** (140 m across, with buildings to fight through) |
+| v39 | https://gaayyynesss.github.io/Seige/?v=39 | **Grenades** (2 per life, NADE button or G), new **Gun Game** mode (free-for-all vs bots, a new gun every elimination), and **17 achievements** with coin rewards on the Career tab |
 | v38 | https://gaayyynesss.github.io/Seige/?v=38 | Fix: on iPad the bottom buttons (Fire, Aim, Crouch, Reload) could be cut off when the browser toolbar changed size; the game now always fits the visible screen |
 | v37 | https://gaayyynesss.github.io/Seige/?v=37 | Fix: on iPad the top of the screen (health, score bar, minimap) could get cut off after typing or swiping; the game now snaps back into place |
 | v36 | https://gaayyynesss.github.io/Seige/?v=36 | **Better camos:** every camo on the gun now uses exactly the colors on its swatch, with real patterns (tiger stripes, digital pixels, carbon weave, galaxy stars, lava cracks, diamond facets); new richer colors for Dune, Jungle, Frost, Blood, Cobalt and Gold |
@@ -54,12 +57,19 @@ Everyone who opens the link plays in the same Team Battle. AI soldiers fill ever
 |---|---|
 | **Team Battle** | Delta vs Viper, 5 v 5, across five maps. The first team to 100 eliminations wins. Party members play on the same team. |
 | **Duel 1v1** | Face your party member one on one, no bots, first to 7 eliminations. Make a party and share the code first. |
+| **Gun Game** | Free-for-all against 9 bots. Every elimination swaps you to the next of 10 guns (SMG → PDW → Rifle → Battle Rifle → LMG → Shotgun → Marksman → Sniper → Hand Cannon → Sidearm). First to get an elimination with all 10 wins. Grenades are off in this mode. |
 | **Drone Holdout** | Solo survival against endless waves of armed drones. Grab green supply cases to heal. |
 
 ## Daily rewards & challenges
 The **Daily** box on the Play tab has:
 - **Login reward:** tap **Claim** once a day. Coming back on days in a row pays more: 50, 75, 100, 150, 200, 250, then 300 coins every day after that. Miss a day and it starts over.
 - **3 daily challenges:** two give battle-pass XP (1,500–3,000 XP) and one gives coins (250–300). They change every day at midnight.
+
+## Grenades
+You carry **2 frag grenades** each life. Tap **NADE** (or press **G**) to throw one. It bounces off walls and the ground and explodes after 2 seconds, hurting enemies within about 7 meters who aren't behind cover. In Drone Holdout you get one more grenade (up to 3) after every wave.
+
+## Achievements
+The **Career** tab lists 17 achievements, such as First Blood, Centurion (100 eliminations), Scanner (10 streak), Missile Man (30 streak), Gun Master (win a Gun Game), Lucky (own a Legendary) and Collector (own every crate item). Each pays coins once, from 50 up to 2,000.
 
 ## Kill streaks
 Eliminations in a row without dying:
@@ -68,7 +78,29 @@ Eliminations in a row without dying:
 | **10** | **Map Scan:** every enemy shows on your minimap for 15 seconds |
 | **30** | **Missile Strike:** a missile hits the biggest group of enemies |
 
-Your current streak shows in the top-right corner during a match.
+Your current streak shows in the top-right corner during a match. When you earn a reward, a glowing **SCAN** or **MISSILE** button appears on the left side of the screen. Use it whenever you want (keyboard: **Z** for Map Scan, **X** for Missile). Earned rewards stay until you use them, even if you die, and reset at the start of the next match.
+
+## Perks & wildcards
+On the **Loadout** tab pick one perk in each of three slots, plus a wildcard.
+
+| Slot | Perk | What it does |
+|---|---|---|
+| Perk 1 | **Salvager** | Enemies you eliminate drop a supply box. Walk over it to refill your magazine and get a grenade. |
+| Perk 1 | **Tough Skin** | Health comes back after 3 seconds instead of 5, and faster. |
+| Perk 1 | **Quickdraw** | Aim down sights 40% faster. |
+| Perk 2 | **Fleetfoot** | Move 8% faster and sprint longer. |
+| Perk 2 | **Fast Hands** | Reload 25% faster. |
+| Perk 2 | **Steady Aim** | 30% tighter hip-fire spread. |
+| Perk 3 | **Tracker** | Enemies you hit show on your minimap for 4 seconds. |
+| Perk 3 | **Hardline** | Map Scan at 8 eliminations, Missile at 27. |
+| Perk 3 | **Demolitions** | +1 grenade every life and a bigger blast. |
+
+| Wildcard | What it does |
+|---|---|
+| **Perk Hoarder** | 2 perks in every slot (6 perks). |
+| **Rule Breaker** | Pick any 3 perks from any slot. |
+| **Deep Pockets** | 50% bigger magazines on every gun. |
+| **Demo Expert** | +2 grenades every life. |
 
 ## Coins & shop
 You earn **10 coins** for every elimination in Team Battle, Duels and Drone Holdout, **+5** for a headshot elimination, and a **+50** bonus for winning a match. The coins you earned show at the end of each match. Spend them on the **Shop** tab:
@@ -79,7 +111,7 @@ You earn **10 coins** for every elimination in Team Battle, Duels and Drone Hold
 | Elite Crate | 750 coins | 20% | 40% | 28% | 12% |
 | Vault Crate | 1,000 coins | — | 25% | 45% | 30% |
 
-Crates hold shop-only operator skins (Sand Viper, Midnight, Royal Guard, Neon Runner, Magma) and camos that work on every gun (Olive Drab, Rust, Zebra, Bubblegum, Neon, Galaxy, Lava). The **Vault Crate** has no commons and is the only crate with the legendary **Phantom** skin and **Aurora** camo. Tap the **?** on any crate to see its odds and every item inside with its exact drop chance. A duplicate refunds coins (Common 50, Rare 100, Epic 200, Legendary 400).
+Crates hold shop-only operator skins (Sand Viper, Copperhead, Midnight, Royal Guard, Night Raid, Tundra Wolf, Neon Runner, Hazmat, Specter, Magma, Inferno King) and camos that work on every gun (Olive Drab, Rust, Autumn, Urban Grid, Zebra, Bubblegum, Ocean, Toxic Waste, Neon, Galaxy, Ruby, Nebula, Lava, Molten Gold). The **Vault Crate** has no commons and is the only crate with the legendary **Phantom** and **Voidwalker** skins and the **Aurora** camo. Tap the **?** on any crate to see its odds and every item inside with its exact drop chance. A duplicate refunds coins (Common 50, Rare 100, Epic 200, Legendary 400).
 
 - **Bad-luck protection:** if you open 9 crates of the same type without a Legendary, the 10th is a guaranteed Legendary. Each crate shows how many are left.
 - **Daily item:** one crate item is for sale directly each day (Common 400, Rare 800, Epic 1,300, Legendary 2,000 coins). Everyone sees the same item. Your coins and crate items are saved on your device and in your backup code.
@@ -132,6 +164,8 @@ Headshots deal about double damage and leg hits deal less. Damage drops off at l
 | Crouch | **CROUCH** | C |
 | Jump | **JUMP** | Space |
 | Reload | **RELOAD** | R |
+| Throw grenade | **NADE** | G |
+| Use Map Scan / Missile | **SCAN** / **MISSILE** (appear when earned) | Z / X |
 | Leaderboard | Tap the score bar | Hold Tab |
 | Pause | **II** | Esc |
 
