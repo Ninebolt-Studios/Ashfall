@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116132648';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116133008';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -440,6 +440,14 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 .mcard[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
 .mcard:focus-visible, .vbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { #banner, #hurt, #hpfill, #cross, .switch span, .switch span::after { transition: none; } }
+/* kill cam + MVP */
+#killcam { position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 0 4px rgba(229,83,61,.75), inset 0 0 120px rgba(229,83,61,.35); }
+#killcam span { position: absolute; left: 50%; top: calc(64px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); padding: 6px 14px; background: rgba(229,83,61,.85); color: #fff; font: 700 15px var(--display); letter-spacing: .2em; border-radius: 8px; white-space: nowrap; }
+#mvp { position: absolute; right: max(16px, env(safe-area-inset-right, 0px)); top: 47%; width: 220px; box-sizing: border-box; display: grid; gap: 4px; justify-items: center; padding: 12px 22px; background: var(--panel); border: 2px solid #f2c84b; border-radius: 14px; box-shadow: 0 8px 30px rgba(0,0,0,.5); text-align: center; animation: bjin .3s ease-out; }
+#mvp .label { color: #f2c84b; }
+#mvp b { font: 700 26px var(--display); letter-spacing: .1em; text-transform: uppercase; }
+#mvp span { font: 600 13px var(--body); line-height: 1.35; overflow-wrap: anywhere; }
+#mvp b { overflow-wrap: anywhere; }
 /* ---------- v40 UI refresh ---------- */
 .perks { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; margin: 6px 0 10px; }
 .perk { display: grid; grid-template-columns: 36px 1fr; gap: 2px 10px; align-items: center; text-align: left; padding: 10px 12px; background: var(--panel2); border: 1px solid rgba(239,232,214,.14); color: var(--ink); cursor: pointer; border-radius: 12px; }
@@ -498,6 +506,8 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
   <div id="dmgDir"><i></i></div>
   <div id="netstat" hidden></div>
   <div id="banner"></div>
+  <div id="killcam" hidden><span id="kcName">KILL CAM</span></div>
+  <div id="mvp" hidden><span class="label">Match MVP</span><b id="mvpName"></b><span id="mvpStats"></span><span id="mvpYou"></span></div>
   <div id="vote" hidden><span class="vt" id="voteTitle">Vote for the next map</span><div class="vrow" id="voteRow"></div></div>
   <div id="deathMsg" hidden></div>
   <div id="stick"><div id="knob"></div></div>
@@ -2293,6 +2303,20 @@ function onDeath(victim, killer, vteam) {
   if (gg) ggKill(victim, killer);
   else if (T.sc[winner] >= SCORE_LIMIT) { T.win = winner; T.winT = 5; }
 }
+function showMVP() {
+  const st = T.st || {}, rows = Object.entries(st).filter(([, v]) => Array.isArray(v)).map(([id, v]) => ({ id, k: +v[0] || 0, d: +v[1] || 0 }));
+  let best = gg && T.ggWin ? rows.find(r => nameOf(r.id) === T.ggWin) : null;
+  if (!best) best = rows.sort((a, b) => b.k - a.k || a.d - b.d)[0];
+  if (!best) return;
+  const kd = r => (r.d ? r.k / r.d : r.k).toFixed(1), me = rows.find(r => r.id === myPeer) || { k: P.kills, d: P.matchDeaths };
+  const tm = teamOf(best.id);
+  $('mvpName').textContent = (best.id === myPeer ? '⭐ ' : '') + nameOf(best.id);
+  $('mvpName').style.color = gg ? '#f2c84b' : tm === 'r' ? 'var(--red)' : 'var(--blue)';
+  $('mvpStats').textContent = best.k + ' eliminations · ' + best.d + ' deaths · K/D ' + kd(best);
+  $('mvpYou').textContent = best.id === myPeer ? 'That\'s you! +100 coin MVP bonus' : 'You: ' + me.k + ' / ' + me.d + ' · K/D ' + kd(me);
+  if (best.id === myPeer) addCoins(100);
+  $('mvp').hidden = false;
+}
 function ggKill(victim, killer) {
   if (!killer || killer === victim) return;
   const lv = T.gg[killer] = (T.gg[killer] || 0) + 1;
@@ -2525,6 +2549,8 @@ function netTick(dt) {
     if (!T.win) for (const b of T.bots) botStep(b, dt, targets);
     else { T.winT -= dt; if (T.winT <= 0) { buildMap(pickNextMap(hs)); T.ep++; T.sc = { b: 0, r: 0 }; T.win = ''; T.kf = []; T.st = {}; T.bots.forEach(b => { b.alive = false; b.respawn = 0.01; }); newMatchLocal(); } }
   }
+  if (T.win && !T.prevWin) showMVP();
+  if (!T.win && T.prevWin) $('mvp').hidden = true;
   if (T.win && !T.prevWin) { C.matches++; if (T.win === P.team) { C.wins++; addCoins(50); dailyProgress('wins', 1); } dailyProgress('matches', 1); saveC(); addXP(80 + (T.win === P.team ? 150 : 0));
     lbAdd('battles', { k: P.kills, d: P.matchDeaths, r: T.win === P.team ? 'Win' : 'Loss', m: curMap, du: duel ? 1 : 0, t: Date.now() }, (a, b) => b.k - a.k || a.d - b.d || b.t - a.t); }
   if (!T.win && T.prevWin) myVote = null;
@@ -2557,6 +2583,7 @@ function netTick(dt) {
   }
 }
 function resetTDM() {
+  $('mvp').hidden = true; $('killcam').hidden = true;
   gg = false; T.gg = {}; T.ggWin = ''; clearNades();
   if (missile) { scene.remove(missile.m); missile = null; } scanT = 0;
   for (const e of [...T.ents.values()]) removeEnt(e);
@@ -3572,14 +3599,21 @@ function stepPlayer(dt) {
   const breath = scoped ? Math.sin(performance.now() / 900) * (optic === 'sniper' ? 0.0013 : 0.0008) : 0;
 
   const eye = 1.6 - P.crouchT * 0.48;
+  // kill cam: while waiting to respawn, watch from just behind the player who got you
+  let kc = null;
+  if (!P.alive && mode === 'tdm' && P.killer && P.respawn > 0.35) { const ke = T.ents.get(P.killer); if (ke && ke.v && ke.v.g.visible) kc = ke; }
+  if (kc) hud.cross.style.opacity = 0;
+  { const el = $('killcam'); if (el) { el.hidden = !kc; if (kc) { const t = 'KILL CAM · ' + nameOf(P.killer).toUpperCase(); if ($('kcName').textContent !== t) $('kcName').textContent = t; } } }
   if (P.alive) camera.position.set(P.pos.x, eye + P.jy + Math.sin(P.bob) * 0.03 * moveAmt * motion * (1 - P.adsT * 0.7), P.pos.z);
+  else if (kc) { const dx = P.pos.x - kc.rx, dz = P.pos.z - kc.rz, d = Math.hypot(dx, dz) || 1; camera.position.set(kc.rx - dx / d * 1.3 + dz / d * 0.45, 2.0, kc.rz - dz / d * 1.3 - dx / d * 0.45); }
   else camera.position.set(P.pos.x, Math.min(4, camera.position.y + dt * 1.5), P.pos.z);
   if (P.shake > 0) { P.shake = Math.max(0, P.shake - dt); camera.position.x += (Math.random() - .5) * P.shake * 0.1 * motion; camera.position.y += (Math.random() - .5) * P.shake * 0.1 * motion; }
   const lateral = P.vx * cos - P.vz * sin;
   P.roll += (-lateral * 0.003 * motion - (P.slideT > 0 ? 0.07 * motion : 0) - P.roll) * Math.min(1, dt * 8);
   P.kick = Math.max(0, P.kick - P.kick * Math.min(1, dt * 9));
   P.bloom = Math.max(0, P.bloom - dt * 0.06);
-  camera.rotation.set(P.alive ? P.pitch + P.kick + breath : -0.6, P.yaw + breath * 0.6, P.alive ? P.roll : 0);
+  if (kc) camera.lookAt(P.pos.x, 0.9, P.pos.z);
+  else camera.rotation.set(P.alive ? P.pitch + P.kick + breath : -0.6, P.yaw + breath * 0.6, P.alive ? P.roll : 0);
   const wantFov = (baseFov + (sprint && hsp > 6.5 ? 6 : 0) + (P.slideT > 0 ? 9 : 0) + (P.vault ? 6 : 0)) / (1 + P.adsT * (W().zoom - 1));
   if (Math.abs(camera.fov - wantFov) > 0.03) { camera.fov += (wantFov - camera.fov) * Math.min(1, dt * 12); camera.updateProjectionMatrix(); }
   const ks = Math.min(1, dt * 10), dyaw = angDiff(P.lastYaw, P.yaw), dpit = P.pitch - P.lastPitch, idt2 = 1 / Math.max(dt, 1e-3);

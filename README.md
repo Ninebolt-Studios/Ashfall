@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v43)](https://gaayyynesss.github.io/Seige/?v=43)
+## ▶️ [PLAY NOW — latest version (v44)](https://gaayyynesss.github.io/Seige/?v=44)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=43
+**Latest:** https://gaayyynesss.github.io/Seige/?v=44
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v43** | https://gaayyynesss.github.io/Seige/?v=43 | Two new maps: **Hollow Pines** (snowy village at night, wooden cabins, lamp posts, falling snow) and **Greywater** (rainy harbor with a warehouse, stacked containers, dock cranes and rain). Also fixed the gun floating in the menu background |
+| **v44** | https://gaayyynesss.github.io/Seige/?v=44 | **Kill cam** (watch from behind whoever got you while you wait to respawn) and a **Match MVP** card at the end of every match (+100 coins if it's you) |
+| v43 | https://gaayyynesss.github.io/Seige/?v=43 | Two new maps: **Hollow Pines** (snowy village at night, wooden cabins, lamp posts, falling snow) and **Greywater** (rainy harbor with a warehouse, stacked containers, dock cranes and rain). Also fixed the gun floating in the menu background |
 | v42 | https://gaayyynesss.github.io/Seige/?v=42 | **Weapon attachments** unlocked by gun level: Extended Mag (lv 2), Grip (lv 4), Laser (lv 6), Suppressor (lv 8); up to 2 per gun |
 | v41 | https://gaayyynesss.github.io/Seige/?v=41 | Slightly smarter bots: they notice you a bit faster, check where they last saw you, back off and strafe when hurt, roam the whole bigger map, and aim a touch better at range |
 | v40 | https://gaayyynesss.github.io/Seige/?v=40 | **Kill streak buttons** (use Map Scan / Missile when you want), **perks & wildcards** (Salvager supply drops and 8 more perks, 4 wildcards), **14 new crate items**, a **refreshed UI**, and **much bigger maps** (140 m across, with buildings to fight through) |
@@ -179,6 +180,10 @@ Headshots deal about double damage and leg hits deal less. Damage drops off at l
 | Use Map Scan / Missile | **SCAN** / **MISSILE** (appear when earned) | Z / X |
 | Leaderboard | Tap the score bar | Hold Tab |
 | Pause | **II** | Esc |
+
+## Kill cam & MVP
+- **Kill cam:** when you're eliminated in Team Battle, Duels or Gun Game, the camera shows the player who got you, from just behind them, until you respawn.
+- **Match MVP:** at the end of every match a card shows the top player with their eliminations, deaths and K/D. If it's you, you get **+100 coins**.
 
 ## Leaderboards
 - **Match leaderboard:** tap the score bar at the top (or hold **Tab** on a keyboard) to see every player and bot ranked by eliminations and deaths. It also shows at the end of every match and on the pause screen.
