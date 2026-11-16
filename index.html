@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116134953';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116144017';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -440,6 +440,13 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 .mcard[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
 .mcard:focus-visible, .vbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { #banner, #hurt, #hpfill, #cross, .switch span, .switch span::after { transition: none; } }
+/* ranked */
+.rankbox { display: flex; gap: 14px; align-items: center; padding: 12px 16px; background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; }
+.rankbox .rb { font-size: 44px; }
+.rankbox b { font: 700 22px var(--display); letter-spacing: .12em; text-transform: uppercase; }
+.rankbox .rbar { height: 6px; background: rgba(239,232,214,.12); border-radius: 3px; overflow: hidden; }
+.rankbox .rbar i { display: block; height: 100%; background: var(--accent); }
+#rankedBtn .mode-name::before { content: '🏆 '; }
 /* kill cam + MVP */
 #killcam { position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 0 4px rgba(229,83,61,.75), inset 0 0 120px rgba(229,83,61,.35); }
 #killcam span { position: absolute; left: 50%; top: calc(64px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); padding: 6px 14px; background: rgba(229,83,61,.85); color: #fff; font: 700 15px var(--display); letter-spacing: .2em; border-radius: 8px; white-space: nowrap; }
@@ -561,6 +568,7 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
           </div>
           <span class="pmsg" id="partyMsg">Make a party and send the code to a friend. Party members duel each other and play on the same team in Team Battle.</span>
         </div>
+        <div class="rankbox" id="rankBox"><span class="rb" id="rkBadge">🥉</span><div style="display:grid;gap:4px;flex:1"><span class="label">Your rank</span><b id="rkName">Bronze</b><span class="rbar"><i id="rkFill"></i></span><span class="pmsg" id="rkNext"></span></div></div>
         <div class="daily" id="dailyBox">
           <div class="dhead"><span class="label">Daily</span><span class="pmsg" id="dailyReset"></span></div>
           <div class="dreward"><div><b id="dailyStreak">Day 1</b><span class="pmsg" id="dailyRwTxt"></span></div><button class="btn go" id="dailyClaim" type="button">Claim</button></div>
@@ -572,6 +580,11 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
             <span class="mode-name">Team Battle</span>
             <span class="mode-desc" id="tdmDesc">Delta vs Viper. First team to 100 eliminations wins. Kill streaks: Map Scan at 10, Missile Strike at 30. Players online join the same match, and AI soldiers fill every empty slot.</span>
             <span class="chips"><span class="chip hot">Online</span><span class="chip">5 v 5</span><span class="chip">Bots fill</span></span>
+          </button>
+          <button class="mode" id="rankedBtn" type="button">
+            <span class="mode-name">Ranked</span>
+            <span class="mode-desc" id="rankedDesc">Ranked Team Battle. Win to earn rank points (RP), lose and you drop some. Bots get tougher as you climb from Bronze to Diamond.</span>
+            <span class="chips"><span class="chip hot">Online</span><span class="chip">5 v 5</span><span class="chip" id="rankChip">Bronze</span></span>
           </button>
           <button class="mode" id="duelBtn" type="button">
             <span class="mode-name">Duel 1v1</span>
@@ -855,6 +868,11 @@ const WALLET = Object.assign({ coins: 0, skins: [], camos: [] }, store.get('wall
 if (!Array.isArray(WALLET.skins)) WALLET.skins = []; if (!Array.isArray(WALLET.camos)) WALLET.camos = [];
 if (!WALLET.pity || typeof WALLET.pity !== 'object') WALLET.pity = {};
 const saveWallet = () => store.set('wallet', WALLET);
+// ---- ranked: rank points (RP) go up when you win a ranked match and down when you lose ----
+const RANKS = [{ n: 'Bronze', i: '🥉', min: 0, c: '#c8844a' }, { n: 'Silver', i: '🥈', min: 300, c: '#c8ccd4' }, { n: 'Gold', i: '🥇', min: 700, c: '#f2c84b' }, { n: 'Platinum', i: '💠', min: 1200, c: '#5fe3d0' }, { n: 'Diamond', i: '💎', min: 1800, c: '#8ab8ff' }];
+const RANK = Object.assign({ rp: 0, best: 0, w: 0, l: 0 }, store.get('rank', {}));
+const rankIdx = (rp = RANK.rp) => { let i = 0; RANKS.forEach((r, k) => { if (rp >= r.min) i = k; }); return i; };
+const rankBadge = i => RANKS[Math.max(0, Math.min(RANKS.length - 1, i | 0))].i;
 // ---- perks (3 slots) and wildcards ----
 const PERKS = [
   { id: 'salvager', t: 1, i: '🦅', n: 'Salvager', d: 'Enemies you eliminate drop a supply box. Walk over it to refill your magazine and get a grenade.' },
@@ -1824,6 +1842,7 @@ let scanT = 0, missile = null;
 const AD = Object.assign({ k: 3, d: 3 }, store.get('aidiff', {}));
 function adNote(kill) { AD.k = AD.k * 0.93 + (kill ? 1 : 0); AD.d = AD.d * 0.93 + (kill ? 0 : 1); store.set('aidiff', AD); }
 function botSkill() { // 0.6 = much easier, 1 = normal, 1.4 = much harder
+  if (ranked) return [0.85, 0.95, 1.05, 1.18, 1.3][rankIdx()];
   if (S.botDiff === 'easy') return 0.65; if (S.botDiff === 'normal') return 1; if (S.botDiff === 'hard') return 1.3;
   const ratio = (AD.k + 1.5) / (AD.d + 1.5);
   return clamp(1 + 0.4 * Math.log2(ratio), 0.6, 1.4);
@@ -2163,7 +2182,7 @@ function clearSiege() {
 /* =========================================================
    TEAM BATTLE 5v5 (online, bots fill empty slots)
    ========================================================= */
-let SCORE_LIMIT = 100, gg = false; // gg = Gun Game (offline free-for-all)
+let SCORE_LIMIT = 100, gg = false, ranked = false; // gg = Gun Game (offline free-for-all)
 const GG_GUNS = ['smg', 'pdw', 'ar', 'br', 'lmg', 'sg', 'dmr', 'snp', 'rev', 'pst'];
 const isFoe = e => gg || e.team !== P.team; const TEAM_SIZE = 5; let duel = false;
 const BOT_NAMES = { b0: 'Hayes', b1: 'Okafor', b2: 'Lindqvist', b3: 'Moreau', b4: 'Tanaka', r0: 'Vance', r1: 'Petrov', r2: 'Silva', r3: 'Kade', r4: 'Ibarra' };
@@ -2562,7 +2581,8 @@ function netTick(dt) {
     if (!T.win) for (const b of T.bots) botStep(b, dt, targets);
     else { T.winT -= dt; if (T.winT <= 0) { buildMap(pickNextMap(hs)); T.ep++; T.sc = { b: 0, r: 0 }; T.win = ''; T.kf = []; T.st = {}; T.bots.forEach(b => { b.alive = false; b.respawn = 0.01; }); newMatchLocal(); } }
   }
-  if (T.win && !T.prevWin) showMVP();
+  if (T.win && !T.prevWin) { showMVP(); if (ranked) rankResult(T.win === P.team); }
+  if (!T.win && T.prevWin) { T.rankDelta = 0; T.rankMsg = ''; }
   if (!T.win && T.prevWin) $('mvp').hidden = true;
   if (T.win && !T.prevWin) { C.matches++; if (T.win === P.team) { C.wins++; addCoins(50); dailyProgress('wins', 1); } dailyProgress('matches', 1); saveC(); addXP(80 + (T.win === P.team ? 150 : 0));
     lbAdd('battles', { k: P.kills, d: P.matchDeaths, r: T.win === P.team ? 'Win' : 'Loss', m: curMap, du: duel ? 1 : 0, t: Date.now() }, (a, b) => b.k - a.k || a.d - b.d || b.t - a.t); }
@@ -2583,19 +2603,21 @@ function netTick(dt) {
   }
   $('scB').textContent = T.sc.b; $('scR').textContent = T.sc.r;
   updBoard(dt);
-  if (T.win) banner(gg ? String(T.ggWin || 'Someone').toUpperCase() + ' WINS' : TEAM_NAME[T.win] + ' WINS', (T.win === P.team ? 'Victory · +50 coin win bonus' : 'Defeat') + ' · ◎ ' + (P.mCoins || 0) + ' coins this match · next match in ' + Math.max(0, Math.ceil(T.winT)), 1);
+  if (T.win) banner(gg ? String(T.ggWin || 'Someone').toUpperCase() + ' WINS' : TEAM_NAME[T.win] + ' WINS', (T.win === P.team ? 'Victory · +50 coin win bonus' : 'Defeat') + (ranked && T.rankDelta ? ' · ' + (T.rankDelta > 0 ? '+' : '') + T.rankDelta + ' RP' + (T.rankMsg ? ' · ' + T.rankMsg : '') : '') + ' · ◎ ' + (P.mCoins || 0) + ' coins this match · next match in ' + Math.max(0, Math.ceil(T.winT)), 1);
   T.sendT -= dt;
   if (troom && T.sendT <= 0) {
     T.sendT = 0.05; T.beat = (T.beat + 1) % 1000;
     const keys = Object.keys(T.myDm);
     if (keys.length > 24) keys.forEach(k => { if (!BOT_NAMES[k] && !hs.some(h => h.peer === k)) delete T.myDm[k]; });
-    const pr = { n: playerName, tm: P.team, x: r2(P.pos.x), z: r2(P.pos.z), y: r2(P.yaw), p: r2(P.pitch), j: r2(P.jy), c: P.crouch || P.slideT > 0 ? 1 : 0, h: Math.round(P.hp), a: P.alive ? 1 : 0, d: P.deaths, kb: P.killer || null, sh: P.shots, dm: T.myDm, mv: T.win ? (myVote || null) : null, sk: mySkin, pt: party || null, t: T.beat };
+    const pr = { n: playerName, tm: P.team, x: r2(P.pos.x), z: r2(P.pos.z), y: r2(P.yaw), p: r2(P.pitch), j: r2(P.jy), c: P.crouch || P.slideT > 0 ? 1 : 0, h: Math.round(P.hp), a: P.alive ? 1 : 0, d: P.deaths, kb: P.killer || null, sh: P.shots, dm: T.myDm, mv: T.win ? (myVote || null) : null, sk: mySkin, pt: party || null, rk: rankIdx(), t: T.beat };
     if (T.isHost) Object.assign(pr, { hb: T.bots.map(b => [b.id, r2(b.x), r2(b.z), r2(b.yaw), Math.round(b.hp), b.alive ? 1 : 0, b.shots]), hd: T.hd, hk: T.hk, sc: [T.sc.b, T.sc.r], ep: T.ep, w: T.win || null, wt: r2(T.winT), kf: T.kf, mp: curMap, st: T.st });
     else Object.assign(pr, { hb: null, hd: null, hk: null, sc: null, ep: null, w: null, wt: null, kf: null, mp: null, st: null });
     troom.presence(pr).catch(() => {});
   }
 }
 function resetTDM() {
+  if (ranked && mode === 'tdm' && !T.win && (P.kills || P.matchDeaths)) rankResult(false, true); // quitting a ranked match counts as a loss
+  ranked = false; T.rankDelta = 0;
   $('mvp').hidden = true; $('killcam').hidden = true;
   gg = false; T.gg = {}; T.ggWin = ''; clearNades();
   if (missile) { scene.remove(missile.m); missile = null; } scanT = 0;
@@ -2610,7 +2632,7 @@ function resetTDM() {
 /* ---------- online lobby ---------- */
 function setLobby() {
   if (!room) return;
-  room.presence({ n: playerName, st: state === 'play' || state === 'paused' ? mode : 'menu' }).catch(() => {});
+  room.presence({ n: playerName, st: state === 'play' || state === 'paused' ? (ranked ? 'ranked' : gg ? 'gg' : mode) : 'menu', rk: rankIdx() }).catch(() => {});
 }
 function renderOnline() {
   const el = $('online');
@@ -2643,7 +2665,7 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () =>
 function showMenu(which) {
   menuMode = which;
   $('menu').hidden = false; $('hud').hidden = true;
-  if (which === 'main') renderDaily();
+  if (which === 'main') { renderDaily(); renderRank(); }
   $('playMain').hidden = which !== 'main'; $('playPause').hidden = which !== 'pause'; $('playOver').hidden = which !== 'over';
   $('tabPlay').textContent = which === 'pause' ? 'Match' : 'Play';
   showTab('play');
@@ -3134,7 +3156,7 @@ function renderSettings() {
   }
 }
 $('resetSettings').addEventListener('click', () => { Object.assign(S, DEF); saveS(); renderSettings(); applyQuality(); applySettings(); });
-const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt'];
+const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank'];
 function makeBackup() {
   const data = {}; for (const k of ACCT_KEYS) { const v = store.get(k, null); if (v !== null) data[k] = v; }
   try { return 'DL1.' + btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/=+$/, ''); } catch (e) { return ''; }
@@ -3243,16 +3265,16 @@ function startSiege() {
   score = 0; wave = 0; betweenWaves = 1; toSpawn = 0; P.nades = nadesPerLife(); updNade(); P.ks = { scan: 0, msl: 0 }; updKS(); P.streak = 0; P.mCoins = 0; scanT = 0;
   state = 'play'; hideMenu(); updHud(); lockPointer();
 }
-async function startTDM(isDuel) {
+async function startTDM(isDuel, isRanked) {
   if (isDuel && !party) { const pm = $('partyMsg'); pm.textContent = 'Duel 1v1 needs a party. Tap Create party and send the code to your friend, or type their code and tap Join.'; pm.style.color = 'var(--accent)'; $('partyBox').scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
   ensureAudio(); clearSiege(); lockPointer();
   duel = !!isDuel; SCORE_LIMIT = duel ? 7 : 100;
-  const btn = duel ? $('duelBtn') : $('tdmBtn'), desc = duel ? $('duelDesc') : $('tdmDesc'), oldDesc = desc.textContent;
+  const btn = duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
   btn.disabled = true; mode = 'tdm'; equip(loadout);
-  resetTDM();
+  resetTDM(); ranked = !!isRanked && !duel;
   if (room) {
     desc.textContent = duel ? 'Finding your rival…' : 'Joining the battle…';
-    try { troom = await Promise.race([room.join(duel ? 'duel-p-' + party.toLowerCase() : 'battle-' + (matchCode || 'main')), sleep(6000).then(() => null)]); } catch (e) { troom = null; }
+    try { troom = await Promise.race([room.join(duel ? 'duel-p-' + party.toLowerCase() : ranked ? 'ranked-main' : 'battle-' + (matchCode || 'main')), sleep(6000).then(() => null)]); } catch (e) { troom = null; }
     if (troom) await sleep(1200);
   }
   const counts = { b: 0, r: 0 };
@@ -3267,7 +3289,23 @@ async function startTDM(isDuel) {
   state = 'play'; hideMenu(); updHud();
   const others = counts.b + counts.r;
   if (duel) banner(TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? 'Rival found · first to ' + SCORE_LIMIT : 'Waiting for a rival — share code “' + (matchCode || 'open') + '”. First to ' + SCORE_LIMIT + '.', 4);
-  else banner(TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest' : 'No other players online · bots fill every slot', 3);
+  else banner((ranked ? 'RANKED · ' + rankBadge(rankIdx()) + ' ' : '') + TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest' : 'No other players online · bots fill every slot', 3);
+}
+function renderRank() {
+  const i = rankIdx(), r = RANKS[i], nx = RANKS[i + 1];
+  $('rkBadge').textContent = r.i; $('rkName').textContent = r.n + ' · ' + RANK.rp + ' RP'; $('rkName').style.color = r.c;
+  $('rkFill').style.width = (nx ? Math.round((RANK.rp - r.min) / (nx.min - r.min) * 100) : 100) + '%';
+  $('rkNext').textContent = (nx ? (nx.min - RANK.rp) + ' RP to ' + nx.n : 'Top rank!') + ' · Ranked record ' + RANK.w + 'W ' + RANK.l + 'L · win +25 RP (+1 per elimination, up to 10), loss −15';
+  $('rankChip').textContent = r.i + ' ' + r.n;
+}
+function rankResult(win, quit) {
+  const before = rankIdx(), delta = win ? 25 + Math.min(10, P.kills) : -15 + (quit ? -5 : Math.min(5, Math.floor(P.kills / 5)));
+  RANK.rp = Math.max(0, RANK.rp + delta); RANK.best = Math.max(RANK.best, RANK.rp); if (win) RANK.w++; else RANK.l++;
+  store.set('rank', RANK); T.rankDelta = delta;
+  const after = rankIdx();
+  T.rankMsg = after > before ? 'PROMOTED to ' + RANKS[after].i + ' ' + RANKS[after].n + '!' : after < before ? 'Dropped to ' + RANKS[after].n : '';
+  if (after > before) try { tone(523, 0.15, 'triangle', 0.12); tone(659, 0.15, 'triangle', 0.12, null, 0.15); tone(784, 0.3, 'triangle', 0.14, null, 0.3); } catch (e) {}
+  renderRank(); setLobby();
 }
 function startGunGame() {
   ensureAudio(); clearSiege(); leaveBattle(); lockPointer();
@@ -3290,7 +3328,7 @@ function pause() {  // online match keeps running while the pause panel is open
 let boardTap = false, boardHold = false;
 function boardRows() {
   const rows = [], st = T.st || {}, kd = id => (Array.isArray(st[id]) ? st[id] : [0, 0]);
-  for (const h of T.humans) { const id = h.me ? myPeer : h.peer, s = kd(id); rows.push({ id, team: h.me ? P.team : h.pr.tm, name: h.me ? playerName : nameOf(h.peer), me: !!h.me, bot: false, k: +s[0] || 0, d: +s[1] || 0 }); }
+  for (const h of T.humans) { const id = h.me ? myPeer : h.peer, s = kd(id); rows.push({ id, team: h.me ? P.team : h.pr.tm, name: rankBadge(h.me ? rankIdx() : +h.pr.rk || 0) + ' ' + (h.me ? playerName : nameOf(h.peer)), me: !!h.me, bot: false, k: +s[0] || 0, d: +s[1] || 0 }); }
   for (const e of T.ents.values()) if (e.kind === 'bot') { const s = kd(e.id); rows.push({ id: e.id, team: e.team, name: BOT_NAMES[e.id] || 'Bot', me: false, bot: true, k: +s[0] || 0, d: +s[1] || 0 }); }
   rows.sort((a, b) => b.k - a.k || a.d - b.d || (a.bot - b.bot));
   return rows;
@@ -3331,6 +3369,7 @@ $('tdmBtn').addEventListener('click', () => { if (!$('tdmBtn').disabled) startTD
 $('duelBtn').addEventListener('click', () => { if (!$('duelBtn').disabled) startTDM(true); });
 $('siegeBtn').addEventListener('click', startSiege);
 $('ggBtn').addEventListener('click', startGunGame);
+$('rankedBtn').addEventListener('click', () => { if (!$('rankedBtn').disabled) startTDM(false, true); });
 $('ksScan').addEventListener('click', useScan); $('ksMsl').addEventListener('click', useMissile);
 $('resumeBtn').addEventListener('click', resume);
 $('quitBtn').addEventListener('click', () => { leaveBattle(); clearSiege(); state = 'menu'; buildMap(selMap); showMenu('main'); });

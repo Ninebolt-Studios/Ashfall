@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v48)](https://gaayyynesss.github.io/Seige/?v=48)
+## ▶️ [PLAY NOW — latest version (v49)](https://gaayyynesss.github.io/Seige/?v=49)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=48
+**Latest:** https://gaayyynesss.github.io/Seige/?v=49
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v48** | https://gaayyynesss.github.io/Seige/?v=48 | Battle pass tiers now take **599 XP** each from Season 2 on (was 650). XP you already earned this season counts toward the new tiers |
+| **v49** | https://gaayyynesss.github.io/Seige/?v=49 | **Ranked mode:** ranked Team Battle with rank points and 5 ranks (Bronze → Silver → Gold → Platinum → Diamond), a rank card on the Play tab, rank badges on the scoreboard, and bots that get tougher as you climb |
+| v48 | https://gaayyynesss.github.io/Seige/?v=48 | Battle pass tiers now take **599 XP** each from Season 2 on (was 650). XP you already earned this season counts toward the new tiers |
 | v47 | https://gaayyynesss.github.io/Seige/?v=47 | Fix: on iPad a black strip could appear at the bottom after scrolling the menu; the game now re-checks the screen size twice a second and fixes itself. The menu also no longer runs slightly off the bottom of the screen |
 | v46 | https://gaayyynesss.github.io/Seige/?v=46 | **Adaptive bots:** they get easier when you're struggling and tougher when you're doing really well. New **Bot difficulty** setting (Adaptive, Easy, Normal, Hard) |
 | v45 | https://gaayyynesss.github.io/Seige/?v=45 | **Season 2: Harvest is live** (Nov 16–26): orange colors, pumpkins and hay bales on every map, 75 tiers at **650 XP per tier**. **Season 2 Premium code: `SCYTHE26`** (the old code `DUSTVIP` no longer works). Reach tier 75 with Premium for the **SC-7 Scythe** |
@@ -62,6 +63,7 @@ Everyone who opens the link plays in the same Team Battle. AI soldiers fill ever
 | Mode | Description |
 |---|---|
 | **Team Battle** | Delta vs Viper, 5 v 5, across seven maps (Outpost, Dockyard, Frostline, Refinery, Hollow Pines, Greywater, Blacksite). The first team to 100 eliminations wins. Party members play on the same team. |
+| **Ranked** | Ranked Team Battle (5 v 5, first to 100). Win: **+25 RP** plus 1 per elimination (up to +10). Loss: **−15 RP** (a little back for 5+ eliminations). Quitting mid-match counts as a loss (−20). Ranks: 🥉 Bronze (0), 🥈 Silver (300), 🥇 Gold (700), 💠 Platinum (1,200), 💎 Diamond (1,800). Bots get tougher at higher ranks. Your rank badge shows next to your name on the scoreboard. |
 | **Duel 1v1** | Face your party member one on one, no bots, first to 7 eliminations. Make a party and share the code first. |
 | **Gun Game** | Free-for-all against 9 bots. Every elimination swaps you to the next of 10 guns (SMG → PDW → Rifle → Battle Rifle → LMG → Shotgun → Marksman → Sniper → Hand Cannon → Sidearm). First to get an elimination with all 10 wins. Grenades are off in this mode. |
 | **Drone Holdout** | Solo survival against endless waves of armed drones. Grab green supply cases to heal. |
