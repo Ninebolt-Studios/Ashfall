@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116164927';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116165100';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -637,7 +637,7 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
     <div id="jumpBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/><path d="M6 20l6-6 6 6"/></svg><span>JUMP</span></div>
     <div id="ksScan" class="tbtn ks" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-6"/></svg><span>SCAN</span><small></small></div>
     <div id="ksMsl" class="tbtn ks" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l7 7-9 9-3-3-3 1 1-3-3-3z"/><path d="M5 19l-2 2"/></svg><span>MISSILE</span><small></small></div>
-    <div id="zBuy" class="tbtn" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M3 12h18M12 8v12M8 8l4-4 4 4"/></svg><span>CRATE</span><small>◎ 950</small></div>
+    <div id="zBuy" class="tbtn" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M3 12h18M12 8v12M8 8l4-4 4 4"/></svg><span>CRATE</span><small>◎ 1,500</small></div>
     <div id="zPow" hidden></div>
     <div id="nadeBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="11" cy="15" rx="6" ry="7"/><path d="M8 8h6v-3H8z"/><path d="M14 6l4 3"/><circle cx="18" cy="4" r="2"/><path d="M6 15h10M11 9v13"/></svg><small id="nadeN">2</small></div>
     <div id="adsBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg><span>AIM</span></div>
@@ -2558,10 +2558,10 @@ function zPickup(k) {
   else if (k === 'double') zDouble = 30;
   else { for (const e of [...enemies]) if (Math.hypot(e.g.position.x - P.pos.x, e.g.position.z - P.pos.z) < 45) { explosionFX(e.g.position.x, 0, e.g.position.z, 0.6); killZombie(e, false); } zPts(400); }
 }
-function updZBuy() { const b = $('zBuy'); if (b) b.classList.toggle('off', score < 950); }
+function updZBuy() { const b = $('zBuy'); if (b) b.classList.toggle('off', score < 1500); }
 function zBuyGun() {
-  if (!zmb || state !== 'play' || !P.alive || score < 950) return;
-  score -= 950; updHud(); updZBuy();
+  if (!zmb || state !== 'play' || !P.alive || score < 1500) return;
+  score -= 1500; updHud(); updZBuy();
   const pool = Object.keys(WEAPONS).filter(k => !WEAPONS[k].premium && k !== P.w), k = pool[Math.random() * pool.length | 0];
   equip(k); banner('MYSTERY CRATE', 'You got the ' + WEAPONS[k].name + '!', 2.2);
   try { for (let i = 0; i < 5; i++) tone(400 + i * 120, 0.08, 'triangle', 0.1, null, i * 0.07); } catch (e) {}
@@ -2578,7 +2578,7 @@ function startZombies() {
   hud.death.hidden = true; zDouble = 0;
   score = 0; wave = 0; betweenWaves = 2; toSpawn = 0; P.nades = nadesPerLife(); updNade(); P.ks = { scan: 0, msl: 0 }; updKS(); P.streak = 0; P.mCoins = 0; scanT = 0;
   state = 'play'; hideMenu(); updHud(); updZBuy(); lockPointer();
-  banner('ZOMBIES · ' + MAPS[curMap].name.toUpperCase(), 'You start with a pistol. Earn points and open the Mystery Crate (◎ 950) for a better gun.', 4);
+  banner('ZOMBIES · ' + MAPS[curMap].name.toUpperCase(), 'You start with a pistol. Earn points and open the Mystery Crate (◎ 1,500) for a better gun.', 4);
 }
 function stepZombies(dt) {
   if (toSpawn === 0 && enemies.length === 0) { betweenWaves -= dt; if (betweenWaves <= 0) {
