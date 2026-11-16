@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v56)](https://gaayyynesss.github.io/Seige/?v=56)
+## ▶️ [PLAY NOW — latest version (v57)](https://gaayyynesss.github.io/Seige/?v=57)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=56
+**Latest:** https://gaayyynesss.github.io/Seige/?v=57
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v56** | https://gaayyynesss.github.io/Seige/?v=56 | **Better touch buttons** (icons, colored rings, press feedback) and a **real frag grenade** (body, grip bands, fuse cap, spoon, pin ring) with a **new explosion**: flash of light, fireball, smoke clouds, shockwave ring, debris and a scorch mark (the Missile Strike uses it too, bigger) |
+| **v57** | https://gaayyynesss.github.io/Seige/?v=57 | **Haptics:** phones vibrate when you shoot, hit, get a kill, get hurt, are near an explosion or earn a kill streak (Android), and iPhones (iOS 18+) click on button presses. On/off switch in Settings. iPads have no vibration motor |
+| v56 | https://gaayyynesss.github.io/Seige/?v=56 | **Better touch buttons** (icons, colored rings, press feedback) and a **real frag grenade** (body, grip bands, fuse cap, spoon, pin ring) with a **new explosion**: flash of light, fireball, smoke clouds, shockwave ring, debris and a scorch mark (the Missile Strike uses it too, bigger) |
 | v55 | https://gaayyynesss.github.io/Seige/?v=55 | **UI polish:** player bar on the menu (rank, callsign, season tier, gun level, coins), color-coded game mode cards, smooth tab and card animations, health bar inside its card that turns yellow then red as you take damage, and cleaner score/kill-feed cards in matches |
 | v54 | https://gaayyynesss.github.io/Seige/?v=54 | **Weapon levels up to 100** with 4 new mastery camos (Platinum lv 25, Obsidian Flame lv 50, Damascus lv 75, Dark Matter lv 100), and you can now **climb onto crates, sandbags and low walls** (tap JUMP next to them) and stand, walk and jump on top |
 | v53 | https://gaayyynesss.github.io/Seige/?v=53 | **Aim assist slider** (0–100% strength in Settings) and a **UI remake**: tabs with icons, glassy rounded cards, accent headers and focus glow on the menus; rounded health/ammo cards, glowing minimap ring and glass touch buttons in matches |
