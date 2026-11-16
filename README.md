@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v64)](https://gaayyynesss.github.io/Seige/?v=64)
+## ▶️ [PLAY NOW — latest version (v65)](https://gaayyynesss.github.io/Seige/?v=65)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=64
+**Latest:** https://gaayyynesss.github.io/Seige/?v=65
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v64** | https://gaayyynesss.github.io/Seige/?v=64 | Zombies: says **waves** instead of rounds, and **health no longer comes back on its own** (zombies drop **health packs**, +40 each). New **medkit** and **ammo can** models with glow rings in every mode |
+| **v65** | https://gaayyynesss.github.io/Seige/?v=65 | **20 new achievements** (37 total) and a fix for the health bar showing **0 while still alive** (health under 1 now counts as dead, and health is shown rounded up) |
+| v64 | https://gaayyynesss.github.io/Seige/?v=64 | Zombies: says **waves** instead of rounds, and **health no longer comes back on its own** (zombies drop **health packs**, +40 each). New **medkit** and **ammo can** models with glow rings in every mode |
 | v63 | https://gaayyynesss.github.io/Seige/?v=63 | Zombies: the Mystery Crate now costs **1,500 points** (was 950) |
 | v62 | https://gaayyynesss.github.io/Seige/?v=62 | Team Battle and Ranked are now **first to 65 eliminations** (was 100) |
 | v61 | https://gaayyynesss.github.io/Seige/?v=61 | **Zombies mode:** endless rounds of the undead on a dark, foggy map. Earn points for hits and kills, spend 950 on the **Mystery Crate** for a random gun, grab power-ups (Full Ammo, 2x Points, Blast). New achievement: Undying (round 10) |
@@ -93,7 +94,14 @@ The **Daily** box on the Play tab has:
 You carry **2 frag grenades** each life. Tap **NADE** (or press **G**) to throw one. It bounces off walls and the ground and explodes after 2 seconds, hurting enemies within about 7 meters who aren't behind cover. In Drone Holdout you get one more grenade (up to 3) after every wave.
 
 ## Achievements
-The **Career** tab lists 17 achievements, such as First Blood, Centurion (100 eliminations), Scanner (10 streak), Missile Man (30 streak), Gun Master (win a Gun Game), Lucky (own a Legendary) and Collector (own every crate item). Each pays coins once, from 50 up to 2,000.
+The **Career** tab lists **37 achievements**. Each pays coins once (50 up to 3,000):
+- **Eliminations:** First Blood (1), Centurion (100), Veteran (500), Thousand Club (1,000), Legend (5,000)
+- **Headshots:** Sharpshooter (100), Deadeye (500)
+- **Wins & matches:** Winner (1), Champion (10), Warlord (50), Unstoppable (100), Regular (play 100), MVP (once), Superstar (MVP 10 times)
+- **Streaks & grenades:** Scanner (10 streak), On Fire (20), Missile Man (30), Demolition (25 grenade eliminations)
+- **Modes:** Holdout Hero / Last Stand (wave 10 / 20 in Holdout), Undying / Brain Drain (wave 10 / 20 in Zombies), Grave Digger (500 zombies), Gun Master (win Gun Game), Golden / Diamond Hands (reach Gold / Diamond in Ranked)
+- **Guns:** Gunsmith (any gun level 25), Weapon Master (level 100), Silent Operator (equip a Suppressor)
+- **Shop & more:** Lucky (own a Legendary), Collector (own every crate item), Crate Hunter (open 50 crates), Saving Up (10,000 coins at once), Pass Master (finish a season pass), Dedicated / Every Single Day (7 / 30-day login streak), Squad (5 friends)
 
 ## Kill streaks
 Eliminations in a row without dying:

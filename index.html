@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116165413';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116190417';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -868,7 +868,7 @@ const S = Object.assign({}, DEF, store.get('settings', {}));
 { const raw = store.get('settings', {}) || {}; if (raw.assistStr == null && raw.assist === false) S.assistStr = 0; } // keep old 'off' choice
 const aimA = () => clamp(+S.assistStr || 0, 0, 1);
 const saveS = () => store.set('settings', S);
-const C = Object.assign({ matches: 0, wins: 0, kills: 0, deaths: 0, heads: 0, bestWave: 0, bestScore: 0, bestStreak: 0, ggWins: 0, maps: {}, bestRound: 0 }, store.get('career', {}));
+const C = Object.assign({ matches: 0, wins: 0, kills: 0, deaths: 0, heads: 0, bestWave: 0, bestScore: 0, bestStreak: 0, ggWins: 0, maps: {}, bestRound: 0, zKills: 0, nadeKills: 0, mvps: 0, crates: 0 }, store.get('career', {}));
 const saveC = () => store.set('career', C);
 const LB = Object.assign({ battles: [], holdout: [] }, store.get('lb', {}));
 function lbAdd(list, row, cmp) { LB[list] = (Array.isArray(LB[list]) ? LB[list] : []).concat([row]).sort(cmp).slice(0, 10); store.set('lb', LB); }
@@ -2225,6 +2225,7 @@ function nadeBlast(x, y, z) {
   explosionFX(x, Math.max(0, y - 0.1), z, hasPerk('demo') ? 1.25 : 1);
   try { noise(1.3, 0.85, 320); tone(70, 0.7, 'sine', 0.45, 32); noise(2.2, 0.15, 160, 'lowpass', 0.7, 0.15); } catch (e) {}
   const dp = Math.hypot(P.pos.x - x, P.pos.z - z); P.shake = Math.max(P.shake, Math.max(0, 0.8 - dp / 20)); if (dp < 25) haptic('boom');
+  P.nadeT = performance.now();
   const RAD = hasPerk('demo') ? 9 : 7, dmgAt = d => d >= RAD ? 0 : Math.round(140 * (1 - d / RAD));
   if (mode === 'siege') { for (const e of [...enemies]) { const dm = dmgAt(e.g.position.distanceTo(c)); if (dm > 0) { e.hp -= dm; e.flash = 0.08; if (e.hp <= 0) killEnemy(e); } } return; }
   if (T.win) return;
@@ -2238,6 +2239,7 @@ function nadeBlast(x, y, z) {
   if (hit) { hitMarker(''); try { sfx.hit(); } catch (e) {} }
 }
 function onMyKill(head) {
+  if (performance.now() - (P.nadeT || 0) < 400) { C.nadeKills = (C.nadeKills || 0) + 1; saveC(); }
   if (mode === 'tdm') { adNote(true); try { sfx.killc(); } catch (e) {} }
   P.streak = (P.streak || 0) + 1; if (P.streak > (C.bestStreak || 0)) { C.bestStreak = P.streak; saveC(); }
   dailyProgress('kills', 1); if (head) dailyProgress('heads', 1); dailyProgress('streak', P.streak, true);
@@ -2315,7 +2317,7 @@ function renderChip() {
 }
 function updCoins() { try { renderChip(); } catch (e) {} const t = $('coinTag'); if (t) t.textContent = '◎ ' + WALLET.coins.toLocaleString() + ' coins'; const sc = $('shopCoins'); if (sc) sc.textContent = WALLET.coins.toLocaleString(); }
 function updHud() {
-  const hp = Math.max(0, Math.round(P.hp));
+  const hp = P.alive && P.hp > 0 ? Math.max(1, Math.ceil(P.hp)) : 0;
   hud.hp.style.width = hp + '%'; hud.hpNum.textContent = hp;
   hud.hp.style.background = P.hp > 60 ? 'linear-gradient(90deg, #5fc95a, #b8e86a)' : P.hp > 30 ? 'linear-gradient(90deg, #e0a030, #f2d050)' : 'linear-gradient(90deg, #d8352a, #f06a4a)';
   hud.ammo.innerHTML = P.ammo + '<small> / ' + magOf(P.w) + '</small>';
@@ -2570,7 +2572,7 @@ function hitZombie(e, dmg, head) {
 function killZombie(e, head) {
   if (!enemies.includes(e)) return;
   spark(new THREE.Vector3(e.g.position.x, 1.2, e.g.position.z), 0x6a1010, 16); try { sfx.kill(); noise(0.4, 0.15, 300); } catch (er) {} hitMarker('kill');
-  zPts(head ? 100 : 60); addXP(12); addWeaponKill(); addCoins(10); onMyKill(!!head); if (hasPerk('salvager')) salvageDrop(e.g.position.x, e.g.position.z);
+  C.zKills = (C.zKills || 0) + 1; zPts(head ? 100 : 60); addXP(12); addWeaponKill(); addCoins(10); onMyKill(!!head); if (hasPerk('salvager')) salvageDrop(e.g.position.x, e.g.position.z);
   if (Math.random() < 0.06) zDropPower(e.g.position);
   else if (Math.random() < (P.hp < 60 ? 0.14 : 0.07)) dropPickup(e.g.position);
   scene.remove(e.g); enemies.splice(enemies.indexOf(e), 1);
@@ -2652,7 +2654,7 @@ function siegeHurt(dmg, sx, sz) {
   haptic('hurt');
   if (sx != null) showDmgDir(sx, sz);
   P.lastHurt = 0; P.shake = Math.max(P.shake, 0.25); P.hp -= dmg; hurtT = 0.35; sfx.hurt(); updHud();
-  if (P.hp <= 0) siegeOver();
+  if (P.hp < 1) { P.hp = 0; updHud(); siegeOver(); }
 }
 function siegeOver() {
   state = 'over';
@@ -2839,7 +2841,7 @@ function showMVP() {
   $('mvpName').style.color = gg ? '#f2c84b' : tm === 'r' ? 'var(--red)' : 'var(--blue)';
   $('mvpStats').textContent = best.k + ' eliminations · ' + best.d + ' deaths · K/D ' + kd(best);
   $('mvpYou').textContent = best.id === myPeer ? 'That\'s you! +100 coin MVP bonus' : 'You: ' + me.k + ' / ' + me.d + ' · K/D ' + kd(me);
-  if (best.id === myPeer) addCoins(100);
+  if (best.id === myPeer) { addCoins(100); C.mvps = (C.mvps || 0) + 1; saveC(); }
   $('mvp').hidden = false;
 }
 function ggKill(victim, killer) {
@@ -2873,7 +2875,7 @@ function takeDamage(dmg, src) {
   if (!P.alive || T.win || P.prot > 0 || mode !== 'tdm') return;
   P.hp -= dmg; P.lastHurt = 0; hurtT = 0.35; sfx.hurt(); haptic('hurt'); P.shake = Math.max(P.shake, 0.25);
   const se = T.ents.get(src); if (se) showDmgDir(se.rx, se.rz);
-  if (P.hp <= 0) {
+  if (P.hp < 1) {
     P.hp = 0; P.alive = false; P.deaths++; P.matchDeaths++; P.killer = src || ''; P.respawn = 3; P.ads = false; P.streak = 0; scanT = 0; adNote(false);
     C.deaths++; saveC();
     if (T.isHost) onDeath(myPeer, src, P.team);
@@ -3361,7 +3363,7 @@ function showOdds(key) {
 let revealItem = null, revealForced = false;
 function openCrate(key) {
   const c = CRATES[key]; if (WALLET.coins < c.price) return;
-  WALLET.coins -= c.price;
+  WALLET.coins -= c.price; C.crates = (C.crates || 0) + 1; saveC();
   const forced = (WALLET.pity[key] || 0) >= PITY - 1;
   const it = rollCrate(key), list = it.kind === 'skin' ? WALLET.skins : WALLET.camos, dupe = list.includes(it.id);
   WALLET.pity[key] = it.r === 'legendary' ? 0 : (WALLET.pity[key] || 0) + 1; revealForced = forced;
@@ -3706,6 +3708,25 @@ const ACHS = [
   { id: 'all', i: '🗃️', n: 'Collector', d: 'Own every crate item', c: 2000, t: () => crateItems().every(itemOwned) },
   { id: 'pass', i: '🎟️', n: 'Pass Master', d: 'Reach the last tier of a season pass', c: 500, t: () => bpTier() >= BP_TIERS },
   { id: 'd7', i: '📅', n: 'Dedicated', d: 'Claim the daily reward 7 days in a row', c: 300, t: () => DAILY.streak >= 7 },
+  { id: 'd30', i: '🗓️', n: 'Every Single Day', d: 'Claim the daily reward 30 days in a row', c: 1500, t: () => DAILY.streak >= 30 },
+  { id: 'k5000', i: '💀', n: 'Legend', d: 'Get 5,000 eliminations', c: 2500, t: () => C.kills >= 5000 },
+  { id: 'h500', i: '🎯', n: 'Deadeye', d: 'Land 500 headshots', c: 750, t: () => C.heads >= 500 },
+  { id: 'w100', i: '🏅', n: 'Unstoppable', d: 'Win 100 matches', c: 1500, t: () => C.wins >= 100 },
+  { id: 'm100', i: '🎮', n: 'Regular', d: 'Play 100 matches', c: 500, t: () => C.matches >= 100 },
+  { id: 'mvp1', i: '⭐', n: 'MVP', d: 'Be the Match MVP', c: 150, t: () => C.mvps >= 1 },
+  { id: 'mvp10', i: '🌟', n: 'Superstar', d: 'Be the Match MVP 10 times', c: 600, t: () => C.mvps >= 10 },
+  { id: 'nade25', i: '💣', n: 'Demolition', d: 'Get 25 grenade eliminations', c: 300, t: () => C.nadeKills >= 25 },
+  { id: 's20', i: '🔥', n: 'On Fire', d: 'Get a 20-elimination streak', c: 400, t: () => C.bestStreak >= 20 },
+  { id: 'z20', i: '🧠', n: 'Brain Drain', d: 'Reach wave 20 in Zombies', c: 750, t: () => C.bestRound >= 20 },
+  { id: 'zk500', i: '🪦', n: 'Grave Digger', d: 'Kill 500 zombies', c: 500, t: () => C.zKills >= 500 },
+  { id: 'gold', i: '🥇', n: 'Golden', d: 'Reach Gold rank in Ranked', c: 400, t: () => RANK.best >= 700 },
+  { id: 'dia', i: '💎', n: 'Diamond Hands', d: 'Reach Diamond rank in Ranked', c: 1500, t: () => RANK.best >= 1800 },
+  { id: 'gl25', i: '🔧', n: 'Gunsmith', d: 'Get any gun to level 25', c: 300, t: () => Object.keys(WEAPONS).some(k => wLevel(k) >= 25) },
+  { id: 'gl100', i: '⚙️', n: 'Weapon Master', d: 'Get any gun to level 100', c: 3000, t: () => Object.keys(WEAPONS).some(k => wLevel(k) >= 100) },
+  { id: 'cr50', i: '📦', n: 'Crate Hunter', d: 'Open 50 crates', c: 500, t: () => C.crates >= 50 },
+  { id: 'rich', i: '💰', n: 'Saving Up', d: 'Have 10,000 coins at once', c: 500, t: () => WALLET.coins >= 10000 },
+  { id: 'fr5', i: '🤝', n: 'Squad', d: 'Add 5 friends', c: 150, t: () => FRIENDS.length >= 5 },
+  { id: 'supp', i: '🔇', n: 'Silent Operator', d: 'Equip a Suppressor on any gun', c: 150, t: () => Object.values(WATT).some(l => Array.isArray(l) && l.includes('supp')) },
 ];
 function checkAch() {
   const got = [];
