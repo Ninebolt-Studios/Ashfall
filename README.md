@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v62)](https://gaayyynesss.github.io/Seige/?v=62)
+## ▶️ [PLAY NOW — latest version (v63)](https://gaayyynesss.github.io/Seige/?v=63)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=62
+**Latest:** https://gaayyynesss.github.io/Seige/?v=63
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v62** | https://gaayyynesss.github.io/Seige/?v=62 | Team Battle and Ranked are now **first to 65 eliminations** (was 100) |
+| **v63** | https://gaayyynesss.github.io/Seige/?v=63 | Zombies: the Mystery Crate now costs **1,500 points** (was 950) |
+| v62 | https://gaayyynesss.github.io/Seige/?v=62 | Team Battle and Ranked are now **first to 65 eliminations** (was 100) |
 | v61 | https://gaayyynesss.github.io/Seige/?v=61 | **Zombies mode:** endless rounds of the undead on a dark, foggy map. Earn points for hits and kills, spend 950 on the **Mystery Crate** for a random gun, grab power-ups (Full Ammo, 2x Points, Blast). New achievement: Undying (round 10) |
 | v60 | https://gaayyynesss.github.io/Seige/?v=60 | **Slower healing:** health starts coming back after 7 seconds without damage (was 5) and heals 6 per second (was 12). Tough Skin: 4.5 seconds, 10 per second |
 | v59 | https://gaayyynesss.github.io/Seige/?v=59 | **Faster reloads:** every gun reloads 30% faster (Fast Hands perk still stacks on top) |
@@ -79,7 +80,7 @@ Everyone who opens the link plays in the same Team Battle. AI soldiers fill ever
 | **Ranked** | Ranked Team Battle (5 v 5, first to 65). Win: **+25 RP** plus 1 per elimination (up to +10). Loss: **−15 RP** (a little back for 5+ eliminations). Quitting mid-match counts as a loss (−20). Ranks: 🥉 Bronze (0), 🥈 Silver (300), 🥇 Gold (700), 💠 Platinum (1,200), 💎 Diamond (1,800). Bots get tougher at higher ranks. Your rank badge shows next to your name on the scoreboard. |
 | **Duel 1v1** | Face your party member one on one, no bots, first to 7 eliminations. Make a party and share the code first. |
 | **Gun Game** | Free-for-all against 9 bots. Every elimination swaps you to the next of 10 guns (SMG → PDW → Rifle → Battle Rifle → LMG → Shotgun → Marksman → Sniper → Hand Cannon → Sidearm). First to get an elimination with all 10 wins. Grenades are off in this mode. |
-| **Zombies** | Solo, endless rounds on a dark, foggy version of the map you pick. Zombies climb out of the ground and walk at you; each round brings more, with more health and speed, and fast runners from round 4. You start with a pistol. Points: +10 per hit, +60 per kill, +100 for a headshot kill. Tap **CRATE** (or press **B**) to spend 950 points on a random gun. Zombies sometimes drop power-ups: **Full Ammo**, **2x Points** (30 s) and **Blast** (wipes out nearby zombies). Your best round is saved. |
+| **Zombies** | Solo, endless rounds on a dark, foggy version of the map you pick. Zombies climb out of the ground and walk at you; each round brings more, with more health and speed, and fast runners from round 4. You start with a pistol. Points: +10 per hit, +60 per kill, +100 for a headshot kill. Tap **CRATE** (or press **B**) to spend **1,500 points** on a random gun. Zombies sometimes drop power-ups: **Full Ammo**, **2x Points** (30 s) and **Blast** (wipes out nearby zombies). Your best round is saved. |
 | **Drone Holdout** | Solo survival against endless waves of armed drones. Grab green supply cases to heal. |
 
 ## Daily rewards & challenges
