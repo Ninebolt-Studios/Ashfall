@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v47)](https://gaayyynesss.github.io/Seige/?v=47)
+## ▶️ [PLAY NOW — latest version (v48)](https://gaayyynesss.github.io/Seige/?v=48)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=47
+**Latest:** https://gaayyynesss.github.io/Seige/?v=48
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v47** | https://gaayyynesss.github.io/Seige/?v=47 | Fix: on iPad a black strip could appear at the bottom after scrolling the menu; the game now re-checks the screen size twice a second and fixes itself. The menu also no longer runs slightly off the bottom of the screen |
+| **v48** | https://gaayyynesss.github.io/Seige/?v=48 | Battle pass tiers now take **599 XP** each from Season 2 on (was 650). XP you already earned this season counts toward the new tiers |
+| v47 | https://gaayyynesss.github.io/Seige/?v=47 | Fix: on iPad a black strip could appear at the bottom after scrolling the menu; the game now re-checks the screen size twice a second and fixes itself. The menu also no longer runs slightly off the bottom of the screen |
 | v46 | https://gaayyynesss.github.io/Seige/?v=46 | **Adaptive bots:** they get easier when you're struggling and tougher when you're doing really well. New **Bot difficulty** setting (Adaptive, Easy, Normal, Hard) |
 | v45 | https://gaayyynesss.github.io/Seige/?v=45 | **Season 2: Harvest is live** (Nov 16–26): orange colors, pumpkins and hay bales on every map, 75 tiers at **650 XP per tier**. **Season 2 Premium code: `SCYTHE26`** (the old code `DUSTVIP` no longer works). Reach tier 75 with Premium for the **SC-7 Scythe** |
 | v44 | https://gaayyynesss.github.io/Seige/?v=44 | **Kill cam** (watch from behind whoever got you while you wait to respawn) and a **Match MVP** card at the end of every match (+100 coins if it's you) |
@@ -150,7 +151,7 @@ Crates hold shop-only operator skins (Sand Viper, Copperhead, Midnight, Royal Gu
 The **Shop** tab has a blackjack table that uses **game coins only** (never real money). Bet 10–250 coins, then **Hit**, **Stand** or **Double**. Blackjack pays 3:2, the dealer stands on 17, and a tie (push) gives your bet back.
 
 ## Battle pass & skins
-Each season has a free battle pass with Season 1 had 50 tiers of **1,000 XP**, and every season from Season 2 has **75 tiers of 650 XP**, with coins every 5 tiers. Earn XP by getting eliminations, finishing and winning matches, and surviving Holdout waves. Ranking up unlocks **weapon camos** and **titles**. All **operator skins are free** to equip from the start on the **Loadout** tab; titles are equipped there too. Progress is saved on your device and travels with your backup code.
+Each season has a free battle pass with Season 1 had 50 tiers of **1,000 XP**, and every season from Season 2 has **75 tiers of 599 XP**, with coins every 5 tiers. Earn XP by getting eliminations, finishing and winning matches, and surviving Holdout waves. Ranking up unlocks **weapon camos** and **titles**. All **operator skins are free** to equip from the start on the **Loadout** tab; titles are equipped there too. Progress is saved on your device and travels with your backup code.
 
 ### Premium pass
 An optional **Premium Pass** unlocks 3 exclusive operator skins (Gold Rush, Obsidian, Prism), the **VIP** title, and **+25% XP**. **Each season has its own Premium code and its own premium weapon**, earned by reaching the season's final tier with Premium: the **VX-9 Tempest** rifle in Season 1 and the **SC-7 Scythe** SMG in Season 2. Skins, the VIP title and weapons you earn stay yours after the season ends. Enter the code on the **Pass** tab. (The codes are set by the game's creator in `PREMIUM_CODES` in index.html.)
