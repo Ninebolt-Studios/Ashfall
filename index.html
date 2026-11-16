@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116134027';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116134953';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -680,7 +680,7 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
         <div class="prow" id="premRedeem"><input type="text" id="premCode" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Premium code" aria-label="Premium code"><button class="btn go" id="premBtn" type="button">Redeem</button></div>
       </div>
       <div class="bp-tiers" id="bpTiers"></div>
-      <p class="tip">A new season starts every week with a new color scheme and map decorations. Everything you unlock stays yours. Earn XP: 50 per elimination, 15 bonus for a headshot finish, 80 for finishing a match, 150 more for a win, 30 per Holdout wave, plus daily challenges on the Play tab. Season 1 has 50 tiers of 1,000 XP; from Season 2 every season has 75 tiers of 650 XP, with coins every 5 tiers. Premium pass adds +25% XP. Progress saves on this device and travels with your backup code.</p>
+      <p class="tip">A new season starts every week with a new color scheme and map decorations. Everything you unlock stays yours. Earn XP: 50 per elimination, 15 bonus for a headshot finish, 80 for finishing a match, 150 more for a win, 30 per Holdout wave, plus daily challenges on the Play tab. Season 1 has 50 tiers of 1,000 XP; from Season 2 every season has 75 tiers of 599 XP, with coins every 5 tiers. Premium pass adds +25% XP. Progress saves on this device and travels with your backup code.</p>
     </section>
 
     <section class="pane" id="pane-career" hidden>
@@ -819,7 +819,7 @@ function seasonTheme(n) {
   return Object.assign({}, base, { name: base.name + ' ' + n, camoName: base.camoName + ' ' + n });
 }
 const SEASON = seasonNum(), THEME = seasonTheme(SEASON);
-const seasonXP = n => n <= 1 ? 1000 : 650; // XP per battle-pass tier: Season 1 = 1000, Season 2 and later = 650
+const seasonXP = n => n <= 1 ? 1000 : 599; // XP per battle-pass tier: Season 1 = 1000, Season 2 and later = 599
 const BP_XP = seasonXP(SEASON);
 for (const n of new Set([...Object.keys(SEASONS).map(Number), SEASON])) { const t = seasonTheme(n); if (!t.camo) continue; CAMOS['s' + n] = { name: t.camoName, c: t.camo, metal: !!t.metal, season: n }; }
 function seasonRewards(n) {
