@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116163557';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116163702';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -3829,9 +3829,10 @@ function fire() {
   if (P.ammo === 0) startReload();
   updHud();
 }
+const RELOAD_MUL = 0.7; // every gun reloads 30% faster than its base time
 function startReload() {
   if (P.reloading > 0 || P.ammo >= magOf(P.w) || !P.alive) return;
-  P.reloading = W().reload * (hasPerk('fasthands') ? 0.75 : 1); sfx.reload(P.reloading); updHud();
+  P.reloading = W().reload * RELOAD_MUL * (hasPerk('fasthands') ? 0.75 : 1); sfx.reload(P.reloading); updHud();
 }
 
 /* ---------- input: keyboard & mouse ---------- */
