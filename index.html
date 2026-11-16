@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116163441';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116163557';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -1875,6 +1875,8 @@ function addSkinPreviews(r) {
 /* ---------- audio ---------- */
 let actx = null, master = null, noiseBuf = null;
 function ensureAudio() {
+  // treat the game like media playback so iPhone/iPad play it (also with the silent switch on)
+  try { if (navigator.audioSession && navigator.audioSession.type !== 'playback') navigator.audioSession.type = 'playback'; } catch (e) {}
   if (!actx) {
     try {
       actx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1883,7 +1885,7 @@ function ensureAudio() {
       const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
     } catch (e) { actx = null; }
   }
-  if (actx && actx.state === 'suspended') actx.resume();
+  if (actx && actx.state !== 'running' && !document.hidden) { try { actx.resume(); } catch (e) {} }
 }
 /* ---------- menu music: a calm synth loop made on the fly (no audio files) ---------- */
 let musicGain = null, musicTimer = null, musicStep = 0, musicNext = 0;
@@ -1897,6 +1899,7 @@ function mnote(freq, start, dur, type, vol) {
 function musicTick() {
   if (!actx || !musicGain) return;
   const beat = 60 / 84 / 2; // eighth notes at 84 BPM
+  if (musicNext < actx.currentTime) musicNext = actx.currentTime + 0.05; // catch up after a pause
   while (musicNext < actx.currentTime + 0.4) {
     const t = musicNext, bar = Math.floor(musicStep / 8) % 4, st = musicStep % 8, ch = MUSIC_CHORDS[bar];
     if (st === 0) { ch.forEach(m => mnote(mtof(m), t, beat * 8, 'triangle', 0.05)); mnote(mtof(ch[0] - 24), t, beat * 4, 'sine', 0.16); }
@@ -1916,7 +1919,19 @@ function updMusic() { // fade in on menus, out during matches
   const want = state === 'play' ? 0 : S.music * 0.5, g = musicGain.gain;
   g.cancelScheduledValues(actx.currentTime); g.setTargetAtTime(want, actx.currentTime, 0.6);
 }
-document.addEventListener('pointerdown', () => { ensureAudio(); startMusic(); updMusic(); }, { once: true });
+// iPad/iPhone only let sound start at the END of a tap and pause it when you leave the tab, so wake it on every tap and when you come back
+function unlockAudio() {
+  ensureAudio(); if (!actx) return;
+  try { const b = actx.createBuffer(1, 1, 22050), src = actx.createBufferSource(); src.buffer = b; src.connect(actx.destination); src.start(0); } catch (e) {}
+  startMusic(); updMusic();
+}
+['touchend', 'click', 'pointerup', 'keydown'].forEach(ev => document.addEventListener(ev, unlockAudio, { passive: true, capture: true }));
+document.addEventListener('visibilitychange', () => {
+  if (!actx) return;
+  if (document.hidden) { try { actx.suspend(); } catch (e) {} }
+  else { try { actx.resume(); } catch (e) {} setTimeout(() => { if (actx.state !== 'running') try { actx.resume(); } catch (e) {} }, 300); }
+});
+window.addEventListener('pageshow', () => { if (actx) try { actx.resume(); } catch (e) {} });
 function tone(freq, dur, type, vol, slide, delay = 0) {
   if (!actx || vol < 0.002) return;
   const t = actx.currentTime + delay, o = actx.createOscillator(), g = actx.createGain();
