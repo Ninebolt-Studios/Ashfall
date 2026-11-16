@@ -4,16 +4,19 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v42)](https://gaayyynesss.github.io/Seige/?v=42)
+## ▶️ [PLAY NOW — latest version (v45)](https://gaayyynesss.github.io/Seige/?v=45)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=42
+**Latest:** https://gaayyynesss.github.io/Seige/?v=45
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v42** | https://gaayyynesss.github.io/Seige/?v=42 | Season 2 and later: 650 XP per battle-pass tier (Season 1 stays 1,000) |
+| **v45** | https://gaayyynesss.github.io/Seige/?v=45 | Season 2 and later: 650 XP per battle-pass tier (Season 1 stays 1,000) |
+| v44 | https://gaayyynesss.github.io/Seige/?v=44 | **Kill cam** (watch from behind whoever got you while you wait to respawn) and a **Match MVP** card at the end of every match (+100 coins if it's you) |
+| v43 | https://gaayyynesss.github.io/Seige/?v=43 | Two new maps: **Hollow Pines** (snowy village at night, wooden cabins, lamp posts, falling snow) and **Greywater** (rainy harbor with a warehouse, stacked containers, dock cranes and rain). Also fixed the gun floating in the menu background |
+| v42 | https://gaayyynesss.github.io/Seige/?v=42 | **Weapon attachments** unlocked by gun level: Extended Mag (lv 2), Grip (lv 4), Laser (lv 6), Suppressor (lv 8); up to 2 per gun |
 | v41 | https://gaayyynesss.github.io/Seige/?v=41 | Slightly smarter bots: they notice you a bit faster, check where they last saw you, back off and strafe when hurt, roam the whole bigger map, and aim a touch better at range |
 | v40 | https://gaayyynesss.github.io/Seige/?v=40 | **Kill streak buttons** (use Map Scan / Missile when you want), **perks & wildcards** (Salvager supply drops and 8 more perks, 4 wildcards), **14 new crate items**, a **refreshed UI**, and **much bigger maps** (140 m across, with buildings to fight through) |
 | v39 | https://gaayyynesss.github.io/Seige/?v=39 | **Grenades** (2 per life, NADE button or G), new **Gun Game** mode (free-for-all vs bots, a new gun every elimination), and **17 achievements** with coin rewards on the Career tab |
@@ -55,7 +58,7 @@ Everyone who opens the link plays in the same Team Battle. AI soldiers fill ever
 ## Game modes
 | Mode | Description |
 |---|---|
-| **Team Battle** | Delta vs Viper, 5 v 5, across five maps. The first team to 100 eliminations wins. Party members play on the same team. |
+| **Team Battle** | Delta vs Viper, 5 v 5, across seven maps (Outpost, Dockyard, Frostline, Refinery, Hollow Pines, Greywater, Blacksite). The first team to 100 eliminations wins. Party members play on the same team. |
 | **Duel 1v1** | Face your party member one on one, no bots, first to 7 eliminations. Make a party and share the code first. |
 | **Gun Game** | Free-for-all against 9 bots. Every elimination swaps you to the next of 10 guns (SMG → PDW → Rifle → Battle Rifle → LMG → Shotgun → Marksman → Sniper → Hand Cannon → Sidearm). First to get an elimination with all 10 wins. Grenades are off in this mode. |
 | **Drone Holdout** | Solo survival against endless waves of armed drones. Grab green supply cases to heal. |
@@ -79,6 +82,16 @@ Eliminations in a row without dying:
 | **30** | **Missile Strike:** a missile hits the biggest group of enemies |
 
 Your current streak shows in the top-right corner during a match. When you earn a reward, a glowing **SCAN** or **MISSILE** button appears on the left side of the screen. Use it whenever you want (keyboard: **Z** for Map Scan, **X** for Missile). Earned rewards stay until you use them, even if you die, and reset at the start of the next match.
+
+## Attachments
+Each gun unlocks attachments as it levels up. Pick up to 2 per gun on the **Loadout** tab (the list shows the gun you have selected).
+
+| Attachment | Gun level | What it does |
+|---|---|---|
+| **Extended Mag** | 2 | +30% magazine size |
+| **Grip** | 4 | 25% less recoil |
+| **Laser** | 6 | 25% tighter hip-fire spread |
+| **Suppressor** | 8 | No muzzle flash, and bots take longer to react to you |
 
 ## Perks & wildcards
 On the **Loadout** tab pick one perk in each of three slots, plus a wildcard.
@@ -168,6 +181,10 @@ Headshots deal about double damage and leg hits deal less. Damage drops off at l
 | Use Map Scan / Missile | **SCAN** / **MISSILE** (appear when earned) | Z / X |
 | Leaderboard | Tap the score bar | Hold Tab |
 | Pause | **II** | Esc |
+
+## Kill cam & MVP
+- **Kill cam:** when you're eliminated in Team Battle, Duels or Gun Game, the camera shows the player who got you, from just behind them, until you respawn.
+- **Match MVP:** at the end of every match a card shows the top player with their eliminations, deaths and K/D. If it's you, you get **+100 coins**.
 
 ## Leaderboards
 - **Match leaderboard:** tap the score bar at the top (or hold **Tab** on a keyboard) to see every player and bot ranked by eliminations and deaths. It also shows at the end of every match and on the pause screen.
