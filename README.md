@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v67)](https://gaayyynesss.github.io/Seige/?v=67)
+## ▶️ [PLAY NOW — latest version (v68)](https://gaayyynesss.github.io/Seige/?v=68)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=67
+**Latest:** https://gaayyynesss.github.io/Seige/?v=68
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v67** | https://gaayyynesss.github.io/Seige/?v=67 | Season 2 started early, so anyone who finished the **Season 1 pass at tier 49 or higher** now gets the **VX-9 Tempest** (with a one-time notice on the Play tab) |
+| **v68** | https://gaayyynesss.github.io/Seige/?v=68 | **Admin panel** (owner only, in Settings) and **gift codes** for friends; the old public Tempest gift code no longer works and secret codes are no longer stored in the game in plain text. The Premium code box now stays visible so premium players can redeem gift codes |
+| v67 | https://gaayyynesss.github.io/Seige/?v=67 | Season 2 started early, so anyone who finished the **Season 1 pass at tier 49 or higher** now gets the **VX-9 Tempest** (with a one-time notice on the Play tab) |
 | v66 | https://gaayyynesss.github.io/Seige/?v=66 | **Calling cards:** unlock 15 banners and 15 emblems with coins (Loadout tab); your card shows when you get someone (KILLED BY) and theirs when you get them (ELIMINATED). **Full-screen MVP moment** at the end of every match with the MVP's card, operator and **best play** |
 | v65 | https://gaayyynesss.github.io/Seige/?v=65 | **20 new achievements** (37 total) and a fix for the health bar showing **0 while still alive** (health under 1 now counts as dead, and health is shown rounded up) |
 | v64 | https://gaayyynesss.github.io/Seige/?v=64 | Zombies: says **waves** instead of rounds, and **health no longer comes back on its own** (zombies drop **health packs**, +40 each). New **medkit** and **ammo can** models with glow rings in every mode |
