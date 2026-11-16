@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v38)](https://gaayyynesss.github.io/Seige/?v=38)
+## ▶️ [PLAY NOW — latest version (v39)](https://gaayyynesss.github.io/Seige/?v=39)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=38
+**Latest:** https://gaayyynesss.github.io/Seige/?v=39
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v38** | https://gaayyynesss.github.io/Seige/?v=38 | Fix: on iPad the bottom buttons (Fire, Aim, Crouch, Reload) could be cut off when the browser toolbar changed size; the game now always fits the visible screen |
+| **v39** | https://gaayyynesss.github.io/Seige/?v=39 | **Grenades** (2 per life, NADE button or G), new **Gun Game** mode (free-for-all vs bots, a new gun every elimination), and **17 achievements** with coin rewards on the Career tab |
+| v38 | https://gaayyynesss.github.io/Seige/?v=38 | Fix: on iPad the bottom buttons (Fire, Aim, Crouch, Reload) could be cut off when the browser toolbar changed size; the game now always fits the visible screen |
 | v37 | https://gaayyynesss.github.io/Seige/?v=37 | Fix: on iPad the top of the screen (health, score bar, minimap) could get cut off after typing or swiping; the game now snaps back into place |
 | v36 | https://gaayyynesss.github.io/Seige/?v=36 | **Better camos:** every camo on the gun now uses exactly the colors on its swatch, with real patterns (tiger stripes, digital pixels, carbon weave, galaxy stars, lava cracks, diamond facets); new richer colors for Dune, Jungle, Frost, Blood, Cobalt and Gold |
 | v35 | https://gaayyynesss.github.io/Seige/?v=35 | **Blackjack table** in the Shop (game coins only), **new detailed soldiers** (knees, shaped arms, gear, smoother animation), **Ultra graphics** setting, and a 60 FPS guard on every graphics level |
@@ -53,12 +54,19 @@ Everyone who opens the link plays in the same Team Battle. AI soldiers fill ever
 |---|---|
 | **Team Battle** | Delta vs Viper, 5 v 5, across five maps. The first team to 100 eliminations wins. Party members play on the same team. |
 | **Duel 1v1** | Face your party member one on one, no bots, first to 7 eliminations. Make a party and share the code first. |
+| **Gun Game** | Free-for-all against 9 bots. Every elimination swaps you to the next of 10 guns (SMG → PDW → Rifle → Battle Rifle → LMG → Shotgun → Marksman → Sniper → Hand Cannon → Sidearm). First to get an elimination with all 10 wins. Grenades are off in this mode. |
 | **Drone Holdout** | Solo survival against endless waves of armed drones. Grab green supply cases to heal. |
 
 ## Daily rewards & challenges
 The **Daily** box on the Play tab has:
 - **Login reward:** tap **Claim** once a day. Coming back on days in a row pays more: 50, 75, 100, 150, 200, 250, then 300 coins every day after that. Miss a day and it starts over.
 - **3 daily challenges:** two give battle-pass XP (1,500–3,000 XP) and one gives coins (250–300). They change every day at midnight.
+
+## Grenades
+You carry **2 frag grenades** each life. Tap **NADE** (or press **G**) to throw one. It bounces off walls and the ground and explodes after 2 seconds, hurting enemies within about 7 meters who aren't behind cover. In Drone Holdout you get one more grenade (up to 3) after every wave.
+
+## Achievements
+The **Career** tab lists 17 achievements, such as First Blood, Centurion (100 eliminations), Scanner (10 streak), Missile Man (30 streak), Gun Master (win a Gun Game), Lucky (own a Legendary) and Collector (own every crate item). Each pays coins once, from 50 up to 2,000.
 
 ## Kill streaks
 Eliminations in a row without dying:
@@ -131,6 +139,7 @@ Headshots deal about double damage and leg hits deal less. Damage drops off at l
 | Crouch | **CROUCH** | C |
 | Jump | **JUMP** | Space |
 | Reload | **RELOAD** | R |
+| Throw grenade | **NADE** | G |
 | Leaderboard | Tap the score bar | Hold Tab |
 | Pause | **II** | Esc |
 
