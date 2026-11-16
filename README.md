@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v49)](https://gaayyynesss.github.io/Seige/?v=49)
+## ▶️ [PLAY NOW — latest version (v50)](https://gaayyynesss.github.io/Seige/?v=50)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=49
+**Latest:** https://gaayyynesss.github.io/Seige/?v=50
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v49** | https://gaayyynesss.github.io/Seige/?v=49 | **Ranked mode:** ranked Team Battle with rank points and 5 ranks (Bronze → Silver → Gold → Platinum → Diamond), a rank card on the Play tab, rank badges on the scoreboard, and bots that get tougher as you climb |
+| **v50** | https://gaayyynesss.github.io/Seige/?v=50 | **Stats card** on the Career tab (rank, K/D, win rate, best weapon, favorite map and more) and a **friends list**: add friends by callsign and see when they're online and what they're playing |
+| v49 | https://gaayyynesss.github.io/Seige/?v=49 | **Ranked mode:** ranked Team Battle with rank points and 5 ranks (Bronze → Silver → Gold → Platinum → Diamond), a rank card on the Play tab, rank badges on the scoreboard, and bots that get tougher as you climb |
 | v48 | https://gaayyynesss.github.io/Seige/?v=48 | Battle pass tiers now take **599 XP** each from Season 2 on (was 650). XP you already earned this season counts toward the new tiers |
 | v47 | https://gaayyynesss.github.io/Seige/?v=47 | Fix: on iPad a black strip could appear at the bottom after scrolling the menu; the game now re-checks the screen size twice a second and fixes itself. The menu also no longer runs slightly off the bottom of the screen |
 | v46 | https://gaayyynesss.github.io/Seige/?v=46 | **Adaptive bots:** they get easier when you're struggling and tougher when you're doing really well. New **Bot difficulty** setting (Adaptive, Easy, Normal, Hard) |
@@ -188,6 +189,11 @@ Headshots deal about double damage and leg hits deal less. Damage drops off at l
 | Use Map Scan / Missile | **SCAN** / **MISSILE** (appear when earned) | Z / X |
 | Leaderboard | Tap the score bar | Hold Tab |
 | Pause | **II** | Esc |
+
+## Profile & friends
+The **Career** tab opens with your **stats card**: rank badge, RP, eliminations, K/D, wins and win rate, best weapon (most eliminations), favorite map (most matches), best streak, best Holdout wave, season tier and achievements.
+
+Below it is your **friends list**. Type a friend's exact callsign and tap **Add**. A green dot means they're online, and it shows what they're doing (menu, Team Battle, Ranked, Gun Game or Holdout) with their rank badge. The top of the menu also says how many friends are online. To play together, make a party on the Play tab and send them the code.
 
 ## Kill cam & MVP
 - **Kill cam:** when you're eliminated in Team Battle, Duels or Gun Game, the camera shows the player who got you, from just behind them, until you respawn.

@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116144017';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116144241';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -440,6 +440,20 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 .mcard[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
 .mcard:focus-visible, .vbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { #banner, #hurt, #hpfill, #cross, .switch span, .switch span::after { transition: none; } }
+/* profile + friends */
+.profile { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-items: center; padding: 16px 18px; margin-bottom: 14px; border-radius: 14px; border: 1px solid var(--line); background: linear-gradient(140deg, color-mix(in srgb, var(--accent) 22%, transparent), var(--panel2) 60%); }
+.profile .pbadge { grid-row: span 2; font-size: 56px; line-height: 1; }
+.profile .pname { font: 700 30px var(--display); letter-spacing: .1em; text-transform: uppercase; }
+.profile .psub { color: var(--dim); font-size: 13px; }
+.profile .pstats { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 8px; }
+.profile .pstats div { display: grid; gap: 2px; padding: 8px 10px; background: rgba(0,0,0,.25); border-radius: 10px; }
+.profile .pstats b { font: 700 18px var(--mono); }
+.friends { display: grid; gap: 6px; }
+.friend { display: grid; grid-template-columns: 12px 1fr auto auto; gap: 10px; align-items: center; padding: 8px 10px; background: rgba(0,0,0,.2); border-radius: 10px; }
+.friend .dot { width: 10px; height: 10px; border-radius: 50%; background: #5a5a5a; }
+.friend.on .dot { background: var(--heal); box-shadow: 0 0 8px var(--heal); }
+.friend .fs { font-size: 12px; color: var(--dim); }
+.friend button { background: none; border: 0; color: var(--dim); font-size: 18px; cursor: pointer; padding: 2px 6px; }
 /* ranked */
 .rankbox { display: flex; gap: 14px; align-items: center; padding: 12px 16px; background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; }
 .rankbox .rb { font-size: 44px; }
@@ -697,6 +711,12 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
     </section>
 
     <section class="pane" id="pane-career" hidden>
+      <div class="profile" id="profileCard"></div>
+      <div class="acct"><span class="label">Friends · <span id="frCount"></span></span>
+        <div class="prow"><input type="text" id="frIn" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Friend's callsign" aria-label="Friend's callsign"><button class="btn go" id="frAdd" type="button">Add</button></div>
+        <div class="friends" id="frList"></div>
+        <span class="amsg">Add friends by their exact callsign. You'll see when they're online and what they're playing. To play together, make a party on the Play tab and send them the code.</span>
+      </div>
       <div class="acct"><span class="label">Achievements · <span id="achCount"></span></span><div class="achs" id="achList"></div></div>
       <div class="acct">
         <span class="label">Account · keep your progress</span>
@@ -737,7 +757,7 @@ const DEF = { botDiff: 'adaptive', sens: 1.2, adsSens: 0.8, invertY: false, assi
   quality: isTouch ? 'medium' : 'high', fov: 72, motion: true, fps: false, uncap: false, volume: 0.8, steps: true, xhColor: 'white', xhSize: 1, radar: true };
 const S = Object.assign({}, DEF, store.get('settings', {}));
 const saveS = () => store.set('settings', S);
-const C = Object.assign({ matches: 0, wins: 0, kills: 0, deaths: 0, heads: 0, bestWave: 0, bestScore: 0, bestStreak: 0, ggWins: 0 }, store.get('career', {}));
+const C = Object.assign({ matches: 0, wins: 0, kills: 0, deaths: 0, heads: 0, bestWave: 0, bestScore: 0, bestStreak: 0, ggWins: 0, maps: {} }, store.get('career', {}));
 const saveC = () => store.set('career', C);
 const LB = Object.assign({ battles: [], holdout: [] }, store.get('lb', {}));
 function lbAdd(list, row, cmp) { LB[list] = (Array.isArray(LB[list]) ? LB[list] : []).concat([row]).sort(cmp).slice(0, 10); store.set('lb', LB); }
@@ -868,6 +888,7 @@ const WALLET = Object.assign({ coins: 0, skins: [], camos: [] }, store.get('wall
 if (!Array.isArray(WALLET.skins)) WALLET.skins = []; if (!Array.isArray(WALLET.camos)) WALLET.camos = [];
 if (!WALLET.pity || typeof WALLET.pity !== 'object') WALLET.pity = {};
 const saveWallet = () => store.set('wallet', WALLET);
+const FRIENDS = (Array.isArray(store.get('friends', [])) ? store.get('friends', []) : []).filter(x => typeof x === 'string').slice(0, 30);
 // ---- ranked: rank points (RP) go up when you win a ranked match and down when you lose ----
 const RANKS = [{ n: 'Bronze', i: '🥉', min: 0, c: '#c8844a' }, { n: 'Silver', i: '🥈', min: 300, c: '#c8ccd4' }, { n: 'Gold', i: '🥇', min: 700, c: '#f2c84b' }, { n: 'Platinum', i: '💠', min: 1200, c: '#5fe3d0' }, { n: 'Diamond', i: '💎', min: 1800, c: '#8ab8ff' }];
 const RANK = Object.assign({ rp: 0, best: 0, w: 0, l: 0 }, store.get('rank', {}));
@@ -2167,6 +2188,7 @@ function siegeHurt(dmg, sx, sz) {
 }
 function siegeOver() {
   state = 'over';
+  if (!C.maps || typeof C.maps !== 'object') C.maps = {}; C.maps[curMap] = (C.maps[curMap] || 0) + 1;
   C.bestWave = Math.max(C.bestWave, wave); C.bestScore = Math.max(C.bestScore, score); C.deaths++; saveC();
   lbAdd('holdout', { s: score, wv: wave, m: curMap, t: Date.now() }, (a, b) => b.s - a.s || b.wv - a.wv || b.t - a.t);
   $('finalScore').textContent = score.toLocaleString(); $('finalWave').textContent = wave; $('bestScore').textContent = C.bestScore.toLocaleString(); $('finalCoins').textContent = '◎ ' + (P.mCoins || 0);
@@ -2584,7 +2606,7 @@ function netTick(dt) {
   if (T.win && !T.prevWin) { showMVP(); if (ranked) rankResult(T.win === P.team); }
   if (!T.win && T.prevWin) { T.rankDelta = 0; T.rankMsg = ''; }
   if (!T.win && T.prevWin) $('mvp').hidden = true;
-  if (T.win && !T.prevWin) { C.matches++; if (T.win === P.team) { C.wins++; addCoins(50); dailyProgress('wins', 1); } dailyProgress('matches', 1); saveC(); addXP(80 + (T.win === P.team ? 150 : 0));
+  if (T.win && !T.prevWin) { if (!C.maps || typeof C.maps !== 'object') C.maps = {}; C.maps[curMap] = (C.maps[curMap] || 0) + 1; C.matches++; if (T.win === P.team) { C.wins++; addCoins(50); dailyProgress('wins', 1); } dailyProgress('matches', 1); saveC(); addXP(80 + (T.win === P.team ? 150 : 0));
     lbAdd('battles', { k: P.kills, d: P.matchDeaths, r: T.win === P.team ? 'Win' : 'Loss', m: curMap, du: duel ? 1 : 0, t: Date.now() }, (a, b) => b.k - a.k || a.d - b.d || b.t - a.t); }
   if (!T.win && T.prevWin) myVote = null;
   T.prevWin = T.win;
@@ -2639,12 +2661,13 @@ function renderOnline() {
   if (!room) { el.textContent = 'Offline · bots fill every slot'; el.classList.remove('live'); return; }
   const n = lobbyPeers.length || 1, inBattle = lobbyPeers.filter(p => !p.sameTab && p.presence && p.presence.st === 'tdm').length;
   el.classList.toggle('live', n > 1);
-  el.textContent = n > 1 ? `${n} online${inBattle ? ' · ' + inBattle + ' in battle' : ''}` : 'Only you online · bots fill every slot';
+  const fo = FRIENDS.filter(f => friendStatus(f).on).length;
+  el.textContent = (n > 1 ? `${n} online${inBattle ? ' · ' + inBattle + ' in battle' : ''}` : 'Only you online · bots fill every slot') + (fo ? ' · ' + fo + ' friend' + (fo > 1 ? 's' : '') + ' online' : '');
 }
 (async () => {
   try { room = window.claude && window.claude.use ? await window.claude.use('room') : null; } catch (e) { room = null; }
   if (!room) { renderOnline(); return; }
-  room.onPeers(ch => { lobbyPeers = ch.peers; const me = ch.peers.find(p => p.sameTab); if (me && !troom) myPeer = me.peer; renderOnline(); }, () => { room = null; renderOnline(); });
+  room.onPeers(ch => { lobbyPeers = ch.peers; const me = ch.peers.find(p => p.sameTab); if (me && !troom) myPeer = me.peer; renderOnline(); if (!$('pane-career').hidden) renderFriends(); }, () => { room = null; renderOnline(); });
   setLobby(); renderOnline();
   if (party) enterParty(party);
 })();
@@ -3156,7 +3179,7 @@ function renderSettings() {
   }
 }
 $('resetSettings').addEventListener('click', () => { Object.assign(S, DEF); saveS(); renderSettings(); applyQuality(); applySettings(); });
-const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank'];
+const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank', 'friends'];
 function makeBackup() {
   const data = {}; for (const k of ACCT_KEYS) { const v = store.get(k, null); if (v !== null) data[k] = v; }
   try { return 'DL1.' + btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/=+$/, ''); } catch (e) { return ''; }
@@ -3222,7 +3245,45 @@ function renderAch() {
   for (const a of ACHS) { const d = document.createElement('div'); d.className = 'ach' + (ACH[a.id] ? ' got' : ''); d.innerHTML = '<span class="ai"></span><b></b><small></small>';
     d.children[0].textContent = ACH[a.id] ? a.i : '🔒'; d.children[1].textContent = a.n; d.children[2].textContent = a.d + ' · ◎ ' + a.c + (ACH[a.id] ? ' ✓' : ''); box.appendChild(d); }
 }
+const ST_NAME = { menu: 'In the menu', tdm: 'In Team Battle', ranked: 'In Ranked', gg: 'In Gun Game', siege: 'In Drone Holdout' };
+function friendStatus(name) {
+  const p = lobbyPeers.find(q => !q.sameTab && q.presence && String(q.presence.n || '').toLowerCase() === name.toLowerCase());
+  return p ? { on: true, st: ST_NAME[p.presence.st] || 'Online', rk: +p.presence.rk || 0 } : { on: false, st: 'Offline' };
+}
+function renderFriends() {
+  const box = $('frList'); if (!box) return; box.textContent = '';
+  const list = FRIENDS.map(n => ({ n, s: friendStatus(n) })).sort((a, b) => b.s.on - a.s.on || a.n.localeCompare(b.n));
+  $('frCount').textContent = list.filter(f => f.s.on).length + ' online · ' + list.length + ' total';
+  if (!list.length) { const e = document.createElement('span'); e.className = 'amsg'; e.textContent = 'No friends added yet.'; box.appendChild(e); }
+  for (const f of list) {
+    const d = document.createElement('div'); d.className = 'friend' + (f.s.on ? ' on' : '');
+    d.innerHTML = '<span class="dot"></span><b></b><span class="fs"></span><button type="button" aria-label="Remove friend">✕</button>';
+    d.children[1].textContent = (f.s.on ? rankBadge(f.s.rk) + ' ' : '') + f.n; d.children[2].textContent = f.s.st;
+    d.children[3].addEventListener('click', () => { FRIENDS.splice(FRIENDS.indexOf(f.n), 1); store.set('friends', FRIENDS); renderFriends(); });
+    box.appendChild(d);
+  }
+}
+$('frAdd').addEventListener('click', () => {
+  const v = ($('frIn').value || '').trim().slice(0, 16);
+  if (!v || FRIENDS.some(x => x.toLowerCase() === v.toLowerCase()) || v.toLowerCase() === playerName.toLowerCase()) { $('frIn').value = ''; return; }
+  FRIENDS.push(v); store.set('friends', FRIENDS); $('frIn').value = ''; renderFriends();
+});
+$('frIn').addEventListener('keydown', ev => { if (ev.key === 'Enter') $('frAdd').click(); });
+function renderProfile() {
+  const ri = rankIdx(), r = RANKS[ri], kd = C.deaths ? (C.kills / C.deaths).toFixed(2) : String(C.kills);
+  let bw = null, bk = -1; for (const k of Object.keys(WEAPONS)) { const n = WL[k] || 0; if (n > bk) { bk = n; bw = k; } }
+  let fm = null, fc = 0; for (const [k, n] of Object.entries(C.maps || {})) if (MAPS[k] && n > fc) { fc = n; fm = k; }
+  const stats = [['Eliminations', C.kills.toLocaleString()], ['K/D', kd], ['Wins', C.wins + ' / ' + C.matches], ['Win rate', C.matches ? Math.round(C.wins / C.matches * 100) + '%' : '—'],
+    ['Best weapon', bk > 0 ? WEAPONS[bw].name + ' (' + bk + ')' : '—'], ['Favorite map', fm ? MAPS[fm].name : '—'], ['Best streak', C.bestStreak || 0], ['Best Holdout wave', C.bestWave || 0],
+    ['Season ' + SEASON + ' tier', bpTier() + ' / ' + BP_TIERS], ['Achievements', Object.keys(ACH).length + ' / ' + ACHS.length]];
+  const pc = $('profileCard');
+  pc.innerHTML = '<span class="pbadge"></span><span class="pname"></span><span class="psub"></span><div class="pstats"></div>';
+  pc.children[0].textContent = r.i; pc.children[1].textContent = playerName;
+  pc.children[2].textContent = r.n + ' · ' + RANK.rp + ' RP' + (myTitle ? ' · “' + myTitle + '”' : '') + ' · ◎ ' + WALLET.coins.toLocaleString() + ' coins';
+  for (const [k, v] of stats) { const d = document.createElement('div'); d.innerHTML = '<span class="label"></span><b></b>'; d.children[0].textContent = k; d.children[1].textContent = v; pc.children[3].appendChild(d); }
+}
 function renderCareer() {
+  renderProfile(); renderFriends();
   renderAch();
   acctWho(); renderLB();
   const g = $('careerGrid'); g.textContent = '';
