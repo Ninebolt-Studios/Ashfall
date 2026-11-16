@@ -13,7 +13,7 @@ If the game looks like an older version, open the latest link above (the `?v=` n
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v45** | https://gaayyynesss.github.io/Seige/?v=45 | Season 2 and later: 650 XP per battle-pass tier (Season 1 stays 1,000) |
+| **v45** | https://gaayyynesss.github.io/Seige/?v=45 | **Season 2: Harvest is live** (Nov 16–26): orange colors, pumpkins and hay bales on every map, 75 tiers at **650 XP per tier**. **Season 2 Premium code: `SCYTHE26`** (the old code `DUSTVIP` no longer works). Reach tier 75 with Premium for the **SC-7 Scythe** |
 | v44 | https://gaayyynesss.github.io/Seige/?v=44 | **Kill cam** (watch from behind whoever got you while you wait to respawn) and a **Match MVP** card at the end of every match (+100 coins if it's you) |
 | v43 | https://gaayyynesss.github.io/Seige/?v=43 | Two new maps: **Hollow Pines** (snowy village at night, wooden cabins, lamp posts, falling snow) and **Greywater** (rainy harbor with a warehouse, stacked containers, dock cranes and rain). Also fixed the gun floating in the menu background |
 | v42 | https://gaayyynesss.github.io/Seige/?v=42 | **Weapon attachments** unlocked by gun level: Extended Mag (lv 2), Grip (lv 4), Laser (lv 6), Suppressor (lv 8); up to 2 per gun |
@@ -130,12 +130,14 @@ Crates hold shop-only operator skins (Sand Viper, Copperhead, Midnight, Royal Gu
 - **Daily item:** one crate item is for sale directly each day (Common 400, Rare 800, Epic 1,300, Legendary 2,000 coins). Everyone sees the same item. Your coins and crate items are saved on your device and in your backup code.
 
 ## Seasons
-**Season 1** runs until Nov 19. From **Season 2 (Nov 20)** a **new season starts every week** (Fridays). Each season has its own **color scheme**, **map decorations**, and a new season camo at tier 60. Everything you unlocked in earlier seasons stays yours.
+> **Current Premium code (Season 2): `SCYTHE26`**. Enter it on the **Pass** tab.
+
+**Season 2** runs Nov 16–26. From **Season 3 (Nov 27)** a **new season starts every week** (Fridays). Each season has its own **color scheme**, **map decorations**, and a new season camo at tier 60. Everything you unlocked in earlier seasons stays yours.
 
 | Season | Dates (2026) | Theme | Premium code | Premium weapon |
 |---|---|---|---|---|
-| 1 | until Nov 19 | Dust Storm (50 tiers) | `DUSTVIP` | VX-9 Tempest rifle |
-| 2 | Nov 20–26 | Harvest: pumpkins and hay bales | `SCYTHE26` | SC-7 Scythe SMG |
+| 1 | until Nov 15 | Dust Storm (50 tiers) | `DUSTVIP` | VX-9 Tempest rifle |
+| 2 | **Nov 16–26 (live now)** | Harvest: pumpkins and hay bales | **`SCYTHE26`** | SC-7 Scythe SMG |
 | 3 | Nov 27–Dec 3 | Neon Grid: glowing neon posts | added the day before | added the day before |
 | 4 | Dec 4–10 | Frostbite: ice crystals and snowfall | added the day before | added the day before |
 | 5 | Dec 11–17 | Midnight: floating violet orbs | added the day before | added the day before |
@@ -146,7 +148,7 @@ Crates hold shop-only operator skins (Sand Viper, Copperhead, Midnight, Royal Gu
 The **Shop** tab has a blackjack table that uses **game coins only** (never real money). Bet 10–250 coins, then **Hit**, **Stand** or **Double**. Blackjack pays 3:2, the dealer stands on 17, and a tie (push) gives your bet back.
 
 ## Battle pass & skins
-Each season has a free battle pass. Season 1 has 50 tiers of **1,000 XP**, and every season from Season 2 has **75 tiers of 650 XP**, with coins every 5 tiers. Earn XP by getting eliminations, finishing and winning matches, and surviving Holdout waves. Ranking up unlocks **weapon camos** and **titles**. All **operator skins are free** to equip from the start on the **Loadout** tab; titles are equipped there too. Progress is saved on your device and travels with your backup code.
+Each season has a free battle pass with Season 1 had 50 tiers of **1,000 XP**, and every season from Season 2 has **75 tiers of 650 XP**, with coins every 5 tiers. Earn XP by getting eliminations, finishing and winning matches, and surviving Holdout waves. Ranking up unlocks **weapon camos** and **titles**. All **operator skins are free** to equip from the start on the **Loadout** tab; titles are equipped there too. Progress is saved on your device and travels with your backup code.
 
 ### Premium pass
 An optional **Premium Pass** unlocks 3 exclusive operator skins (Gold Rush, Obsidian, Prism), the **VIP** title, and **+25% XP**. **Each season has its own Premium code and its own premium weapon**, earned by reaching the season's final tier with Premium: the **VX-9 Tempest** rifle in Season 1 and the **SC-7 Scythe** SMG in Season 2. Skins, the VIP title and weapons you earn stay yours after the season ends. Enter the code on the **Pass** tab. (The codes are set by the game's creator in `PREMIUM_CODES` in index.html.)

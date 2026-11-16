@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116133008';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116133250';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -799,7 +799,7 @@ const PREMIUM_SKINS = new Set(['gold', 'obsidian', 'prism']);
 const WEAPONS_PREMIUM = { vx: 1, sc7: 2 }; // premium weapon -> the season whose Premium pass awards it at the final tier
 // ---- weekly seasons: Season 1 runs until 20 Nov 2026; Season 2 starts then, and a new one every 7 days (UTC midnight) ----
 // To add a season: add an entry below. Seasons without an entry reuse an older theme.
-const SEASON_START = Date.UTC(2026, 10, 20), WEEK_MS = 7 * 864e5; // when Season 2 starts
+const SEASON2_START = Date.UTC(2026, 10, 16), SEASON_START = Date.UTC(2026, 10, 27), WEEK_MS = 7 * 864e5; // Season 2: 16-26 Nov; Season 3 starts 27 Nov, then a new season every 7 days
 const SEASONS = {
   1: { name: 'Dust Storm', accent: '#f2a93b' },
   2: { name: 'Harvest', accent: '#e0a03a', camoName: 'Harvest', camo: [0xc8782a, 0x3a2410, 0xe8c060], deco: 'harvest', light: 0xffa040 },
@@ -811,8 +811,8 @@ const SEASONS = {
 };
 // themes reused for any season that has no entry yet
 const THEME_ROTATION = [{ name: 'Ember Ops', accent: '#ff7a3a', camoName: 'Ember', camo: [0xff6a2a, 0x2a0f06, 0xffb070], deco: 'lanterns', light: 0xff8a3a }, SEASONS[3], SEASONS[4], SEASONS[5], SEASONS[2]];
-const seasonNum = () => Date.now() < SEASON_START ? 1 : 2 + Math.floor((Date.now() - SEASON_START) / WEEK_MS);
-const seasonEnd = n => SEASON_START + (n - 1) * WEEK_MS;
+const seasonNum = () => Date.now() < SEASON2_START ? 1 : Date.now() < SEASON_START ? 2 : 3 + Math.floor((Date.now() - SEASON_START) / WEEK_MS);
+const seasonEnd = n => n <= 1 ? SEASON2_START : SEASON_START + (n - 2) * WEEK_MS;
 function seasonTheme(n) {
   if (SEASONS[n]) return SEASONS[n];
   const base = THEME_ROTATION[Math.max(0, n - 8) % THEME_ROTATION.length];
@@ -1307,8 +1307,8 @@ const DG = { sph: new THREE.SphereGeometry(1, 12, 9), box: new THREE.BoxGeometry
 function dpart(g, geo, mat, x, y, z, sx, sy, sz) { const m = new THREE.Mesh(DG[geo], mat); m.position.set(x, y, z); m.scale.set(sx, sy == null ? sx : sy, sz == null ? sx : sz); m.castShadow = true; m.userData.sharedGeo = true; g.add(m); return m; }
 const DECO = {
   lanterns(g, th, i) { dpart(g, 'cyl', dmat(0x2a2620), 0, 1.3, 0, 0.06, 2.6); dpart(g, 'box', dmat(0x2a2620), 0, 2.62, 0, 0.42, 0.06); dpart(g, 'sph', dmat(th.light, 1), 0, 2.3, 0, 0.3); },
-  harvest(g, th, i) { if (i % 3 === 0) { dpart(g, 'box', dmat(0xc8a850), 0, 0.4, 0, 1.3, 0.8, 0.8); dpart(g, 'box', dmat(0xc8a850), 0.2, 1.1, 0, 0.9, 0.6, 0.7); }
-    dpart(g, 'sph', dmat(0xe0701a), 0.9, 0.32, 0.6, 0.42, 0.34); dpart(g, 'cyl', dmat(0x3a6a20), 0.9, 0.72, 0.6, 0.05, 0.16); dpart(g, 'sph', dmat(0xd8601a), -0.7, 0.26, 0.5, 0.32, 0.27); },
+  harvest(g, th, i) { if (i % 3 === 0) { dpart(g, 'box', dmat(0xa07a28), 0, 0.4, 0, 1.3, 0.8, 0.8); dpart(g, 'box', dmat(0xa07a28), 0.2, 1.1, 0, 0.9, 0.6, 0.7); }
+    dpart(g, 'sph', dmat(0xd2500a), 0.9, 0.32, 0.6, 0.42, 0.34); dpart(g, 'cyl', dmat(0x3a6a20), 0.9, 0.72, 0.6, 0.05, 0.16); dpart(g, 'sph', dmat(0xc04808), -0.7, 0.26, 0.5, 0.32, 0.27); },
   neon(g, th, i) { const c = i % 2 ? 0xff3ad0 : th.light; dpart(g, 'box', dmat(c, 1), 0, 1.3, 0, 0.12, 2.6, 0.12); dpart(g, 'box', dmat(c, 1), 0, 2.6, 0, 1.2, 0.1, 0.1); dpart(g, 'box', dmat(0x101418), 0, 0.1, 0, 0.5, 0.2, 0.5); },
   crystals(g, th, i) { const m = dmat(th.light, 1); m.transparent = true; m.opacity = 0.8; [[0, 1.2, 0, 0.35, 2.4], [0.5, 0.7, 0.2, 0.25, 1.4], [-0.4, 0.6, -0.3, 0.22, 1.2]].forEach(([x, y, z, r, h], k) => { const c = dpart(g, 'cone', m, x, y, z, r, h, r); c.rotation.z = (k - 1) * 0.3; }); },
   orbs(g, th, i) { dpart(g, 'sph', dmat(th.light, 1), 0, 2.6 + (i % 3) * 0.4, 0, 0.3); dpart(g, 'cyl', dmat(0x1a1626), 0, 0.15, 0, 0.35, 0.3); },
