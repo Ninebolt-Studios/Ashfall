@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116022724';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116023202';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -2324,19 +2324,23 @@ function botStep(b, dt, targets) {
       const d = Math.hypot(t.x - b.x, t.z - b.z), v = d < 80 && !losBlocked(b.x, b.z, t.x, t.z), s = d - (v ? 100 : 0);
       if (s < bs) { bs = s; best = t; vis = v; }
     }
-    if (best && vis && (!b.vis || !b.target || b.target.id !== best.id)) b.react = 0.22 + Math.random() * 0.26;
+    if (best && vis && (!b.vis || !b.target || b.target.id !== best.id)) b.react = 0.18 + Math.random() * 0.22;
     b.target = best; b.vis = vis;
+    if (vis && best) b.seen = { x: best.x, z: best.z, t: 4 };
+    if (b.seen) b.seen.t -= 0.3;
+    if (!vis && b.seen && b.seen.t > 0 && b.stuck <= 0.8 && (!b.wp || !b.wp.chase)) { b.wp = { x: b.seen.x, z: b.seen.z, chase: true }; b.stuck = 0; }
     if (!vis && (!b.wp || Math.hypot(b.wp.x - b.x, b.wp.z - b.z) < 2 || b.stuck > 0.8)) {
-      b.wp = best && Math.random() < 0.7 && b.stuck <= 0.8 ? { x: clamp(best.x + (Math.random() - .5) * 10, -31, 31), z: clamp(best.z + (Math.random() - .5) * 10, -31, 31) } : randomOpenPoint();
-      b.stuck = 0;
+      const L = HALF - 4;
+      b.wp = best && Math.random() < 0.7 && b.stuck <= 0.8 ? { x: clamp(best.x + (Math.random() - .5) * 14, -L, L), z: clamp(best.z + (Math.random() - .5) * 14, -L, L) } : randomOpenPoint();
+      b.stuck = 0; if (b.seen) b.seen.t = 0;
     }
     if (Math.random() < 0.15) b.strafe *= -1;
   }
   const t = b.target ? targets.find(x => x.id === b.target.id) : null;
   let mx = 0, mz = 0, face = b.yaw;
   if (t && b.vis && t.alive) {
-    const dx = t.x - b.x, dz = t.z - b.z, d = Math.hypot(dx, dz) || 1, ux = dx / d, uz = dz / d, fwd = d > 20 ? 1 : d < 8 ? -0.5 : 0;
-    mx = ux * fwd - uz * b.strafe * 0.6; mz = uz * fwd + ux * b.strafe * 0.6; face = Math.atan2(-dx, -dz);
+    const dx = t.x - b.x, dz = t.z - b.z, d = Math.hypot(dx, dz) || 1, ux = dx / d, uz = dz / d, hurt = b.hp < 35, fwd = hurt ? -0.6 : d > 22 ? 1 : d < 8 ? -0.5 : 0, sw = hurt ? 0.9 : 0.65;
+    mx = ux * fwd - uz * b.strafe * sw; mz = uz * fwd + ux * b.strafe * sw; face = Math.atan2(-dx, -dz);
   } else if (b.wp) {
     const dx = b.wp.x - b.x, dz = b.wp.z - b.z, d = Math.hypot(dx, dz) || 1;
     mx = dx / d; mz = dz / d; face = Math.atan2(-dx, -dz);
@@ -2349,13 +2353,13 @@ function botStep(b, dt, targets) {
   for (const o of T.bots) { if (o === b || !o.alive) continue; const dx = p.x - o.x, dz = p.z - o.z, d = Math.hypot(dx, dz); if (d > 0 && d < 0.8) { p.x += dx / d * (0.8 - d) * 0.5; p.z += dz / d * (0.8 - d) * 0.5; } }
   b.x = clamp(p.x, -HALF + 0.5, HALF - 0.5); b.z = clamp(p.z, -HALF + 0.5, HALF - 0.5);
   if ((mx || mz) && Math.hypot(b.x - ox, b.z - oz) < sp * dt * 0.3) { b.stuck += dt; if (b.stuck > 0.5) b.strafe *= -1; }
-  const turn = angDiff(b.yaw, face); b.yaw += clamp(turn, -5 * dt, 5 * dt);
+  const turn = angDiff(b.yaw, face); b.yaw += clamp(turn, -6 * dt, 6 * dt);
   b.cd -= dt; b.react -= dt;
   if (t && b.vis && t.alive && b.react <= 0 && b.cd <= 0 && Math.abs(turn) < 0.25 && !T.win) {
     b.cd = 0.1; if (--b.burst <= 0) { b.cd = 0.34 + Math.random() * 0.44; b.burst = 4 + (Math.random() * 4 | 0); }
     b.shots++;
     const d = Math.hypot(t.x - b.x, t.z - b.z);
-    const acc = clamp(0.74 - d * 0.011, 0.16, 0.74) * (t.bot ? 1 : 0.72);
+    const acc = clamp(0.77 - d * 0.0095, 0.18, 0.77) * (t.bot ? 1 : 0.75);
     const from = new THREE.Vector3(b.x - Math.sin(b.yaw) * 0.6, 1.3, b.z - Math.cos(b.yaw) * 0.6);
     const dmg = 10 + (Math.random() * 6 | 0);
     if (t.id === myPeer) {
