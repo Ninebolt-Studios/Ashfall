@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116163801';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116164218';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -557,6 +557,12 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 #rankedBtn { background-image: linear-gradient(135deg, rgba(242,200,75,.3), transparent 65%); border-top-color: #f2c84b; }
 #duelBtn { background-image: linear-gradient(135deg, rgba(224,96,63,.3), transparent 65%); border-top-color: #e0603f; }
 #ggBtn { background-image: linear-gradient(135deg, rgba(120,220,120,.26), transparent 65%); border-top-color: #7dd87a; }
+#zmbBtn { background-image: linear-gradient(135deg, rgba(120,200,60,.3), rgba(90,20,20,.2) 55%, transparent 80%); border-top-color: #8fd14a; }
+#zmbBtn .mode-name::before { content: '🧟 '; }
+#zBuy { --ring: #c08aff; width: 70px; height: 70px; left: max(16px, env(safe-area-inset-left, 0px)); bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
+#zBuy small { font: 700 11px var(--mono); color: #e0c8ff; }
+#zBuy.off { opacity: .45; }
+#zPow { position: absolute; left: 50%; top: calc(70px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); font: 700 14px var(--display); letter-spacing: .14em; color: #f2c84b; text-shadow: 0 1px 6px #000; }
 #siegeBtn { background-image: linear-gradient(135deg, rgba(160,110,255,.28), transparent 65%); border-top-color: #a07aff; }
 .mode:hover .mode-name { color: var(--accent); }
 .mode-desc { line-height: 1.45; }
@@ -631,6 +637,8 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
     <div id="jumpBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/><path d="M6 20l6-6 6 6"/></svg><span>JUMP</span></div>
     <div id="ksScan" class="tbtn ks" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-6"/></svg><span>SCAN</span><small></small></div>
     <div id="ksMsl" class="tbtn ks" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l7 7-9 9-3-3-3 1 1-3-3-3z"/><path d="M5 19l-2 2"/></svg><span>MISSILE</span><small></small></div>
+    <div id="zBuy" class="tbtn" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M3 12h18M12 8v12M8 8l4-4 4 4"/></svg><span>CRATE</span><small>◎ 950</small></div>
+    <div id="zPow" hidden></div>
     <div id="nadeBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="11" cy="15" rx="6" ry="7"/><path d="M8 8h6v-3H8z"/><path d="M14 6l4 3"/><circle cx="18" cy="4" r="2"/><path d="M6 15h10M11 9v13"/></svg><small id="nadeN">2</small></div>
     <div id="adsBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg><span>AIM</span></div>
     <div id="reloadBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 3v5h5"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 21v-5h-5"/></svg><span>RELOAD</span></div>
@@ -706,6 +714,11 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
             <span class="mode-desc">Free-for-all against 9 bots. Every elimination gives you the next gun. Get one with all 10 guns to win.</span>
             <span class="chips"><span class="chip">Solo</span><span class="chip">Free-for-all</span><span class="chip">10 guns</span></span>
           </button>
+          <button class="mode" id="zmbBtn" type="button">
+            <span class="mode-name">Zombies</span>
+            <span class="mode-desc">Survive endless rounds of the undead. Earn points for hits and kills, spend them on the Mystery Crate for a random gun, and grab power-ups.</span>
+            <span class="chips"><span class="chip">Solo</span><span class="chip">Rounds</span><span class="chip" id="zBestChip">Best round —</span></span>
+          </button>
           <button class="mode" id="siegeBtn" type="button">
             <span class="mode-name">Drone Holdout</span>
             <span class="mode-desc">Solo survival. Hold your ground against endless waves of armed drones.</span>
@@ -720,7 +733,7 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
         <ul class="roster" id="roster"></ul>
       </div>
       <div class="pane" id="playOver" hidden>
-        <p class="msg">The outpost has fallen.</p>
+        <p class="msg" id="overMsg">The outpost has fallen.</p>
         <div class="stats">
           <div><span class="label">Score</span><span id="finalScore" class="num">0</span></div>
           <div><span class="label">Wave</span><span id="finalWave" class="num">1</span></div>
@@ -855,7 +868,7 @@ const S = Object.assign({}, DEF, store.get('settings', {}));
 { const raw = store.get('settings', {}) || {}; if (raw.assistStr == null && raw.assist === false) S.assistStr = 0; } // keep old 'off' choice
 const aimA = () => clamp(+S.assistStr || 0, 0, 1);
 const saveS = () => store.set('settings', S);
-const C = Object.assign({ matches: 0, wins: 0, kills: 0, deaths: 0, heads: 0, bestWave: 0, bestScore: 0, bestStreak: 0, ggWins: 0, maps: {} }, store.get('career', {}));
+const C = Object.assign({ matches: 0, wins: 0, kills: 0, deaths: 0, heads: 0, bestWave: 0, bestScore: 0, bestStreak: 0, ggWins: 0, maps: {}, bestRound: 0 }, store.get('career', {}));
 const saveC = () => store.set('career', C);
 const LB = Object.assign({ battles: [], holdout: [] }, store.get('lb', {}));
 function lbAdd(list, row, cmp) { LB[list] = (Array.isArray(LB[list]) ? LB[list] : []).concat([row]).sort(cmp).slice(0, 10); store.set('lb', LB); }
@@ -1524,7 +1537,8 @@ function building(cx, cz, w, d, h = 3.4, mat = M.conc, roof = M.conc) {
 }
 function buildMap(id) {
   if (!MAPS[id]) id = 'outpost';
-  if (curMap === id) return;
+  if (curMap === id && !zmbAtmo) return;
+  zmbAtmo = false;
   clearMap(); curMap = id;
   const m = MAPS[id];
   ground.material = M[THEME.snowGround ? 'snow' : m.ground];
@@ -2212,7 +2226,7 @@ function nadeBlast(x, y, z) {
   try { noise(1.3, 0.85, 320); tone(70, 0.7, 'sine', 0.45, 32); noise(2.2, 0.15, 160, 'lowpass', 0.7, 0.15); } catch (e) {}
   const dp = Math.hypot(P.pos.x - x, P.pos.z - z); P.shake = Math.max(P.shake, Math.max(0, 0.8 - dp / 20)); if (dp < 25) haptic('boom');
   const RAD = hasPerk('demo') ? 9 : 7, dmgAt = d => d >= RAD ? 0 : Math.round(140 * (1 - d / RAD));
-  if (mode === 'siege') { for (const e of [...enemies]) { const dm = dmgAt(e.g.position.distanceTo(c)); if (dm > 0) { e.hp -= dm; e.flash = 0.08; if (e.hp <= 0) killDrone(e); } } return; }
+  if (mode === 'siege') { for (const e of [...enemies]) { const dm = dmgAt(e.g.position.distanceTo(c)); if (dm > 0) { e.hp -= dm; e.flash = 0.08; if (e.hp <= 0) killEnemy(e); } } return; }
   if (T.win) return;
   let hit = false;
   for (const e of T.ents.values()) {
@@ -2272,7 +2286,7 @@ function stepMissile(dt) {
   explosionFX(x, 0, z, 2.6); haptic('boom');
   try { noise(1.4, 0.9, 260); tone(70, 0.9, 'sine', 0.5, 30); } catch (e) {}
   P.shake = Math.max(P.shake, Math.max(0.15, 1 - Math.hypot(P.pos.x - x, P.pos.z - z) / 45));
-  if (mode === 'siege') { for (const e of [...enemies]) if (Math.hypot(e.g.position.x - x, e.g.position.z - z) < 12) killDrone(e); return; }
+  if (mode === 'siege') { for (const e of [...enemies]) if (Math.hypot(e.g.position.x - x, e.g.position.z - z) < 12) killEnemy(e); return; }
   if (T.win) return;
   let hitAny = false;
   for (const e of T.ents.values()) {
@@ -2488,24 +2502,136 @@ function stepSiege(dt) {
     else if (pk.life <= 0) { scene.remove(pk.m); pickups.splice(i, 1); }
   }
 }
+/* =========================================================
+   ZOMBIES: endless rounds of the undead (solo, built on the Holdout engine)
+   ========================================================= */
+let zmb = false, zmbAtmo = false, zDouble = 0;
+const POWS = [];
+const ZM = { skins: [0x7a9a5a, 0x8aa070, 0x6a8a6a, 0x9aa080].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.9 })),
+  cloth: [0x3a3020, 0x2a3040, 0x40302a, 0x30302a].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 1 })),
+  eye: new THREE.MeshBasicMaterial({ color: 0xffe040, toneMapped: false }), blood: new THREE.MeshStandardMaterial({ color: 0x5a0a08, roughness: 0.8 }) };
+function zSpawnPoint() {
+  for (let i = 0; i < 40; i++) { const a = Math.random() * Math.PI * 2, d = 20 + Math.random() * 18, x = clamp(P.pos.x + Math.cos(a) * d, -HALF + 2, HALF - 2), z = clamp(P.pos.z + Math.sin(a) * d, -HALF + 2, HALF - 2);
+    if (!insideSolid({ x, z }, 0.8) && Math.hypot(x - P.pos.x, z - P.pos.z) > 14) return { x, z }; }
+  return randomOpenPoint();
+}
+function makeZombie() {
+  const R = wave, g = new THREE.Group(), skin = ZM.skins[Math.random() * 4 | 0], cloth = ZM.cloth[Math.random() * 4 | 0];
+  const runner = R >= 4 && Math.random() < Math.min(0.45, 0.08 + R * 0.03);
+  const e = { kind: 'zombie', g, hp: 60 + 45 * R, speed: (runner ? 1.8 : 1) * Math.min(4.2, 1.5 + R * 0.22) * (0.85 + Math.random() * 0.3), radius: 0.42, aimY: 1.3, cd: 0.5, t: Math.random() * 9, flash: 0, strafe: Math.random() < 0.5 ? 1 : -1, stuck: 0, runner };
+  const part = (geo, mat, parent, x, y, z, sx, sy, sz, p = 'body') => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.scale.set(sx, sy, sz); m.castShadow = true; m.userData.ent = e; m.userData.part = p; parent.add(m); return m; };
+  const hipL = new THREE.Group(), hipR = new THREE.Group(); hipL.position.set(-0.11, 0.88, 0); hipR.position.set(0.11, 0.88, 0); g.add(hipL, hipR);
+  [hipL, hipR].forEach(h => { part(SG2.box, cloth, h, 0, -0.22, 0, 0.17, 0.45, 0.19, 'leg'); part(SG2.box, cloth, h, 0, -0.62, 0, 0.15, 0.4, 0.17, 'leg'); part(SG2.box, skin, h, 0, -0.85, -0.04, 0.15, 0.08, 0.24, 'leg'); });
+  const up = new THREE.Group(); up.position.y = 0.9; up.rotation.x = 0.25; g.add(up);
+  part(SG2.box, cloth, up, 0, 0.3, 0, 0.46, 0.56, 0.25); part(SG2.box, ZM.blood, up, 0.08, 0.25, -0.13, 0.14, 0.18, 0.02);
+  part(SG2.sph, skin, up, 0, 0.74, -0.02, 0.15, 0.17, 0.15, 'head'); part(SG2.sph, ZM.eye, up, -0.05, 0.76, -0.14, 0.025, 0.02, 0.02, 'head'); part(SG2.sph, ZM.eye, up, 0.05, 0.76, -0.14, 0.025, 0.02, 0.02, 'head');
+  const armL = new THREE.Group(), armR = new THREE.Group(); armL.position.set(-0.29, 0.52, 0); armR.position.set(0.29, 0.52, 0); up.add(armL, armR);
+  [armL, armR].forEach(a => { part(SG2.box, cloth, a, 0, 0, -0.16, 0.12, 0.12, 0.32); part(SG2.box, skin, a, 0, 0, -0.43, 0.1, 0.1, 0.26); });
+  armL.rotation.x = -0.2; armR.rotation.x = -0.1;
+  Object.assign(e, { hipL, hipR, armL, armR, up });
+  const sp = zSpawnPoint(); g.position.set(sp.x, -1.6, sp.z); e.rise = 1; // climbs out of the ground
+  scene.add(g); enemies.push(e);
+}
+function zPts(n) { score += n * (zDouble > 0 ? 2 : 1); updHud(); updZBuy(); }
+function hitZombie(e, dmg, head) {
+  e.hp -= dmg; e.flash = 0.08; zPts(10);
+  if (e.hp <= 0) killZombie(e, head); else { if (head) sfx.head(); else sfx.hit(); hitMarker(head ? 'head' : ''); }
+}
+function killZombie(e, head) {
+  if (!enemies.includes(e)) return;
+  spark(new THREE.Vector3(e.g.position.x, 1.2, e.g.position.z), 0x6a1010, 16); try { sfx.kill(); noise(0.4, 0.15, 300); } catch (er) {} hitMarker('kill');
+  zPts(head ? 100 : 60); addXP(12); addWeaponKill(); addCoins(10); onMyKill(!!head); if (hasPerk('salvager')) salvageDrop(e.g.position.x, e.g.position.z);
+  if (Math.random() < 0.06) zDropPower(e.g.position);
+  scene.remove(e.g); enemies.splice(enemies.indexOf(e), 1);
+}
+function killEnemy(e) { if (e.kind === 'zombie') killZombie(e, false); else killDrone(e); }
+const POW_TYPES = { ammo: { n: 'FULL AMMO', c: 0x5fe35f }, double: { n: '2X POINTS', c: 0xf2c84b }, blast: { n: 'BLAST', c: 0xff5a3a } };
+function zDropPower(pos) {
+  const keys = Object.keys(POW_TYPES), k = keys[Math.random() * keys.length | 0], t = POW_TYPES[k];
+  const m = new THREE.Mesh(new THREE.OctahedronGeometry(0.32), new THREE.MeshBasicMaterial({ color: t.c, toneMapped: false })); m.position.set(pos.x, 1, pos.z); scene.add(m);
+  POWS.push({ m, k, life: 25 });
+}
+function zPickup(k) {
+  banner(POW_TYPES[k].n, k === 'ammo' ? 'Magazine and grenades refilled' : k === 'double' ? 'Double points for 30 seconds' : 'Every zombie nearby is gone', 2);
+  try { tone(660, 0.12, 'triangle', 0.14); tone(990, 0.2, 'triangle', 0.12, null, 0.1); } catch (e) {}
+  if (k === 'ammo') { P.ammo = magOf(P.w); P.reloading = 0; P.nades = nadesPerLife() + 1; updNade(); updHud(); }
+  else if (k === 'double') zDouble = 30;
+  else { for (const e of [...enemies]) if (Math.hypot(e.g.position.x - P.pos.x, e.g.position.z - P.pos.z) < 45) { explosionFX(e.g.position.x, 0, e.g.position.z, 0.6); killZombie(e, false); } zPts(400); }
+}
+function updZBuy() { const b = $('zBuy'); if (b) b.classList.toggle('off', score < 950); }
+function zBuyGun() {
+  if (!zmb || state !== 'play' || !P.alive || score < 950) return;
+  score -= 950; updHud(); updZBuy();
+  const pool = Object.keys(WEAPONS).filter(k => !WEAPONS[k].premium && k !== P.w), k = pool[Math.random() * pool.length | 0];
+  equip(k); banner('MYSTERY CRATE', 'You got the ' + WEAPONS[k].name + '!', 2.2);
+  try { for (let i = 0; i < 5; i++) tone(400 + i * 120, 0.08, 'triangle', 0.1, null, i * 0.07); } catch (e) {}
+}
+function zAtmosphere() { // dark, foggy night on whichever map you picked
+  scene.fog.color.setHex(0x0d140f); scene.background.setHex(0x0d140f); scene.fog.near = 10; scene.fog.far = 75;
+  sky.material.color.setHex(0x1a2420); sun.intensity = 0.3; sun.color.setHex(0x9ab0a0); hemi.intensity = 0.4; hemi.color.setHex(0x5a7060); renderer.toneMappingExposure = 0.95; zmbAtmo = true;
+}
+function startZombies() {
+  ensureAudio(); leaveBattle(); clearSiege(); POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
+  mode = 'siege'; duel = false; zmb = true; buildMap(selMap); zAtmosphere(); equip('pst');
+  Object.assign(P, { yaw: 0, pitch: 0, hp: 100, alive: true, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, prot: 0, lastHurt: 99 });
+  P.pos.set(0, 1.6, 9); if (insideSolid(P.pos, 0.6)) { const o = randomOpenPoint(); P.pos.set(o.x, 1.6, o.z); }
+  hud.death.hidden = true; zDouble = 0;
+  score = 0; wave = 0; betweenWaves = 2; toSpawn = 0; P.nades = nadesPerLife(); updNade(); P.ks = { scan: 0, msl: 0 }; updKS(); P.streak = 0; P.mCoins = 0; scanT = 0;
+  state = 'play'; hideMenu(); updHud(); updZBuy(); lockPointer();
+  banner('ZOMBIES · ' + MAPS[curMap].name.toUpperCase(), 'You start with a pistol. Earn points and open the Mystery Crate (◎ 950) for a better gun.', 4);
+}
+function stepZombies(dt) {
+  if (toSpawn === 0 && enemies.length === 0) { betweenWaves -= dt; if (betweenWaves <= 0) {
+    if (wave > 0) { addXP(40); dailyProgress('waves', 1); P.nades = Math.min(nadesPerLife() + 1, (P.nades || 0) + 1); updNade(); }
+    wave++; toSpawn = 5 + wave * 3; spawnTimer = 0; banner('ROUND ' + wave, wave === 1 ? 'They are coming…' : 'Zombies get tougher and faster', 2.5);
+    try { tone(110, 1.2, 'sawtooth', 0.06, 70); tone(82, 1.4, 'sine', 0.12, 55, 0.2); } catch (e) {} updHud(); } }
+  if (toSpawn > 0) { spawnTimer -= dt; if (spawnTimer <= 0 && enemies.length < Math.min(24, 8 + wave)) { makeZombie(); toSpawn--; spawnTimer = Math.max(0.4, 1.6 - wave * 0.08); if (toSpawn === 0) betweenWaves = 6; } }
+  if (zDouble > 0) { zDouble -= dt; $('zPow').hidden = false; $('zPow').textContent = '2X POINTS · ' + Math.ceil(zDouble) + 's'; } else if (!$('zPow').hidden) $('zPow').hidden = true;
+  for (const e of enemies) {
+    if (e.kind !== 'zombie') continue;
+    e.t += dt; const g = e.g;
+    if (e.rise > 0) { e.rise = Math.max(0, e.rise - dt * 0.9); g.position.y = -1.6 * e.rise; continue; }
+    const dx = P.pos.x - g.position.x, dz = P.pos.z - g.position.z, dist = Math.hypot(dx, dz) || 1, ux = dx / dist, uz = dz / dist;
+    const mv = dist > 1.0 ? 1 : 0, ox = g.position.x, oz = g.position.z;
+    let mx = ux, mz = uz; if (e.stuck > 0.25) { mx = -uz * e.strafe; mz = ux * e.strafe; }
+    g.position.x += mx * e.speed * mv * dt; g.position.z += mz * e.speed * mv * dt;
+    collide(g.position, e.radius);
+    for (const o of enemies) { if (o === e || o.rise > 0) continue; const ddx = g.position.x - o.g.position.x, ddz = g.position.z - o.g.position.z, d = Math.hypot(ddx, ddz), m = e.radius + o.radius; if (d > 0 && d < m) { g.position.x += ddx / d * (m - d) * 0.5; g.position.z += ddz / d * (m - d) * 0.5; } }
+    const moved = Math.hypot(g.position.x - ox, g.position.z - oz);
+    if (mv && moved < e.speed * dt * 0.3) { e.stuck += dt; if (e.stuck > 1.2) { e.strafe *= -1; e.stuck = 0.3; } } else e.stuck = Math.max(0, e.stuck - dt);
+    g.rotation.y = Math.atan2(-dx, -dz);
+    const sw = Math.sin(e.t * e.speed * 2.6) * 0.5 * mv; e.hipL.rotation.x = sw; e.hipR.rotation.x = -sw; e.up.rotation.z = Math.sin(e.t * 1.7) * 0.08;
+    e.armL.rotation.x = -0.2 + Math.sin(e.t * 3) * 0.15; e.armR.rotation.x = -0.1 - Math.sin(e.t * 3) * 0.15;
+    if (Math.random() < dt * 0.15 && dist < 20) try { tone(70 + Math.random() * 40, 0.6, 'sawtooth', 0.025 * (1 - dist / 20), 50); } catch (er) {}
+    e.cd -= dt;
+    if (dist < 1.25 && e.cd <= 0 && P.alive) { e.cd = 0.9; e.armL.rotation.x = e.armR.rotation.x = -0.9; siegeHurt(e.runner ? 22 : 28, g.position.x, g.position.z); if (state !== 'play') return; }
+  }
+  for (let i = POWS.length - 1; i >= 0; i--) { const pw = POWS[i]; pw.life -= dt; pw.m.rotation.y += dt * 2; pw.m.position.y = 1 + Math.sin(pw.life * 3) * 0.15; pw.m.visible = pw.life > 5 || Math.sin(pw.life * 12) > 0;
+    if (Math.hypot(pw.m.position.x - P.pos.x, pw.m.position.z - P.pos.z) < 1.3) { zPickup(pw.k); pw.life = 0; }
+    if (pw.life <= 0) { scene.remove(pw.m); POWS.splice(i, 1); } }
+  if (P.alive) { P.lastHurt += dt; if (P.lastHurt > (hasPerk('toughskin') ? 4.5 : 7) && P.hp < 100) { P.hp = Math.min(100, P.hp + (hasPerk('toughskin') ? 10 : 6) * dt); updHud(); } }
+}
 function siegeHurt(dmg, sx, sz) {
   haptic('hurt');
   if (sx != null) showDmgDir(sx, sz);
-  P.shake = Math.max(P.shake, 0.25); P.hp -= dmg; hurtT = 0.35; sfx.hurt(); updHud();
+  P.lastHurt = 0; P.shake = Math.max(P.shake, 0.25); P.hp -= dmg; hurtT = 0.35; sfx.hurt(); updHud();
   if (P.hp <= 0) siegeOver();
 }
 function siegeOver() {
   state = 'over';
+  const lbl = document.querySelectorAll('#playOver .stats .label');
+  if (zmb) { C.bestRound = Math.max(C.bestRound || 0, wave); if (lbl[0]) { lbl[0].textContent = 'Points'; lbl[1].textContent = 'Round'; } $('overMsg').textContent = 'The horde got you on round ' + wave + '.'; $('zBestChip').textContent = 'Best round ' + C.bestRound; }
+  else { if (lbl[0]) { lbl[0].textContent = 'Score'; lbl[1].textContent = 'Wave'; } $('overMsg').textContent = 'The outpost has fallen.'; }
   if (!C.maps || typeof C.maps !== 'object') C.maps = {}; C.maps[curMap] = (C.maps[curMap] || 0) + 1;
-  C.bestWave = Math.max(C.bestWave, wave); C.bestScore = Math.max(C.bestScore, score); C.deaths++; saveC();
-  lbAdd('holdout', { s: score, wv: wave, m: curMap, t: Date.now() }, (a, b) => b.s - a.s || b.wv - a.wv || b.t - a.t);
+  if (!zmb) { C.bestWave = Math.max(C.bestWave, wave); C.bestScore = Math.max(C.bestScore, score); } C.deaths++; saveC();
+  if (!zmb) lbAdd('holdout', { s: score, wv: wave, m: curMap, t: Date.now() }, (a, b) => b.s - a.s || b.wv - a.wv || b.t - a.t);
   $('finalScore').textContent = score.toLocaleString(); $('finalWave').textContent = wave; $('bestScore').textContent = C.bestScore.toLocaleString(); $('finalCoins').textContent = '◎ ' + (P.mCoins || 0);
   showMenu('over');
 }
 function clearSiege() {
   clearNades();
   if (missile) { scene.remove(missile.m); missile = null; } scanT = 0;
-  [...enemies.map(e => e.g), ...shots.map(s => s.m), ...pickups.map(p => p.m)].forEach(o => scene.remove(o));
+  [...enemies.map(e => e.g), ...shots.map(s => s.m), ...pickups.map(p => p.m), ...POWS.map(p => p.m)].forEach(o => scene.remove(o)); POWS.length = 0; zDouble = 0;
   enemies.length = shots.length = pickups.length = 0;
 }
 
@@ -3020,8 +3146,10 @@ function hideMenu() {
   $('menu').hidden = true; $('hud').hidden = false;
   const tdm = mode === 'tdm';
   if (tdm) { const bl = document.querySelector('#scorebar .tn.t-b'), rl = document.querySelector('#scorebar .tn.t-r'); if (bl && rl) { bl.textContent = gg ? 'YOU' : duel ? (P.team === 'b' ? 'YOU' : 'RIVAL') : 'DELTA'; rl.textContent = gg ? 'LEADER' : duel ? (P.team === 'r' ? 'YOU' : 'RIVAL') : 'VIPER'; } }
+  $('waveTag').firstChild.textContent = zmb ? 'ROUND ' : 'WAVE ';
   $('scorebar').hidden = !tdm; $('waveTag').hidden = tdm; hud.kd.hidden = !tdm;
-  $('statLabel').textContent = tdm ? 'Eliminations' : 'Score';
+  $('statLabel').textContent = tdm ? 'Eliminations' : zmb ? 'Points' : 'Score';
+  $('zBuy').hidden = !zmb; $('zPow').hidden = true;
   $('scGoal').textContent = gg ? 'OF ' + GG_GUNS.length : 'TO ' + SCORE_LIMIT;
   setLobby();
 }
@@ -3536,6 +3664,7 @@ const ACHS = [
   { id: 'wv20', i: '🏰', n: 'Last Stand', d: 'Reach wave 20 in Drone Holdout', c: 500, t: () => C.bestWave >= 20 },
   { id: 's10', i: '📡', n: 'Scanner', d: 'Earn a Map Scan (10 streak)', c: 250, t: () => C.bestStreak >= 10 },
   { id: 's30', i: '🚀', n: 'Missile Man', d: 'Earn a Missile Strike (30 streak)', c: 750, t: () => C.bestStreak >= 30 },
+  { id: 'z10', i: '🧟', n: 'Undying', d: 'Reach round 10 in Zombies', c: 300, t: () => C.bestRound >= 10 },
   { id: 'gg', i: '🔫', n: 'Gun Master', d: 'Win a Gun Game', c: 400, t: () => C.ggWins >= 1 },
   { id: 'leg', i: '✨', n: 'Lucky', d: 'Own a Legendary crate item', c: 200, t: legendaryOwned },
   { id: 'all', i: '🗃️', n: 'Collector', d: 'Own every crate item', c: 2000, t: () => crateItems().every(itemOwned) },
@@ -3630,7 +3759,7 @@ codeIn.addEventListener('input', () => { matchCode = codeIn.value.replace(/[^a-z
 
 /* ---------- flow ---------- */
 function startSiege() {
-  ensureAudio(); leaveBattle(); clearSiege();
+  ensureAudio(); leaveBattle(); clearSiege(); zmb = false;
   mode = 'siege'; duel = false; buildMap(selMap); equip(loadout);
   Object.assign(P, { yaw: 0, pitch: 0, hp: 100, alive: true, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, prot: 0 });
   P.pos.set(0, 1.6, 9); if (insideSolid(P.pos, 0.6)) { const o = randomOpenPoint(); P.pos.set(o.x, 1.6, o.z); }
@@ -3746,7 +3875,9 @@ $('rankedBtn').addEventListener('click', () => { if (!$('rankedBtn').disabled) s
 $('ksScan').addEventListener('click', useScan); $('ksMsl').addEventListener('click', useMissile);
 $('resumeBtn').addEventListener('click', resume);
 $('quitBtn').addEventListener('click', () => { leaveBattle(); clearSiege(); state = 'menu'; buildMap(selMap); showMenu('main'); });
-$('againBtn').addEventListener('click', startSiege);
+$('againBtn').addEventListener('click', () => zmb ? startZombies() : startSiege());
+$('zmbBtn').addEventListener('click', () => startZombies());
+$('zBuy').addEventListener('click', () => zBuyGun());
 $('menuBtn').addEventListener('click', () => { state = 'menu'; showMenu('main'); });
 $('pauseBtn').addEventListener('touchstart', ev => { ev.preventDefault(); ev.stopPropagation(); pause(); }, { passive: false });
 $('pauseBtn').addEventListener('click', pause);
@@ -3756,7 +3887,7 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) pause
 let assist = null;
 function hostileTargets() {
   const out = [];
-  if (mode === 'siege') for (const e of enemies) out.push({ x: e.g.position.x, y: e.g.position.y, z: e.g.position.z, r: e.radius });
+  if (mode === 'siege') for (const e of enemies) out.push({ x: e.g.position.x, y: e.aimY != null ? e.aimY : e.g.position.y, z: e.g.position.z, r: e.radius });
   else for (const e of T.ents.values()) if (e.alive && isFoe(e)) out.push({ x: e.rx, y: 1.2 - e.rc * 0.3, z: e.rz, r: 0.4 });
   return out;
 }
@@ -3803,7 +3934,7 @@ function fire() {
     if (!hits.length) continue;
     const h = hits[0], ent = h.object.userData.ent, d = h.distance;
     const fall = d <= w.r0 ? 1 : Math.max(w.fall, 1 - (d - w.r0) / (w.r1 - w.r0) * (1 - w.fall));
-    if (ent && (ent.kind === 'drone' || (mode === 'tdm' && isFoe(ent) && ent.alive))) {
+    if (ent && (ent.kind === 'drone' || (ent.kind === 'zombie' && ent.hp > 0) || (mode === 'tdm' && isFoe(ent) && ent.alive))) {
       const part = h.object.userData.part, mul = ent.kind === 'drone' ? 1 : part === 'head' ? w.head : part === 'leg' ? 0.75 : 1;
       if (part === 'head' && ent.kind !== 'drone') headHit = true;
       dmgTo.set(ent, (dmgTo.get(ent) || 0) + w.dmg * fall * mul);
@@ -3812,6 +3943,7 @@ function fire() {
   }
   for (const [ent, raw] of dmgTo) {
     const dmg = Math.round(raw);
+    if (ent.kind === 'zombie') { hitZombie(ent, dmg, headHit); continue; }
     if (ent.kind === 'drone') { ent.hp -= dmg; ent.flash = 0.08; if (ent.hp <= 0) killDrone(ent); else { sfx.hit(); hitMarker(''); } continue; }
     ent.v.flashT = 0.06;
     if (hasPerk('tracker')) ent.trackT = 4;
@@ -3848,6 +3980,7 @@ window.addEventListener('keydown', ev => {
   if (state === 'play') {
     if (ev.code === 'KeyR') startReload();
     if (ev.code === 'KeyG') throwNade();
+    if (ev.code === 'KeyB' && zmb) zBuyGun();
     if (ev.code === 'KeyZ') useScan();
     if (ev.code === 'KeyX') useMissile();
     if (/^Digit[1-9]$/.test(ev.code) && mode === 'tdm' && T.win) castVote(Object.keys(MAPS)[+ev.code.slice(5) - 1]);
@@ -3895,6 +4028,7 @@ function onTouchStart(ev) {
     if (el.closest('#reloadBtn')) { startReload(); continue; }
     if (el.closest('#jumpBtn')) { input.jump = true; continue; }
     if (el.closest('#nadeBtn')) { throwNade(); continue; }
+    if (el.closest('#zBuy')) { zBuyGun(); continue; }
     if (el.closest('#ksScan')) { useScan(); continue; }
     if (el.closest('#ksMsl')) { useMissile(); continue; }
     if (el.closest('#adsBtn')) { adsId = t.identifier; adsX = t.clientX; adsY = t.clientY; P.ads = !P.ads; adsBtn.classList.toggle('on', P.ads); continue; }
@@ -4134,7 +4268,7 @@ function loop() {
     }
     else if (S.uncap && dpr !== DPR_MAX) { dpr = DPR_MAX; renderer.setPixelRatio(dpr); resize(); }
     stepPlayer(dt);
-    if (mode === 'siege') stepSiege(dt); else netTick(dt);
+    if (mode === 'siege') { if (zmb) stepZombies(dt); else stepSiege(dt); } else netTick(dt);
   } else if (state === 'paused' && mode === 'tdm') {
     netTick(dt);
   } else if (state === 'menu') {
