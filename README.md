@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v54)](https://gaayyynesss.github.io/Seige/?v=54)
+## ▶️ [PLAY NOW — latest version (v55)](https://gaayyynesss.github.io/Seige/?v=55)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=54
+**Latest:** https://gaayyynesss.github.io/Seige/?v=55
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v54** | https://gaayyynesss.github.io/Seige/?v=54 | **Weapon levels up to 100** with 4 new mastery camos (Platinum lv 25, Obsidian Flame lv 50, Damascus lv 75, Dark Matter lv 100), and you can now **climb onto crates, sandbags and low walls** (tap JUMP next to them) and stand, walk and jump on top |
+| **v55** | https://gaayyynesss.github.io/Seige/?v=55 | **UI polish:** player bar on the menu (rank, callsign, season tier, gun level, coins), color-coded game mode cards, smooth tab and card animations, health bar inside its card that turns yellow then red as you take damage, and cleaner score/kill-feed cards in matches |
+| v54 | https://gaayyynesss.github.io/Seige/?v=54 | **Weapon levels up to 100** with 4 new mastery camos (Platinum lv 25, Obsidian Flame lv 50, Damascus lv 75, Dark Matter lv 100), and you can now **climb onto crates, sandbags and low walls** (tap JUMP next to them) and stand, walk and jump on top |
 | v53 | https://gaayyynesss.github.io/Seige/?v=53 | **Aim assist slider** (0–100% strength in Settings) and a **UI remake**: tabs with icons, glassy rounded cards, accent headers and focus glow on the menus; rounded health/ammo cards, glowing minimap ring and glass touch buttons in matches |
 | v52 | https://gaayyynesss.github.io/Seige/?v=52 | **Realistic guns:** all 12 guns rebuilt with real shapes (angled grips, shaped stocks, curved/straight/drum mags, round barrels with muzzle brakes, vented rails, holo sights, bolt handle, revolver cylinder, pump shotgun). **Real bullets:** glowing rounds in flight, brass shell casings that eject and bounce, and bullet holes where shots hit |
 | v51 | https://gaayyynesss.github.io/Seige/?v=51 | **Sound & music:** menu music (fades out in matches, own volume slider), every gun has its own sound, footsteps change with the ground (snow, sand, hard ground), and a kill-confirm sound |
