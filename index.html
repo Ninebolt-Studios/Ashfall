@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116153206';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116162939';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -539,6 +539,43 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 #fireBtn.on { background: radial-gradient(circle at 35% 30%, rgba(240,100,70,.65), rgba(130,22,10,.8) 72%); }
 #fireBtn small { color: rgba(255,230,220,.75); }
 #pauseBtn { border-radius: 10px; background: rgba(14,16,12,.6); backdrop-filter: blur(6px); }
+/* ---------- v55 UI polish ---------- */
+.hright { display: grid; gap: 6px; justify-items: end; }
+.pchip { display: flex; align-items: center; gap: 12px; padding: 8px 14px 8px 10px; border-radius: 999px; background: rgba(26,28,23,.75); border: 1px solid rgba(255,255,255,.1); box-shadow: 0 6px 22px rgba(0,0,0,.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.pchip .pc-rank { font-size: 28px; line-height: 1; }
+.pchip .pc-mid { display: grid; line-height: 1.15; }
+.pchip b { font: 700 17px var(--display); letter-spacing: .1em; text-transform: uppercase; }
+.pchip .pc-mid span { font-size: 11px; color: var(--dim); letter-spacing: .04em; }
+.pchip .pc-coins { font: 700 14px var(--mono); color: #f2c84b; padding: 4px 10px; border-radius: 999px; background: rgba(242,200,75,.12); border: 1px solid rgba(242,200,75,.3); }
+@keyframes paneIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes cardPop { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+.pane:not([hidden]) { animation: paneIn .28s ease-out; }
+.mode, .crate, .perk, .wcard, .rankbox, .daily, .profile { animation: cardPop .32s ease-out both; }
+.modes .mode:nth-child(2) { animation-delay: .04s; } .modes .mode:nth-child(3) { animation-delay: .08s; } .modes .mode:nth-child(4) { animation-delay: .12s; } .modes .mode:nth-child(5) { animation-delay: .16s; }
+.mode-name::before { font-size: 1.1em; margin-right: 4px; }
+#tdmBtn { background-image: linear-gradient(135deg, rgba(80,130,200,.32), transparent 65%); border-top-color: #6aa8e0; }
+#rankedBtn { background-image: linear-gradient(135deg, rgba(242,200,75,.3), transparent 65%); border-top-color: #f2c84b; }
+#duelBtn { background-image: linear-gradient(135deg, rgba(224,96,63,.3), transparent 65%); border-top-color: #e0603f; }
+#ggBtn { background-image: linear-gradient(135deg, rgba(120,220,120,.26), transparent 65%); border-top-color: #7dd87a; }
+#siegeBtn { background-image: linear-gradient(135deg, rgba(160,110,255,.28), transparent 65%); border-top-color: #a07aff; }
+.mode:hover .mode-name { color: var(--accent); }
+.mode-desc { line-height: 1.45; }
+.chip { background: rgba(255,255,255,.05); }
+.chip.hot { box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 40%, transparent); }
+/* HUD */
+.tl .vit { display: grid; gap: 5px; padding: 8px 12px 10px; min-width: min(220px, 36vw); }
+.vit .vrow { display: flex; align-items: baseline; gap: 10px; }
+.vit #hpbar { width: 100%; height: 10px; } .vit #stbar { width: 100%; height: 3px; background: rgba(0,0,0,.4); }
+#hpfill { transition: width .15s, background .3s; }
+#feed div { border-left: 3px solid rgba(255,255,255,.15); border-radius: 6px; }
+#feed .me { border-left-color: var(--accent); box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 30%, transparent); }
+#banner { text-shadow: 0 4px 24px rgba(0,0,0,.6); }
+.set { border-top-color: rgba(255,255,255,.06); }
+.set input[type=range] { accent-color: var(--accent); }
+.tr .sideStat { background: rgba(14,16,12,.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 6px 12px; }
+.tr .sideStat .coinTag:empty { display: none; }
+@media (max-width: 700px) { .pchip .pc-mid span { display: none; } }
+@media (prefers-reduced-motion: reduce) { .pane:not([hidden]), .mode, .crate, .perk, .wcard, .rankbox, .daily, .profile { animation: none; } }
 </style>
 
 <div id="oddsBox" hidden><div class="ob"><div class="obh"><span class="rvname" id="oddsTitle"></span><button class="btn ghost" id="oddsClose" type="button">Close</button></div><div class="pmsg" id="oddsNote"></div><div id="oddsList"></div></div></div>
@@ -548,9 +585,9 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 <div id="hud" hidden>
   <div id="hurt"></div>
   <div class="corner tl">
-    <div class="vit"><span class="label">Health</span><span id="hpNum" class="num">100</span></div>
-    <div id="hpbar"><div id="hpfill"></div></div>
-    <div id="stbar"><div id="stfill"></div></div>
+    <div class="vit"><div class="vrow"><span class="label">Health</span><span id="hpNum" class="num">100</span></div>
+      <div id="hpbar"><div id="hpfill"></div></div>
+      <div id="stbar"><div id="stfill"></div></div></div>
     <canvas id="radar" width="224" height="224"></canvas>
     <span id="fpsTag" class="num" hidden></span>
   </div>
@@ -594,7 +631,10 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
         <svg viewBox="0 0 42 42" aria-hidden="true"><path d="M21 3 L39 21 L21 39 L3 21 Z" fill="#221e14"/><path d="M12.3 26.5 Q16.6 25.4 21 26.5 T29.7 26.5 L26.5 30 L21 35.5 L15.5 30 Z" fill="#96703a"/><path d="M21 3 L39 21 L21 39 L3 21 Z" fill="none" stroke="#f2a93b" stroke-width="2.5"/><path d="M14 21 L21 14 L28 21" fill="none" stroke="#efe8d6" stroke-width="3" stroke-linejoin="round"/><circle cx="21" cy="27.5" r="2" fill="#f2a93b"/></svg>
         <div><h1>DUSTLINE</h1><p id="brandSub">Tactical arena</p></div>
       </div>
-      <p class="online" id="online">Looking for players…</p>
+      <div class="hright">
+        <div class="pchip" id="pchip"><span class="pc-rank" id="pcRank">🥉</span><div class="pc-mid"><b id="pcName">Operator</b><span id="pcSub"></span></div><span class="pc-coins" id="pcCoins">◎ 0</span></div>
+        <p class="online" id="online">Looking for players…</p>
+      </div>
     </header>
     <nav class="tabs" role="tablist">
       <button class="tab" role="tab" data-tab="play" id="tabPlay" aria-selected="true" type="button">Play</button>
@@ -2187,11 +2227,18 @@ function addCoins(n) {
   WALLET.coins += n; P.mCoins = (P.mCoins || 0) + n; saveWallet(); updCoins();
   const t = $('coinTag'); t.classList.add('pop'); clearTimeout(addCoins.tm); addCoins.tm = setTimeout(() => t.classList.remove('pop'), 220);
 }
-function updCoins() { const t = $('coinTag'); if (t) t.textContent = '◎ ' + WALLET.coins.toLocaleString() + ' coins'; const sc = $('shopCoins'); if (sc) sc.textContent = WALLET.coins.toLocaleString(); }
+function renderChip() {
+  const ri = rankIdx(); if (!$('pcName')) return;
+  $('pcRank').textContent = RANKS[ri].i; $('pcName').textContent = playerName;
+  let lv = 1; for (const k of Object.keys(WEAPONS)) lv = Math.max(lv, wLevel(k));
+  $('pcSub').textContent = RANKS[ri].n + ' · S' + SEASON + ' tier ' + bpTier() + ' · gun lv ' + lv;
+  $('pcCoins').textContent = '◎ ' + WALLET.coins.toLocaleString();
+}
+function updCoins() { try { renderChip(); } catch (e) {} const t = $('coinTag'); if (t) t.textContent = '◎ ' + WALLET.coins.toLocaleString() + ' coins'; const sc = $('shopCoins'); if (sc) sc.textContent = WALLET.coins.toLocaleString(); }
 function updHud() {
   const hp = Math.max(0, Math.round(P.hp));
   hud.hp.style.width = hp + '%'; hud.hpNum.textContent = hp;
-  hud.hp.style.background = P.hp > 50 ? 'var(--ink)' : P.hp > 25 ? 'var(--accent)' : 'var(--hostile)';
+  hud.hp.style.background = P.hp > 60 ? 'linear-gradient(90deg, #5fc95a, #b8e86a)' : P.hp > 30 ? 'linear-gradient(90deg, #e0a030, #f2d050)' : 'linear-gradient(90deg, #d8352a, #f06a4a)';
   hud.ammo.innerHTML = P.ammo + '<small> / ' + magOf(P.w) + '</small>';
   hud.wName.textContent = W().name;
   hud.reload.textContent = P.reloading > 0 ? 'RELOADING' : P.ammo === 0 ? 'RELOAD' : P.ammo <= magOf(P.w) * 0.25 ? 'LOW AMMO' : '';
@@ -2872,6 +2919,7 @@ function showMenu(which) {
   menuMode = which;
   $('menu').hidden = false; $('hud').hidden = true;
   if (which === 'main') { renderDaily(); renderRank(); }
+  try { renderChip(); } catch (e) {}
   $('playMain').hidden = which !== 'main'; $('playPause').hidden = which !== 'pause'; $('playOver').hidden = which !== 'over';
   $('tabPlay').textContent = which === 'pause' ? 'Match' : 'Play';
   showTab('play');
@@ -3479,7 +3527,7 @@ function renderCareer() {
 const nameIn = $('nameIn'), codeIn = $('codeIn');
 nameIn.value = playerName; codeIn.value = matchCode;
 applyCamo(); renderParty();
-nameIn.addEventListener('input', () => { playerName = nameIn.value.replace(/[^\w .\-]/g, '').slice(0, 16) || 'Operator'; store.set('name', playerName); setLobby(); });
+nameIn.addEventListener('input', () => { playerName = nameIn.value.replace(/[^\w .\-]/g, '').slice(0, 16) || 'Operator'; store.set('name', playerName); setLobby(); try { renderChip(); } catch (e) {} });
 codeIn.addEventListener('input', () => { matchCode = codeIn.value.replace(/[^a-z0-9-]/gi, '').slice(0, 20).toLowerCase(); });
 (function () {
   const ta = $('acctCode'), acts = $('acctActions'), load = $('acctLoad'), copy = $('acctCopy');
