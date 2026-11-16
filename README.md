@@ -4,16 +4,19 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v48)](https://gaayyynesss.github.io/Seige/?v=48)
+## ▶️ [PLAY NOW — latest version (v51)](https://gaayyynesss.github.io/Seige/?v=51)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=48
+**Latest:** https://gaayyynesss.github.io/Seige/?v=51
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v48** | https://gaayyynesss.github.io/Seige/?v=48 | Battle pass tiers now take **599 XP** each from Season 2 on (was 650). XP you already earned this season counts toward the new tiers |
+| **v51** | https://gaayyynesss.github.io/Seige/?v=51 | **Sound & music:** menu music (fades out in matches, own volume slider), every gun has its own sound, footsteps change with the ground (snow, sand, hard ground), and a kill-confirm sound |
+| v50 | https://gaayyynesss.github.io/Seige/?v=50 | **Stats card** on the Career tab (rank, K/D, win rate, best weapon, favorite map and more) and a **friends list**: add friends by callsign and see when they're online and what they're playing |
+| v49 | https://gaayyynesss.github.io/Seige/?v=49 | **Ranked mode:** ranked Team Battle with rank points and 5 ranks (Bronze → Silver → Gold → Platinum → Diamond), a rank card on the Play tab, rank badges on the scoreboard, and bots that get tougher as you climb |
+| v48 | https://gaayyynesss.github.io/Seige/?v=48 | Battle pass tiers now take **599 XP** each from Season 2 on (was 650). XP you already earned this season counts toward the new tiers |
 | v47 | https://gaayyynesss.github.io/Seige/?v=47 | Fix: on iPad a black strip could appear at the bottom after scrolling the menu; the game now re-checks the screen size twice a second and fixes itself. The menu also no longer runs slightly off the bottom of the screen |
 | v46 | https://gaayyynesss.github.io/Seige/?v=46 | **Adaptive bots:** they get easier when you're struggling and tougher when you're doing really well. New **Bot difficulty** setting (Adaptive, Easy, Normal, Hard) |
 | v45 | https://gaayyynesss.github.io/Seige/?v=45 | **Season 2: Harvest is live** (Nov 16–26): orange colors, pumpkins and hay bales on every map, 75 tiers at **650 XP per tier**. **Season 2 Premium code: `SCYTHE26`** (the old code `DUSTVIP` no longer works). Reach tier 75 with Premium for the **SC-7 Scythe** |
@@ -62,6 +65,7 @@ Everyone who opens the link plays in the same Team Battle. AI soldiers fill ever
 | Mode | Description |
 |---|---|
 | **Team Battle** | Delta vs Viper, 5 v 5, across seven maps (Outpost, Dockyard, Frostline, Refinery, Hollow Pines, Greywater, Blacksite). The first team to 100 eliminations wins. Party members play on the same team. |
+| **Ranked** | Ranked Team Battle (5 v 5, first to 100). Win: **+25 RP** plus 1 per elimination (up to +10). Loss: **−15 RP** (a little back for 5+ eliminations). Quitting mid-match counts as a loss (−20). Ranks: 🥉 Bronze (0), 🥈 Silver (300), 🥇 Gold (700), 💠 Platinum (1,200), 💎 Diamond (1,800). Bots get tougher at higher ranks. Your rank badge shows next to your name on the scoreboard. |
 | **Duel 1v1** | Face your party member one on one, no bots, first to 7 eliminations. Make a party and share the code first. |
 | **Gun Game** | Free-for-all against 9 bots. Every elimination swaps you to the next of 10 guns (SMG → PDW → Rifle → Battle Rifle → LMG → Shotgun → Marksman → Sniper → Hand Cannon → Sidearm). First to get an elimination with all 10 wins. Grenades are off in this mode. |
 | **Drone Holdout** | Solo survival against endless waves of armed drones. Grab green supply cases to heal. |
@@ -187,6 +191,11 @@ Headshots deal about double damage and leg hits deal less. Damage drops off at l
 | Leaderboard | Tap the score bar | Hold Tab |
 | Pause | **II** | Esc |
 
+## Profile & friends
+The **Career** tab opens with your **stats card**: rank badge, RP, eliminations, K/D, wins and win rate, best weapon (most eliminations), favorite map (most matches), best streak, best Holdout wave, season tier and achievements.
+
+Below it is your **friends list**. Type a friend's exact callsign and tap **Add**. A green dot means they're online, and it shows what they're doing (menu, Team Battle, Ranked, Gun Game or Holdout) with their rank badge. The top of the menu also says how many friends are online. To play together, make a party on the Play tab and send them the code.
+
 ## Kill cam & MVP
 - **Kill cam:** when you're eliminated in Team Battle, Duels or Gun Game, the camera shows the player who got you, from just behind them, until you respawn.
 - **Match MVP:** at the end of every match a card shows the top player with their eliminations, deaths and K/D. If it's you, you get **+100 coins**.
@@ -197,6 +206,12 @@ Headshots deal about double damage and leg hits deal less. Damage drops off at l
 
 ## Bot difficulty
 Bots are **Adaptive** by default. The game watches your recent eliminations and deaths: if you're struggling, bots aim worse, react slower and pause longer between bursts; if you're doing really well, they get sharper (up to a fair limit). It changes gradually and remembers your level between matches. You can also pick **Easy**, **Normal** or **Hard** in **Settings**, which shows the current adaptive level.
+
+## Sound & music
+- **Menu music:** a calm synth track plays on the menus (it starts after your first tap) and fades out when a match starts. Change its volume with **Menu music** in Settings.
+- **Gun sounds:** each gun has its own sound on top of its weapon type, for example a deep thump on the LMG, a heavy boom on the Hand Cannon, an electric zap on the VX-9 and a copper zing on the SC-7.
+- **Footsteps:** they sound different on snow (crunch), sand (soft) and hard ground (sharp taps).
+- **Kill confirm:** a short ding when you get an elimination.
 
 ## Settings
 Open the **Settings** tab to change look and aiming sensitivity, graphics quality (**Low, Medium, High or Ultra**; every level holds 60 FPS by lowering resolution and then shadow detail only when needed), aim assist, auto-fire, the left-handed touch layout, field of view, camera motion, the frame-rate counter, volume, crosshair color and size, and the minimap. Pick **Low** quality if the game feels slow on an older device.
