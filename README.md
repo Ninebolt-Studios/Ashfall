@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v59)](https://gaayyynesss.github.io/Seige/?v=59)
+## ▶️ [PLAY NOW — latest version (v60)](https://gaayyynesss.github.io/Seige/?v=60)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=59
+**Latest:** https://gaayyynesss.github.io/Seige/?v=60
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v59** | https://gaayyynesss.github.io/Seige/?v=59 | **Faster reloads:** every gun reloads 30% faster (Fast Hands perk still stacks on top) |
+| **v60** | https://gaayyynesss.github.io/Seige/?v=60 | **Slower healing:** health starts coming back after 7 seconds without damage (was 5) and heals 6 per second (was 12). Tough Skin: 4.5 seconds, 10 per second |
+| v59 | https://gaayyynesss.github.io/Seige/?v=59 | **Faster reloads:** every gun reloads 30% faster (Fast Hands perk still stacks on top) |
 | v58 | https://gaayyynesss.github.io/Seige/?v=58 | **Sound fixes:** sound and music come back after switching tabs, menu music now starts on your first tap on iPad/iPhone, and game audio plays even with the silent switch on |
 | v57 | https://gaayyynesss.github.io/Seige/?v=57 | **Haptics:** phones vibrate when you shoot, hit, get a kill, get hurt, are near an explosion or earn a kill streak (Android), and iPhones (iOS 18+) click on button presses. On/off switch in Settings. iPads have no vibration motor |
 | v56 | https://gaayyynesss.github.io/Seige/?v=56 | **Better touch buttons** (icons, colored rings, press feedback) and a **real frag grenade** (body, grip bands, fuse cap, spoon, pin ring) with a **new explosion**: flash of light, fireball, smoke clouds, shockwave ring, debris and a scorch mark (the Missile Strike uses it too, bigger) |
@@ -114,7 +115,7 @@ On the **Loadout** tab pick one perk in each of three slots, plus a wildcard.
 | Slot | Perk | What it does |
 |---|---|---|
 | Perk 1 | **Salvager** | Enemies you eliminate drop a supply box. Walk over it to refill your magazine and get a grenade. |
-| Perk 1 | **Tough Skin** | Health comes back after 3 seconds instead of 5, and faster. |
+| Perk 1 | **Tough Skin** | Health comes back after 4.5 seconds instead of 7, and faster. |
 | Perk 1 | **Quickdraw** | Aim down sights 40% faster. |
 | Perk 2 | **Fleetfoot** | Move 8% faster and sprint longer. |
 | Perk 2 | **Fast Hands** | Reload 25% faster. |
