@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116164218';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116164927';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -696,7 +696,7 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
         <div class="modes">
           <button class="mode" id="tdmBtn" type="button">
             <span class="mode-name">Team Battle</span>
-            <span class="mode-desc" id="tdmDesc">Delta vs Viper. First team to 100 eliminations wins. Kill streaks: Map Scan at 10, Missile Strike at 30. Players online join the same match, and AI soldiers fill every empty slot.</span>
+            <span class="mode-desc" id="tdmDesc">Delta vs Viper. First team to 65 eliminations wins. Kill streaks: Map Scan at 10, Missile Strike at 30. Players online join the same match, and AI soldiers fill every empty slot.</span>
             <span class="chips"><span class="chip hot">Online</span><span class="chip">5 v 5</span><span class="chip">Bots fill</span></span>
           </button>
           <button class="mode" id="rankedBtn" type="button">
@@ -2638,7 +2638,7 @@ function clearSiege() {
 /* =========================================================
    TEAM BATTLE 5v5 (online, bots fill empty slots)
    ========================================================= */
-let SCORE_LIMIT = 100, gg = false, ranked = false; // gg = Gun Game (offline free-for-all)
+let SCORE_LIMIT = 65, gg = false, ranked = false; // gg = Gun Game (offline free-for-all)
 const GG_GUNS = ['smg', 'pdw', 'ar', 'br', 'lmg', 'sg', 'dmr', 'snp', 'rev', 'pst'];
 const isFoe = e => gg || e.team !== P.team; const TEAM_SIZE = 5; let duel = false;
 const BOT_NAMES = { b0: 'Hayes', b1: 'Okafor', b2: 'Lindqvist', b3: 'Moreau', b4: 'Tanaka', r0: 'Vance', r1: 'Petrov', r2: 'Silva', r3: 'Kade', r4: 'Ibarra' };
@@ -3770,7 +3770,7 @@ function startSiege() {
 async function startTDM(isDuel, isRanked) {
   if (isDuel && !party) { const pm = $('partyMsg'); pm.textContent = 'Duel 1v1 needs a party. Tap Create party and send the code to your friend, or type their code and tap Join.'; pm.style.color = 'var(--accent)'; $('partyBox').scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
   ensureAudio(); clearSiege(); lockPointer();
-  duel = !!isDuel; SCORE_LIMIT = duel ? 7 : 100;
+  duel = !!isDuel; SCORE_LIMIT = duel ? 7 : 65;
   const btn = duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
   btn.disabled = true; mode = 'tdm'; equip(loadout);
   resetTDM(); ranked = !!isRanked && !duel;
