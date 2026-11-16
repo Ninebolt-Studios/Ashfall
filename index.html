@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116152939';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116153206';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -846,6 +846,10 @@ const CAMOS = {
   carbon:  { name: 'Carbon', c: [0x5a5f68, 0x24262b, 0x7a808a], lvl: 7, pat: 'carbon' },
   dragon:  { name: 'Dragon', c: [0xc8341c, 0x3a0a06, 0xe86a2a], lvl: 9, pat: 'cracks' },
   diamond: { name: 'Diamond', c: [0xc8ecff, 0x6aa8d0, 0xf0faff], lvl: 10, metal: true, pat: 'facets' },
+  platinum: { name: 'Platinum', c: [0xd8dde4, 0x8a929c, 0xffffff], lvl: 25, metal: true, pat: 'facets' },
+  obsidian2: { name: 'Obsidian Flame', c: [0x14121a, 0x05040a, 0xff5a2a], lvl: 50, metal: true, pat: 'cracks' },
+  damascus: { name: 'Damascus', c: [0x9aa0a8, 0x3a3e46, 0xd0d4da], lvl: 75, metal: true, pat: 'stripes' },
+  darkmatter: { name: 'Dark Matter', c: [0x2a0a5a, 0x05020c, 0xc04aff], lvl: 100, metal: true, pat: 'stars' },
   // shop crate camos (work on every gun)
   olive:   { name: 'Olive Drab', c: [0x6a7040, 0x3a4020, 0x8a9058], crate: 'common' },
   rust:    { name: 'Rust', c: [0x9a4a20, 0x3a1a08, 0xc8743a], crate: 'common' },
@@ -1006,7 +1010,9 @@ let myCamo = CAMOS[store.get('camo', 'none')] ? store.get('camo', 'none') : 'non
 // weapon levels: kills per gun -> level 1..10; each gun remembers its own camo
 const WL = Object.assign({}, store.get('wlv', {}));
 const WCAMO = Object.assign({}, store.get('wcamo', {}));
+// kills needed for each weapon level (level 1..100); the first 10 are unchanged, then each level takes a little longer
 const WLV_KILLS = [0, 5, 12, 20, 30, 42, 56, 72, 90, 110];
+for (let L = 11; L <= 100; L++) WLV_KILLS.push(WLV_KILLS[L - 2] + 20 + Math.floor((L - 10) * 1.2));
 const WLV_MAX = WLV_KILLS.length;
 function wLevel(w) { const n = WL[w] || 0; let l = 1; for (let i = 1; i < WLV_MAX; i++) if (n >= WLV_KILLS[i]) l = i + 1; return l; }
 function camoOwned(k, w) { const d = CAMOS[k]; if (!d) return false; return d.lvl ? wLevel(w) >= d.lvl : bpOwned('camo', k); }
@@ -1495,8 +1501,9 @@ function buildMap(id) {
   decorate(THEME);
 }
 
-function collide(p, r) {
+function collide(p, r, feet = 0) {
   for (const b of boxes) {
+    if (feet > 0 && b.h <= feet + 0.05) continue; // you're above it (standing on top)
     const cx = Math.max(b.minX, Math.min(p.x, b.maxX)), cz = Math.max(b.minZ, Math.min(p.z, b.maxZ));
     const dx = p.x - cx, dz = p.z - cz, d2 = dx * dx + dz * dz;
     if (d2 < r * r) {
@@ -1505,6 +1512,9 @@ function collide(p, r) {
     }
   }
 }
+// highest low object (crate, sandbags, low wall) under you that you can stand on
+function floorAt(x, z, feet) { let f = 0; for (const b of boxes) if (b.h <= 1.8 && b.h <= feet + 0.35 && x > b.minX - 0.2 && x < b.maxX + 0.2 && z > b.minZ - 0.2 && z < b.maxZ + 0.2 && b.h > f) f = b.h; return f; }
+const onGround = () => P.jvy <= 0 && P.jy <= floorAt(P.pos.x, P.pos.z, P.jy) + 0.02;
 function insideSolid(p, m = 0) { for (const b of boxes) if (p.x > b.minX - m && p.x < b.maxX + m && p.z > b.minZ - m && p.z < b.maxZ + m) return true; return false; }
 function losBlocked(x1, z1, x2, z2) {
   const dx = x2 - x1, dz = z2 - z1;
@@ -2010,9 +2020,9 @@ function updateBullets(dt) {
       let tt = ((P.pos.x - x0) * dx + (P.pos.z - z0) * dz) / len2; tt = tt < 0 ? 0 : tt > 1 ? 1 : tt;
       const cxp = x0 + dx * tt, czp = z0 + dz * tt, cy = y0 + (b.y - y0) * tt;
       const hx = P.pos.x - cxp, hz = P.pos.z - czp;
-      if (cy > 0.25 && cy < 1.95 && hx * hx + hz * hz < R * R) { b.done = true; takeDamage(b.dmg, b.src); spark(new THREE.Vector3(cxp, cy, czp), 0xff6a3a, 6); }
+      if (cy > 0.25 + P.jy && cy < 1.95 + P.jy && hx * hx + hz * hz < R * R) { b.done = true; takeDamage(b.dmg, b.src); spark(new THREE.Vector3(cxp, cy, czp), 0xff6a3a, 6); }
     }
-    if (!b.done && b.y < 4 && insideSolid({ x: b.x, z: b.z }, 0.05)) { b.done = true; spark(new THREE.Vector3(b.x, b.y, b.z), 0xffd9a0, 5); }
+    if (!b.done && b.y < 4 && nadeSolid({ x: b.x, y: b.y, z: b.z })) { b.done = true; spark(new THREE.Vector3(b.x, b.y, b.z), 0xffd9a0, 5); }
     if (b.done || b.life <= 0) { b.life = 0; b.m.visible = false; continue; }
     b.m.position.set(b.x, b.y, b.z); b.m.lookAt(b.x + b.vx, b.y + b.vy, b.z + b.vz);
   }
@@ -2655,7 +2665,7 @@ function botStep(b, dt, targets) {
     const dmg = 10 + (Math.random() * 6 | 0);
     if (t.id === myPeer) {
       const miss = (1 - acc) * 2.4;
-      const aim = new THREE.Vector3(t.x + (P.vx || 0) * 0.05 + (Math.random() - .5) * miss, 1.1 + (Math.random() - .5) * 0.5, t.z + (P.vz || 0) * 0.05 + (Math.random() - .5) * miss);
+      const aim = new THREE.Vector3(t.x + (P.vx || 0) * 0.05 + (Math.random() - .5) * miss, 1.1 + P.jy + (Math.random() - .5) * 0.5, t.z + (P.vz || 0) * 0.05 + (Math.random() - .5) * miss);
       fireBullet(from, aim, dmg, b.id);
     } else {
       const hit = Math.random() < acc;
@@ -3804,7 +3814,7 @@ document.addEventListener('gesturestart', ev => ev.preventDefault());
 
 /* ---------- slide & mantle ---------- */
 function startSlide(){
-  if (!P.alive || P.jy > 0.05 || P.slideT > 0 || P.slideCd > 0 || P.vault || state !== 'play') return false;
+  if (!P.alive || !onGround() || P.slideT > 0 || P.slideCd > 0 || P.vault || state !== 'play') return false;
   const hsp = Math.hypot(P.vx, P.vz); if (hsp < 3.4) return false;
   const k = 10.5 / hsp; P.vx *= k; P.vz *= k;
   P.slideT = 0.75; P.slideCd = 1.1; P.ads = false;
@@ -3812,16 +3822,24 @@ function startSlide(){
   return true;
 }
 function tryVault(){
-  if (!P.alive || P.jy > 0.05 || P.vault) return false;
+  if (!P.alive || !onGround() || P.vault) return false;
   const fx = -Math.sin(P.yaw), fz = -Math.cos(P.yaw);
   const probe = { x: P.pos.x + fx * 0.75, z: P.pos.z + fz * 0.75 };
   let box = null;
-  for (const b of boxes){ if (b.h > 1.8 || b.h < 0.5) continue; if (probe.x > b.minX - 0.1 && probe.x < b.maxX + 0.1 && probe.z > b.minZ - 0.1 && probe.z < b.maxZ + 0.1){ box = b; break; } }
+  for (const b of boxes){ if (b.h > 1.8 || b.h < 0.5 || b.h <= P.jy + 0.05) continue; if (probe.x > b.minX - 0.1 && probe.x < b.maxX + 0.1 && probe.z > b.minZ - 0.1 && probe.z < b.maxZ + 0.1){ box = b; break; } }
   if (!box) return false;
+  { // mantle up: if there's room to stand on top, climb onto it
+    const inside = (x, z, m) => x > box.minX + m && x < box.maxX - m && z > box.minZ + m && z < box.maxZ - m;
+    let dIn = -1; for (let d = 0.3; d < 2.2; d += 0.05) if (inside(P.pos.x + fx * d, P.pos.z + fz * d, 0)) { dIn = d; break; }
+    if (dIn > 0 && box.h <= 1.6) { const lx = P.pos.x + fx * (dIn + 0.45), lz = P.pos.z + fz * (dIn + 0.45);
+      if (inside(lx, lz, 0.15) && !boxes.some(o => o !== box && o.h > box.h + 0.3 && lx > o.minX - 0.4 && lx < o.maxX + 0.4 && lz > o.minZ - 0.4 && lz < o.maxZ + 0.4)) {
+        P.vault = { up: true, t: 0, dur: 0.36, sx: P.pos.x, sz: P.pos.z, ex: lx, ez: lz, sh: P.jy, eh: box.h };
+        P.crouch = false; P.ads = false; P.slideT = 0; P.vx = P.vz = 0; sfx.vault(); return true; } }
+  }
   let clearPt = null;
   for (let d = 0.9; d < 3.4; d += 0.2){ const px = P.pos.x + fx * d, pz = P.pos.z + fz * d; if (!(px > box.minX - 0.1 && px < box.maxX + 0.1 && pz > box.minZ - 0.1 && pz < box.maxZ + 0.1)){ clearPt = { x: P.pos.x + fx * (d + 0.4), z: P.pos.z + fz * (d + 0.4) }; break; } }
   if (!clearPt || insideSolid(clearPt, 0.3)) return false;
-  P.vault = { t: 0, dur: 0.42, sx: P.pos.x, sz: P.pos.z, ex: clearPt.x, ez: clearPt.z, peak: box.h + 0.35 };
+  P.vault = { t: 0, dur: 0.42, sx: P.pos.x, sz: P.pos.z, ex: clearPt.x, ez: clearPt.z, sh: P.jy, peak: box.h - P.jy + 0.35 };
   P.crouch = false; P.ads = false; P.slideT = 0; P.vx = P.vz = 0; sfx.vault();
   return true;
 }
@@ -3844,7 +3862,7 @@ function stepPlayer(dt) {
   if (len > 1) { mx /= len; mz /= len; len = 1; }
   const mob = (W().mob || 1) * (hasPerk('fleetfoot') ? 1.08 : 1), speed = (sprint ? 8.2 : P.crouch ? 2.7 : 5.2 * (P.ads ? 0.65 : 1)) * mob, sin = Math.sin(P.yaw), cos = Math.cos(P.yaw);
   const tvx = P.alive ? (mx * cos + mz * sin) * speed : 0, tvz = P.alive ? (-mx * sin + mz * cos) * speed : 0;
-  const acc = Math.min(1, dt * (len > 0.05 ? 10 : 13) * (P.jy > 0 ? 0.3 : 1));
+  const acc = Math.min(1, dt * (len > 0.05 ? 10 : 13) * (onGround() ? 1 : 0.3));
   P.sprinting = sprint;
   if (P.slideT > 0 || P.vault) { P.vx += (tvx - P.vx) * dt * 0.9; P.vz += (tvz - P.vz) * dt * 0.9; }
   else { P.vx += (tvx - P.vx) * acc; P.vz += (tvz - P.vz) * acc; }
@@ -3854,20 +3872,23 @@ function stepPlayer(dt) {
     if (P.vault){
       P.vault.t += dt; const u = Math.min(1, P.vault.t / P.vault.dur);
       P.pos.x = THREE.MathUtils.lerp(P.vault.sx, P.vault.ex, u); P.pos.z = THREE.MathUtils.lerp(P.vault.sz, P.vault.ez, u);
-      P.jy = Math.sin(u * Math.PI) * P.vault.peak;
-      if (u >= 1){ P.jy = 0; P.vault = null; sfx.land(); }
+      if (P.vault.up) { const e = 1 - (1 - u) * (1 - u); P.jy = P.vault.sh + (P.vault.eh - P.vault.sh) * e + Math.sin(u * Math.PI) * 0.25; }
+      else P.jy = P.vault.sh + Math.sin(u * Math.PI) * P.vault.peak;
+      if (u >= 1){ P.jy = P.vault.up ? P.vault.eh : floorAt(P.pos.x, P.pos.z, P.vault.sh + 0.1); P.jvy = 0; P.vault = null; sfx.land(); }
     } else {
       const ox = P.pos.x, oz = P.pos.z;
       P.pos.x += P.vx * dt; P.pos.z += P.vz * dt;
-      collide(P.pos, 0.45);
+      collide(P.pos, 0.45, P.jy);
       const idt = 1 / Math.max(dt, 1e-4); P.vx = (P.pos.x - ox) * idt; P.vz = (P.pos.z - oz) * idt;
-      if (input.jump){ if (!tryVault()){ if (P.slideT > 0) P.slideT = 0; if (P.jy <= 0 && P.jvy <= 0 && P.stamina > 10){ P.jvy = 5; P.stamina -= 10; sfx.jump(); } } }
-      if (P.jy > 0 || P.jvy > 0){ P.jvy -= 15 * dt; P.jy += P.jvy * dt; if (P.jy <= 0){ P.jy = 0; P.jvy = 0; sfx.land(); P.bob += 0.6; } }
+      const fl = floorAt(P.pos.x, P.pos.z, P.jy);
+      if (input.jump){ if (!tryVault()){ if (P.slideT > 0) P.slideT = 0; if (P.jy <= fl + 0.02 && P.jvy <= 0 && P.stamina > 10){ P.jvy = 5; P.stamina -= 10; sfx.jump(); } } }
+      if (P.jy > fl + 0.001 || P.jvy > 0){ P.jvy -= 15 * dt; P.jy += P.jvy * dt; if (P.jy <= fl){ P.jy = fl; P.jvy = 0; sfx.land(); P.bob += 0.6; } }
+      else P.jy = fl;
     }
   }
   input.jump = false;
   const hsp = Math.hypot(P.vx, P.vz), moveAmt = Math.min(1, hsp / 5.2), motion = S.motion ? 1 : 0;
-  if (P.jy === 0 && P.alive) { const prev = P.bob; P.bob += hsp * dt * 1.6; if (hsp > 1 && !P.crouch && Math.floor(prev / Math.PI) !== Math.floor(P.bob / Math.PI)) sfx.step(); }
+  if (onGround() && P.alive) { const prev = P.bob; P.bob += hsp * dt * 1.6; if (hsp > 1 && !P.crouch && Math.floor(prev / Math.PI) !== Math.floor(P.bob / Math.PI)) sfx.step(); }
   P.crouchT += ((P.crouch || P.slideT > 0 ? 1 : 0) - P.crouchT) * Math.min(1, dt * 10);
   P.adsT += ((P.ads && P.alive && P.reloading <= 0 ? 1 : 0) - P.adsT) * Math.min(1, dt * (hasPerk('quickdraw') ? 17 : 12));
   computeAssist();
