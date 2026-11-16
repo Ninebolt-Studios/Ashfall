@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116144241';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116144444';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -753,7 +753,7 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('dl-' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('dl-' + k, JSON.stringify(v)); } catch (e) {} },
 };
-const DEF = { botDiff: 'adaptive', sens: 1.2, adsSens: 0.8, invertY: false, assist: isTouch, auto: isTouch, holdAds: true, lefty: false,
+const DEF = { music: 0.45, botDiff: 'adaptive', sens: 1.2, adsSens: 0.8, invertY: false, assist: isTouch, auto: isTouch, holdAds: true, lefty: false,
   quality: isTouch ? 'medium' : 'high', fov: 72, motion: true, fps: false, uncap: false, volume: 0.8, steps: true, xhColor: 'white', xhSize: 1, radar: true };
 const S = Object.assign({}, DEF, store.get('settings', {}));
 const saveS = () => store.set('settings', S);
@@ -1738,6 +1738,38 @@ function ensureAudio() {
   }
   if (actx && actx.state === 'suspended') actx.resume();
 }
+/* ---------- menu music: a calm synth loop made on the fly (no audio files) ---------- */
+let musicGain = null, musicTimer = null, musicStep = 0, musicNext = 0;
+const MUSIC_CHORDS = [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]]; // Am F C G
+const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+function mnote(freq, start, dur, type, vol) {
+  const o = actx.createOscillator(), g = actx.createGain(); o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, start); g.gain.linearRampToValueAtTime(vol, start + Math.min(0.08, dur / 3)); g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+  o.connect(g).connect(musicGain); o.start(start); o.stop(start + dur + 0.05);
+}
+function musicTick() {
+  if (!actx || !musicGain) return;
+  const beat = 60 / 84 / 2; // eighth notes at 84 BPM
+  while (musicNext < actx.currentTime + 0.4) {
+    const t = musicNext, bar = Math.floor(musicStep / 8) % 4, st = musicStep % 8, ch = MUSIC_CHORDS[bar];
+    if (st === 0) { ch.forEach(m => mnote(mtof(m), t, beat * 8, 'triangle', 0.05)); mnote(mtof(ch[0] - 24), t, beat * 4, 'sine', 0.16); }
+    if (st === 4) mnote(mtof(ch[0] - 24), t, beat * 4, 'sine', 0.12);
+    if (st % 2 === 1) mnote(mtof(ch[(st >> 1) % 3] + 12), t, beat * 1.5, 'sine', 0.035);
+    if (st % 2 === 0) { const s2 = actx.createBufferSource(), f = actx.createBiquadFilter(), g = actx.createGain(); s2.buffer = noiseBuf; f.type = 'highpass'; f.frequency.value = 7000; g.gain.setValueAtTime(st % 4 === 0 ? 0.03 : 0.015, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05); s2.connect(f).connect(g).connect(musicGain); s2.start(t, Math.random() * 0.5); s2.stop(t + 0.06); }
+    musicNext += beat; musicStep++;
+  }
+}
+function startMusic() {
+  if (!actx) return;
+  if (!musicGain) { musicGain = actx.createGain(); musicGain.gain.value = 0; musicGain.connect(master); }
+  if (!musicTimer) { musicNext = actx.currentTime + 0.1; musicTimer = setInterval(musicTick, 100); }
+}
+function updMusic() { // fade in on menus, out during matches
+  if (!musicGain || !actx) return;
+  const want = state === 'play' ? 0 : S.music * 0.5, g = musicGain.gain;
+  g.cancelScheduledValues(actx.currentTime); g.setTargetAtTime(want, actx.currentTime, 0.6);
+}
+document.addEventListener('pointerdown', () => { ensureAudio(); startMusic(); updMusic(); }, { once: true });
 function tone(freq, dur, type, vol, slide, delay = 0) {
   if (!actx || vol < 0.002) return;
   const t = actx.currentTime + delay, o = actx.createOscillator(), g = actx.createGain();
@@ -1752,8 +1784,21 @@ function noise(dur, vol, freq, type = 'lowpass', q = 0.7, delay = 0) {
   g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   s.connect(f).connect(g).connect(master); s.start(t, Math.random() * 0.5); s.stop(t + dur + 0.02);
 }
+// each gun gets its own extra layer on top of its class sound
+const GUN_VOICE = {
+  lmg: () => { tone(55, 0.22, 'sine', 0.3, 32); noise(0.25, 0.12, 300); },
+  br: () => { noise(0.08, 0.3, 4200, 'highpass'); tone(95, 0.2, 'sine', 0.22, 40); },
+  pdw: () => { noise(0.05, 0.22, 5200, 'highpass'); },
+  rev: () => { tone(48, 0.5, 'sine', 0.4, 26); noise(0.9, 0.08, 700, 'bandpass', 0.6, 0.08); tone(1200, 0.4, 'sine', 0.02, 900, 0.02); },
+  vx: () => { tone(1800, 0.09, 'sawtooth', 0.05, 600); tone(240, 0.12, 'square', 0.04, 120); },
+  sc7: () => { tone(2400, 0.06, 'triangle', 0.06, 1400); noise(0.05, 0.15, 6000, 'highpass'); },
+  smg: () => noise(0.04, 0.12, 6500, 'highpass'),
+  ar: () => noise(0.25, 0.05, 900, 'bandpass', 0.8, 0.04),
+};
+function surface() { const m = MAPS[curMap] || {}; return THEME.snowGround || m.ground === 'snow' ? 'snow' : m.ground === 'sand' ? 'sand' : 'hard'; }
 const sfx = {
-  shot(k) {
+  shot(k, gunKey) { sfx.shotBase(k); if (gunKey && GUN_VOICE[gunKey]) try { GUN_VOICE[gunKey](); } catch (e) {} },
+  shotBase(k) {
     if (k === 'dmr') { noise(0.32, 0.55, 2000); tone(85, 0.26, 'sine', 0.35, 30); noise(0.7, 0.1, 500, 'lowpass', 0.7, 0.05); }
     else if (k === 'smg') { noise(0.1, 0.38, 3400); tone(150, 0.08, 'sine', 0.2, 50); }
     else if (k === 'sg') { noise(0.3, 0.62, 1500); tone(70, 0.25, 'sine', 0.42, 30); noise(0.6, 0.1, 450, 'lowpass', 0.7, 0.04); }
@@ -1766,7 +1811,11 @@ const sfx = {
   head: () => { tone(2500, 0.07, 'triangle', 0.14); tone(1250, 0.1, 'triangle', 0.08); },
   kill: () => { tone(900, 0.08, 'triangle', 0.12); tone(1350, 0.14, 'triangle', 0.12, null, 0.07); },
   hurt: () => { noise(0.18, 0.35, 700); tone(80, 0.18, 'sine', 0.2, 50); },
-  step: () => { if (S.steps) noise(0.07, 0.11, 380 + Math.random() * 260, 'bandpass', 1.2); },
+  step: () => { if (!S.steps) return; const sf = surface(), r = Math.random();
+    if (sf === 'snow') { noise(0.11, 0.12, 2200 + r * 800, 'bandpass', 0.6); noise(0.08, 0.06, 500); }
+    else if (sf === 'sand') { noise(0.09, 0.09, 900 + r * 300, 'lowpass', 0.7); }
+    else { noise(0.04, 0.12, 1700 + r * 500, 'bandpass', 2.2); tone(140 + r * 40, 0.04, 'sine', 0.05); } },
+  killc: () => { tone(1046, 0.09, 'triangle', 0.14); tone(1568, 0.18, 'triangle', 0.12, null, 0.06); noise(0.08, 0.18, 220); },
   jump: () => noise(0.08, 0.06, 500, 'bandpass'),
   land: () => { noise(0.12, 0.16, 300); },
   reload(t) { noise(0.05, 0.22, 3000, 'bandpass', 2); noise(0.06, 0.25, 2200, 'bandpass', 2, t * 0.55); noise(0.07, 0.3, 1600, 'bandpass', 2, t * 0.85); },
@@ -1937,7 +1986,7 @@ function nadeBlast(x, y, z) {
   if (hit) { hitMarker(''); try { sfx.hit(); } catch (e) {} }
 }
 function onMyKill(head) {
-  if (mode === 'tdm') adNote(true);
+  if (mode === 'tdm') { adNote(true); try { sfx.killc(); } catch (e) {} }
   P.streak = (P.streak || 0) + 1; if (P.streak > (C.bestStreak || 0)) { C.bestStreak = P.streak; saveC(); }
   dailyProgress('kills', 1); if (head) dailyProgress('heads', 1); dailyProgress('streak', P.streak, true);
   const need = ksNeed();
@@ -3126,6 +3175,7 @@ const SETTINGS_UI = [
   ] },
   { sec: 'Audio', items: [
     { k: 'volume', type: 'range', label: 'Master volume', min: 0, max: 1, step: 0.05, fmt: v => Math.round(v * 100) + '%' },
+    { k: 'music', type: 'range', label: 'Menu music', min: 0, max: 1, step: 0.05, fmt: v => Math.round(v * 100) + '%', hint: 'Music plays in the menus and fades out when a match starts' },
     { k: 'steps', type: 'toggle', label: 'Footsteps' },
   ] },
   { sec: 'HUD', items: [
@@ -3141,6 +3191,7 @@ function applySettings() {
   document.body.classList.toggle('lefty', !!S.lefty);
   $('radar').hidden = !S.radar; hud.fps.hidden = !(S.fps || S.uncap);
   if (master) master.gain.value = S.volume;
+  if (musicGain && state === 'menu') musicGain.gain.value = S.music * 0.5;
   resize();
 }
 function renderSettings() {
@@ -3477,7 +3528,7 @@ function fire() {
   if (P.ammo <= 0) { sfx.empty(); P.cooldown = 0.25; startReload(); return; }
   P.ammo--; P.cooldown = w.rate; P.shots++;
   const sup = hasAtt(P.w, 'supp'); flash.visible = !sup; flashLight.intensity = sup ? 0 : 3; P.flashT = 0.045; flash.rotation.z = Math.random() * 3;
-  sfx.shot(w.snd);
+  sfx.shot(w.snd, P.w);
   flash.getWorldPosition(muzzle);
   const n = w.pellets || 1, sp = currentSpread(), tf = Math.tan(camera.fov * Math.PI / 360), targets = solids.concat(hitMeshes());
   const dmgTo = new Map(); let headHit = false;
@@ -3786,7 +3837,7 @@ function fx(dt) {
 
 /* ---------- main loop ---------- */
 const clock = new THREE.Clock();
-let sizeT = 0, achT = 0, menuT = 0, radarT = 0, ftAvg = 16, resT = 0, fpsT = 0, fpsN = 0, perfCool = 0, goodN = 0;
+let musT = 0, sizeT = 0, achT = 0, menuT = 0, radarT = 0, ftAvg = 16, resT = 0, fpsT = 0, fpsN = 0, perfCool = 0, goodN = 0;
 function loop() {
   requestAnimationFrame(loop);
   const raw = clock.getDelta(), dt = Math.min(raw, 0.05);
@@ -3820,6 +3871,7 @@ function loop() {
   if (mode === 'tdm') renderEnts(dt);
   stepSnow(dt);
   achT -= raw; if (achT <= 0) { achT = 1; checkAch(); }
+  musT -= raw; if (musT <= 0) { musT = 0.5; if (actx && !musicTimer && state !== 'play') startMusic(); updMusic(); }
   // iPad browsers don't always report toolbar size changes, so check the visible size ourselves
   sizeT -= raw; if (sizeT <= 0) { sizeT = 0.5; const vh = appH(), cv = document.getElementById('view').clientHeight; if (vh !== lastAppH || Math.abs(cv - vh) > 2 || window.innerWidth !== lastAppW) resize(); }
   if (state === 'play') { stepNades(dt); stepSalvage(dt); stepMissile(dt); if (scanT > 0) scanT = Math.max(0, scanT - dt); updStreak(); }

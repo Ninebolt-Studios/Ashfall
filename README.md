@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v50)](https://gaayyynesss.github.io/Seige/?v=50)
+## ▶️ [PLAY NOW — latest version (v51)](https://gaayyynesss.github.io/Seige/?v=51)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=50
+**Latest:** https://gaayyynesss.github.io/Seige/?v=51
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v50** | https://gaayyynesss.github.io/Seige/?v=50 | **Stats card** on the Career tab (rank, K/D, win rate, best weapon, favorite map and more) and a **friends list**: add friends by callsign and see when they're online and what they're playing |
+| **v51** | https://gaayyynesss.github.io/Seige/?v=51 | **Sound & music:** menu music (fades out in matches, own volume slider), every gun has its own sound, footsteps change with the ground (snow, sand, hard ground), and a kill-confirm sound |
+| v50 | https://gaayyynesss.github.io/Seige/?v=50 | **Stats card** on the Career tab (rank, K/D, win rate, best weapon, favorite map and more) and a **friends list**: add friends by callsign and see when they're online and what they're playing |
 | v49 | https://gaayyynesss.github.io/Seige/?v=49 | **Ranked mode:** ranked Team Battle with rank points and 5 ranks (Bronze → Silver → Gold → Platinum → Diamond), a rank card on the Play tab, rank badges on the scoreboard, and bots that get tougher as you climb |
 | v48 | https://gaayyynesss.github.io/Seige/?v=48 | Battle pass tiers now take **599 XP** each from Season 2 on (was 650). XP you already earned this season counts toward the new tiers |
 | v47 | https://gaayyynesss.github.io/Seige/?v=47 | Fix: on iPad a black strip could appear at the bottom after scrolling the menu; the game now re-checks the screen size twice a second and fixes itself. The menu also no longer runs slightly off the bottom of the screen |
@@ -205,6 +206,12 @@ Below it is your **friends list**. Type a friend's exact callsign and tap **Add*
 
 ## Bot difficulty
 Bots are **Adaptive** by default. The game watches your recent eliminations and deaths: if you're struggling, bots aim worse, react slower and pause longer between bursts; if you're doing really well, they get sharper (up to a fair limit). It changes gradually and remembers your level between matches. You can also pick **Easy**, **Normal** or **Hard** in **Settings**, which shows the current adaptive level.
+
+## Sound & music
+- **Menu music:** a calm synth track plays on the menus (it starts after your first tap) and fades out when a match starts. Change its volume with **Menu music** in Settings.
+- **Gun sounds:** each gun has its own sound on top of its weapon type, for example a deep thump on the LMG, a heavy boom on the Hand Cannon, an electric zap on the VX-9 and a copper zing on the SC-7.
+- **Footsteps:** they sound different on snow (crunch), sand (soft) and hard ground (sharp taps).
+- **Kill confirm:** a short ding when you get an elimination.
 
 ## Settings
 Open the **Settings** tab to change look and aiming sensitivity, graphics quality (**Low, Medium, High or Ultra**; every level holds 60 FPS by lowering resolution and then shadow detail only when needed), aim assist, auto-fire, the left-handed touch layout, field of view, camera motion, the frame-rate counter, volume, crosshair color and size, and the minimap. Pick **Low** quality if the game feels slow on an older device.
