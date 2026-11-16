@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116152333';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116152939';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -497,6 +497,48 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 #scorebar { border-radius: 10px; overflow: hidden; box-shadow: 0 4px 18px rgba(0,0,0,.35); }
 #feed div { border-radius: 6px; }
 .tbtn { box-shadow: 0 2px 10px rgba(0,0,0,.35); }
+/* ---------- v53 UI remake ---------- */
+#menu { background: radial-gradient(ellipse 70% 60% at 15% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%), linear-gradient(90deg, rgba(10,11,9,.95) 0%, rgba(10,11,9,.86) 55%, rgba(10,11,9,.55) 100%); }
+.shell { gap: 16px; }
+.brand h1 { text-shadow: 0 2px 24px color-mix(in srgb, var(--accent) 35%, transparent); }
+.tabs { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.06); box-shadow: 0 6px 24px rgba(0,0,0,.35); backdrop-filter: blur(8px); }
+.tab { display: inline-flex; align-items: center; gap: 7px; }
+.tab::before { font-size: 15px; letter-spacing: 0; }
+.tab[data-tab="play"]::before { content: '▶'; } .tab[data-tab="loadout"]::before { content: '🎒'; } .tab[data-tab="settings"]::before { content: '⚙️'; }
+.tab[data-tab="pass"]::before { content: '🎟️'; } .tab[data-tab="shop"]::before { content: '🛒'; } .tab[data-tab="career"]::before { content: '👤'; }
+.tab[aria-selected="true"] { box-shadow: 0 4px 16px color-mix(in srgb, var(--accent) 40%, transparent); }
+.mode, .acct, .daily, .crate, .ditem, .bj, .skin, .wcard, .bp-head, .bp-tier, .ach, .perk, .sec, .party, .rankbox, .profile, .maps > * {
+  background-color: rgba(26,28,23,.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-color: rgba(255,255,255,.08); box-shadow: 0 6px 22px rgba(0,0,0,.28); }
+.maps > * { border-radius: 12px; overflow: hidden; }
+.sec { border-radius: 14px; padding: 8px 18px 12px; }
+.sec h3 { display: flex; align-items: center; gap: 8px; } .sec h3::before { content: ''; width: 4px; height: 16px; border-radius: 2px; background: var(--accent); }
+.subh { display: flex; align-items: center; gap: 10px; } .subh::before { content: ''; width: 4px; height: 16px; border-radius: 2px; background: var(--accent); }
+.mode { padding: 18px 20px 16px; border-top: 3px solid color-mix(in srgb, var(--accent) 70%, transparent); }
+.mode-name { font-size: 26px; }
+.field input[type=text], .prow input[type=text], #frIn, #premCode { border-radius: 10px; background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.12); transition: border-color .15s, box-shadow .15s; }
+.field input[type=text]:focus, .prow input[type=text]:focus, #frIn:focus, #premCode:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+.chip { border-radius: 6px; }
+.set { padding: 12px 0; }
+.set input[type=range] { height: 28px; }
+.btn.ghost { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.18); }
+.btn.ghost:hover { border-color: var(--accent); }
+/* in-game HUD */
+.tl .vit, .tr .wpn { background: rgba(14,16,12,.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 6px 12px; }
+.tl .vit { padding-bottom: 8px; }
+#hpbar { height: 10px; border-radius: 6px; border: 0; background: rgba(0,0,0,.5); width: min(200px, 34vw); }
+#hpfill { background: linear-gradient(90deg, #6fcf6a, #c8e86a); border-radius: 6px; }
+#stbar { border-radius: 3px; margin-top: 2px; } #stfill { border-radius: 3px; }
+#radar { border-radius: 50%; box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 55%, transparent), 0 6px 20px rgba(0,0,0,.4); }
+#ammo { font-size: 32px; }
+#feed div { background: rgba(14,16,12,.6); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.06); }
+#scorebar { background: rgba(14,16,12,.7); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.08); }
+.tbtn { background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.14), rgba(15,17,13,.55) 70%); border-color: rgba(239,232,214,.32); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+.tbtn.on { border-color: var(--accent); box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 55%, transparent); }
+#fireBtn { background: radial-gradient(circle at 35% 30%, rgba(200,70,50,.5), rgba(70,12,6,.72) 72%); text-shadow: 0 1px 3px #000; border-color: rgba(255,110,90,.9); box-shadow: 0 0 20px rgba(229,83,61,.35); }
+#fireBtn.on { background: radial-gradient(circle at 35% 30%, rgba(240,100,70,.65), rgba(130,22,10,.8) 72%); }
+#fireBtn small { color: rgba(255,230,220,.75); }
+#pauseBtn { border-radius: 10px; background: rgba(14,16,12,.6); backdrop-filter: blur(6px); }
 </style>
 
 <div id="oddsBox" hidden><div class="ob"><div class="obh"><span class="rvname" id="oddsTitle"></span><button class="btn ghost" id="oddsClose" type="button">Close</button></div><div class="pmsg" id="oddsNote"></div><div id="oddsList"></div></div></div>
@@ -753,9 +795,11 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('dl-' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('dl-' + k, JSON.stringify(v)); } catch (e) {} },
 };
-const DEF = { music: 0.45, botDiff: 'adaptive', sens: 1.2, adsSens: 0.8, invertY: false, assist: isTouch, auto: isTouch, holdAds: true, lefty: false,
+const DEF = { assistStr: isTouch ? 0.6 : 0, music: 0.45, botDiff: 'adaptive', sens: 1.2, adsSens: 0.8, invertY: false, assist: isTouch, auto: isTouch, holdAds: true, lefty: false,
   quality: isTouch ? 'medium' : 'high', fov: 72, motion: true, fps: false, uncap: false, volume: 0.8, steps: true, xhColor: 'white', xhSize: 1, radar: true };
 const S = Object.assign({}, DEF, store.get('settings', {}));
+{ const raw = store.get('settings', {}) || {}; if (raw.assistStr == null && raw.assist === false) S.assistStr = 0; } // keep old 'off' choice
+const aimA = () => clamp(+S.assistStr || 0, 0, 1);
 const saveS = () => store.set('settings', S);
 const C = Object.assign({ matches: 0, wins: 0, kills: 0, deaths: 0, heads: 0, bestWave: 0, bestScore: 0, bestStreak: 0, ggWins: 0, maps: {} }, store.get('career', {}));
 const saveC = () => store.set('career', C);
@@ -3240,7 +3284,7 @@ const SETTINGS_UI = [
     { k: 'sens', type: 'range', label: 'Look sensitivity', min: 0.3, max: 3, step: 0.1, fmt: v => v.toFixed(1) + '×' },
     { k: 'adsSens', type: 'range', label: 'Aiming sensitivity', min: 0.3, max: 1.5, step: 0.05, fmt: v => Math.round(v * 100) + '%', hint: 'Look speed while aiming down sights' },
     { k: 'invertY', type: 'toggle', label: 'Invert vertical look' },
-    { k: 'assist', type: 'toggle', label: 'Aim assist', hint: 'Slows your aim over a target and gently pulls toward it' },
+    { k: 'assistStr', type: 'range', label: 'Aim assist', min: 0, max: 1, step: 0.05, fmt: v => v <= 0 ? 'Off' : Math.round(v * 100) + '%', hint: 'How much your aim slows down over enemies and pulls toward them. 0% = off, 100% = strongest' },
     { k: 'auto', type: 'toggle', label: 'Auto-fire', hint: 'Fires on its own when the crosshair is on an enemy' },
     { k: 'holdAds', type: 'toggle', label: 'Hold right click to aim', hint: 'Off: click once to aim and again to stop. On touch, tap AIM to aim and tap again to stop.' },
     { k: 'lefty', type: 'toggle', label: 'Left-handed touch layout', hint: 'Buttons on the left, joystick on the right' },
@@ -3588,7 +3632,7 @@ function computeAssist() {
     const dx = t.x - camera.position.x, dy = t.y - camera.position.y, dz = t.z - camera.position.z, d = Math.hypot(dx, dy, dz);
     if (d > 60 || d < 0.5) continue;
     const ang = Math.acos(clamp((dx * fx + dy * fy + dz * fz) / d, -1, 1));
-    if (ang < 0.28 && ang < bestA && !losBlocked(P.pos.x, P.pos.z, t.x, t.z)) { bestA = ang; assist = { d, ang, dx, dy, dz, r: t.r }; }
+    if (ang < 0.1 + 0.25 * aimA() && ang < bestA && !losBlocked(P.pos.x, P.pos.z, t.x, t.z)) { bestA = ang; assist = { d, ang, dx, dy, dz, r: t.r }; }
   }
 }
 
@@ -3693,7 +3737,7 @@ window.addEventListener('mousemove', ev => {
 });
 document.addEventListener('pointerlockchange', () => { if (!document.pointerLockElement && state === 'play' && !isTouch && !dragLook) pause(); });
 function look(dx, dy, smooth) {
-  const s = S.sens * (S.assist && assist ? 0.55 : 1) * (1 + P.adsT * (S.adsSens / Math.pow(W().zoom, 0.3) - 1));
+  const s = S.sens * (assist && aimA() > 0 ? 1 - 0.65 * aimA() : 1) * (1 + P.adsT * (S.adsSens / Math.pow(W().zoom, 0.3) - 1));
   dy *= S.invertY ? -1 : 1;
   if (smooth) { input.ldx += dx * s; input.ldy += dy * s; }
   else { P.yaw -= dx * s; P.pitch = clamp(P.pitch - dy * s, -1.4, 1.4); }
@@ -3828,11 +3872,11 @@ function stepPlayer(dt) {
   P.adsT += ((P.ads && P.alive && P.reloading <= 0 ? 1 : 0) - P.adsT) * Math.min(1, dt * (hasPerk('quickdraw') ? 17 : 12));
   computeAssist();
   input.looked = Math.max(0, input.looked - dt);
-  if (S.assist && assist) {
+  if (assist && aimA() > 0) {
     const wantYaw = Math.atan2(-assist.dx, -assist.dz), wantPitch = Math.atan2(assist.dy, Math.hypot(assist.dx, assist.dz));
     // magnetism: strong while firing, medium while aiming, gentle otherwise
     const strength = input.fire ? 7 : (P.ads || P.adsT > 0.3) ? 4.5 : (len > 0.05 || input.looked > 0) ? 3 : 1.6;
-    const rate = Math.min(1, dt * strength);
+    const rate = Math.min(1, dt * strength * aimA() * 1.65);
     P.yaw += angDiff(P.yaw, wantYaw) * rate; P.pitch += (wantPitch - P.pitch) * rate * 0.85;
   }
   const onTarget = !!assist && assist.ang < Math.atan2(assist.r * 1.1, assist.d);

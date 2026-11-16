@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v52)](https://gaayyynesss.github.io/Seige/?v=52)
+## ▶️ [PLAY NOW — latest version (v53)](https://gaayyynesss.github.io/Seige/?v=53)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=52
+**Latest:** https://gaayyynesss.github.io/Seige/?v=53
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v52** | https://gaayyynesss.github.io/Seige/?v=52 | **Realistic guns:** all 12 guns rebuilt with real shapes (angled grips, shaped stocks, curved/straight/drum mags, round barrels with muzzle brakes, vented rails, holo sights, bolt handle, revolver cylinder, pump shotgun). **Real bullets:** glowing rounds in flight, brass shell casings that eject and bounce, and bullet holes where shots hit |
+| **v53** | https://gaayyynesss.github.io/Seige/?v=53 | **Aim assist slider** (0–100% strength in Settings) and a **UI remake**: tabs with icons, glassy rounded cards, accent headers and focus glow on the menus; rounded health/ammo cards, glowing minimap ring and glass touch buttons in matches |
+| v52 | https://gaayyynesss.github.io/Seige/?v=52 | **Realistic guns:** all 12 guns rebuilt with real shapes (angled grips, shaped stocks, curved/straight/drum mags, round barrels with muzzle brakes, vented rails, holo sights, bolt handle, revolver cylinder, pump shotgun). **Real bullets:** glowing rounds in flight, brass shell casings that eject and bounce, and bullet holes where shots hit |
 | v51 | https://gaayyynesss.github.io/Seige/?v=51 | **Sound & music:** menu music (fades out in matches, own volume slider), every gun has its own sound, footsteps change with the ground (snow, sand, hard ground), and a kill-confirm sound |
 | v50 | https://gaayyynesss.github.io/Seige/?v=50 | **Stats card** on the Career tab (rank, K/D, win rate, best weapon, favorite map and more) and a **friends list**: add friends by callsign and see when they're online and what they're playing |
 | v49 | https://gaayyynesss.github.io/Seige/?v=49 | **Ranked mode:** ranked Team Battle with rank points and 5 ranks (Bronze → Silver → Gold → Platinum → Diamond), a rank card on the Play tab, rank badges on the scoreboard, and bots that get tougher as you climb |
@@ -215,7 +216,7 @@ Bots are **Adaptive** by default. The game watches your recent eliminations and 
 - **Kill confirm:** a short ding when you get an elimination.
 
 ## Settings
-Open the **Settings** tab to change look and aiming sensitivity, graphics quality (**Low, Medium, High or Ultra**; every level holds 60 FPS by lowering resolution and then shadow detail only when needed), aim assist, auto-fire, the left-handed touch layout, field of view, camera motion, the frame-rate counter, volume, crosshair color and size, and the minimap. Pick **Low** quality if the game feels slow on an older device.
+Open the **Settings** tab to change look and aiming sensitivity, **aim assist strength** (0% = off up to 100%), graphics quality (**Low, Medium, High or Ultra**; every level holds 60 FPS by lowering resolution and then shadow detail only when needed), aim assist, auto-fire, the left-handed touch layout, field of view, camera motion, the frame-rate counter, volume, crosshair color and size, and the minimap. Pick **Low** quality if the game feels slow on an older device.
 
 ## Notes
 - Online play connects players directly to each other. On some strict networks, such as certain school or cellular networks, two players may not be able to connect. When that happens, each player still gets a full match against bots.
