@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261116165100';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261116165413';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -716,8 +716,8 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
           </button>
           <button class="mode" id="zmbBtn" type="button">
             <span class="mode-name">Zombies</span>
-            <span class="mode-desc">Survive endless rounds of the undead. Earn points for hits and kills, spend them on the Mystery Crate for a random gun, and grab power-ups.</span>
-            <span class="chips"><span class="chip">Solo</span><span class="chip">Rounds</span><span class="chip" id="zBestChip">Best round —</span></span>
+            <span class="mode-desc">Survive endless waves of the undead. Earn points for hits and kills, spend them on the Mystery Crate for a random gun, and grab power-ups.</span>
+            <span class="chips"><span class="chip">Solo</span><span class="chip">Waves</span><span class="chip" id="zBestChip">Best wave —</span></span>
           </button>
           <button class="mode" id="siegeBtn" type="button">
             <span class="mode-name">Drone Holdout</span>
@@ -2179,7 +2179,7 @@ function stepNades(dt) {
 const SALV = [], salvGeo = new THREE.BoxGeometry(0.45, 0.28, 0.32), salvMat = new THREE.MeshStandardMaterial({ color: 0x4a5a2a, emissive: 0x6a8a20, emissiveIntensity: 0.5, roughness: 0.7 });
 function salvageDrop(x, z) {
   if (SALV.length > 8) { scene.remove(SALV[0].m); SALV.shift(); }
-  const m = new THREE.Mesh(salvGeo, salvMat); m.position.set(x, 0.2, z); scene.add(m); SALV.push({ m, life: 20 });
+  const m = makeAmmoBox(); m.position.set(x, 0.2, z); scene.add(m); SALV.push({ m, life: 20 });
 }
 function stepSalvage(dt) {
   for (let i = SALV.length - 1; i >= 0; i--) {
@@ -2448,7 +2448,37 @@ function makeDrone(kind) {
   }
   enemies.push(e);
 }
+/* ---------- pickup models: medkit (health) and ammo can, used in every mode ---------- */
+const PKM = (() => {
+  const med = canvasTex(128, 128, (g, s) => { g.fillStyle = '#eef0ea'; g.fillRect(0, 0, s, s); g.fillStyle = 'rgba(0,0,0,.06)'; for (let i = 0; i < 400; i++) g.fillRect(Math.random() * s, Math.random() * s, 2, 2);
+    g.fillStyle = '#d42a24'; g.fillRect(s * 0.38, s * 0.14, s * 0.24, s * 0.72); g.fillRect(s * 0.14, s * 0.38, s * 0.72, s * 0.24); g.strokeStyle = 'rgba(0,0,0,.25)'; g.lineWidth = 4; g.strokeRect(2, 2, s - 4, s - 4); });
+  const ammo = canvasTex(256, 128, (g, w, h) => { g.fillStyle = '#4a5530'; g.fillRect(0, 0, w, h); g.fillStyle = 'rgba(0,0,0,.12)'; for (let i = 0; i < 900; i++) g.fillRect(Math.random() * w, Math.random() * h, 2, 2);
+    g.fillStyle = '#e8c33a'; g.fillRect(0, h * 0.68, w, h * 0.1); g.font = 'bold 52px monospace'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('AMMO', w / 2, h * 0.38); g.font = 'bold 16px monospace'; g.fillText('5.56 · LINKED', w / 2, h * 0.88); });
+  med.wrapS = med.wrapT = ammo.wrapS = ammo.wrapT = THREE.ClampToEdgeWrapping;
+  return { medMat: new THREE.MeshStandardMaterial({ map: med, roughness: 0.6 }), ammoMat: new THREE.MeshStandardMaterial({ map: ammo, roughness: 0.75, metalness: 0.2 }),
+    trim: new THREE.MeshStandardMaterial({ color: 0x2a2e24, roughness: 0.6, metalness: 0.5 }), brass: new THREE.MeshStandardMaterial({ color: 0xc9a24a, roughness: 0.3, metalness: 0.9 }),
+    box: new THREE.BoxGeometry(1, 1, 1), cyl: new THREE.CylinderGeometry(1, 1, 1, 10), ring: new THREE.RingGeometry(0.42, 0.5, 32),
+    glowG: new THREE.MeshBasicMaterial({ color: 0x5fe35f, transparent: true, opacity: 0.55, side: THREE.DoubleSide, depthWrite: false, toneMapped: false }),
+    glowY: new THREE.MeshBasicMaterial({ color: 0xf2c84b, transparent: true, opacity: 0.55, side: THREE.DoubleSide, depthWrite: false, toneMapped: false }) };
+})();
+function pkPart(g, geo, mat, x, y, z, sx, sy, sz) { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.scale.set(sx, sy, sz); m.castShadow = true; g.add(m); return m; }
+function makeMedkit() { // white case, red cross on every side, dark handle, green glow ring underneath
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  pkPart(body, PKM.box, PKM.medMat, 0, 0, 0, 0.46, 0.3, 0.34); pkPart(body, PKM.box, PKM.trim, 0, 0, 0, 0.47, 0.03, 0.35);
+  pkPart(body, PKM.box, PKM.trim, 0, 0.19, 0, 0.2, 0.03, 0.04); pkPart(body, PKM.box, PKM.trim, -0.09, 0.165, 0, 0.025, 0.05, 0.04); pkPart(body, PKM.box, PKM.trim, 0.09, 0.165, 0, 0.025, 0.05, 0.04);
+  const ring = new THREE.Mesh(PKM.ring, PKM.glowG); ring.rotation.x = -Math.PI / 2; ring.position.y = -0.33; g.add(ring); g.userData.body = body; return g;
+}
+function makeAmmoBox(glow = true) { // olive ammo can with stencil, lid latch, brass rounds on top, gold glow ring
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  pkPart(body, PKM.box, PKM.ammoMat, 0, 0, 0, 0.46, 0.26, 0.24); pkPart(body, PKM.box, PKM.trim, 0, 0.14, 0, 0.48, 0.03, 0.26); pkPart(body, PKM.box, PKM.trim, 0.2, 0.08, 0.125, 0.05, 0.08, 0.015);
+  for (let k = 0; k < 5; k++) { const r = pkPart(body, PKM.cyl, PKM.brass, -0.14 + k * 0.07, 0.2, 0, 0.014, 0.09, 0.014); r.rotation.z = 0.15; }
+  if (glow) { const ring = new THREE.Mesh(PKM.ring, PKM.glowY); ring.rotation.x = -Math.PI / 2; ring.position.y = -0.18; g.add(ring); }
+  g.userData.body = body; return g;
+}
 function dropPickup(pos) {
+  const m = makeMedkit(); m.position.set(pos.x, 0.35, pos.z); scene.add(m); pickups.push({ m, life: 20 });
+}
+function oldDropPickup(pos) {
   const m = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.25, 0.3), new THREE.MeshStandardMaterial({ color: 0x3d4a33, emissive: 0x2f6b2a, emissiveIntensity: 0.6 }));
   m.position.set(pos.x, 0.4, pos.z); scene.add(m); pickups.push({ m, life: 15 });
 }
@@ -2503,7 +2533,7 @@ function stepSiege(dt) {
   }
 }
 /* =========================================================
-   ZOMBIES: endless rounds of the undead (solo, built on the Holdout engine)
+   ZOMBIES: endless waves of the undead (solo, built on the Holdout engine)
    ========================================================= */
 let zmb = false, zmbAtmo = false, zDouble = 0;
 const POWS = [];
@@ -2542,13 +2572,15 @@ function killZombie(e, head) {
   spark(new THREE.Vector3(e.g.position.x, 1.2, e.g.position.z), 0x6a1010, 16); try { sfx.kill(); noise(0.4, 0.15, 300); } catch (er) {} hitMarker('kill');
   zPts(head ? 100 : 60); addXP(12); addWeaponKill(); addCoins(10); onMyKill(!!head); if (hasPerk('salvager')) salvageDrop(e.g.position.x, e.g.position.z);
   if (Math.random() < 0.06) zDropPower(e.g.position);
+  else if (Math.random() < (P.hp < 60 ? 0.14 : 0.07)) dropPickup(e.g.position);
   scene.remove(e.g); enemies.splice(enemies.indexOf(e), 1);
 }
 function killEnemy(e) { if (e.kind === 'zombie') killZombie(e, false); else killDrone(e); }
 const POW_TYPES = { ammo: { n: 'FULL AMMO', c: 0x5fe35f }, double: { n: '2X POINTS', c: 0xf2c84b }, blast: { n: 'BLAST', c: 0xff5a3a } };
 function zDropPower(pos) {
   const keys = Object.keys(POW_TYPES), k = keys[Math.random() * keys.length | 0], t = POW_TYPES[k];
-  const m = new THREE.Mesh(new THREE.OctahedronGeometry(0.32), new THREE.MeshBasicMaterial({ color: t.c, toneMapped: false })); m.position.set(pos.x, 1, pos.z); scene.add(m);
+  let m; if (k === 'ammo') { m = makeAmmoBox(); m.scale.setScalar(1.3); } else m = new THREE.Mesh(new THREE.OctahedronGeometry(0.32), new THREE.MeshBasicMaterial({ color: t.c, toneMapped: false }));
+  m.position.set(pos.x, 1, pos.z); scene.add(m);
   POWS.push({ m, k, life: 25 });
 }
 function zPickup(k) {
@@ -2583,7 +2615,7 @@ function startZombies() {
 function stepZombies(dt) {
   if (toSpawn === 0 && enemies.length === 0) { betweenWaves -= dt; if (betweenWaves <= 0) {
     if (wave > 0) { addXP(40); dailyProgress('waves', 1); P.nades = Math.min(nadesPerLife() + 1, (P.nades || 0) + 1); updNade(); }
-    wave++; toSpawn = 5 + wave * 3; spawnTimer = 0; banner('ROUND ' + wave, wave === 1 ? 'They are coming…' : 'Zombies get tougher and faster', 2.5);
+    wave++; toSpawn = 5 + wave * 3; spawnTimer = 0; banner('WAVE ' + wave, wave === 1 ? 'They are coming…' : 'Zombies get tougher and faster', 2.5);
     try { tone(110, 1.2, 'sawtooth', 0.06, 70); tone(82, 1.4, 'sine', 0.12, 55, 0.2); } catch (e) {} updHud(); } }
   if (toSpawn > 0) { spawnTimer -= dt; if (spawnTimer <= 0 && enemies.length < Math.min(24, 8 + wave)) { makeZombie(); toSpawn--; spawnTimer = Math.max(0.4, 1.6 - wave * 0.08); if (toSpawn === 0) betweenWaves = 6; } }
   if (zDouble > 0) { zDouble -= dt; $('zPow').hidden = false; $('zPow').textContent = '2X POINTS · ' + Math.ceil(zDouble) + 's'; } else if (!$('zPow').hidden) $('zPow').hidden = true;
@@ -2609,7 +2641,12 @@ function stepZombies(dt) {
   for (let i = POWS.length - 1; i >= 0; i--) { const pw = POWS[i]; pw.life -= dt; pw.m.rotation.y += dt * 2; pw.m.position.y = 1 + Math.sin(pw.life * 3) * 0.15; pw.m.visible = pw.life > 5 || Math.sin(pw.life * 12) > 0;
     if (Math.hypot(pw.m.position.x - P.pos.x, pw.m.position.z - P.pos.z) < 1.3) { zPickup(pw.k); pw.life = 0; }
     if (pw.life <= 0) { scene.remove(pw.m); POWS.splice(i, 1); } }
-  if (P.alive) { P.lastHurt += dt; if (P.lastHurt > (hasPerk('toughskin') ? 4.5 : 7) && P.hp < 100) { P.hp = Math.min(100, P.hp + (hasPerk('toughskin') ? 10 : 6) * dt); updHud(); } }
+  // no health regen in Zombies: only health packs (dropped by zombies) heal you
+  for (let i = pickups.length - 1; i >= 0; i--) {
+    const pk = pickups[i]; pk.life -= dt; pk.m.rotation.y += dt * 1.5; pk.m.position.y = 0.35 + Math.sin(pk.life * 3) * 0.06; pk.m.visible = pk.life > 4 || Math.sin(pk.life * 12) > 0;
+    if (Math.hypot(pk.m.position.x - P.pos.x, pk.m.position.z - P.pos.z) < 1.2 && P.hp < 100) { P.hp = Math.min(100, P.hp + 40); sfx.heal(); banner('HEALTH PACK', '+40 health', 1.2); updHud(); scene.remove(pk.m); pickups.splice(i, 1); }
+    else if (pk.life <= 0) { scene.remove(pk.m); pickups.splice(i, 1); }
+  }
 }
 function siegeHurt(dmg, sx, sz) {
   haptic('hurt');
@@ -2620,7 +2657,7 @@ function siegeHurt(dmg, sx, sz) {
 function siegeOver() {
   state = 'over';
   const lbl = document.querySelectorAll('#playOver .stats .label');
-  if (zmb) { C.bestRound = Math.max(C.bestRound || 0, wave); if (lbl[0]) { lbl[0].textContent = 'Points'; lbl[1].textContent = 'Round'; } $('overMsg').textContent = 'The horde got you on round ' + wave + '.'; $('zBestChip').textContent = 'Best round ' + C.bestRound; }
+  if (zmb) { C.bestRound = Math.max(C.bestRound || 0, wave); if (lbl[0]) { lbl[0].textContent = 'Points'; lbl[1].textContent = 'Wave'; } $('overMsg').textContent = 'The horde got you on wave ' + wave + '.'; $('zBestChip').textContent = 'Best wave ' + C.bestRound; }
   else { if (lbl[0]) { lbl[0].textContent = 'Score'; lbl[1].textContent = 'Wave'; } $('overMsg').textContent = 'The outpost has fallen.'; }
   if (!C.maps || typeof C.maps !== 'object') C.maps = {}; C.maps[curMap] = (C.maps[curMap] || 0) + 1;
   if (!zmb) { C.bestWave = Math.max(C.bestWave, wave); C.bestScore = Math.max(C.bestScore, score); } C.deaths++; saveC();
@@ -3146,7 +3183,6 @@ function hideMenu() {
   $('menu').hidden = true; $('hud').hidden = false;
   const tdm = mode === 'tdm';
   if (tdm) { const bl = document.querySelector('#scorebar .tn.t-b'), rl = document.querySelector('#scorebar .tn.t-r'); if (bl && rl) { bl.textContent = gg ? 'YOU' : duel ? (P.team === 'b' ? 'YOU' : 'RIVAL') : 'DELTA'; rl.textContent = gg ? 'LEADER' : duel ? (P.team === 'r' ? 'YOU' : 'RIVAL') : 'VIPER'; } }
-  $('waveTag').firstChild.textContent = zmb ? 'ROUND ' : 'WAVE ';
   $('scorebar').hidden = !tdm; $('waveTag').hidden = tdm; hud.kd.hidden = !tdm;
   $('statLabel').textContent = tdm ? 'Eliminations' : zmb ? 'Points' : 'Score';
   $('zBuy').hidden = !zmb; $('zPow').hidden = true;
@@ -3664,7 +3700,7 @@ const ACHS = [
   { id: 'wv20', i: '🏰', n: 'Last Stand', d: 'Reach wave 20 in Drone Holdout', c: 500, t: () => C.bestWave >= 20 },
   { id: 's10', i: '📡', n: 'Scanner', d: 'Earn a Map Scan (10 streak)', c: 250, t: () => C.bestStreak >= 10 },
   { id: 's30', i: '🚀', n: 'Missile Man', d: 'Earn a Missile Strike (30 streak)', c: 750, t: () => C.bestStreak >= 30 },
-  { id: 'z10', i: '🧟', n: 'Undying', d: 'Reach round 10 in Zombies', c: 300, t: () => C.bestRound >= 10 },
+  { id: 'z10', i: '🧟', n: 'Undying', d: 'Reach wave 10 in Zombies', c: 300, t: () => C.bestRound >= 10 },
   { id: 'gg', i: '🔫', n: 'Gun Master', d: 'Win a Gun Game', c: 400, t: () => C.ggWins >= 1 },
   { id: 'leg', i: '✨', n: 'Lucky', d: 'Own a Legendary crate item', c: 200, t: legendaryOwned },
   { id: 'all', i: '🗃️', n: 'Collector', d: 'Own every crate item', c: 2000, t: () => crateItems().every(itemOwned) },
