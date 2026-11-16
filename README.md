@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v41)](https://gaayyynesss.github.io/Seige/?v=41)
+## ▶️ [PLAY NOW — latest version (v42)](https://gaayyynesss.github.io/Seige/?v=42)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=41
+**Latest:** https://gaayyynesss.github.io/Seige/?v=42
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v41** | https://gaayyynesss.github.io/Seige/?v=41 | Slightly smarter bots: they notice you a bit faster, check where they last saw you, back off and strafe when hurt, roam the whole bigger map, and aim a touch better at range |
+| **v42** | https://gaayyynesss.github.io/Seige/?v=42 | **Weapon attachments** unlocked by gun level: Extended Mag (lv 2), Grip (lv 4), Laser (lv 6), Suppressor (lv 8); up to 2 per gun |
+| v41 | https://gaayyynesss.github.io/Seige/?v=41 | Slightly smarter bots: they notice you a bit faster, check where they last saw you, back off and strafe when hurt, roam the whole bigger map, and aim a touch better at range |
 | v40 | https://gaayyynesss.github.io/Seige/?v=40 | **Kill streak buttons** (use Map Scan / Missile when you want), **perks & wildcards** (Salvager supply drops and 8 more perks, 4 wildcards), **14 new crate items**, a **refreshed UI**, and **much bigger maps** (140 m across, with buildings to fight through) |
 | v39 | https://gaayyynesss.github.io/Seige/?v=39 | **Grenades** (2 per life, NADE button or G), new **Gun Game** mode (free-for-all vs bots, a new gun every elimination), and **17 achievements** with coin rewards on the Career tab |
 | v38 | https://gaayyynesss.github.io/Seige/?v=38 | Fix: on iPad the bottom buttons (Fire, Aim, Crouch, Reload) could be cut off when the browser toolbar changed size; the game now always fits the visible screen |
@@ -78,6 +79,16 @@ Eliminations in a row without dying:
 | **30** | **Missile Strike:** a missile hits the biggest group of enemies |
 
 Your current streak shows in the top-right corner during a match. When you earn a reward, a glowing **SCAN** or **MISSILE** button appears on the left side of the screen. Use it whenever you want (keyboard: **Z** for Map Scan, **X** for Missile). Earned rewards stay until you use them, even if you die, and reset at the start of the next match.
+
+## Attachments
+Each gun unlocks attachments as it levels up. Pick up to 2 per gun on the **Loadout** tab (the list shows the gun you have selected).
+
+| Attachment | Gun level | What it does |
+|---|---|---|
+| **Extended Mag** | 2 | +30% magazine size |
+| **Grip** | 4 | 25% less recoil |
+| **Laser** | 6 | 25% tighter hip-fire spread |
+| **Suppressor** | 8 | No muzzle flash, and bots take longer to react to you |
 
 ## Perks & wildcards
 On the **Loadout** tab pick one perk in each of three slots, plus a wildcard.
