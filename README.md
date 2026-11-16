@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v65)](https://gaayyynesss.github.io/Seige/?v=65)
+## ▶️ [PLAY NOW — latest version (v66)](https://gaayyynesss.github.io/Seige/?v=66)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=65
+**Latest:** https://gaayyynesss.github.io/Seige/?v=66
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v65** | https://gaayyynesss.github.io/Seige/?v=65 | **20 new achievements** (37 total) and a fix for the health bar showing **0 while still alive** (health under 1 now counts as dead, and health is shown rounded up) |
+| **v66** | https://gaayyynesss.github.io/Seige/?v=66 | **Calling cards:** unlock 15 banners and 15 emblems with coins (Loadout tab); your card shows when you get someone (KILLED BY) and theirs when you get them (ELIMINATED). **Full-screen MVP moment** at the end of every match with the MVP's card, operator and **best play** |
+| v65 | https://gaayyynesss.github.io/Seige/?v=65 | **20 new achievements** (37 total) and a fix for the health bar showing **0 while still alive** (health under 1 now counts as dead, and health is shown rounded up) |
 | v64 | https://gaayyynesss.github.io/Seige/?v=64 | Zombies: says **waves** instead of rounds, and **health no longer comes back on its own** (zombies drop **health packs**, +40 each). New **medkit** and **ammo can** models with glow rings in every mode |
 | v63 | https://gaayyynesss.github.io/Seige/?v=63 | Zombies: the Mystery Crate now costs **1,500 points** (was 950) |
 | v62 | https://gaayyynesss.github.io/Seige/?v=62 | Team Battle and Ranked are now **first to 65 eliminations** (was 100) |
@@ -218,9 +219,16 @@ The **Career** tab opens with your **stats card**: rank badge, RP, eliminations,
 
 Below it is your **friends list**. Type a friend's exact callsign and tap **Add**. A green dot means they're online, and it shows what they're doing (menu, Team Battle, Ranked, Gun Game or Holdout) with their rank badge. The top of the menu also says how many friends are online. To play together, make a party on the Play tab and send them the code.
 
+## Calling cards
+Your **calling card** is a **banner** + an **emblem** + your callsign. Pick them on the **Loadout** tab. Field Gray and Star are free; the rest are unlocked with coins:
+- **Banners:** Dusk / Deep Ocean (150), Woodland (250), Tiger / Carbon / Arctic (400), Neon Grid / Flames / Blood Moon (700), Galaxy (1,200), Gold Rush (1,500), Diamond (2,000), Inferno (2,500), Champion (3,000)
+- **Emblems:** Skull (150), Wolf / Eagle (250), Viper / Lightning (300), Fire / Bullseye (400), Shield (500), Scorpion (600), Joker (800), Hazard (1,000), Dragon (1,500), Gem (2,000), Crown (3,000)
+
+When someone gets you, their card pops up (**KILLED BY**). When you get someone, theirs flashes up (**ELIMINATED**). Online players see your card.
+
 ## Kill cam & MVP
 - **Kill cam:** when you're eliminated in Team Battle, Duels or Gun Game, the camera shows the player who got you, from just behind them, until you respawn.
-- **Match MVP:** at the end of every match a card shows the top player with their eliminations, deaths and K/D. If it's you, you get **+100 coins**.
+- **Match MVP:** at the end of every match a **full-screen MVP moment** shows the top player's calling card and operator with their **best play** (for example "TRIPLE KILL · 3 eliminations in 1.2s with the M7 Rifle" or their longest streak) and stats. Tap to skip. If it's you, you get **+100 coins**.
 
 ## Leaderboards
 - **Match leaderboard:** tap the score bar at the top (or hold **Tab** on a keyboard) to see every player and bot ranked by eliminations and deaths. It also shows at the end of every match and on the pause screen.
