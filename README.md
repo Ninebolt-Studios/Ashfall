@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v39)](https://gaayyynesss.github.io/Seige/?v=39)
+## ▶️ [PLAY NOW — latest version (v40)](https://gaayyynesss.github.io/Seige/?v=40)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=39
+**Latest:** https://gaayyynesss.github.io/Seige/?v=40
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v39** | https://gaayyynesss.github.io/Seige/?v=39 | **Grenades** (2 per life, NADE button or G), new **Gun Game** mode (free-for-all vs bots, a new gun every elimination), and **17 achievements** with coin rewards on the Career tab |
+| **v40** | https://gaayyynesss.github.io/Seige/?v=40 | **Kill streak buttons** (use Map Scan / Missile when you want), **perks & wildcards** (Salvager supply drops and 8 more perks, 4 wildcards), **14 new crate items**, a **refreshed UI**, and **much bigger maps** (140 m across, with buildings to fight through) |
+| v39 | https://gaayyynesss.github.io/Seige/?v=39 | **Grenades** (2 per life, NADE button or G), new **Gun Game** mode (free-for-all vs bots, a new gun every elimination), and **17 achievements** with coin rewards on the Career tab |
 | v38 | https://gaayyynesss.github.io/Seige/?v=38 | Fix: on iPad the bottom buttons (Fire, Aim, Crouch, Reload) could be cut off when the browser toolbar changed size; the game now always fits the visible screen |
 | v37 | https://gaayyynesss.github.io/Seige/?v=37 | Fix: on iPad the top of the screen (health, score bar, minimap) could get cut off after typing or swiping; the game now snaps back into place |
 | v36 | https://gaayyynesss.github.io/Seige/?v=36 | **Better camos:** every camo on the gun now uses exactly the colors on its swatch, with real patterns (tiger stripes, digital pixels, carbon weave, galaxy stars, lava cracks, diamond facets); new richer colors for Dune, Jungle, Frost, Blood, Cobalt and Gold |
@@ -75,7 +76,29 @@ Eliminations in a row without dying:
 | **10** | **Map Scan:** every enemy shows on your minimap for 15 seconds |
 | **30** | **Missile Strike:** a missile hits the biggest group of enemies |
 
-Your current streak shows in the top-right corner during a match.
+Your current streak shows in the top-right corner during a match. When you earn a reward, a glowing **SCAN** or **MISSILE** button appears on the left side of the screen. Use it whenever you want (keyboard: **Z** for Map Scan, **X** for Missile). Earned rewards stay until you use them, even if you die, and reset at the start of the next match.
+
+## Perks & wildcards
+On the **Loadout** tab pick one perk in each of three slots, plus a wildcard.
+
+| Slot | Perk | What it does |
+|---|---|---|
+| Perk 1 | **Salvager** | Enemies you eliminate drop a supply box. Walk over it to refill your magazine and get a grenade. |
+| Perk 1 | **Tough Skin** | Health comes back after 3 seconds instead of 5, and faster. |
+| Perk 1 | **Quickdraw** | Aim down sights 40% faster. |
+| Perk 2 | **Fleetfoot** | Move 8% faster and sprint longer. |
+| Perk 2 | **Fast Hands** | Reload 25% faster. |
+| Perk 2 | **Steady Aim** | 30% tighter hip-fire spread. |
+| Perk 3 | **Tracker** | Enemies you hit show on your minimap for 4 seconds. |
+| Perk 3 | **Hardline** | Map Scan at 8 eliminations, Missile at 27. |
+| Perk 3 | **Demolitions** | +1 grenade every life and a bigger blast. |
+
+| Wildcard | What it does |
+|---|---|
+| **Perk Hoarder** | 2 perks in every slot (6 perks). |
+| **Rule Breaker** | Pick any 3 perks from any slot. |
+| **Deep Pockets** | 50% bigger magazines on every gun. |
+| **Demo Expert** | +2 grenades every life. |
 
 ## Coins & shop
 You earn **10 coins** for every elimination in Team Battle, Duels and Drone Holdout, **+5** for a headshot elimination, and a **+50** bonus for winning a match. The coins you earned show at the end of each match. Spend them on the **Shop** tab:
@@ -86,7 +109,7 @@ You earn **10 coins** for every elimination in Team Battle, Duels and Drone Hold
 | Elite Crate | 750 coins | 20% | 40% | 28% | 12% |
 | Vault Crate | 1,000 coins | — | 25% | 45% | 30% |
 
-Crates hold shop-only operator skins (Sand Viper, Midnight, Royal Guard, Neon Runner, Magma) and camos that work on every gun (Olive Drab, Rust, Zebra, Bubblegum, Neon, Galaxy, Lava). The **Vault Crate** has no commons and is the only crate with the legendary **Phantom** skin and **Aurora** camo. Tap the **?** on any crate to see its odds and every item inside with its exact drop chance. A duplicate refunds coins (Common 50, Rare 100, Epic 200, Legendary 400).
+Crates hold shop-only operator skins (Sand Viper, Copperhead, Midnight, Royal Guard, Night Raid, Tundra Wolf, Neon Runner, Hazmat, Specter, Magma, Inferno King) and camos that work on every gun (Olive Drab, Rust, Autumn, Urban Grid, Zebra, Bubblegum, Ocean, Toxic Waste, Neon, Galaxy, Ruby, Nebula, Lava, Molten Gold). The **Vault Crate** has no commons and is the only crate with the legendary **Phantom** and **Voidwalker** skins and the **Aurora** camo. Tap the **?** on any crate to see its odds and every item inside with its exact drop chance. A duplicate refunds coins (Common 50, Rare 100, Epic 200, Legendary 400).
 
 - **Bad-luck protection:** if you open 9 crates of the same type without a Legendary, the 10th is a guaranteed Legendary. Each crate shows how many are left.
 - **Daily item:** one crate item is for sale directly each day (Common 400, Rare 800, Epic 1,300, Legendary 2,000 coins). Everyone sees the same item. Your coins and crate items are saved on your device and in your backup code.
@@ -140,6 +163,7 @@ Headshots deal about double damage and leg hits deal less. Damage drops off at l
 | Jump | **JUMP** | Space |
 | Reload | **RELOAD** | R |
 | Throw grenade | **NADE** | G |
+| Use Map Scan / Missile | **SCAN** / **MISSILE** (appear when earned) | Z / X |
 | Leaderboard | Tap the score bar | Hold Tab |
 | Pause | **II** | Esc |
 
