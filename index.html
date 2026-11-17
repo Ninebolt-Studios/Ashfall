@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117145301';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117152120';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -458,6 +458,9 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 .cform input { flex: 1 1 220px; font: 500 15px var(--mono); color: var(--ink); background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.14); border-radius: 10px; padding: 11px 12px; -webkit-user-select: text; user-select: text; }
 .cloud { border-color: rgba(95,180,255,.45) !important; }
 #cloudPick .btn { white-space: normal; text-align: left; }
+.glbtabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.glbtabs .btn.on { background: var(--accent, #f2a93b); color: #1a1408; }
+#glbTable tr.me td { color: #f2c84b; }
 /* admin */
 .admin { border-color: rgba(192,138,255,.5) !important; }
 .admrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -918,6 +921,12 @@ el.addEventListener('pointerdown',done);var go=function(){requestAnimationFrame(
           <div class="prow"><button class="btn go" id="cloudUseCloud" type="button"></button><button class="btn ghost" id="cloudUseLocal" type="button"></button></div>
         </div>
         <span class="amsg" id="cloudMsg"></span>
+      </div>
+      <div class="acct" id="glbBox">
+        <span class="label">🌍 Global leaderboard · every player</span>
+        <div class="glbtabs" role="tablist"><button class="btn ghost on" data-glb="kills" type="button">Eliminations</button><button class="btn ghost" data-glb="wins" type="button">Wins</button><button class="btn ghost" data-glb="rp" type="button">Ranked RP</button><button class="btn ghost" data-glb="zwave" type="button">Zombies wave</button><button class="btn ghost" id="glbRefresh" type="button">↻</button></div>
+        <table class="lb" id="glbTable"></table>
+        <span class="amsg" id="glbMsg">Sign in with an account (above) to put your name on the board.</span>
       </div>
       <div class="acct"><span class="label">Friends · <span id="frCount"></span></span>
         <div class="prow"><input type="text" id="frIn" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Friend's callsign" aria-label="Friend's callsign"><button class="btn go" id="frAdd" type="button">Add</button></div>
@@ -2155,7 +2164,8 @@ let state = 'menu', mode = 'siege';
 const input = { mx: 0, mz: 0, fire: false, keys: {}, looked: 0, ldx: 0, ldy: 0, jump: false };
 const ray = new THREE.Raycaster();
 const tmpV = new THREE.Vector3(), tmpV2 = new THREE.Vector3();
-function equip(key) { P.w = key; P.ammo = magOf(key); P.reloading = 0; buildGun(key); applyCamo(); }
+const reserveOf = k => { let z = false; try { z = zmb; } catch (e) {} return magOf(k) * (z ? 5 : 3); }; // spare bullets you carry: 3 extra mags (5 in Zombies)
+function equip(key) { P.w = key; P.ammo = magOf(key); P.res = reserveOf(key); P.reloading = 0; buildGun(key); applyCamo(); }
 
 /* pooled effects */
 const sparkGeo = new THREE.BoxGeometry(0.06, 0.06, 0.06);
@@ -2319,15 +2329,16 @@ function stepNades(dt) {
   }
 }
 const SALV = [], salvGeo = new THREE.BoxGeometry(0.45, 0.28, 0.32), salvMat = new THREE.MeshStandardMaterial({ color: 0x4a5a2a, emissive: 0x6a8a20, emissiveIntensity: 0.5, roughness: 0.7 });
-function salvageDrop(x, z) {
+function salvageDrop(x, z, full = true) {
   if (SALV.length > 8) { scene.remove(SALV[0].m); SALV.shift(); }
-  const m = makeAmmoBox(); m.position.set(x, 0.2, z); scene.add(m); SALV.push({ m, life: 20 });
+  const m = makeAmmoBox(full); if (!full) m.scale.setScalar(0.8); m.position.set(x, 0.2, z); scene.add(m); SALV.push({ m, life: 20, full });
 }
 function stepSalvage(dt) {
   for (let i = SALV.length - 1; i >= 0; i--) {
     const sv = SALV[i]; sv.life -= dt; sv.m.rotation.y += dt * 1.5; sv.m.position.y = 0.2 + Math.sin(sv.life * 3) * 0.05;
     if (P.alive && Math.hypot(P.pos.x - sv.m.position.x, P.pos.z - sv.m.position.z) < 1.6) {
-      P.ammo = magOf(P.w); P.reloading = 0; P.nades = Math.min(nadesPerLife() + 1, (P.nades || 0) + 1); updNade(); updHud();
+      if (sv.full) { P.ammo = magOf(P.w); P.res = reserveOf(P.w); P.reloading = 0; P.nades = Math.min(nadesPerLife() + 1, (P.nades || 0) + 1); updNade(); } else P.res = Math.min(reserveOf(P.w), (P.res || 0) + magOf(P.w));
+      updHud();
       try { tone(1100, 0.08, 'triangle', 0.1); tone(1500, 0.1, 'triangle', 0.08, null, 0.06); } catch (e) {}
       sv.life = 0;
     }
@@ -2463,9 +2474,9 @@ function updHud() {
   const hp = P.alive && P.hp > 0 ? Math.max(1, Math.ceil(P.hp)) : 0;
   hud.hp.style.width = hp + '%'; hud.hpNum.textContent = hp;
   hud.hp.style.background = P.hp > 60 ? 'linear-gradient(90deg, #5fc95a, #b8e86a)' : P.hp > 30 ? 'linear-gradient(90deg, #e0a030, #f2d050)' : 'linear-gradient(90deg, #d8352a, #f06a4a)';
-  hud.ammo.innerHTML = P.ammo + '<small> / ' + magOf(P.w) + '</small>';
+  hud.ammo.innerHTML = P.ammo + '<small> / ' + (P.res || 0) + '</small>';
   hud.wName.textContent = W().name;
-  hud.reload.textContent = P.reloading > 0 ? 'RELOADING' : P.ammo === 0 ? 'RELOAD' : P.ammo <= magOf(P.w) * 0.25 ? 'LOW AMMO' : '';
+  hud.reload.textContent = P.reloading > 0 ? 'RELOADING' : P.ammo === 0 && !(P.res > 0) ? 'NO AMMO' : P.ammo === 0 ? 'RELOAD' : P.ammo <= magOf(P.w) * 0.25 && !(P.res > 0) ? 'LAST MAG' : P.ammo <= magOf(P.w) * 0.25 ? 'LOW AMMO' : '';
   if (mode === 'siege') { hud.score.textContent = score.toLocaleString(); hud.wave.textContent = wave; }
   else { hud.score.textContent = P.kills; hud.kd.textContent = 'Deaths ' + P.matchDeaths; }
 }
@@ -2629,7 +2640,7 @@ function oldDropPickup(pos) {
 }
 function killDrone(e) {
   spark(e.g.position, e.color, 18); sfx.kill(); hitMarker('kill');
-  score += e.points * (1 + Math.floor(wave / 5)); addXP(12); addWeaponKill(); addCoins(10); onMyKill(false); if (hasPerk('salvager')) salvageDrop(e.g.position.x, e.g.position.z);
+  score += e.points * (1 + Math.floor(wave / 5)); addXP(12); addWeaponKill(); addCoins(10); onMyKill(false); salvageDrop(e.g.position.x, e.g.position.z, hasPerk('salvager'));
   if (Math.random() < 0.25) dropPickup(e.g.position);
   scene.remove(e.g); enemies.splice(enemies.indexOf(e), 1); updHud();
 }
@@ -2729,9 +2740,9 @@ function zDropPower(pos) {
   POWS.push({ m, k, life: 25 });
 }
 function zPickup(k) {
-  banner(POW_TYPES[k].n, k === 'ammo' ? 'Magazine and grenades refilled' : k === 'double' ? 'Double points for 30 seconds' : 'Every zombie nearby is gone', 2);
+  banner(POW_TYPES[k].n, k === 'ammo' ? 'Max ammo and grenades' : k === 'double' ? 'Double points for 30 seconds' : 'Every zombie nearby is gone', 2);
   try { tone(660, 0.12, 'triangle', 0.14); tone(990, 0.2, 'triangle', 0.12, null, 0.1); } catch (e) {}
-  if (k === 'ammo') { P.ammo = magOf(P.w); P.reloading = 0; P.nades = nadesPerLife() + 1; updNade(); updHud(); }
+  if (k === 'ammo') { P.ammo = magOf(P.w); P.res = reserveOf(P.w); P.reloading = 0; P.nades = nadesPerLife() + 1; updNade(); updHud(); }
   else if (k === 'double') zDouble = 30;
   else { for (const e of [...enemies]) if (Math.hypot(e.g.position.x - P.pos.x, e.g.position.z - P.pos.z) < 45) { explosionFX(e.g.position.x, 0, e.g.position.z, 0.6); killZombie(e, false); } zPts(400); }
 }
@@ -3062,7 +3073,7 @@ function respawnPlayer() {
   const sp = spawnPoint(P.team);
   P.pos.set(sp.x, 1.6, sp.z); P.yaw = gg ? Math.atan2(sp.x, sp.z) : P.team === 'b' ? 0 : Math.PI; P.pitch = 0;
   const want = gg ? GG_GUNS[Math.min(GG_GUNS.length - 1, T.gg[myPeer] || 0)] : loadout;
-  if (P.w !== want) equip(want); else { P.ammo = magOf(P.w); P.reloading = 0; }
+  if (P.w !== want) equip(want); else { P.ammo = magOf(P.w); P.res = reserveOf(P.w); P.reloading = 0; }
   P.nades = nadesPerLife(); updNade();
   Object.assign(P, { hp: 100, alive: true, prot: 1.5, lastHurt: 99, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, slideT: 0, slideCd: 0, vault: null });
   hud.death.hidden = true; updHud(); { const cp = $('cardPop'); if (cp && cp.querySelector('.killer')) cp.hidden = true; }
@@ -3328,7 +3339,7 @@ let menuMode = 'main';
 function showTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.tab === name)));
   ['play', 'loadout', 'pass', 'shop', 'settings', 'career'].forEach(n => { $('pane-' + n).hidden = n !== name; });
-  if (name === 'career') { renderCareer(); cloudUI(); }
+  if (name === 'career') { renderCareer(); cloudUI(); glbLoad(); }
   if (name === 'settings') renderAdmin();
   if (name === 'play') { try { renderRank(); renderProfile(); } catch (e) {} }
   if (name === 'pass') renderPass();
@@ -3797,6 +3808,7 @@ const localTrivial = () => !store.get('name', '') && !(C.kills > 0) && !(BP.xp >
 async function cloudPut(code, h) {
   await CLOUD.db.collection('saves').doc(CLOUD.user.uid).set({ code, hash: h, at: Date.now(), name: playerName, v: 1 });
   store.set('cloudLocal', h); store.set('cloudSeen', h); store.set('cloudAt', Date.now()); cloudUI();
+  glbPut();
 }
 function cloudApply(code, h) {
   const err = loadBackup(code); if (err) { cloudMsg(err); return; }
@@ -3815,7 +3827,7 @@ async function cloudSync(startup) {
     const cd = snap.exists ? snap.data() : null;
     if (!cd || !cd.code) { await cloudPut(code, h); if (startup) cloudMsg('Your progress is now saved to your account.'); return; }
     const cloudChanged = cd.hash !== lastCloud;
-    if (cd.hash === h) { store.set('cloudLocal', h); store.set('cloudSeen', h); cloudUI(); return; }
+    if (cd.hash === h) { store.set('cloudLocal', h); store.set('cloudSeen', h); cloudUI(); if (startup) glbPut(); return; }
     if (!cloudChanged) { if (localChanged) await cloudPut(code, h); return; } // only this device changed
     if (!localChanged || localTrivial()) { cloudApply(cd.code, cd.hash); return; } // only the account changed
     // both changed: ask
@@ -3839,6 +3851,33 @@ async function cloudSync(startup) {
   setInterval(() => { if (CLOUD.user && Date.now() - CLOUD.last > 40000) cloudSync(false); }, 10000);
   document.addEventListener('visibilitychange', () => { if (document.hidden && CLOUD.user) cloudSync(false); });
 })();
+/* ---------- global leaderboard ---------- */
+const GLB = { by: 'kills', busy: false };
+const GLB_COL = { kills: 'Eliminations', wins: 'Wins', rp: 'Ranked RP', zwave: 'Best Zombies wave' };
+function glbPut() {
+  if (!CLOUD.user || !CLOUD.db) return;
+  const e = { name: String(playerName || 'Operator').slice(0, 16), kills: C.kills | 0, wins: C.wins | 0, rp: RANK.rp | 0, zwave: C.bestRound | 0, hwave: C.bestWave | 0, at: Date.now() };
+  CLOUD.db.collection('leaderboard').doc(CLOUD.user.uid).set(e).catch(() => {});
+}
+async function glbLoad() {
+  if (GLB.busy || !$('glbTable')) return; GLB.busy = true;
+  const msg = $('glbMsg'); msg.textContent = 'Loading the leaderboard…';
+  try {
+    await cloudInit();
+    const snap = await CLOUD.db.collection('leaderboard').orderBy(GLB.by, 'desc').limit(25).get();
+    const tb = $('glbTable'); tb.textContent = '';
+    const hr = document.createElement('tr'); ['#', 'Player', GLB_COL[GLB.by]].forEach(h => { const th = document.createElement('th'); th.textContent = h; hr.appendChild(th); }); tb.appendChild(hr);
+    let n = 0, mine = false;
+    snap.docs.forEach(d => { const v = d.data() || {}; n++; const tr = document.createElement('tr'); if (CLOUD.user && d.id === CLOUD.user.uid) { tr.className = 'me'; mine = true; } [n, String(v.name || 'Operator').slice(0, 16), (+v[GLB.by] || 0).toLocaleString()].forEach(x => { const td = document.createElement('td'); td.textContent = x; tr.appendChild(td); }); tb.appendChild(tr); });
+    msg.textContent = !n ? 'Nobody on the board yet. Sign in and play to be first!' : CLOUD.user ? (mine ? 'You are on the board (highlighted). It updates every time your progress saves.' : 'You are not in the top 25 for this one yet. Keep playing!') : 'Sign in with an account (above) to put your name on the board.';
+  } catch (e) { msg.textContent = e && e.code === 'permission-denied' ? 'The leaderboard is not switched on yet (the database rules need updating).' : 'Could not load the leaderboard. Check your internet and tap ↻.'; }
+  finally { GLB.busy = false; }
+}
+document.addEventListener('click', ev => {
+  const b = ev.target.closest && ev.target.closest('[data-glb]'); if (!b) return;
+  GLB.by = b.dataset.glb; document.querySelectorAll('[data-glb]').forEach(x => x.classList.toggle('on', x === b)); glbLoad();
+});
+$('glbRefresh').addEventListener('click', () => glbLoad());
 /* ---------- secret codes: only SHA-256 fingerprints are stored here, never the codes ---------- */
 const H_VX_GIFT = '59bd02673107179b088387e1d02d77873de69e8d7a523c50b54add4d914bea2b', H_ADMIN = '5298d79bd8d9e189084a9d7eb140d76462af9440c4dbd02c5535b1342e9bc4dc', GIFT_SALT = 'bf3ff5caa6576aae8dc60863';
 async function sha256(t) { try { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); } catch (e) { return ''; } }
@@ -4169,7 +4208,7 @@ codeIn.addEventListener('input', () => { matchCode = codeIn.value.replace(/[^a-z
 
 /* ---------- flow ---------- */
 function startSiege() {
-  ensureAudio(); leaveBattle(); clearSiege(); zmb = false;
+  ensureAudio(); leaveBattle(); clearSiege(); zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
   mode = 'siege'; duel = false; buildMap(selMap); equip(loadout);
   Object.assign(P, { yaw: 0, pitch: 0, hp: 100, alive: true, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, prot: 0 });
   P.pos.set(0, 1.6, 9); if (insideSolid(P.pos, 0.6)) { const o = randomOpenPoint(); P.pos.set(o.x, 1.6, o.z); }
@@ -4182,7 +4221,7 @@ async function startTDM(isDuel, isRanked) {
   ensureAudio(); clearSiege(); lockPointer();
   duel = !!isDuel; SCORE_LIMIT = duel ? 7 : 65;
   const btn = duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
-  btn.disabled = true; mode = 'tdm'; equip(loadout);
+  btn.disabled = true; mode = 'tdm'; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
   resetTDM(); ranked = !!isRanked && !duel;
   if (room) {
     desc.textContent = duel ? 'Finding your rival…' : 'Joining the battle…';
@@ -4232,7 +4271,7 @@ function rankResult(win, quit) {
 }
 function startGunGame() {
   ensureAudio(); clearSiege(); leaveBattle(); lockPointer();
-  duel = false; mode = 'tdm'; gg = true; SCORE_LIMIT = 1e9; P.team = 'b';
+  duel = false; mode = 'tdm'; gg = true; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 1e9; P.team = 'b';
   buildMap(selMap); newMatchLocal();
   state = 'play'; hideMenu(); updHud();
   banner('GUN GAME · ' + MAPS[curMap].name.toUpperCase(), 'Every elimination gives you the next gun. Get one with all ' + GG_GUNS.length + ' to win.', 4);
@@ -4368,7 +4407,7 @@ function fire() {
     if (ent.kind === 'drone') { ent.hp -= dmg; ent.flash = 0.08; if (ent.hp <= 0) killDrone(ent); else { sfx.hit(); hitMarker(''); } continue; }
     ent.v.flashT = 0.06;
     if (hasPerk('tracker')) ent.trackT = 4;
-    if (ent.hp - dmg <= 0 && hasPerk('salvager')) salvageDrop(ent.rx, ent.rz);
+    if (ent.hp - dmg <= 0) salvageDrop(ent.rx, ent.rz, hasPerk('salvager'));
     if (ent.kind === 'bot' && T.isHost) botDamage(ent.id, dmg, myPeer);
     else T.myDm[ent.id] = (T.myDm[ent.id] || 0) + dmg;
     ent.hp -= dmg;
@@ -4384,7 +4423,7 @@ function fire() {
 }
 const RELOAD_MUL = 0.7; // every gun reloads 30% faster than its base time
 function startReload() {
-  if (P.reloading > 0 || P.ammo >= magOf(P.w) || !P.alive) return;
+  if (P.reloading > 0 || P.ammo >= magOf(P.w) || !P.alive || !(P.res > 0)) return;
   P.reloading = W().reload * RELOAD_MUL * (hasPerk('fasthands') ? 0.75 : 1); sfx.reload(P.reloading); updHud();
 }
 
@@ -4618,7 +4657,7 @@ function stepPlayer(dt) {
   gun.visible = P.alive && !(optic && optic !== 'irons' && P.adsT > 0.5);
   P.cooldown = Math.max(0, P.cooldown - dt);
   if (P.flashT > 0) { P.flashT -= dt; if (P.flashT <= 0) { flash.visible = false; flashLight.intensity = 0; } }
-  if (P.reloading > 0) { P.reloading -= dt; if (P.reloading <= 0) { P.reloading = 0; P.ammo = magOf(P.w); updHud(); } }
+  if (P.reloading > 0) { P.reloading -= dt; if (P.reloading <= 0) { P.reloading = 0; const take = Math.min(magOf(P.w) - P.ammo, P.res || 0); P.ammo += take; P.res = (P.res || 0) - take; updHud(); } }
   if (input.fire || (S.auto && onTarget)) fire();
   const rT = W().reload, dip = P.reloading > 0 ? Math.sin((rT - P.reloading) / rT * Math.PI) * 0.22 : 0;
   const hb = (1 - P.adsT) * motion, sprintTilt = sprint ? 1 : 0;
