@@ -95,7 +95,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117193857';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117194126';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -575,6 +575,12 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #tdmBtn { background-image: linear-gradient(135deg, rgba(80,130,200,.32), transparent 65%); border-top-color: #6aa8e0; }
 #rankedBtn { background-image: linear-gradient(135deg, rgba(242,200,75,.3), transparent 65%); border-top-color: #f2c84b; }
 #duelBtn { background-image: linear-gradient(135deg, rgba(224,96,63,.3), transparent 65%); border-top-color: #e0603f; }
+#domBtn .mode-name::before { content: '🚩 '; }
+#domBtn { background-image: linear-gradient(135deg, rgba(90,160,255,.26), transparent 65%); border-top-color: #5aa0ff; }
+#domHud { position: fixed; top: calc(70px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 6; pointer-events: none; }
+#domHud .fl { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; font: 800 20px var(--display); color: #fff; background: rgba(20,20,20,.7); border: 2px solid rgba(255,255,255,.35); position: relative; overflow: hidden; }
+#domHud .fl i { position: absolute; left: 0; bottom: 0; height: 4px; background: #fff; }
+#domHud .fl.b { background: rgba(70,130,220,.85); } #domHud .fl.r { background: rgba(220,80,60,.85); } #domHud .fl.here { outline: 2px solid #fff; outline-offset: 2px; }
 #ggBtn { background-image: linear-gradient(135deg, rgba(120,220,120,.26), transparent 65%); border-top-color: #7dd87a; }
 #zmbBtn { background-image: linear-gradient(135deg, rgba(120,200,60,.3), rgba(90,20,20,.2) 55%, transparent 80%); border-top-color: #8fd14a; }
 #zmbBtn .mode-name::before { content: '🧟 '; }
@@ -663,6 +669,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 <canvas id="view"></canvas>
 
 <div id="grade" aria-hidden="true"></div>
+<div id="domHud" hidden><div class="fl" id="flA">A<i></i></div><div class="fl" id="flB">B<i></i></div><div class="fl" id="flC">C<i></i></div></div>
 <div id="hud" hidden>
   <div id="hurt"></div>
   <div class="corner tl">
@@ -782,6 +789,11 @@ el.addEventListener('pointerdown',done);var go=function(){requestAnimationFrame(
             <span class="mode-name">Gun Game</span>
             <span class="mode-desc">Free-for-all against 9 bots. Every elimination gives you the next gun. Get one with all 10 guns to win.</span>
             <span class="chips"><span class="chip">Solo</span><span class="chip">Free-for-all</span><span class="chip">10 guns</span></span>
+          </button>
+          <button class="mode" id="domBtn" type="button">
+            <span class="mode-name">Domination</span>
+            <span class="mode-desc">5v5 with bots. Capture and hold flags A, B and C. Every flag you hold scores points; first team to 150 wins.</span>
+            <span class="chips"><span class="chip">Solo</span><span class="chip">Objective</span><span class="chip">3 flags</span></span>
           </button>
           <button class="mode" id="zmbBtn" type="button">
             <span class="mode-name">Zombies</span>
@@ -2898,7 +2910,7 @@ function clearSiege() {
 /* =========================================================
    TEAM BATTLE 5v5 (online, bots fill empty slots)
    ========================================================= */
-let SCORE_LIMIT = 65, gg = false, ranked = false; // gg = Gun Game (offline free-for-all)
+let SCORE_LIMIT = 65, gg = false, ranked = false, dom = false; // gg = Gun Game (offline free-for-all)
 const GG_GUNS = ['smg', 'pdw', 'ar', 'br', 'lmg', 'sg', 'dmr', 'snp', 'rev', 'pst'];
 const isFoe = e => gg || e.team !== P.team; const TEAM_SIZE = 5; let duel = false;
 const BOT_NAMES = { b0: 'Hayes', b1: 'Okafor', b2: 'Lindqvist', b3: 'Moreau', b4: 'Tanaka', r0: 'Vance', r1: 'Petrov', r2: 'Silva', r3: 'Kade', r4: 'Ibarra' };
@@ -3063,13 +3075,13 @@ function becomeHost() {
 function onDeath(victim, killer, vteam) {
   if (T.win) return;
   const winner = other(vteam);
-  if (!gg) T.sc[winner]++;
+  if (!gg && !dom) T.sc[winner]++;
   (T.st[victim] = T.st[victim] || [0, 0])[1]++; if (killer && killer !== victim) (T.st[killer] = T.st[killer] || [0, 0])[0]++;
   T.kf.push({ s: ++T.kfSeq, k: nameOf(killer).slice(0, 16), kt: teamOf(killer) || winner, v: nameOf(victim).slice(0, 16), vt: vteam, ki: killer || '' });
   if (T.kf.length > 5) T.kf.shift();
   showFeed(T.kf);
   if (gg) ggKill(victim, killer);
-  else if (T.sc[winner] >= SCORE_LIMIT) { T.win = winner; T.winT = 5; }
+  else if (!dom && T.sc[winner] >= SCORE_LIMIT) { T.win = winner; T.winT = 5; }
 }
 function identOf(id, name) { // calling card for any player or bot
   if (id === myPeer) return { n: playerName, bn: IDN.bn, em: IDN.em };
@@ -3168,6 +3180,7 @@ function newMatchLocal() {
   P.killLog = []; P.mBestStreak = 0; $('mvpFull').hidden = true;
   P.ks = { scan: 0, msl: 0 }; updKS();
   if (gg) { T.gg = {}; T.ggWin = ''; T.sc = { b: 0, r: 0 }; }
+  if (dom) { T.sc = { b: 0, r: 0 }; try { domBuild(); } catch (e) {} DOM.tick = 0; }
   P.kills = 0; P.matchDeaths = 0; P.streak = 0; P.mCoins = 0; scanT = 0; respawnPlayer();
   hud.feed.textContent = '';
   banner('MATCH START', TEAM_NAME[P.team] + ' · first to ' + SCORE_LIMIT);
@@ -3195,7 +3208,7 @@ function botStep(b, dt, targets) {
     if (!vis && b.seen && b.seen.t > 0 && b.stuck <= 0.8 && (!b.wp || !b.wp.chase)) { b.wp = { x: b.seen.x, z: b.seen.z, chase: true }; b.stuck = 0; }
     if (!vis && (!b.wp || Math.hypot(b.wp.x - b.x, b.wp.z - b.z) < 2 || b.stuck > 0.8)) {
       const L = HALF - 4;
-      b.wp = best && Math.random() < 0.7 && b.stuck <= 0.8 ? { x: clamp(best.x + (Math.random() - .5) * 14, -L, L), z: clamp(best.z + (Math.random() - .5) * 14, -L, L) } : randomOpenPoint();
+      b.wp = dom && DOM.flags.length && Math.random() < 0.75 ? domGoal(b) : best && Math.random() < 0.7 && b.stuck <= 0.8 ? { x: clamp(best.x + (Math.random() - .5) * 14, -L, L), z: clamp(best.z + (Math.random() - .5) * 14, -L, L) } : randomOpenPoint();
       b.stuck = 0; if (b.seen) b.seen.t = 0;
     }
     if (Math.random() < 0.15) b.strafe *= -1;
@@ -4313,7 +4326,7 @@ codeIn.addEventListener('input', () => { matchCode = codeIn.value.replace(/[^a-z
 
 /* ---------- flow ---------- */
 function startSiege() {
-  ensureAudio(); leaveBattle(); clearSiege(); zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
+  ensureAudio(); leaveBattle(); clearSiege(); zmb = false; dom = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
   mode = 'siege'; duel = false; buildMap(selMap); equip(loadout);
   Object.assign(P, { yaw: 0, pitch: 0, hp: 100, alive: true, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, prot: 0 });
   P.pos.set(0, 1.6, 9); if (insideSolid(P.pos, 0.6)) { const o = randomOpenPoint(); P.pos.set(o.x, 1.6, o.z); }
@@ -4326,7 +4339,7 @@ async function startTDM(isDuel, isRanked) {
   ensureAudio(); clearSiege(); lockPointer();
   duel = !!isDuel; SCORE_LIMIT = duel ? 7 : 65;
   const btn = duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
-  btn.disabled = true; mode = 'tdm'; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
+  btn.disabled = true; mode = 'tdm'; dom = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
   resetTDM(); ranked = !!isRanked && !duel;
   if (room) {
     desc.textContent = duel ? 'Finding your rival…' : 'Joining the battle…';
@@ -4376,10 +4389,53 @@ function rankResult(win, quit) {
 }
 function startGunGame() {
   ensureAudio(); clearSiege(); leaveBattle(); lockPointer();
-  duel = false; mode = 'tdm'; gg = true; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 1e9; P.team = 'b';
+  duel = false; mode = 'tdm'; gg = true; dom = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 1e9; P.team = 'b';
   buildMap(selMap); newMatchLocal();
   state = 'play'; hideMenu(); updHud();
   banner('GUN GAME · ' + MAPS[curMap].name.toUpperCase(), 'Every elimination gives you the next gun. Get one with all ' + GG_GUNS.length + ' to win.', 4);
+}
+/* ---------- Domination (solo 5v5 with bots) ---------- */
+const DOM = { flags: [], group: new THREE.Group(), tick: 0 }; scene.add(DOM.group);
+function domBuild() {
+  DOM.group.clear(); DOM.flags = [];
+  const zs = [HALF * 0.42, 0, -HALF * 0.42];
+  ['A', 'B', 'C'].forEach((n, i) => {
+    let x = 0, z = zs[i]; for (let k = 0; k < 60 && insideSolid({ x, z }, 4.5); k++) { x = (Math.random() - 0.5) * 30; z = zs[i] + (Math.random() - 0.5) * 16; }
+    const g = new THREE.Group(); g.position.set(x, 0, z);
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 3.2, 8), new THREE.MeshStandardMaterial({ color: 0xb8bcc0, metalness: 0.8, roughness: 0.3 })); pole.position.y = 1.6; g.add(pole);
+    const cloth = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.7), new THREE.MeshStandardMaterial({ color: 0xdddddd, side: THREE.DoubleSide, roughness: 0.8 })); cloth.position.set(0.58, 2.8, 0); g.add(cloth);
+    const ring = new THREE.Mesh(new THREE.RingGeometry(4.6, 5, 48), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55, side: THREE.DoubleSide, depthWrite: false })); ring.rotation.x = -Math.PI / 2; ring.position.y = 0.04; g.add(ring);
+    DOM.group.add(g); DOM.flags.push({ n, x, z, p: i === 0 ? 1 : i === 2 ? -1 : 0, owner: i === 0 ? 'b' : i === 2 ? 'r' : null, cloth, ring });
+  });
+  domColor();
+}
+function domColor() { for (const f of DOM.flags) { const c = f.owner === 'b' ? 0x4a8ae0 : f.owner === 'r' ? 0xe0543c : 0xdddddd; f.cloth.material.color.setHex(c); f.ring.material.color.setHex(c); } }
+function domGoal(b) { // bots go for flags they don't own (nearest first), sometimes defend
+  const want = DOM.flags.filter(f => f.owner !== b.team).sort((a, c) => Math.hypot(a.x - b.x, a.z - b.z) - Math.hypot(c.x - b.x, c.z - b.z));
+  const f = want.length && Math.random() < 0.8 ? want[0] : DOM.flags[Math.random() * DOM.flags.length | 0];
+  return f ? { x: f.x + (Math.random() - 0.5) * 6, z: f.z + (Math.random() - 0.5) * 6 } : null;
+}
+function stepDom(dt) {
+  DOM.group.visible = dom; $('domHud').hidden = !(dom && state === 'play'); if (!dom || T.win) return;
+  for (const f of DOM.flags) {
+    const n = { b: 0, r: 0 }; let meIn = false;
+    if (P.alive && Math.hypot(P.pos.x - f.x, P.pos.z - f.z) < 5) { n[P.team]++; meIn = true; }
+    for (const b of T.bots) if (b.alive && Math.hypot(b.x - f.x, b.z - f.z) < 5) n[b.team]++;
+    const dir = n.b && !n.r ? 1 : n.r && !n.b ? -1 : 0, before = f.owner;
+    if (dir) f.p = clamp(f.p + dir * dt * 0.22 * Math.min(3, n.b + n.r), -1, 1);
+    if (f.p >= 1) f.owner = 'b'; else if (f.p <= -1) f.owner = 'r'; else if ((f.owner === 'b' && f.p <= 0) || (f.owner === 'r' && f.p >= 0)) f.owner = null;
+    if (f.owner !== before) { domColor(); if (f.owner) { banner('FLAG ' + f.n + (f.owner === P.team ? ' SECURED' : ' LOST'), f.owner === P.team ? 'Hold it to score' : 'Take it back!', 2); if (f.owner === P.team && meIn) { addXP(100); addCoins(15); } try { tone(f.owner === P.team ? 880 : 300, 0.15, 'triangle', 0.12); } catch (e) {} } }
+    const el = $('fl' + f.n); el.className = 'fl' + (f.owner ? ' ' + f.owner : '') + (meIn ? ' here' : ''); el.firstElementChild.style.width = Math.round(Math.abs(f.p) * 100) + '%'; el.firstElementChild.style.background = f.p > 0 ? '#8ec0ff' : '#ff9a86';
+  }
+  DOM.tick += dt;
+  if (DOM.tick >= 1.5) { DOM.tick = 0; for (const f of DOM.flags) if (f.owner) T.sc[f.owner]++; for (const t of ['b', 'r']) if (T.sc[t] >= SCORE_LIMIT && !T.win) { T.win = t; T.winT = 5; } updHud(); }
+}
+function startDomination() {
+  ensureAudio(); clearSiege(); leaveBattle(); lockPointer();
+  duel = false; mode = 'tdm'; gg = false; dom = true; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 150; P.team = 'b'; ranked = false;
+  equip(loadout); buildMap(selMap); newMatchLocal(); domBuild(); DOM.tick = 0;
+  state = 'play'; hideMenu(); updHud();
+  banner('DOMINATION · ' + MAPS[curMap].name.toUpperCase(), 'Capture A, B and C. Each flag you hold scores. First to ' + SCORE_LIMIT + '.', 4);
 }
 function leaveBattle() { if (troom) { troom.leave().catch(() => {}); troom = null; } resetTDM(); }
 function pause() {  // online match keeps running while the pause panel is open
@@ -4436,6 +4492,7 @@ $('tdmBtn').addEventListener('click', () => { if (!$('tdmBtn').disabled) startTD
 $('duelBtn').addEventListener('click', () => { if (!$('duelBtn').disabled) startTDM(true); });
 $('siegeBtn').addEventListener('click', startSiege);
 $('ggBtn').addEventListener('click', startGunGame);
+$('domBtn').addEventListener('click', startDomination);
 $('rankedBtn').addEventListener('click', () => { if (!$('rankedBtn').disabled) startTDM(false, true); });
 $('ksScan').addEventListener('click', useScan); $('ksMsl').addEventListener('click', useMissile);
 $('resumeBtn').addEventListener('click', resume);
@@ -4841,6 +4898,7 @@ function loop() {
   if (aoDirty) rebuildAO();
   const raw = clock.getDelta(), dt = Math.min(raw, 0.05);
   try { stepDust(dt); } catch (e) {}
+  try { stepDom(dt); } catch (e) {}
   fpsT += raw; fpsN++;
   if (fpsT > 0.5) { if (S.fps) hud.fps.textContent = Math.round(fpsN / fpsT) + ' FPS'; fpsT = 0; fpsN = 0; }
   if (state === 'play') {
