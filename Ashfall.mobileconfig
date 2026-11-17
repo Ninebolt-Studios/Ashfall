@@ -360,17 +360,17 @@ AAAASUVORK5CYII=
       <key>Label</key><string>Ashfall</string>
       <key>PayloadDescription</key><string>Adds the Ashfall game to your Home Screen. It always opens the newest version.</string>
       <key>PayloadDisplayName</key><string>Ashfall</string>
-      <key>PayloadIdentifier</key><string>io.github.gaayyynesss.ashfall.webclip</string>
+      <key>PayloadIdentifier</key><string>io.github.ninebolt-studios.ashfall.webclip</string>
       <key>PayloadType</key><string>com.apple.webClip.managed</string>
       <key>PayloadUUID</key><string>8B5093E0-D752-407E-9E78-85383C89A4A7</string>
       <key>PayloadVersion</key><integer>1</integer>
       <key>Precomposed</key><true/>
-      <key>URL</key><string>https://gaayyynesss.github.io/Ashfall/</string>
+      <key>URL</key><string>https://ninebolt-studios.github.io/Ashfall/</string>
     </dict>
   </array>
   <key>PayloadDescription</key><string>Installs the Ashfall app icon (a full-screen shortcut to the game by Ninebolt Studios). Remove it any time in Settings → General → VPN &amp; Device Management.</string>
   <key>PayloadDisplayName</key><string>Ashfall</string>
-  <key>PayloadIdentifier</key><string>io.github.gaayyynesss.ashfall</string>
+  <key>PayloadIdentifier</key><string>io.github.ninebolt-studios.ashfall</string>
   <key>PayloadOrganization</key><string>Ninebolt Studios</string>
   <key>PayloadRemovalDisallowed</key><false/>
   <key>PayloadType</key><string>Configuration</string>

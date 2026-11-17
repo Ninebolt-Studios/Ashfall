@@ -11,7 +11,7 @@
 <meta name="description" content="Ashfall — a tactical arena shooter. 5v5, 1v1 duels, and solo. No install.">
 <link rel="apple-touch-icon" href="ashfall-touch.png">
 <link rel="preload" as="image" href="studio/ninebolt-dark.png" fetchpriority="high">
-<meta property="og:title" content="Ashfall"><meta property="og:description" content="Ashfall: a free tactical arena shooter by Ninebolt Studios. 5v5, ranked, zombies, no install."><meta property="og:image" content="https://gaayyynesss.github.io/Ashfall/ashfall-logo.png"><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:title" content="Ashfall"><meta property="og:description" content="Ashfall: a free tactical arena shooter by Ninebolt Studios. 5v5, ranked, zombies, no install."><meta property="og:image" content="https://ninebolt-studios.github.io/Ashfall/ashfall-logo.png"><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="ashfall-icon.svg"><link rel="icon" type="image/png" sizes="192x192" href="ashfall-192.png">
 <link rel="manifest" href="manifest.webmanifest">
 <style>html,body{margin:0;background:#0f110d}</style>
@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117194126';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117201235';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -466,6 +466,18 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 #grade { position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0; transition: opacity .6s; background: radial-gradient(ellipse at 50% 48%, rgba(0,0,0,0) 55%, rgba(0,0,0,.42) 100%), linear-gradient(180deg, rgba(255,190,120,.05), rgba(0,40,60,.06)); }
 body.ingame #grade { opacity: 1; }
 body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
+.fr2 { display: grid; gap: 8px; margin: 6px 0 10px; }
+.fr2 input { font: 600 15px var(--mono); color: var(--ink); background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.14); border-radius: 10px; padding: 9px 10px; width: 140px; -webkit-user-select: text; user-select: text; }
+.ofr { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; background: rgba(0,0,0,.25); }
+.ofr b { flex: 1; } .ofr .dot { width: 9px; height: 9px; border-radius: 50%; background: #666; } .ofr .dot.on { background: #6ad46a; box-shadow: 0 0 8px #6ad46a; }
+.ofr .btn { padding: 8px 12px; font-size: 13px; }
+#pingBtn, #qcBtn { width: 48px; height: 48px; font-size: 22px; display: grid; place-items: center; position: fixed; right: calc(150px + env(safe-area-inset-right, 0px)); z-index: 7; }
+#pingBtn { top: calc(250px + env(safe-area-inset-top, 0px)); } #qcBtn { top: calc(306px + env(safe-area-inset-top, 0px)); }
+#qcPanel, #qcPanel button, #pingBtn, #qcBtn { pointer-events: auto; }
+#qcPanel { position: fixed; right: calc(206px + env(safe-area-inset-right, 0px)); top: calc(230px + env(safe-area-inset-top, 0px)); z-index: 8; display: grid; gap: 6px; }
+#qcPanel button { font: 700 14px var(--display); letter-spacing: .08em; color: #fff; background: rgba(15,15,15,.85); border: 1px solid rgba(255,255,255,.25); border-radius: 10px; padding: 10px 14px; text-align: left; }
+#chatFeed { position: fixed; left: calc(16px + env(safe-area-inset-left, 0px)); bottom: calc(230px + env(safe-area-inset-bottom, 0px)); z-index: 6; display: grid; gap: 4px; pointer-events: none; }
+#chatFeed div { font: 600 14px var(--body); color: #fff; background: rgba(0,0,0,.55); padding: 5px 10px; border-radius: 8px; animation: fadeUp .25s both; } #chatFeed b { color: var(--accent); }
 /* admin */
 .admin { border-color: rgba(192,138,255,.5) !important; }
 .admrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -578,6 +590,10 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #duelBtn { background-image: linear-gradient(135deg, rgba(224,96,63,.3), transparent 65%); border-top-color: #e0603f; }
 #domBtn .mode-name::before { content: '🚩 '; }
 #sndBtn .mode-name::before { content: '💣 '; }
+#rangeBtn .mode-name::before { content: '🎯 '; }
+#rangeBtn { background-image: linear-gradient(135deg, rgba(240,220,120,.22), transparent 65%); border-top-color: #e8d070; }
+#rangeHud { position: fixed; top: calc(70px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 6; display: flex; gap: 10px; align-items: center; font: 700 15px var(--display); letter-spacing: .12em; color: #fff; background: rgba(15,15,15,.72); border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 6px 10px 6px 14px; }
+#rangeHud button { font: 700 13px var(--display); letter-spacing: .12em; color: #1a1408; background: var(--accent); border: 0; border-radius: 8px; padding: 8px 12px; pointer-events: auto; }
 #sndBtn { background-image: linear-gradient(135deg, rgba(255,90,60,.26), transparent 65%); border-top-color: #ff5a3c; }
 #sndHud { position: fixed; top: calc(70px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 6; pointer-events: none; text-align: center; font: 700 15px var(--display); letter-spacing: .14em; color: #fff; background: rgba(15,15,15,.7); border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 6px 14px; min-width: 240px; }
 #sndHud .bar { height: 5px; background: rgba(255,255,255,.15); border-radius: 3px; margin-top: 5px; overflow: hidden; } #sndHud .bar i { display: block; height: 100%; width: 0; background: #ffb03a; }
@@ -677,6 +693,8 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 <canvas id="view"></canvas>
 
 <div id="grade" aria-hidden="true"></div>
+<div id="chatFeed"></div>
+<div id="rangeHud" hidden><span id="rangeTxt">Shoot a target</span><button id="rangeGun" type="button">Next gun ▸</button></div>
 <div id="sndHud" hidden><div id="sndTxt"></div><div class="bar" id="sndBarW" hidden><i id="sndBar"></i></div></div>
 <div id="domHud" hidden><div class="fl" id="flA">A<i></i></div><div class="fl" id="flB">B<i></i></div><div class="fl" id="flC">C<i></i></div></div>
 <div id="hud" hidden>
@@ -716,6 +734,9 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
     <div id="jumpBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/><path d="M6 20l6-6 6 6"/></svg><span>JUMP</span></div>
     <div id="ksScan" class="tbtn ks" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-6"/></svg><span>SCAN</span><small></small></div>
     <div id="ksMsl" class="tbtn ks" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l7 7-9 9-3-3-3 1 1-3-3-3z"/><path d="M5 19l-2 2"/></svg><span>MISSILE</span><small></small></div>
+    <div id="pingBtn" class="tbtn small2" title="Ping (Z)">📍</div>
+    <div id="qcBtn" class="tbtn small2" title="Quick chat (X)">💬</div>
+    <div id="qcPanel" hidden></div>
     <div id="zBuy" class="tbtn" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M3 12h18M12 8v12M8 8l4-4 4 4"/></svg><span>CRATE</span><small>◎ 1,500</small></div>
     <div id="zPow" hidden></div>
     <div id="nadeBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="11" cy="15" rx="6" ry="7"/><path d="M8 8h6v-3H8z"/><path d="M14 6l4 3"/><circle cx="18" cy="4" r="2"/><path d="M6 15h10M11 9v13"/></svg><small id="nadeN">2</small></div>
@@ -809,6 +830,11 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
             <span class="mode-name">Search &amp; Destroy</span>
             <span class="mode-desc">5v5 with bots, one life per round. Attack: plant the bomb on site A or B. Defend: stop the plant or defuse it. First to 4 rounds.</span>
             <span class="chips"><span class="chip">Solo</span><span class="chip">Rounds</span><span class="chip">One life</span></span>
+          </button>
+          <button class="mode" id="rangeBtn" type="button">
+            <span class="mode-name">Firing Range</span>
+            <span class="mode-desc">Practice targets at 10, 25, 50 and 80 m plus a moving target. See the damage of every hit and try every gun with unlimited ammo.</span>
+            <span class="chips"><span class="chip">Solo</span><span class="chip">Practice</span><span class="chip">No enemies</span></span>
           </button>
           <button class="mode" id="zmbBtn" type="button">
             <span class="mode-name">Zombies</span>
@@ -942,6 +968,12 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
 
     <section class="pane" id="pane-career" hidden>
       <div class="profile" id="profileCard"></div>
+      <div class="acct" id="prestigeBox">
+        <span class="label">⭐ Player level &amp; Prestige</span>
+        <span class="amsg" id="plInfo"></span>
+        <div class="bar lv"><i id="plBar"></i></div>
+        <div class="prow"><button class="btn go" id="prestigeBtn" type="button" disabled>Prestige</button></div>
+      </div>
       <div class="acct cloud" id="cloudBox">
         <span class="label">☁️ Account · your progress saves online</span>
         <div id="cloudOut">
@@ -951,6 +983,11 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
         </div>
         <div id="cloudIn" hidden>
           <span class="amsg" id="cloudWho"></span>
+          <div class="fr2">
+            <span class="amsg">Your friend code: <b id="myFcode">…</b> · friends add you with it and can join your party in one tap.</span>
+            <div class="prow"><input type="text" id="fcodeIn" maxlength="6" autocomplete="off" spellcheck="false" placeholder="Friend code" aria-label="Friend code" style="text-transform:uppercase"><button class="btn ghost" id="fcodeAdd" type="button">Add friend</button></div>
+            <div id="onFriends"></div>
+          </div>
           <div class="prow"><button class="btn go" id="cloudSync" type="button">Sync now</button><button class="btn ghost" id="cloudOutBtn" type="button">Sign out</button><button class="btn ghost" id="cloudOld" type="button" hidden>Restore older save</button></div>
         </div>
         <div id="cloudPick" hidden>
@@ -961,7 +998,8 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
       </div>
       <div class="acct" id="glbBox">
         <span class="label">🌍 Global leaderboard · every player</span>
-        <div class="glbtabs" role="tablist"><button class="btn ghost on" data-glb="kills" type="button">Eliminations</button><button class="btn ghost" data-glb="wins" type="button">Wins</button><button class="btn ghost" data-glb="rp" type="button">Ranked RP</button><button class="btn ghost" data-glb="zwave" type="button">Zombies wave</button><button class="btn ghost" id="glbRefresh" type="button">↻</button></div>
+        <div class="glbtabs"><button class="btn ghost on" data-glbp="all" type="button">All-time</button><button class="btn ghost" data-glbp="week" type="button">This week</button></div>
+        <div class="glbtabs" role="tablist"><button class="btn ghost on" data-glb="kills" type="button">Eliminations</button><button class="btn ghost" data-glb="wins" type="button">Wins</button><button class="btn ghost" data-glb="rp" type="button">Ranked RP</button><button class="btn ghost" data-glb="zwave" type="button">Zombies wave</button><button class="btn ghost" data-glb="xp" type="button" hidden>XP</button><button class="btn ghost" id="glbRefresh" type="button">↻</button></div>
         <table class="lb" id="glbTable"></table>
         <span class="amsg" id="glbMsg">Sign in with an account (above) to put your name on the board.</span>
       </div>
@@ -1019,6 +1057,11 @@ const aimA = () => clamp(+S.assistStr || 0, 0, 1);
 const saveS = () => store.set('settings', S);
 const C = Object.assign({ matches: 0, wins: 0, kills: 0, deaths: 0, heads: 0, bestWave: 0, bestScore: 0, bestStreak: 0, ggWins: 0, maps: {}, bestRound: 0, zKills: 0, nadeKills: 0, mvps: 0, crates: 0 }, store.get('career', {}));
 const saveC = () => store.set('career', C);
+// player level 1-55 from lifetime XP, then Prestige (up to 10)
+const LV_XP = 4000, MAX_LV = 55, MAX_PRESTIGE = 10;
+const plLevel = () => Math.min(MAX_LV, 1 + Math.floor((C.xpTotal || 0) / LV_XP));
+const prestigeTag = () => (C.prestige ? '★' + C.prestige + ' ' : '');
+if (C.xpTotal == null) { C.xpTotal = Math.min((MAX_LV - 1) * LV_XP, (C.kills || 0) * 50 + (C.matches || 0) * 80 + (C.wins || 0) * 150 + (C.zKills || 0) * 12); saveC(); } // existing players start at a level that matches their career
 const LB = Object.assign({ battles: [], holdout: [] }, store.get('lb', {}));
 function lbAdd(list, row, cmp) { LB[list] = (Array.isArray(LB[list]) ? LB[list] : []).concat([row]).sort(cmp).slice(0, 10); store.set('lb', LB); }
 const SKINS = {
@@ -2558,7 +2601,7 @@ function renderChip() {
   const ri = rankIdx(); if (!$('pcName')) return;
   $('pcRank').textContent = RANKS[ri].i; $('pcName').textContent = playerName;
   let lv = 1; for (const k of Object.keys(WEAPONS)) lv = Math.max(lv, wLevel(k));
-  $('pcSub').textContent = RANKS[ri].n + ' · S' + SEASON + ' tier ' + bpTier() + ' · gun lv ' + lv;
+  $('pcSub').textContent = prestigeTag() + 'Lv ' + plLevel() + ' · ' + RANKS[ri].n + ' · S' + SEASON + ' tier ' + bpTier();
   $('pcCoins').textContent = '◎ ' + WALLET.coins.toLocaleString();
   try { if (CLOUD.user) $('pcName').textContent = playerName + ' ☁️'; } catch (e) {}
 }
@@ -2585,6 +2628,7 @@ function addWeaponKill() {
 function addXP(n, why) {
   if (!(n > 0)) return;
   n = Math.round(n * (BP.premium ? 1.25 : 1));
+  { const lb = plLevel(); C.xpTotal = (C.xpTotal || 0) + n; saveC(); const la = plLevel(); if (la > lb) setTimeout(() => banner('LEVEL ' + la, la >= MAX_LV ? (C.prestige < MAX_PRESTIGE ? 'Max level! Prestige from the Career tab' : 'Max level') : 'Player level up', 2.5), 900); }
   const before = bpTier(); BP.xp += n; store.set('pass', BP); savePassBest();
   const after = bpTier();
   if (after > before) {
@@ -2739,6 +2783,7 @@ function killDrone(e) {
 }
 function pickKind() { const r = Math.random(); if (wave >= 3 && r < 0.15 + wave * 0.01) return 'heavy'; if (wave >= 2 && r < 0.45) return 'fast'; return 'basic'; }
 function stepSiege(dt) {
+  if (rng) { stepRange(dt); return; }
   if (toSpawn === 0 && enemies.length === 0) { betweenWaves -= dt; if (betweenWaves <= 0) { if (wave > 0) { addXP(30); dailyProgress('waves', 1); P.nades = Math.min(nadesPerLife() + 1, (P.nades || 0) + 1); updNade(); } wave++; toSpawn = 3 + wave * 2; spawnTimer = 0; banner('WAVE ' + wave, 'Drones inbound'); updHud(); betweenWaves = 3; } }
   if (toSpawn > 0) { spawnTimer -= dt; if (spawnTimer <= 0 && enemies.length < 6 + wave) { makeDrone(pickKind()); toSpawn--; spawnTimer = Math.max(0.35, 1.4 - wave * 0.08); } }
   for (const e of enemies) {
@@ -2925,7 +2970,7 @@ function clearSiege() {
 /* =========================================================
    TEAM BATTLE 5v5 (online, bots fill empty slots)
    ========================================================= */
-let SCORE_LIMIT = 65, gg = false, ranked = false, dom = false, snd = false; // gg = Gun Game (offline free-for-all)
+let SCORE_LIMIT = 65, gg = false, ranked = false, dom = false, snd = false, rng = false; // gg = Gun Game (offline free-for-all)
 const GG_GUNS = ['smg', 'pdw', 'ar', 'br', 'lmg', 'sg', 'dmr', 'snp', 'rev', 'pst'];
 const isFoe = e => gg || e.team !== P.team; const TEAM_SIZE = 5; let duel = false;
 const BOT_NAMES = { b0: 'Hayes', b1: 'Okafor', b2: 'Lindqvist', b3: 'Moreau', b4: 'Tanaka', r0: 'Vance', r1: 'Petrov', r2: 'Silva', r3: 'Kade', r4: 'Ibarra' };
@@ -3390,6 +3435,7 @@ function netTick(dt) {
   if (T.isHost) T.bots.forEach(b => syncEnt(b.id, 'bot', b.team, { x: b.x, z: b.z, yaw: b.yaw, hp: b.hp, alive: b.alive, shots: b.shots, sk: botSkin(b.id) }));
   else if (T.lastHb) T.lastHb.forEach(r => { if (Array.isArray(r) && BOT_NAMES[r[0]]) syncEnt(r[0], 'bot', r[0][0], { x: +r[1] || 0, z: +r[2] || 0, yaw: +r[3] || 0, hp: +r[4] || 0, alive: !!r[5], shots: +r[6] || 0, sk: botSkin(r[0]) }); });
   for (const e of [...T.ents.values()]) if (e.seen !== T.frame) removeEnt(e);
+  try { netQc(hs); } catch (e) {}
   if (!P.alive) {
     P.respawn -= dt;
     hud.death.textContent = (P.killer ? 'Killed by ' + nameOf(P.killer) : 'Killed in action') + ' · redeploying in ' + Math.max(0, Math.ceil(P.respawn));
@@ -3407,7 +3453,7 @@ function netTick(dt) {
     T.sendT = 0.05; T.beat = (T.beat + 1) % 1000;
     const keys = Object.keys(T.myDm);
     if (keys.length > 24) keys.forEach(k => { if (!BOT_NAMES[k] && !hs.some(h => h.peer === k)) delete T.myDm[k]; });
-    const pr = { n: playerName, tm: P.team, x: r2(P.pos.x), z: r2(P.pos.z), y: r2(P.yaw), p: r2(P.pitch), j: r2(P.jy), c: P.crouch || P.slideT > 0 ? 1 : 0, h: Math.round(P.hp), a: P.alive ? 1 : 0, d: P.deaths, kb: P.killer || null, sh: P.shots, dm: T.myDm, mv: T.win ? (myVote || null) : null, sk: mySkin, pt: party || null, rk: rankIdx(), bn: IDN.bn, em: IDN.em, t: T.beat };
+    const pr = { qc: QC.msg, pg: QC.ping, n: playerName, tm: P.team, x: r2(P.pos.x), z: r2(P.pos.z), y: r2(P.yaw), p: r2(P.pitch), j: r2(P.jy), c: P.crouch || P.slideT > 0 ? 1 : 0, h: Math.round(P.hp), a: P.alive ? 1 : 0, d: P.deaths, kb: P.killer || null, sh: P.shots, dm: T.myDm, mv: T.win ? (myVote || null) : null, sk: mySkin, pt: party || null, rk: rankIdx(), bn: IDN.bn, em: IDN.em, t: T.beat };
     if (T.isHost) Object.assign(pr, { hb: T.bots.map(b => [b.id, r2(b.x), r2(b.z), r2(b.yaw), Math.round(b.hp), b.alive ? 1 : 0, b.shots]), hd: T.hd, hk: T.hk, sc: [T.sc.b, T.sc.r], ep: T.ep, w: T.win || null, wt: r2(T.winT), kf: T.kf, mp: curMap, st: T.st });
     else Object.assign(pr, { hb: null, hd: null, hk: null, sc: null, ep: null, w: null, wt: null, kf: null, mp: null, st: null });
     troom.presence(pr).catch(() => {});
@@ -3456,7 +3502,7 @@ let menuMode = 'main';
 function showTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.tab === name)));
   ['play', 'loadout', 'pass', 'shop', 'settings', 'career'].forEach(n => { $('pane-' + n).hidden = n !== name; });
-  if (name === 'career') { renderCareer(); cloudUI(); glbLoad(); }
+  if (name === 'career') { renderCareer(); cloudUI(); glbLoad(); try { friendsRefresh(); } catch (e) {} }
   if (name === 'settings') renderAdmin();
   if (name === 'play') { try { renderRank(); renderProfile(); } catch (e) {} }
   if (name === 'pass') renderPass();
@@ -3466,6 +3512,7 @@ function showTab(name) {
 }
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
 function showMenu(which) {
+  try { $('rangeHud').hidden = true; } catch (e) {}
   document.body.classList.remove('ingame');
   menuMode = which;
   $('menu').hidden = false; $('hud').hidden = true;
@@ -3908,7 +3955,7 @@ function cloudInit() {
   CLOUD.ready = loadJs(base + 'firebase-app-compat.js').then(() => Promise.all([loadJs(base + 'firebase-auth-compat.js'), loadJs(base + 'firebase-firestore-compat.js')])).then(() => {
     const app = firebase.apps && firebase.apps.length ? firebase.app() : firebase.initializeApp(FB_CFG);
     CLOUD.auth = firebase.auth(); CLOUD.db = firebase.firestore();
-    CLOUD.auth.onAuthStateChanged(u => { CLOUD.user = u || null; store.set('cloudOn', !!u); cloudUI(); if (u) cloudSync(true); });
+    CLOUD.auth.onAuthStateChanged(u => { CLOUD.user = u || null; store.set('cloudOn', !!u); cloudUI(); if (u) { cloudSync(true); presencePut(); friendsRefresh(); } });
     return true;
   }).catch(e => { CLOUD.ready = null; cloudMsg('Could not reach the account server. Check your internet and try again.'); throw e; });
   return CLOUD.ready;
@@ -3930,7 +3977,7 @@ async function cloudPut(code, h, prev) {
   if (prev && prev.code && progOf(prev.code) > progOf(code)) hist = [prev.code, ...hist].slice(0, 3); // never lose a bigger save
   await CLOUD.db.collection('saves').doc(CLOUD.user.uid).set({ code, hash: h, at: Date.now(), name: playerName, v: 1, hist });
   store.set('cloudLocal', h); store.set('cloudSeen', h); store.set('cloudAt', Date.now()); cloudUI();
-  glbPut();
+  glbPut(); presencePut();
 }
 function cloudApply(code, h) {
   const err = loadBackup(code); if (err) { cloudMsg(err); return; }
@@ -3986,29 +4033,76 @@ async function cloudSync(startup) {
   setInterval(() => { if (CLOUD.user && Date.now() - CLOUD.last > 40000) cloudSync(false); }, 10000);
   document.addEventListener('visibilitychange', () => { if (document.hidden && CLOUD.user) cloudSync(false); });
 })();
+/* ---------- account friends: online status + one-tap party join ---------- */
+const FR = { list: store.get('cfriends', []) || [], data: {}, beat: 0 };
+const fcodeOf = uid => (uid || '').replace(/[^A-Za-z0-9]/g, '').slice(0, 6).toUpperCase();
+function presencePut() {
+  if (!CLOUD.user || !CLOUD.db) return;
+  CLOUD.db.collection('presence').doc(CLOUD.user.uid).set({ name: String(playerName).slice(0, 16), code: fcodeOf(CLOUD.user.uid), at: Date.now(), party: party || '', playing: state === 'play' ? (mode === 'tdm' ? 'a battle' : zmb ? 'Zombies' : 'Holdout') : '' }).catch(() => {});
+}
+async function friendsRefresh() {
+  if (!CLOUD.user || !CLOUD.db || !$('onFriends')) return;
+  $('myFcode').textContent = fcodeOf(CLOUD.user.uid);
+  for (const uid of FR.list) { try { const d = await CLOUD.db.collection('presence').doc(uid).get(); if (d.exists) FR.data[uid] = d.data(); } catch (e) {} }
+  renderOnFriends();
+}
+function renderOnFriends() {
+  const box = $('onFriends'); if (!box) return; box.textContent = '';
+  if (!FR.list.length) { const s = document.createElement('span'); s.className = 'amsg'; s.textContent = 'No friends added yet.'; box.appendChild(s); return; }
+  for (const uid of FR.list) {
+    const d = FR.data[uid] || {}, on = d.at && Date.now() - d.at < 150000, row = document.createElement('div'); row.className = 'ofr';
+    const dot = document.createElement('i'); dot.className = 'dot' + (on ? ' on' : ''); row.appendChild(dot);
+    const nm = document.createElement('b'); nm.textContent = (d.name || 'Friend') + (on ? (d.playing ? ' · playing ' + d.playing : ' · online') : ' · offline'); row.appendChild(nm);
+    if (on && d.party) { const j = document.createElement('button'); j.className = 'btn go'; j.type = 'button'; j.textContent = 'Join party'; j.addEventListener('click', () => { $('partyIn').value = d.party; $('partyJoin').click(); showTab('play'); banner('JOINING ' + String(d.name || 'FRIEND').toUpperCase(), 'Party ' + d.party, 2); }); row.appendChild(j); }
+    const x = document.createElement('button'); x.className = 'btn ghost'; x.type = 'button'; x.textContent = '✕'; x.title = 'Remove'; x.addEventListener('click', () => { FR.list = FR.list.filter(u => u !== uid); store.set('cfriends', FR.list); renderOnFriends(); }); row.appendChild(x);
+    box.appendChild(row);
+  }
+}
+$('fcodeAdd').addEventListener('click', async () => {
+  const code = ($('fcodeIn').value || '').trim().toUpperCase(); if (code.length < 6) { cloudMsg('Friend codes are 6 letters/numbers.'); return; }
+  if (!CLOUD.user) { cloudMsg('Sign in first.'); return; }
+  try {
+    const q = await CLOUD.db.collection('presence').where('code', '==', code).limit(1).get();
+    if (!q.docs.length) { cloudMsg('No player with that friend code (they need to sign in once).'); return; }
+    const uid = q.docs[0].id; if (uid === CLOUD.user.uid) { cloudMsg('That’s your own code.'); return; }
+    if (!FR.list.includes(uid)) { FR.list.push(uid); store.set('cfriends', FR.list); }
+    FR.data[uid] = q.docs[0].data(); $('fcodeIn').value = ''; cloudMsg('Friend added: ' + (FR.data[uid].name || 'Player')); renderOnFriends();
+  } catch (e) { cloudMsg(e && e.code === 'permission-denied' ? 'Friends need the database rules update (see the owner).' : errText(e)); }
+});
+setInterval(() => { if (CLOUD.user) { presencePut(); if ($('pane-career') && !$('pane-career').hidden) friendsRefresh(); } }, 45000);
 /* ---------- global leaderboard ---------- */
-const GLB = { by: 'kills', busy: false };
-const GLB_COL = { kills: 'Eliminations', wins: 'Wins', rp: 'Ranked RP', zwave: 'Best Zombies wave' };
+const GLB = { by: 'kills', busy: false, period: 'all' };
+// weekly board: weeks start Monday 00:00 UTC; this week's numbers = career now minus career at the start of the week
+const weekNum = () => Math.floor((Date.now() - Date.UTC(2026, 0, 5)) / (7 * 864e5));
+const WB = Object.assign({ w: -1, kills: 0, wins: 0, xp: 0 }, store.get('weekBase', {}));
+const weekBase = () => { const n = weekNum(); if (WB.w !== n) { WB.w = n; WB.kills = C.kills | 0; WB.wins = C.wins | 0; WB.xp = C.xpTotal | 0; store.set('weekBase', WB); } return WB; };
+weekBase();
+const weekStats = () => { const b = weekBase(); return { kills: Math.max(0, (C.kills | 0) - b.kills), wins: Math.max(0, (C.wins | 0) - b.wins), xp: Math.max(0, (C.xpTotal | 0) - b.xp) }; };
+const GLB_COL = { kills: 'Eliminations', wins: 'Wins', rp: 'Ranked RP', zwave: 'Best Zombies wave', xp: 'XP this week' };
 function glbPut() {
   if (!CLOUD.user || !CLOUD.db) return;
   const e = { name: String(playerName || 'Operator').slice(0, 16), kills: C.kills | 0, wins: C.wins | 0, rp: RANK.rp | 0, zwave: C.bestRound | 0, hwave: C.bestWave | 0, at: Date.now() };
   CLOUD.db.collection('leaderboard').doc(CLOUD.user.uid).set(e).catch(() => {});
+  const ws = weekStats(); CLOUD.db.collection('lbw_' + weekNum()).doc(CLOUD.user.uid).set({ name: e.name, kills: ws.kills, wins: ws.wins, xp: ws.xp, at: Date.now() }).catch(() => {});
 }
 async function glbLoad() {
   if (GLB.busy || !$('glbTable')) return; GLB.busy = true;
   const msg = $('glbMsg'); msg.textContent = 'Loading the leaderboard…';
   try {
     await cloudInit();
-    const snap = await CLOUD.db.collection('leaderboard').orderBy(GLB.by, 'desc').limit(25).get();
+    const wk = GLB.period === 'week', by = wk && !['kills', 'wins', 'xp'].includes(GLB.by) ? 'kills' : GLB.by;
+    const snap = await CLOUD.db.collection(wk ? 'lbw_' + weekNum() : 'leaderboard').orderBy(by, 'desc').limit(25).get();
     const tb = $('glbTable'); tb.textContent = '';
-    const hr = document.createElement('tr'); ['#', 'Player', GLB_COL[GLB.by]].forEach(h => { const th = document.createElement('th'); th.textContent = h; hr.appendChild(th); }); tb.appendChild(hr);
+    const hr = document.createElement('tr'); ['#', 'Player', GLB_COL[by] + (wk && by !== 'xp' ? ' this week' : '')].forEach(h => { const th = document.createElement('th'); th.textContent = h; hr.appendChild(th); }); tb.appendChild(hr);
     let n = 0, mine = false;
-    snap.docs.forEach(d => { const v = d.data() || {}; n++; const tr = document.createElement('tr'); if (CLOUD.user && d.id === CLOUD.user.uid) { tr.className = 'me'; mine = true; } [n, String(v.name || 'Operator').slice(0, 16), (+v[GLB.by] || 0).toLocaleString()].forEach(x => { const td = document.createElement('td'); td.textContent = x; tr.appendChild(td); }); tb.appendChild(tr); });
-    msg.textContent = !n ? 'Nobody on the board yet. Sign in and play to be first!' : CLOUD.user ? (mine ? 'You are on the board (highlighted). It updates every time your progress saves.' : 'You are not in the top 25 for this one yet. Keep playing!') : 'Sign in with an account (above) to put your name on the board.';
+    snap.docs.forEach(d => { const v = d.data() || {}; n++; const tr = document.createElement('tr'); if (CLOUD.user && d.id === CLOUD.user.uid) { tr.className = 'me'; mine = true; } [n, String(v.name || 'Operator').slice(0, 16), (+v[by] || 0).toLocaleString()].forEach(x => { const td = document.createElement('td'); td.textContent = x; tr.appendChild(td); }); tb.appendChild(tr); });
+    msg.textContent = !n ? (wk ? 'Nobody on this week’s board yet. It resets every Monday. Sign in and play to be first!' : 'Nobody on the board yet. Sign in and play to be first!') : CLOUD.user ? (mine ? 'You are on the board (highlighted). It updates every time your progress saves.' : 'You are not in the top 25 for this one yet. Keep playing!') : 'Sign in with an account (above) to put your name on the board.';
   } catch (e) { msg.textContent = e && e.code === 'permission-denied' ? 'The leaderboard is not switched on yet (the database rules need updating).' : 'Could not load the leaderboard. Check your internet and tap ↻.'; }
   finally { GLB.busy = false; }
 }
 document.addEventListener('click', ev => {
+  const pb = ev.target.closest && ev.target.closest('[data-glbp]');
+  if (pb) { GLB.period = pb.dataset.glbp; document.querySelectorAll('[data-glbp]').forEach(x => x.classList.toggle('on', x === pb)); const xb = document.querySelector('[data-glb="rp"]'), zb = document.querySelector('[data-glb="zwave"]'); if (xb) xb.hidden = GLB.period === 'week'; if (zb) zb.hidden = GLB.period === 'week'; const xpb = document.querySelector('[data-glb="xp"]'); if (xpb) xpb.hidden = GLB.period !== 'week'; if ((GLB.period === 'week' && !['kills', 'wins', 'xp'].includes(GLB.by)) || (GLB.period === 'all' && GLB.by === 'xp')) { GLB.by = 'kills'; document.querySelectorAll('[data-glb]').forEach(x => x.classList.toggle('on', x.dataset.glb === 'kills')); } glbLoad(); return; }
   const b = ev.target.closest && ev.target.closest('[data-glb]'); if (!b) return;
   GLB.by = b.dataset.glb; document.querySelectorAll('[data-glb]').forEach(x => x.classList.toggle('on', x === b)); glbLoad();
 });
@@ -4164,7 +4258,7 @@ function renderSettings() {
   }
 }
 $('resetSettings').addEventListener('click', () => { Object.assign(S, DEF); saveS(); renderSettings(); applyQuality(); applySettings(); });
-const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank', 'friends', 'ident', 'econ'];
+const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase', 'cfriends'];
 function makeBackup() {
   const data = {}; for (const k of ACCT_KEYS) { const v = store.get(k, null); if (v !== null) data[k] = v; }
   try { return 'DL1.' + btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/=+$/, ''); } catch (e) { return ''; }
@@ -4288,7 +4382,21 @@ function renderProfile() {
   pc.children[2].textContent = r.n + ' · ' + RANK.rp + ' RP' + (myTitle ? ' · “' + myTitle + '”' : '') + ' · ◎ ' + WALLET.coins.toLocaleString() + ' coins';
   for (const [k, v] of stats) { const d = document.createElement('div'); d.innerHTML = '<span class="label"></span><b></b>'; d.children[0].textContent = k; d.children[1].textContent = v; pc.children[3].appendChild(d); }
 }
+function renderPrestige() {
+  if (!$('plInfo')) return; const lv = plLevel(), into = (C.xpTotal || 0) - (lv - 1) * LV_XP, pr = C.prestige || 0;
+  $('plInfo').textContent = (pr ? 'Prestige ' + pr + ' ★ · ' : '') + 'Level ' + lv + ' of ' + MAX_LV + (lv < MAX_LV ? ' · ' + Math.max(0, LV_XP - into).toLocaleString() + ' XP to level ' + (lv + 1) : pr < MAX_PRESTIGE ? ' · Max level! Prestige to reset your level and earn a ★ badge, the "Prestige ' + (pr + 1) + '" title and ◎ 1,000' : ' · Master Prestige reached');
+  $('plBar').style.width = (lv >= MAX_LV ? 100 : Math.round(into / LV_XP * 100)) + '%';
+  $('prestigeBtn').disabled = !(lv >= MAX_LV && pr < MAX_PRESTIGE);
+}
+$('prestigeBtn').addEventListener('click', () => {
+  if (plLevel() < MAX_LV || (C.prestige || 0) >= MAX_PRESTIGE) return;
+  if (!confirm('Enter Prestige ' + ((C.prestige || 0) + 1) + '? Your player level goes back to 1. You keep everything else (guns, skins, pass, coins).')) return;
+  C.prestige = (C.prestige || 0) + 1; C.xpTotal = 0; saveC(); addCoins(1000);
+  myTitle = 'Prestige ' + C.prestige; store.set('title', myTitle);
+  banner('PRESTIGE ' + C.prestige, '★ badge, "Prestige ' + C.prestige + '" title and ◎ 1,000 unlocked', 3.5); renderPrestige(); try { renderChip(); } catch (e) {}
+});
 function renderCareer() {
+  try { renderPrestige(); } catch (e) {}
   renderProfile(); renderFriends();
   renderAch();
   acctWho(); renderLB();
@@ -4342,8 +4450,79 @@ codeIn.addEventListener('input', () => { matchCode = codeIn.value.replace(/[^a-z
 })();
 
 /* ---------- flow ---------- */
+/* ---------- quick chat + pings (teammates online see them too) ---------- */
+const QC_MSGS = ['Enemy spotted!', 'Need ammo', 'On my way', 'Cover me', 'Nice shot!', 'Thanks!', 'Good game'];
+const QC = { seq: 0, msg: null, pseq: 0, ping: null, seenMsg: {}, seenPing: {}, marks: [] };
+function chatLine(who, text) {
+  const f = $('chatFeed'); if (!f) return; const d = document.createElement('div'); const b = document.createElement('b'); b.textContent = who + ': '; d.appendChild(b); d.appendChild(document.createTextNode(text)); f.appendChild(d);
+  while (f.children.length > 4) f.firstChild.remove(); setTimeout(() => d.remove(), 5500);
+}
+function sendQc(i) {
+  $('qcPanel').hidden = true; QC.seq++; QC.msg = [QC.seq, i]; chatLine(playerName, QC_MSGS[i]); try { tone(900, 0.06, 'triangle', 0.08); } catch (e) {}
+  if (mode === 'tdm' && T.bots.length && Math.random() < 0.6) { const mate = T.bots.find(b => b.team === P.team && b.alive); if (mate) setTimeout(() => chatLine(nameOf(mate.id), i === 1 ? 'Dropping you a mag soon' : i === 4 ? 'Thanks!' : i === 6 ? 'GG!' : 'Copy that'), 900); }
+}
+const pingTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d'); g.fillStyle = '#fff'; g.beginPath(); g.moveTo(32, 4); g.lineTo(58, 30); g.lineTo(32, 60); g.lineTo(6, 30); g.closePath(); g.fill(); g.fillStyle = 'rgba(0,0,0,.35)'; g.beginPath(); g.moveTo(32, 16); g.lineTo(46, 30); g.lineTo(32, 46); g.lineTo(18, 30); g.closePath(); g.fill(); return new THREE.CanvasTexture(c); })();
+function pingMark(x, y, z, enemy, who) {
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: pingTex, color: enemy ? 0xff4a3a : 0xffd24a, depthTest: false, transparent: true })); sp.position.set(x, y + 1.2, z); sp.scale.set(0.8, 0.8, 1); sp.renderOrder = 999; scene.add(sp);
+  QC.marks.push({ sp, life: 6 }); if (who) chatLine(who, enemy ? 'Enemy here!' : 'Ping'); try { tone(enemy ? 700 : 1000, 0.08, 'sine', 0.1); } catch (e) {}
+}
+function doPing() {
+  if (state !== 'play') return;
+  ray.setFromCamera({ x: 0, y: 0 }, camera); const hits = ray.intersectObjects(solids.concat(hitMeshes(), [ground]), true); if (!hits.length) return;
+  const h = hits[0], enemy = !!(h.object.userData.ent && (mode !== 'tdm' || isFoe(h.object.userData.ent)));
+  pingMark(h.point.x, h.point.y, h.point.z, enemy, null); QC.pseq++; QC.ping = [QC.pseq, r2(h.point.x), r2(h.point.y), r2(h.point.z), enemy ? 1 : 0];
+}
+function stepPings(dt) { for (let i = QC.marks.length - 1; i >= 0; i--) { const m = QC.marks[i]; m.life -= dt; m.sp.material.opacity = Math.min(1, m.life); m.sp.position.y += Math.sin(performance.now() / 200) * 0.002; if (m.life <= 0) { scene.remove(m.sp); QC.marks.splice(i, 1); } } }
+function netQc(hs) { // messages and pings from teammates online
+  for (const h of hs) { if (h.me || !h.pr) continue; const same = h.pr.tm === P.team, nm = String(h.pr.n || 'Player').slice(0, 16);
+    if (Array.isArray(h.pr.qc) && QC.seenMsg[h.peer] !== h.pr.qc[0]) { const first = QC.seenMsg[h.peer] == null; QC.seenMsg[h.peer] = h.pr.qc[0]; if (!first && QC_MSGS[h.pr.qc[1]] && (same || h.pr.qc[1] >= 4)) chatLine(nm, QC_MSGS[h.pr.qc[1]]); }
+    if (same && Array.isArray(h.pr.pg) && QC.seenPing[h.peer] !== h.pr.pg[0]) { const first = QC.seenPing[h.peer] == null; QC.seenPing[h.peer] = h.pr.pg[0]; if (!first) pingMark(+h.pr.pg[1], +h.pr.pg[2], +h.pr.pg[3], !!h.pr.pg[4], nm); } }
+}
+if (!isTouch) { $('pingBtn').addEventListener('click', doPing); $('qcBtn').addEventListener('click', () => { $('qcPanel').hidden = !$('qcPanel').hidden; }); $('qcPanel').addEventListener('click', ev => { const b = ev.target.closest('[data-qc]'); if (b) sendQc(+b.dataset.qc); }); }
+$('qcPanel').innerHTML = QC_MSGS.map((m, i) => '<button type="button" data-qc="' + i + '">' + (i + 1) + '. ' + m + '</button>').join('');
+/* ---------- Firing range ---------- */
+const RNG = { targets: [], mover: null, gunI: 0 };
+function rangeTarget(x, z, dist) {
+  const g = new THREE.Group(); g.position.set(x, 0, z);
+  const steel = new THREE.MeshStandardMaterial({ color: 0x3a3d40, metalness: 0.6, roughness: 0.5 }), paint = new THREE.MeshStandardMaterial({ color: 0xe8e2d0, roughness: 0.8 });
+  const post = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.9, 0.1), steel); post.position.y = 0.45; g.add(post);
+  const plate = new THREE.Group(); plate.position.y = 0.9; g.add(plate);
+  const body = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.75, 0.04), paint); body.position.y = 0.38; body.userData.rangeT = { dist, part: 'body', g: plate }; plate.add(body);
+  const head = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.04, 16), paint); head.rotation.x = Math.PI / 2; head.position.y = 0.92; head.userData.rangeT = { dist, part: 'head', g: plate }; plate.add(head);
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.13, 0.2, 20), new THREE.MeshBasicMaterial({ color: 0xc8361f })); ring.position.set(0, 0.42, 0.022); plate.add(ring);
+  const c = document.createElement('canvas'); c.width = 128; c.height = 48; const cx = c.getContext('2d'); cx.fillStyle = '#ffd27a'; cx.font = '800 34px sans-serif'; cx.textAlign = 'center'; cx.fillText(dist + ' m', 64, 36);
+  const lbl = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true })); lbl.position.y = 2.4; lbl.scale.set(1.2, 0.45, 1); g.add(lbl);
+  mapGroup.add(g); solids.push(body, head); plate.userData.hp = 100; plate.userData.down = 0;
+  RNG.targets.push(plate); return g;
+}
+function buildRange() {
+  clearMap(); curMap = ''; builtHalf = 0; ground.material = M.sand;
+  scene.fog.color.setHex(0xd3cbb6); scene.background.setHex(0xd3cbb6); scene.fog.near = 60; scene.fog.far = 220;
+  RNG.targets = [];
+  addBox(-9, -45, 0.6, 100, 2.4, M.conc, 4, 4); addBox(9, -45, 0.6, 100, 2.4, M.conc, 4, 4); addBox(0, -96, 20, 1, 5, M.conc, 4, 4); // lane walls + backstop
+  addBox(0, 1.6, 7, 0.5, 0.85, M.crate, 1.4, 1.4); // firing-line bench
+  [[-5, -10, 10], [-1.5, -25, 25], [2, -50, 50], [5.5, -80, 80]].forEach(([x, z, d]) => rangeTarget(x, z, d));
+  RNG.mover = rangeTarget(0, -30, 30);
+}
+function rangeHit(rt, dmg) {
+  const plate = rt.g; if (plate.userData.down > 0) return;
+  plate.userData.hp -= dmg;
+  $('rangeTxt').textContent = rt.dist + ' m · ' + (rt.part === 'head' ? 'HEAD' : 'BODY') + ' · ' + Math.round(dmg) + ' dmg' + (plate.userData.hp <= 0 ? ' · DOWN' : '');
+  try { tone(rt.part === 'head' ? 1500 : 1100, 0.06, 'triangle', 0.12); } catch (e) {}
+  if (plate.userData.hp <= 0) { plate.userData.down = 2; plate.rotation.x = -Math.PI / 2.2; }
+}
+function stepRange(dt) {
+  for (const p of RNG.targets) if (p.userData.down > 0) { p.userData.down -= dt; if (p.userData.down <= 0) { p.rotation.x = 0; p.userData.hp = 100; } }
+  if (RNG.mover) RNG.mover.position.x = Math.sin(performance.now() / 1400) * 6;
+  P.res = 999; // unlimited ammo
+}
+function startRange() {
+  startSiege(); rng = true; buildRange(); P.pos.set(0, 1.6, 4); P.yaw = 0; P.pitch = 0;
+  $('rangeHud').hidden = false; $('rangeTxt').textContent = 'Shoot a target'; try { $('waveTag').hidden = true; } catch (e) {}
+  banner('FIRING RANGE', 'Targets at 10, 25, 50 and 80 m. Tap Next gun to switch.', 3);
+}
 function startSiege() {
-  ensureAudio(); leaveBattle(); clearSiege(); zmb = false; dom = false; snd = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
+  ensureAudio(); leaveBattle(); clearSiege(); zmb = false; dom = false; snd = false; rng = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
   mode = 'siege'; duel = false; buildMap(selMap); equip(loadout);
   Object.assign(P, { yaw: 0, pitch: 0, hp: 100, alive: true, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, prot: 0 });
   P.pos.set(0, 1.6, 9); if (insideSolid(P.pos, 0.6)) { const o = randomOpenPoint(); P.pos.set(o.x, 1.6, o.z); }
@@ -4356,7 +4535,7 @@ async function startTDM(isDuel, isRanked) {
   ensureAudio(); clearSiege(); lockPointer();
   duel = !!isDuel; SCORE_LIMIT = duel ? 7 : 65;
   const btn = duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
-  btn.disabled = true; mode = 'tdm'; dom = false; snd = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
+  btn.disabled = true; mode = 'tdm'; dom = false; snd = false; rng = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
   resetTDM(); ranked = !!isRanked && !duel;
   if (room) {
     desc.textContent = duel ? 'Finding your rival…' : 'Joining the battle…';
@@ -4583,6 +4762,8 @@ $('siegeBtn').addEventListener('click', startSiege);
 $('ggBtn').addEventListener('click', startGunGame);
 $('domBtn').addEventListener('click', startDomination);
 $('sndBtn').addEventListener('click', startSnd);
+$('rangeBtn').addEventListener('click', startRange);
+$('rangeGun').addEventListener('click', () => { const ks = Object.keys(WEAPONS).filter(k => weaponOwned(k)); RNG.gunI = (RNG.gunI + 1) % ks.length; equip(ks[RNG.gunI]); P.res = 999; updHud(); $('rangeTxt').textContent = WEAPONS[ks[RNG.gunI]].name; });
 $('rankedBtn').addEventListener('click', () => { if (!$('rankedBtn').disabled) startTDM(false, true); });
 $('ksScan').addEventListener('click', useScan); $('ksMsl').addEventListener('click', useMissile);
 $('resumeBtn').addEventListener('click', resume);
@@ -4646,6 +4827,7 @@ function fire() {
     if (!hits.length) continue;
     const h = hits[0], ent = h.object.userData.ent, d = h.distance;
     const fall = d <= w.r0 ? 1 : Math.max(w.fall, 1 - (d - w.r0) / (w.r1 - w.r0) * (1 - w.fall));
+    if (h.object.userData.rangeT) { const rt = h.object.userData.rangeT; rangeHit(rt, w.dmg * fall * (rt.part === 'head' ? w.head : 1)); spark(h.point, 0xffe0a0, 3); hitMarker(rt.part === 'head' ? 'head' : ''); continue; }
     if (ent && (ent.kind === 'drone' || (ent.kind === 'zombie' && ent.hp > 0) || (mode === 'tdm' && isFoe(ent) && ent.alive))) {
       const part = h.object.userData.part, mul = ent.kind === 'drone' ? 1 : part === 'head' ? w.head : part === 'leg' ? 0.75 : 1;
       if (part === 'head' && ent.kind !== 'drone') headHit = true;
@@ -4693,6 +4875,9 @@ window.addEventListener('keydown', ev => {
     if (ev.code === 'KeyR') startReload();
     if (ev.code === 'KeyG') throwNade();
     if (ev.code === 'KeyB' && zmb) zBuyGun();
+    if (ev.code === 'KeyZ') doPing();
+    if (ev.code === 'KeyX') $('qcPanel').hidden = !$('qcPanel').hidden;
+    if (!$('qcPanel').hidden && /^Digit[1-7]$/.test(ev.code)) sendQc(+ev.code.slice(5) - 1);
     if (ev.code === 'KeyZ') useScan();
     if (ev.code === 'KeyX') useMissile();
     if (/^Digit[1-9]$/.test(ev.code) && mode === 'tdm' && T.win) castVote(Object.keys(MAPS)[+ev.code.slice(5) - 1]);
@@ -4741,6 +4926,9 @@ function onTouchStart(ev) {
     if (el.closest('#jumpBtn')) { input.jump = true; continue; }
     if (el.closest('#nadeBtn')) { throwNade(); continue; }
     if (el.closest('#zBuy')) { zBuyGun(); continue; }
+    if (el.closest('#pingBtn')) { doPing(); continue; }
+    if (el.closest('#qcBtn')) { $('qcPanel').hidden = !$('qcPanel').hidden; continue; }
+    { const qb = el.closest('[data-qc]'); if (qb) { sendQc(+qb.dataset.qc); continue; } }
     if (el.closest('#ksScan')) { useScan(); continue; }
     if (el.closest('#ksMsl')) { useMissile(); continue; }
     if (el.closest('#adsBtn')) { adsId = t.identifier; adsX = t.clientX; adsY = t.clientY; P.ads = !P.ads; adsBtn.classList.toggle('on', P.ads); continue; }
@@ -4819,18 +5007,48 @@ function tryVault(){
   return true;
 }
 
+/* ---------- game controllers (PlayStation / Xbox / Backbone / MFi) ---------- */
+const GP = { prev: [], mx: 0, mz: 0, fire: false, ads: false, sprint: false, on: false };
+window.addEventListener('gamepadconnected', e => { GP.on = true; banner('🎮 CONTROLLER CONNECTED', String(e.gamepad.id || '').replace(/\(.*\)/, '').slice(0, 40) || 'Ready to play', 2.5); });
+window.addEventListener('gamepaddisconnected', () => { GP.on = false; GP.mx = GP.mz = 0; if (GP.fire) input.fire = false; GP.fire = false; });
+function pollPad(dt) {
+  const pads = navigator.getGamepads ? navigator.getGamepads() : []; let g = null; for (const p of pads) if (p && p.connected) { g = p; break; }
+  if (!g) return; GP.on = true;
+  const dz = v => Math.abs(v) < 0.15 ? 0 : (v - Math.sign(v) * 0.15) / 0.85, ax = i => dz(g.axes[i] || 0), btn = i => !!(g.buttons[i] && (g.buttons[i].pressed || g.buttons[i].value > 0.35));
+  const down = i => btn(i) && !GP.prev[i];
+  // start: pause / resume (works in menus too)
+  if (down(9)) { if (state === 'play') { const pb = $('pauseBtn'); if (pb) pb.click(); else pause(); } else if (state === 'paused') resume(); }
+  if (state === 'play' && P.alive) {
+    GP.mx = ax(0); GP.mz = ax(1);
+    const rx = ax(2), ry = ax(3), sens = (S.sens || 1.2) * (P.ads ? (S.adsSens || 0.8) : 1) * 2.6;
+    P.yaw -= rx * Math.abs(rx) * sens * dt; P.pitch = clamp(P.pitch - ry * Math.abs(ry) * sens * dt * (S.invertY ? -1 : 1), -1.4, 1.4);
+    const f = btn(7); if (f !== GP.fire) { GP.fire = f; input.fire = f; }
+    const a = btn(6); if (a !== GP.ads) { GP.ads = a; P.ads = a; }
+    if (down(0)) input.jump = true;
+    if (down(1)) { if (!(P.sprinting && startSlide())) P.crouch = !P.crouch; }
+    if (down(2)) startReload();
+    if (down(3)) doPing();
+    if (down(4)) try { throwNade(); } catch (e) {}
+    if (down(10)) GP.sprint = !GP.sprint;
+    if (down(12)) sendQc(0); if (down(15)) sendQc(2); if (down(13)) sendQc(1); if (down(14)) sendQc(4);
+    if (down(5)) { try { const k = document.querySelector('#ksScan:not([hidden]), #ksMsl:not([hidden])'); if (k) k.click(); } catch (e) {} }
+  } else { GP.mx = GP.mz = 0; if (GP.fire) { GP.fire = false; input.fire = false; } }
+  if (Math.hypot(GP.mx, GP.mz) < 0.3) GP.sprint = false;
+  for (let i = 0; i < g.buttons.length; i++) GP.prev[i] = btn(i);
+}
 /* ---------- player step ---------- */
 function stepPlayer(dt) {
+  try { pollPad(dt); } catch (e) {}
   const kL = Math.min(1, dt * 40), ax = input.ldx * kL, ay = input.ldy * kL;
   input.ldx -= ax; input.ldy -= ay; P.yaw -= ax; P.pitch = clamp(P.pitch - ay, -1.4, 1.4);
-  let mx = input.mx, mz = input.mz;
+  let mx = input.mx + GP.mx, mz = input.mz + GP.mz;
   const k = input.keys;
   if (k.KeyW || k.ArrowUp) mz -= 1;
   if (k.KeyS || k.ArrowDown) mz += 1;
   if (k.KeyA || k.ArrowLeft) mx -= 1;
   if (k.KeyD || k.ArrowRight) mx += 1;
   let len = Math.hypot(mx, mz);
-  const wantSprint = (k.ShiftLeft || k.ShiftRight || (stickId !== null && len > 0.95 && mz < -0.6)) && mz < 0 && !P.crouch && !P.ads;
+  const wantSprint = (k.ShiftLeft || k.ShiftRight || GP.sprint || (stickId !== null && len > 0.95 && mz < -0.6)) && mz < 0 && !P.crouch && !P.ads;
   const sprint = wantSprint && P.stamina > 0;
   if (sprint) { P.stamina = Math.max(0, P.stamina - (hasPerk('fleetfoot') ? 13 : 20) * dt); P.stWait = 0.9; } else { P.stWait -= dt; if (P.stWait <= 0) P.stamina = Math.min(100, P.stamina + 16 * dt); }
   if (sprint && P.ads) P.ads = false;
@@ -4989,6 +5207,8 @@ function loop() {
   const raw = clock.getDelta(), dt = Math.min(raw, 0.05);
   try { stepDust(dt); } catch (e) {}
   try { stepDom(dt); } catch (e) {}
+  try { stepPings(dt); } catch (e) {}
+  if (state === 'paused') try { pollPad(dt); } catch (e) {}
   try { stepSnd(dt); } catch (e) {}
   fpsT += raw; fpsN++;
   if (fpsT > 0.5) { if (S.fps) hud.fps.textContent = Math.round(fpsN / fpsT) + ' FPS'; fpsT = 0; fpsN = 0; }
