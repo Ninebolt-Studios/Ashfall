@@ -8,16 +8,17 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v78)](https://gaayyynesss.github.io/Seige/?v=78)
+## ▶️ [PLAY NOW — latest version (v79)](https://gaayyynesss.github.io/Seige/?v=79)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=78
+**Latest:** https://gaayyynesss.github.io/Seige/?v=79
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v78** | https://gaayyynesss.github.io/Seige/?v=78 | **CoD-style ammo:** you spawn with a full mag plus 3 spare mags (e.g. 30 / 90), and every reload uses up your spare bullets. Enemies you take down drop an ammo box (Salvager drops a full refill + grenade); Zombies gives 5 spare mags and Max Ammo refills everything. **🌍 Global leaderboard** on the Career tab: top 25 players by Eliminations, Wins, Ranked RP and best Zombies wave (sign in to get on it). The Zombies **Mystery Crate** no longer shows up in other modes |
+| **v79** | https://gaayyynesss.github.io/Seige/?v=79 | **Louder menu music** (about 2.5x louder, default slider now 70%) with a limiter so it stays clean instead of crackling. You can still change it in Settings → Audio → Menu music |
+| v78 | https://gaayyynesss.github.io/Seige/?v=78 | **CoD-style ammo:** you spawn with a full mag plus 3 spare mags (e.g. 30 / 90), and every reload uses up your spare bullets. Enemies you take down drop an ammo box (Salvager drops a full refill + grenade); Zombies gives 5 spare mags and Max Ammo refills everything. **🌍 Global leaderboard** on the Career tab: top 25 players by Eliminations, Wins, Ranked RP and best Zombies wave (sign in to get on it). The Zombies **Mystery Crate** no longer shows up in other modes |
 | v77 | https://gaayyynesss.github.io/Seige/?v=77 | The **☁️ Account** box is now at the very top of the Career tab. Fixed a wrong "which progress do you want to keep?" popup that could appear after switching devices |
 | v76 | https://gaayyynesss.github.io/Seige/?v=76 | **Accounts!** On the Career tab, create an account with your email and a password and your progress saves online automatically (about every 40 seconds and when you leave). Sign in on any iPad, phone or computer to get everything back. If your account and a device have different progress, the game asks which one to keep. Forgot password sends a reset email. A ☁️ next to your name means you are signed in |
 | v75 | https://gaayyynesss.github.io/Seige/?v=75 | **Save files:** on the Career tab tap **💾 Save to file** to keep your whole progress as a file (save it to Files, Notes or send it to yourself), and **📂 Load save file** to get it back on any device. Shows when you last saved. The **Played before?** card on a new device can load a save file too |

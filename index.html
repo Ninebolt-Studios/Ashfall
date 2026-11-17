@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117152120';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117152330';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -973,9 +973,10 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem('dl-' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('dl-' + k, JSON.stringify(v)); } catch (e) {} },
 };
-const DEF = { haptics: true, assistStr: isTouch ? 0.6 : 0, music: 0.45, botDiff: 'adaptive', sens: 1.2, adsSens: 0.8, invertY: false, assist: isTouch, auto: isTouch, holdAds: true, lefty: false,
+const DEF = { haptics: true, assistStr: isTouch ? 0.6 : 0, music: 0.7, botDiff: 'adaptive', sens: 1.2, adsSens: 0.8, invertY: false, assist: isTouch, auto: isTouch, holdAds: true, lefty: false,
   quality: isTouch ? 'medium' : 'high', fov: 72, motion: true, fps: false, uncap: false, volume: 0.8, steps: true, xhColor: 'white', xhSize: 1, radar: true };
 const S = Object.assign({}, DEF, store.get('settings', {}));
+if (!store.get('musicUp', false)) { if (S.music === 0.45) { S.music = 0.7; const sv = store.get('settings', null); if (sv) { sv.music = 0.7; store.set('settings', sv); } } store.set('musicUp', true); } // old default -> new louder default
 { const raw = store.get('settings', {}) || {}; if (raw.assistStr == null && raw.assist === false) S.assistStr = 0; } // keep old 'off' choice
 const aimA = () => clamp(+S.assistStr || 0, 0, 1);
 const saveS = () => store.set('settings', S);
@@ -2054,6 +2055,7 @@ function ensureAudio() {
 }
 /* ---------- menu music: a calm synth loop made on the fly (no audio files) ---------- */
 let musicGain = null, musicTimer = null, musicStep = 0, musicNext = 0;
+const MUSIC_BOOST = 1.25; // menu music is ~2.5x louder than before (was 0.5)
 const MUSIC_CHORDS = [[57, 60, 64], [53, 57, 60], [48, 52, 55], [55, 59, 62]]; // Am F C G
 const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
 function mnote(freq, start, dur, type, vol) {
@@ -2076,12 +2078,12 @@ function musicTick() {
 }
 function startMusic() {
   if (!actx) return;
-  if (!musicGain) { musicGain = actx.createGain(); musicGain.gain.value = 0; musicGain.connect(master); }
+  if (!musicGain) { musicGain = actx.createGain(); musicGain.gain.value = 0; let out = master; try { const lim = actx.createDynamicsCompressor(); lim.threshold.value = -6; lim.knee.value = 6; lim.ratio.value = 12; lim.attack.value = 0.003; lim.release.value = 0.2; lim.connect(master); out = lim; } catch (e) {} musicGain.connect(out); }
   if (!musicTimer) { musicNext = actx.currentTime + 0.1; musicTimer = setInterval(musicTick, 100); }
 }
 function updMusic() { // fade in on menus, out during matches
   if (!musicGain || !actx) return;
-  const want = state === 'play' ? 0 : S.music * 0.5, g = musicGain.gain;
+  const want = state === 'play' ? 0 : S.music * MUSIC_BOOST, g = musicGain.gain;
   g.cancelScheduledValues(actx.currentTime); g.setTargetAtTime(want, actx.currentTime, 0.6);
 }
 // iPad/iPhone only let sound start at the END of a tap and pause it when you leave the tab, so wake it on every tap and when you come back
@@ -3990,7 +3992,7 @@ function applySettings() {
   document.body.classList.toggle('lefty', !!S.lefty);
   $('radar').hidden = !S.radar; hud.fps.hidden = !(S.fps || S.uncap);
   if (master) master.gain.value = S.volume;
-  if (musicGain && state === 'menu') musicGain.gain.value = S.music * 0.5;
+  if (musicGain && state === 'menu') musicGain.gain.value = S.music * MUSIC_BOOST;
   resize();
 }
 function renderSettings() {
