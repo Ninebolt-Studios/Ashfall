@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v91)](https://gaayyynesss.github.io/Ashfall/?v=91)
+## ▶️ [PLAY NOW — latest version (v92)](https://gaayyynesss.github.io/Ashfall/?v=92)
 
-**Latest:** https://gaayyynesss.github.io/Ashfall/?v=91
+**Latest:** https://gaayyynesss.github.io/Ashfall/?v=92
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,7 +20,8 @@ Open **[Ashfall.mobileconfig](https://gaayyynesss.github.io/Ashfall/Ashfall.mobi
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v91** | https://gaayyynesss.github.io/Ashfall/?v=91 | **New mode: 🚩 Domination.** 5v5 with bots on the big maps: capture and hold flags A, B and C (stand in the ring to capture; more teammates capture faster). Every flag you hold scores a point every 1.5 s; first to 150 wins. +100 XP and coins for each capture you're in. Bots fight over the flags |
+| **v92** | https://gaayyynesss.github.io/Ashfall/?v=92 | **New mode: 💣 Search & Destroy.** 5v5 with bots, one life per round, first to 4 rounds. Attack: carry the bomb and plant it on site A or B (stand in the ring for 3 s). Defend: stop the plant, or defuse the bomb within 40 s (5 s hold). Sides swap every round. Also: the Ninebolt Studios intro now waits for its logo (no more lonely "presents") and fades much sooner |
+| v91 | https://gaayyynesss.github.io/Ashfall/?v=91 | **New mode: 🚩 Domination.** 5v5 with bots on the big maps: capture and hold flags A, B and C (stand in the ring to capture; more teammates capture faster). Every flag you hold scores a point every 1.5 s; first to 150 wins. +100 XP and coins for each capture you're in. Bots fight over the flags |
 | v90 | https://gaayyynesss.github.io/Ashfall/?v=90 | **Ashfall app for iPhone/iPad:** install `Ashfall.mobileconfig` (button in Settings → 📲 Get the Ashfall app, or the link above) to get a full-screen Ashfall icon that always opens the newest version |
 | v89 | https://gaayyynesss.github.io/Ashfall/?v=89 | **More realistic bullets:** tracers are now a thin white-hot core with a soft orange glow that tapers to a tail and flies faster; enemy rounds are thin glowing tracers instead of chunky boxes; bullet holes are chipped craters with cracks that look different on concrete, wood, metal and sand; every impact kicks up a dust puff colored by the surface |
 | v88 | https://gaayyynesss.github.io/Ashfall/?v=88 | **90 bot names** (real surnames and callsigns like Ghost, Viper, Reyes, Novak); every match picks a fresh set, the same for everyone in the lobby. **5v5 maps resized to 165 m** across (from 190 m) so fights find you faster, still bigger than the original 140 m |
