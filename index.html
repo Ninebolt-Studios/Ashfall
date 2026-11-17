@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117153428';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117153616';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -1513,7 +1513,7 @@ scene.add(sky);
 try { scene.environment = new THREE.PMREMGenerator(renderer).fromEquirectangular(skyTex).texture; } catch (e) {}
 
 /* ---------- the outpost ---------- */
-const HALF = 70, MS = 2.0; // MS spreads every map's outer cover out to fill the bigger arena
+let HALF = 70; const MS = 2.0; let builtHalf = 0; // MS spreads every map's outer cover out to fill the bigger arena
 const solids = [], boxes = [];
 const mapGroup = new THREE.Group(); scene.add(mapGroup);
 function boxGeo(w, h, d, su, sv) {
@@ -1714,9 +1714,12 @@ function building(cx, cz, w, d, h = 3.4, mat = M.conc, roof = M.conc) {
 }
 function buildMap(id) {
   if (!MAPS[id]) id = 'outpost';
-  if (curMap === id && !zmbAtmo) return;
+  let bigMap = false; try { bigMap = mode === 'tdm' && !duel && !gg; } catch (e) {}
+  HALF = bigMap ? 95 : 70; // 5v5 (Team Battle / Ranked) arenas are ~190 m across
+  if (curMap === id && !zmbAtmo && builtHalf === HALF) return;
   zmbAtmo = false;
-  clearMap(); curMap = id;
+  clearMap(); curMap = id; builtHalf = HALF;
+  { const sb = HALF + 18; Object.assign(sun.shadow.camera, { left: -sb, right: sb, top: sb, bottom: -sb }); sun.shadow.camera.updateProjectionMatrix(); }
   const m = MAPS[id];
   ground.material = M[THEME.snowGround ? 'snow' : m.ground];
   setPrecip(m.rain ? 'rain' : (m.snow || THEME.snowfall) ? 'snow' : '');
@@ -1743,6 +1746,17 @@ function buildMap(id) {
       else addBox(px, pz, 0.6, 4, 1.3, M.conc, 4, 4);
     }
   });
+  if (HALF > 70) { // fill the extra outer band so the bigger 5v5 maps aren't empty
+    const sc = 1.42;
+    [[-48, -18, 12, 9], [-44, 22, 10, 12], [26, -40, 12, 9], [52, 6, 9, 13], [-16, 30, 9, 9], [30, 22, 11, 9], [-34, -42, 9, 11], [8, -22, 10, 8], [0, -60, 12, 9], [-62, 0, 9, 12]].forEach(([x0, z0, w, d]) => {
+      const x = clamp(x0 * sc, -HALF + 10, HALF - 10), z = clamp(z0 * sc, -HALF + 10, HALF - 10);
+      const free = (cx, cz) => { for (const [ox, oz] of [[0, 0], [-w / 2, -d / 2], [w / 2, -d / 2], [-w / 2, d / 2], [w / 2, d / 2]]) if (insideSolid({ x: cx + ox, z: cz + oz }, 1.6) || inSpawnZone(cx + ox, cz + oz)) return false; return Math.abs(cx) < HALF - 6 && Math.abs(cz) < HALF - 6; };
+      if (free(x, z) && free(-x, -z)) { building(x, z, w, d); building(-x, -z, w, d); }
+    });
+    for (let k = 0; k < 40; k++) { const a = k / 40 * Math.PI * 2 + 0.3, rr = 72 + (k % 3) * 6, x = Math.cos(a) * rr, z = Math.sin(a) * rr;
+      if (Math.abs(x) > HALF - 4 || Math.abs(z) > HALF - 4 || insideSolid({ x, z }, 2.5) || inSpawnZone(x, z)) continue;
+      const t = k % 4; if (t === 0) { crate([x, z]); crate([x + 1.5, z]); } else if (t === 1) bags([x, z, 4, 0.9]); else if (t === 2) addBox(x, z, 0.6, 4, 1.3, M.conc, 4, 4); else addBox(x, z, 6.1, 2.44, 2.6, M.cont[k % 3], 6.1, 2.6); }
+  }
   decorate(THEME);
 }
 
