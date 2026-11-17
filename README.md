@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v94)](https://ninebolt-studios.github.io/Ashfall/?v=94)
+## ▶️ [PLAY NOW — latest version (v95)](https://ninebolt-studios.github.io/Ashfall/?v=95)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=94
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=95
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,7 +20,8 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v94** | https://ninebolt-studios.github.io/Ashfall/?v=94 | **New: 🎯 Firing Range.** Steel targets at 10, 25, 50 and 80 m plus a target that slides side to side. Every hit shows distance, body or head, and damage; targets drop after 100 damage and pop back up. Tap **Next gun** to try every gun you own, with unlimited ammo |
+| **v95** | https://ninebolt-studios.github.io/Ashfall/?v=95 | **Player levels & ⭐ Prestige:** a new player level from 1 to 55 built from all the XP you earn (shown next to your name; existing players start at a level based on their career). At level 55, Prestige from the Career tab: level resets to 1 and you get a ★ badge, the "Prestige N" title and ◎ 1,000, up to Prestige 10 |
+| v94 | https://ninebolt-studios.github.io/Ashfall/?v=94 | **New: 🎯 Firing Range.** Steel targets at 10, 25, 50 and 80 m plus a target that slides side to side. Every hit shows distance, body or head, and damage; targets drop after 100 damage and pop back up. Tap **Next gun** to try every gun you own, with unlimited ammo |
 | v93 | https://ninebolt-studios.github.io/Ashfall/?v=93 | Ashfall now lives under **Ninebolt Studios**: new play link https://ninebolt-studios.github.io/Ashfall/ and repo https://github.com/Ninebolt-Studios/Ashfall. **Sign in to your account** (Career tab) to bring your progress to the new address. The app profile was updated too: reinstall it from Settings → 📲 Get the Ashfall app |
 | v92 | https://ninebolt-studios.github.io/Ashfall/?v=92 | **New mode: 💣 Search & Destroy.** 5v5 with bots, one life per round, first to 4 rounds. Attack: carry the bomb and plant it on site A or B (stand in the ring for 3 s). Defend: stop the plant, or defuse the bomb within 40 s (5 s hold). Sides swap every round. Also: the Ninebolt Studios intro now waits for its logo (no more lonely "presents") and fades much sooner |
 | v91 | https://ninebolt-studios.github.io/Ashfall/?v=91 | **New mode: 🚩 Domination.** 5v5 with bots on the big maps: capture and hold flags A, B and C (stand in the ring to capture; more teammates capture faster). Every flag you hold scores a point every 1.5 s; first to 150 wins. +100 XP and coins for each capture you're in. Bots fight over the flags |

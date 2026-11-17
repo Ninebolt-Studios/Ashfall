@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117195730';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117195857';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -952,6 +952,12 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
 
     <section class="pane" id="pane-career" hidden>
       <div class="profile" id="profileCard"></div>
+      <div class="acct" id="prestigeBox">
+        <span class="label">⭐ Player level &amp; Prestige</span>
+        <span class="amsg" id="plInfo"></span>
+        <div class="bar lv"><i id="plBar"></i></div>
+        <div class="prow"><button class="btn go" id="prestigeBtn" type="button" disabled>Prestige</button></div>
+      </div>
       <div class="acct cloud" id="cloudBox">
         <span class="label">☁️ Account · your progress saves online</span>
         <div id="cloudOut">
@@ -1029,6 +1035,11 @@ const aimA = () => clamp(+S.assistStr || 0, 0, 1);
 const saveS = () => store.set('settings', S);
 const C = Object.assign({ matches: 0, wins: 0, kills: 0, deaths: 0, heads: 0, bestWave: 0, bestScore: 0, bestStreak: 0, ggWins: 0, maps: {}, bestRound: 0, zKills: 0, nadeKills: 0, mvps: 0, crates: 0 }, store.get('career', {}));
 const saveC = () => store.set('career', C);
+// player level 1-55 from lifetime XP, then Prestige (up to 10)
+const LV_XP = 4000, MAX_LV = 55, MAX_PRESTIGE = 10;
+const plLevel = () => Math.min(MAX_LV, 1 + Math.floor((C.xpTotal || 0) / LV_XP));
+const prestigeTag = () => (C.prestige ? '★' + C.prestige + ' ' : '');
+if (C.xpTotal == null) { C.xpTotal = Math.min((MAX_LV - 1) * LV_XP, (C.kills || 0) * 50 + (C.matches || 0) * 80 + (C.wins || 0) * 150 + (C.zKills || 0) * 12); saveC(); } // existing players start at a level that matches their career
 const LB = Object.assign({ battles: [], holdout: [] }, store.get('lb', {}));
 function lbAdd(list, row, cmp) { LB[list] = (Array.isArray(LB[list]) ? LB[list] : []).concat([row]).sort(cmp).slice(0, 10); store.set('lb', LB); }
 const SKINS = {
@@ -2568,7 +2579,7 @@ function renderChip() {
   const ri = rankIdx(); if (!$('pcName')) return;
   $('pcRank').textContent = RANKS[ri].i; $('pcName').textContent = playerName;
   let lv = 1; for (const k of Object.keys(WEAPONS)) lv = Math.max(lv, wLevel(k));
-  $('pcSub').textContent = RANKS[ri].n + ' · S' + SEASON + ' tier ' + bpTier() + ' · gun lv ' + lv;
+  $('pcSub').textContent = prestigeTag() + 'Lv ' + plLevel() + ' · ' + RANKS[ri].n + ' · S' + SEASON + ' tier ' + bpTier();
   $('pcCoins').textContent = '◎ ' + WALLET.coins.toLocaleString();
   try { if (CLOUD.user) $('pcName').textContent = playerName + ' ☁️'; } catch (e) {}
 }
@@ -2595,6 +2606,7 @@ function addWeaponKill() {
 function addXP(n, why) {
   if (!(n > 0)) return;
   n = Math.round(n * (BP.premium ? 1.25 : 1));
+  { const lb = plLevel(); C.xpTotal = (C.xpTotal || 0) + n; saveC(); const la = plLevel(); if (la > lb) setTimeout(() => banner('LEVEL ' + la, la >= MAX_LV ? (C.prestige < MAX_PRESTIGE ? 'Max level! Prestige from the Career tab' : 'Max level') : 'Player level up', 2.5), 900); }
   const before = bpTier(); BP.xp += n; store.set('pass', BP); savePassBest();
   const after = bpTier();
   if (after > before) {
@@ -4300,7 +4312,21 @@ function renderProfile() {
   pc.children[2].textContent = r.n + ' · ' + RANK.rp + ' RP' + (myTitle ? ' · “' + myTitle + '”' : '') + ' · ◎ ' + WALLET.coins.toLocaleString() + ' coins';
   for (const [k, v] of stats) { const d = document.createElement('div'); d.innerHTML = '<span class="label"></span><b></b>'; d.children[0].textContent = k; d.children[1].textContent = v; pc.children[3].appendChild(d); }
 }
+function renderPrestige() {
+  if (!$('plInfo')) return; const lv = plLevel(), into = (C.xpTotal || 0) - (lv - 1) * LV_XP, pr = C.prestige || 0;
+  $('plInfo').textContent = (pr ? 'Prestige ' + pr + ' ★ · ' : '') + 'Level ' + lv + ' of ' + MAX_LV + (lv < MAX_LV ? ' · ' + Math.max(0, LV_XP - into).toLocaleString() + ' XP to level ' + (lv + 1) : pr < MAX_PRESTIGE ? ' · Max level! Prestige to reset your level and earn a ★ badge, the "Prestige ' + (pr + 1) + '" title and ◎ 1,000' : ' · Master Prestige reached');
+  $('plBar').style.width = (lv >= MAX_LV ? 100 : Math.round(into / LV_XP * 100)) + '%';
+  $('prestigeBtn').disabled = !(lv >= MAX_LV && pr < MAX_PRESTIGE);
+}
+$('prestigeBtn').addEventListener('click', () => {
+  if (plLevel() < MAX_LV || (C.prestige || 0) >= MAX_PRESTIGE) return;
+  if (!confirm('Enter Prestige ' + ((C.prestige || 0) + 1) + '? Your player level goes back to 1. You keep everything else (guns, skins, pass, coins).')) return;
+  C.prestige = (C.prestige || 0) + 1; C.xpTotal = 0; saveC(); addCoins(1000);
+  myTitle = 'Prestige ' + C.prestige; store.set('title', myTitle);
+  banner('PRESTIGE ' + C.prestige, '★ badge, "Prestige ' + C.prestige + '" title and ◎ 1,000 unlocked', 3.5); renderPrestige(); try { renderChip(); } catch (e) {}
+});
 function renderCareer() {
+  try { renderPrestige(); } catch (e) {}
   renderProfile(); renderFriends();
   renderAch();
   acctWho(); renderLB();
