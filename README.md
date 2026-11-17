@@ -8,16 +8,17 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v85)](https://gaayyynesss.github.io/Seige/?v=85)
+## ▶️ [PLAY NOW — latest version (v86)](https://gaayyynesss.github.io/Seige/?v=86)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=85
+**Latest:** https://gaayyynesss.github.io/Seige/?v=86
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v85** | https://gaayyynesss.github.io/Seige/?v=85 | The GitHub page banner now shows the new **Ashfall** logo (it was stuck on the old cached Dustline image), and shared links show an Ashfall preview card |
+| **v86** | https://gaayyynesss.github.io/Seige/?v=86 | The **browser tab icon** and home-screen icon now show the Ashfall badge (they were stuck on the old cached Dustline icon) |
+| v85 | https://gaayyynesss.github.io/Seige/?v=85 | The GitHub page banner now shows the new **Ashfall** logo (it was stuck on the old cached Dustline image), and shared links show an Ashfall preview card |
 | v84 | https://gaayyynesss.github.io/Seige/?v=84 | **Dustline is now Ashfall!** New military-badge logo (steel hexagon, bold A with a burning slash) on the menu, browser tab and home-screen icon. **Season colors fixed:** every season now changes the whole menu and HUD color scheme (accent plus tinted panels and background), not just the map decorations. Season 2 Harvest is now maple red-orange. Your saves, account and coins are unchanged |
 | v83 | https://gaayyynesss.github.io/Seige/?v=83 | **Account fixes:** accounts made on v76 stopped auto-saving after v77 and could ask "which progress to keep?"; that is fixed and they save again. A device with **less** progress than your account can no longer overwrite it by accident (it loads your account instead, or warns you with ⚠️ and asks again). Your account now keeps backups of bigger older saves, with a **Restore older save** button. The choice never pops up in the middle of a match |
 | v82 | https://gaayyynesss.github.io/Seige/?v=82 | **Much bigger 5v5 maps:** Team Battle and Ranked arenas are now about 190 m across (was 140 m), with a whole extra outer ring of buildings, containers, crates, sandbags and walls to fight through. Duels, Gun Game, Holdout and Zombies keep their tighter size |
