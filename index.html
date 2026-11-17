@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117134309';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117140259';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -741,7 +741,7 @@ el.addEventListener('pointerdown',done);var go=function(){requestAnimationFrame(
           </div>
           <span class="pmsg" id="partyMsg">Make a party and send the code to a friend. Party members duel each other and play on the same team in Team Battle.</span>
         </div>
-        <div class="gift" id="freshNote" hidden><span>💾</span><div><b>Played before?</b><span class="pmsg">This device has no saved progress yet. If you had progress somewhere else, tap Restore and paste your backup code. (Tip: always open the game the same way, e.g. in Safari, since other apps and private tabs keep separate saves.)</span></div><button class="btn go" id="freshRestore" type="button">Restore</button><button class="btn ghost" id="freshNo" type="button">I'm new</button></div>
+        <div class="gift" id="freshNote" hidden><span>💾</span><div><b>Played before?</b><span class="pmsg">This device has no saved progress yet. If you had progress somewhere else, load your save file or paste your backup code. (Tip: always open the game the same way, e.g. in Safari, since other apps and private tabs keep separate saves.)</span></div><button class="btn go" id="freshRestore" type="button">Restore</button><button class="btn ghost" id="freshFile" type="button">Load file</button><button class="btn ghost" id="freshNo" type="button">I'm new</button></div>
         <div class="gift" id="giftNote" hidden><span>🎁</span><div><b>VX-9 Tempest unlocked!</b><span class="pmsg">You were so close on the Season 1 pass that the Tempest rifle is yours. Equip it on the Loadout tab.</span></div><button class="btn go" id="giftOk" type="button">Nice!</button></div>
         <div class="rankbox" id="rankBox"><span class="rb" id="rkBadge">🥉</span><div style="display:grid;gap:4px;flex:1"><span class="label">Your rank</span><b id="rkName">Bronze</b><span class="rbar"><i id="rkFill"></i></span><span class="pmsg" id="rkNext"></span></div></div>
         <div class="daily" id="dailyBox">
@@ -905,10 +905,12 @@ el.addEventListener('pointerdown',done);var go=function(){requestAnimationFrame(
       </div>
       <div class="acct"><span class="label">Achievements · <span id="achCount"></span></span><div class="achs" id="achList"></div></div>
       <div class="acct">
-        <span class="label">Account · keep your progress</span>
+        <span class="label">💾 Save &amp; load · keep your progress</span>
         <span class="amsg" id="acctWho"></span>
         <span class="amsg">Your callsign, career, battle pass and skins save on this device on their own. To move them to another phone or computer — or keep them safe if you clear your browser — copy your backup code and paste it in on the other device.</span>
-        <div class="prow"><button class="btn go" id="acctBackup" type="button">Show backup code</button><button class="btn ghost" id="acctRestore" type="button">Restore from code</button></div>
+        <div class="prow"><button class="btn go" id="saveFile" type="button">💾 Save to file</button><button class="btn ghost" id="loadFile" type="button">📂 Load save file</button><input type="file" id="loadFileIn" accept=".dlsave,.txt,text/plain" hidden></div>
+        <span class="amsg" id="saveWhen"></span>
+        <div class="prow"><button class="btn ghost" id="acctBackup" type="button">Show backup code</button><button class="btn ghost" id="acctRestore" type="button">Restore from code</button></div>
         <textarea id="acctCode" spellcheck="false" autocomplete="off" placeholder="Your backup code appears here. To restore, paste a code and tap Load code." hidden></textarea>
         <div class="prow" id="acctActions" hidden><button class="btn go" id="acctCopy" type="button">Copy</button><button class="btn ghost" id="acctLoad" type="button">Load code</button><button class="btn ghost" id="acctCancel" type="button">Close</button></div>
       </div>
@@ -4037,6 +4039,25 @@ codeIn.addEventListener('input', () => { matchCode = codeIn.value.replace(/[^a-z
   $('acctBackup').addEventListener('click', () => { const c = makeBackup(); if (!c) { $('acctWho').textContent = 'Could not build a code on this device.'; return; } show(c, false); });
   $('acctRestore').addEventListener('click', () => { show('', true); ta.value = ''; ta.placeholder = 'Paste your backup code here, then tap Load code.'; });
   $('acctCancel').addEventListener('click', () => { ta.hidden = true; acts.hidden = true; });
+  const when = () => { const t = +store.get('savedAt', 0); $('saveWhen').textContent = t ? 'Last saved ' + new Date(t).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) + '. Save again after you play so the file has your newest progress.' : 'Not saved yet. Tap Save to file and keep it in Files, Notes or send it to yourself, so you never lose your progress.'; };
+  when();
+  $('saveFile').addEventListener('click', async () => {
+    const c = makeBackup(); if (!c) { $('saveWhen').textContent = 'Could not build a save on this device.'; return; }
+    const d = new Date(), name = 'Dustline-' + String(playerName).replace(/[^\w-]/g, '') + '-' + d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') + '.dlsave';
+    const file = new File([c], name, { type: 'text/plain' });
+    let ok = false;
+    try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: 'Dustline save' }); ok = true; } } catch (e) { if (e && e.name === 'AbortError') return; }
+    if (!ok) { const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); }
+    store.set('savedAt', Date.now()); when(); banner('PROGRESS SAVED', name, 2.5);
+  });
+  $('loadFile').addEventListener('click', () => $('loadFileIn').click());
+  $('loadFileIn').addEventListener('change', ev => {
+    const f = ev.target.files && ev.target.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => { const txt = String(rd.result || '').trim(); show(txt, true); load.click(); ev.target.value = ''; };
+    rd.onerror = () => { $('saveWhen').textContent = 'Could not read that file.'; };
+    rd.readAsText(f);
+  });
   copy.addEventListener('click', () => { try { navigator.clipboard.writeText(ta.value).then(() => { copy.textContent = 'Copied'; setTimeout(() => copy.textContent = 'Copy', 1500); }, () => { ta.select(); }); } catch (e) { ta.select(); } });
   load.addEventListener('click', () => {
     const err = loadBackup(ta.value);
@@ -4092,6 +4113,7 @@ async function startTDM(isDuel, isRanked) {
   n.hidden = !(FRESH_SAVE || store.get('freshAsk', false)); if (!n.hidden) store.set('freshAsk', true);
   const close = () => { n.hidden = true; store.set('freshAsk', false); };
   $('freshNo').addEventListener('click', close);
+  $('freshFile').addEventListener('click', () => { close(); showTab('career'); $('loadFile').click(); });
   $('freshRestore').addEventListener('click', () => { close(); showTab('career'); $('acctRestore').click(); try { $('acctCode').scrollIntoView({ block: 'center' }); } catch (e) {} });
 })();
 function showGift() { const g = $('giftNote'); if (g) g.hidden = BP.vxGift !== 1; }
