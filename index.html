@@ -902,12 +902,6 @@ el.addEventListener('pointerdown',done);var go=function(){requestAnimationFrame(
 
     <section class="pane" id="pane-career" hidden>
       <div class="profile" id="profileCard"></div>
-      <div class="acct"><span class="label">Friends · <span id="frCount"></span></span>
-        <div class="prow"><input type="text" id="frIn" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Friend's callsign" aria-label="Friend's callsign"><button class="btn go" id="frAdd" type="button">Add</button></div>
-        <div class="friends" id="frList"></div>
-        <span class="amsg">Add friends by their exact callsign. You'll see when they're online and what they're playing. To play together, make a party on the Play tab and send them the code.</span>
-      </div>
-      <div class="acct"><span class="label">Achievements · <span id="achCount"></span></span><div class="achs" id="achList"></div></div>
       <div class="acct cloud" id="cloudBox">
         <span class="label">☁️ Account · your progress saves online</span>
         <div id="cloudOut">
@@ -925,6 +919,12 @@ el.addEventListener('pointerdown',done);var go=function(){requestAnimationFrame(
         </div>
         <span class="amsg" id="cloudMsg"></span>
       </div>
+      <div class="acct"><span class="label">Friends · <span id="frCount"></span></span>
+        <div class="prow"><input type="text" id="frIn" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Friend's callsign" aria-label="Friend's callsign"><button class="btn go" id="frAdd" type="button">Add</button></div>
+        <div class="friends" id="frList"></div>
+        <span class="amsg">Add friends by their exact callsign. You'll see when they're online and what they're playing. To play together, make a party on the Play tab and send them the code.</span>
+      </div>
+      <div class="acct"><span class="label">Achievements · <span id="achCount"></span></span><div class="achs" id="achList"></div></div>
       <div class="acct">
         <span class="label">💾 Save &amp; load · keep your progress</span>
         <span class="amsg" id="acctWho"></span>
@@ -3796,25 +3796,29 @@ const summ = code => { try { const o = JSON.parse(decodeURIComponent(escape(atob
 const localTrivial = () => !store.get('name', '') && !(C.kills > 0) && !(BP.xp > 0) && !(WALLET.coins > 0);
 async function cloudPut(code, h) {
   await CLOUD.db.collection('saves').doc(CLOUD.user.uid).set({ code, hash: h, at: Date.now(), name: playerName, v: 1 });
-  store.set('cloudHash', h); store.set('cloudAt', Date.now()); cloudUI();
+  store.set('cloudLocal', h); store.set('cloudSeen', h); store.set('cloudAt', Date.now()); cloudUI();
 }
 function cloudApply(code, h) {
   const err = loadBackup(code); if (err) { cloudMsg(err); return; }
-  store.set('cloudHash', h); store.set('cloudAt', Date.now()); banner('ACCOUNT LOADED', 'Getting your progress…', 2);
+  store.set('cloudSeen', h); store.set('cloudAdopt', true); store.set('cloudAt', Date.now()); banner('ACCOUNT LOADED', 'Getting your progress…', 2);
   setTimeout(() => location.reload(), 600);
 }
 async function cloudSync(startup) {
   if (!CLOUD.user || CLOUD.busy) return; CLOUD.busy = true;
   try {
-    const code = makeBackup(); if (!code) return; const h = fnv(code), last = store.get('cloudHash', '');
-    if (!startup && h === last) return; // nothing new to save
+    const code = makeBackup(); if (!code) return; const h = fnv(code);
+    if (store.get('cloudAdopt', false)) { store.set('cloudAdopt', false); store.set('cloudLocal', h); cloudUI(); return; } // just loaded from the account: this is now the synced state
+    const lastLocal = store.get('cloudLocal', ''), lastCloud = store.get('cloudSeen', '');
+    const localChanged = h !== lastLocal;
+    if (!startup && !localChanged) return; // nothing new to save
     const snap = await CLOUD.db.collection('saves').doc(CLOUD.user.uid).get();
     const cd = snap.exists ? snap.data() : null;
     if (!cd || !cd.code) { await cloudPut(code, h); if (startup) cloudMsg('Your progress is now saved to your account.'); return; }
-    if (cd.hash === h) { store.set('cloudHash', h); cloudUI(); return; }
-    if (cd.hash === last) { await cloudPut(code, h); return; } // only this device changed
-    if (h === last || localTrivial()) { cloudApply(cd.code, cd.hash); return; } // only the account changed
-    // both changed: ask once
+    const cloudChanged = cd.hash !== lastCloud;
+    if (cd.hash === h) { store.set('cloudLocal', h); store.set('cloudSeen', h); cloudUI(); return; }
+    if (!cloudChanged) { if (localChanged) await cloudPut(code, h); return; } // only this device changed
+    if (!localChanged || localTrivial()) { cloudApply(cd.code, cd.hash); return; } // only the account changed
+    // both changed: ask
     $('cloudPick').hidden = false; showTab('career');
     $('cloudUseCloud').textContent = '☁️ Account: ' + summ(cd.code); $('cloudUseLocal').textContent = '📱 This device: ' + summ(code);
     $('cloudUseCloud').onclick = () => { $('cloudPick').hidden = true; cloudApply(cd.code, cd.hash); };
@@ -3829,7 +3833,7 @@ async function cloudSync(startup) {
   $('cloudSignUp').addEventListener('click', () => go((e, p) => CLOUD.auth.createUserWithEmailAndPassword(e, p), 'Creating your account…'));
   $('cloudForgot').addEventListener('click', async () => { const e = creds()[0]; if (!e) { cloudMsg('Type your email first, then tap Forgot password.'); return; } try { await cloudInit(); await CLOUD.auth.sendPasswordResetEmail(e); cloudMsg('Password reset email sent to ' + e + '. Check your inbox (and spam).'); } catch (er) { if (er && er.message !== 'load') cloudMsg(errText(er)); } });
   $('cloudSync').addEventListener('click', async () => { cloudMsg('Syncing…'); await cloudSync(true); if (!$('cloudMsg').textContent || $('cloudMsg').textContent === 'Syncing…') cloudMsg('Up to date ✓'); });
-  $('cloudOutBtn').addEventListener('click', async () => { try { await cloudSync(false); } catch (e) {} try { await CLOUD.auth.signOut(); } catch (e) {} store.set('cloudHash', ''); cloudMsg('Signed out. Your progress stays on this device and in your account.'); });
+  $('cloudOutBtn').addEventListener('click', async () => { try { await cloudSync(false); } catch (e) {} try { await CLOUD.auth.signOut(); } catch (e) {} store.set('cloudLocal', ''); store.set('cloudSeen', ''); cloudMsg('Signed out. Your progress stays on this device and in your account.'); });
   $('cloudPass').addEventListener('keydown', e => { if (e.key === 'Enter') $('cloudSignIn').click(); });
   if (store.get('cloudOn', false)) cloudInit().catch(() => {});
   setInterval(() => { if (CLOUD.user && Date.now() - CLOUD.last > 40000) cloudSync(false); }, 10000);
