@@ -8,16 +8,17 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v87)](https://gaayyynesss.github.io/Ashfall/?v=87)
+## ▶️ [PLAY NOW — latest version (v88)](https://gaayyynesss.github.io/Ashfall/?v=88)
 
-**Latest:** https://gaayyynesss.github.io/Ashfall/?v=87
+**Latest:** https://gaayyynesss.github.io/Ashfall/?v=88
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v87** | https://gaayyynesss.github.io/Ashfall/?v=87 | The repo is now **Ashfall**. New play link: https://gaayyynesss.github.io/Ashfall/ (all links updated) |
+| **v88** | https://gaayyynesss.github.io/Ashfall/?v=88 | **90 bot names** (real surnames and callsigns like Ghost, Viper, Reyes, Novak); every match picks a fresh set, the same for everyone in the lobby. **5v5 maps resized to 165 m** across (from 190 m) so fights find you faster, still bigger than the original 140 m |
+| v87 | https://gaayyynesss.github.io/Ashfall/?v=87 | The repo is now **Ashfall**. New play link: https://gaayyynesss.github.io/Ashfall/ (all links updated) |
 | v86 | https://gaayyynesss.github.io/Ashfall/?v=86 | The **browser tab icon** and home-screen icon now show the Ashfall badge (they were stuck on the old cached Dustline icon) |
 | v85 | https://gaayyynesss.github.io/Ashfall/?v=85 | The GitHub page banner now shows the new **Ashfall** logo (it was stuck on the old cached Dustline image), and shared links show an Ashfall preview card |
 | v84 | https://gaayyynesss.github.io/Ashfall/?v=84 | **Dustline is now Ashfall!** New military-badge logo (steel hexagon, bold A with a burning slash) on the menu, browser tab and home-screen icon. **Season colors fixed:** every season now changes the whole menu and HUD color scheme (accent plus tinted panels and background), not just the map decorations. Season 2 Harvest is now maple red-orange. Your saves, account and coins are unchanged |
