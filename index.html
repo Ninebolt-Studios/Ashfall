@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117195438';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117195730';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -578,6 +578,10 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #duelBtn { background-image: linear-gradient(135deg, rgba(224,96,63,.3), transparent 65%); border-top-color: #e0603f; }
 #domBtn .mode-name::before { content: '🚩 '; }
 #sndBtn .mode-name::before { content: '💣 '; }
+#rangeBtn .mode-name::before { content: '🎯 '; }
+#rangeBtn { background-image: linear-gradient(135deg, rgba(240,220,120,.22), transparent 65%); border-top-color: #e8d070; }
+#rangeHud { position: fixed; top: calc(70px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 6; display: flex; gap: 10px; align-items: center; font: 700 15px var(--display); letter-spacing: .12em; color: #fff; background: rgba(15,15,15,.72); border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 6px 10px 6px 14px; }
+#rangeHud button { font: 700 13px var(--display); letter-spacing: .12em; color: #1a1408; background: var(--accent); border: 0; border-radius: 8px; padding: 8px 12px; pointer-events: auto; }
 #sndBtn { background-image: linear-gradient(135deg, rgba(255,90,60,.26), transparent 65%); border-top-color: #ff5a3c; }
 #sndHud { position: fixed; top: calc(70px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 6; pointer-events: none; text-align: center; font: 700 15px var(--display); letter-spacing: .14em; color: #fff; background: rgba(15,15,15,.7); border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 6px 14px; min-width: 240px; }
 #sndHud .bar { height: 5px; background: rgba(255,255,255,.15); border-radius: 3px; margin-top: 5px; overflow: hidden; } #sndHud .bar i { display: block; height: 100%; width: 0; background: #ffb03a; }
@@ -677,6 +681,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 <canvas id="view"></canvas>
 
 <div id="grade" aria-hidden="true"></div>
+<div id="rangeHud" hidden><span id="rangeTxt">Shoot a target</span><button id="rangeGun" type="button">Next gun ▸</button></div>
 <div id="sndHud" hidden><div id="sndTxt"></div><div class="bar" id="sndBarW" hidden><i id="sndBar"></i></div></div>
 <div id="domHud" hidden><div class="fl" id="flA">A<i></i></div><div class="fl" id="flB">B<i></i></div><div class="fl" id="flC">C<i></i></div></div>
 <div id="hud" hidden>
@@ -809,6 +814,11 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
             <span class="mode-name">Search &amp; Destroy</span>
             <span class="mode-desc">5v5 with bots, one life per round. Attack: plant the bomb on site A or B. Defend: stop the plant or defuse it. First to 4 rounds.</span>
             <span class="chips"><span class="chip">Solo</span><span class="chip">Rounds</span><span class="chip">One life</span></span>
+          </button>
+          <button class="mode" id="rangeBtn" type="button">
+            <span class="mode-name">Firing Range</span>
+            <span class="mode-desc">Practice targets at 10, 25, 50 and 80 m plus a moving target. See the damage of every hit and try every gun with unlimited ammo.</span>
+            <span class="chips"><span class="chip">Solo</span><span class="chip">Practice</span><span class="chip">No enemies</span></span>
           </button>
           <button class="mode" id="zmbBtn" type="button">
             <span class="mode-name">Zombies</span>
@@ -2739,6 +2749,7 @@ function killDrone(e) {
 }
 function pickKind() { const r = Math.random(); if (wave >= 3 && r < 0.15 + wave * 0.01) return 'heavy'; if (wave >= 2 && r < 0.45) return 'fast'; return 'basic'; }
 function stepSiege(dt) {
+  if (rng) { stepRange(dt); return; }
   if (toSpawn === 0 && enemies.length === 0) { betweenWaves -= dt; if (betweenWaves <= 0) { if (wave > 0) { addXP(30); dailyProgress('waves', 1); P.nades = Math.min(nadesPerLife() + 1, (P.nades || 0) + 1); updNade(); } wave++; toSpawn = 3 + wave * 2; spawnTimer = 0; banner('WAVE ' + wave, 'Drones inbound'); updHud(); betweenWaves = 3; } }
   if (toSpawn > 0) { spawnTimer -= dt; if (spawnTimer <= 0 && enemies.length < 6 + wave) { makeDrone(pickKind()); toSpawn--; spawnTimer = Math.max(0.35, 1.4 - wave * 0.08); } }
   for (const e of enemies) {
@@ -2925,7 +2936,7 @@ function clearSiege() {
 /* =========================================================
    TEAM BATTLE 5v5 (online, bots fill empty slots)
    ========================================================= */
-let SCORE_LIMIT = 65, gg = false, ranked = false, dom = false, snd = false; // gg = Gun Game (offline free-for-all)
+let SCORE_LIMIT = 65, gg = false, ranked = false, dom = false, snd = false, rng = false; // gg = Gun Game (offline free-for-all)
 const GG_GUNS = ['smg', 'pdw', 'ar', 'br', 'lmg', 'sg', 'dmr', 'snp', 'rev', 'pst'];
 const isFoe = e => gg || e.team !== P.team; const TEAM_SIZE = 5; let duel = false;
 const BOT_NAMES = { b0: 'Hayes', b1: 'Okafor', b2: 'Lindqvist', b3: 'Moreau', b4: 'Tanaka', r0: 'Vance', r1: 'Petrov', r2: 'Silva', r3: 'Kade', r4: 'Ibarra' };
@@ -3466,6 +3477,7 @@ function showTab(name) {
 }
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
 function showMenu(which) {
+  try { $('rangeHud').hidden = true; } catch (e) {}
   document.body.classList.remove('ingame');
   menuMode = which;
   $('menu').hidden = false; $('hud').hidden = true;
@@ -4342,8 +4354,49 @@ codeIn.addEventListener('input', () => { matchCode = codeIn.value.replace(/[^a-z
 })();
 
 /* ---------- flow ---------- */
+/* ---------- Firing range ---------- */
+const RNG = { targets: [], mover: null, gunI: 0 };
+function rangeTarget(x, z, dist) {
+  const g = new THREE.Group(); g.position.set(x, 0, z);
+  const steel = new THREE.MeshStandardMaterial({ color: 0x3a3d40, metalness: 0.6, roughness: 0.5 }), paint = new THREE.MeshStandardMaterial({ color: 0xe8e2d0, roughness: 0.8 });
+  const post = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.9, 0.1), steel); post.position.y = 0.45; g.add(post);
+  const plate = new THREE.Group(); plate.position.y = 0.9; g.add(plate);
+  const body = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.75, 0.04), paint); body.position.y = 0.38; body.userData.rangeT = { dist, part: 'body', g: plate }; plate.add(body);
+  const head = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.04, 16), paint); head.rotation.x = Math.PI / 2; head.position.y = 0.92; head.userData.rangeT = { dist, part: 'head', g: plate }; plate.add(head);
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.13, 0.2, 20), new THREE.MeshBasicMaterial({ color: 0xc8361f })); ring.position.set(0, 0.42, 0.022); plate.add(ring);
+  const c = document.createElement('canvas'); c.width = 128; c.height = 48; const cx = c.getContext('2d'); cx.fillStyle = '#ffd27a'; cx.font = '800 34px sans-serif'; cx.textAlign = 'center'; cx.fillText(dist + ' m', 64, 36);
+  const lbl = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true })); lbl.position.y = 2.4; lbl.scale.set(1.2, 0.45, 1); g.add(lbl);
+  mapGroup.add(g); solids.push(body, head); plate.userData.hp = 100; plate.userData.down = 0;
+  RNG.targets.push(plate); return g;
+}
+function buildRange() {
+  clearMap(); curMap = ''; builtHalf = 0; ground.material = M.sand;
+  scene.fog.color.setHex(0xd3cbb6); scene.background.setHex(0xd3cbb6); scene.fog.near = 60; scene.fog.far = 220;
+  RNG.targets = [];
+  addBox(-9, -45, 0.6, 100, 2.4, M.conc, 4, 4); addBox(9, -45, 0.6, 100, 2.4, M.conc, 4, 4); addBox(0, -96, 20, 1, 5, M.conc, 4, 4); // lane walls + backstop
+  addBox(0, 1.6, 7, 0.5, 0.85, M.crate, 1.4, 1.4); // firing-line bench
+  [[-5, -10, 10], [-1.5, -25, 25], [2, -50, 50], [5.5, -80, 80]].forEach(([x, z, d]) => rangeTarget(x, z, d));
+  RNG.mover = rangeTarget(0, -30, 30);
+}
+function rangeHit(rt, dmg) {
+  const plate = rt.g; if (plate.userData.down > 0) return;
+  plate.userData.hp -= dmg;
+  $('rangeTxt').textContent = rt.dist + ' m · ' + (rt.part === 'head' ? 'HEAD' : 'BODY') + ' · ' + Math.round(dmg) + ' dmg' + (plate.userData.hp <= 0 ? ' · DOWN' : '');
+  try { tone(rt.part === 'head' ? 1500 : 1100, 0.06, 'triangle', 0.12); } catch (e) {}
+  if (plate.userData.hp <= 0) { plate.userData.down = 2; plate.rotation.x = -Math.PI / 2.2; }
+}
+function stepRange(dt) {
+  for (const p of RNG.targets) if (p.userData.down > 0) { p.userData.down -= dt; if (p.userData.down <= 0) { p.rotation.x = 0; p.userData.hp = 100; } }
+  if (RNG.mover) RNG.mover.position.x = Math.sin(performance.now() / 1400) * 6;
+  P.res = 999; // unlimited ammo
+}
+function startRange() {
+  startSiege(); rng = true; buildRange(); P.pos.set(0, 1.6, 4); P.yaw = 0; P.pitch = 0;
+  $('rangeHud').hidden = false; $('rangeTxt').textContent = 'Shoot a target'; try { $('waveTag').hidden = true; } catch (e) {}
+  banner('FIRING RANGE', 'Targets at 10, 25, 50 and 80 m. Tap Next gun to switch.', 3);
+}
 function startSiege() {
-  ensureAudio(); leaveBattle(); clearSiege(); zmb = false; dom = false; snd = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
+  ensureAudio(); leaveBattle(); clearSiege(); zmb = false; dom = false; snd = false; rng = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
   mode = 'siege'; duel = false; buildMap(selMap); equip(loadout);
   Object.assign(P, { yaw: 0, pitch: 0, hp: 100, alive: true, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, prot: 0 });
   P.pos.set(0, 1.6, 9); if (insideSolid(P.pos, 0.6)) { const o = randomOpenPoint(); P.pos.set(o.x, 1.6, o.z); }
@@ -4356,7 +4409,7 @@ async function startTDM(isDuel, isRanked) {
   ensureAudio(); clearSiege(); lockPointer();
   duel = !!isDuel; SCORE_LIMIT = duel ? 7 : 65;
   const btn = duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
-  btn.disabled = true; mode = 'tdm'; dom = false; snd = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
+  btn.disabled = true; mode = 'tdm'; dom = false; snd = false; rng = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
   resetTDM(); ranked = !!isRanked && !duel;
   if (room) {
     desc.textContent = duel ? 'Finding your rival…' : 'Joining the battle…';
@@ -4583,6 +4636,8 @@ $('siegeBtn').addEventListener('click', startSiege);
 $('ggBtn').addEventListener('click', startGunGame);
 $('domBtn').addEventListener('click', startDomination);
 $('sndBtn').addEventListener('click', startSnd);
+$('rangeBtn').addEventListener('click', startRange);
+$('rangeGun').addEventListener('click', () => { const ks = Object.keys(WEAPONS).filter(k => weaponOwned(k)); RNG.gunI = (RNG.gunI + 1) % ks.length; equip(ks[RNG.gunI]); P.res = 999; updHud(); $('rangeTxt').textContent = WEAPONS[ks[RNG.gunI]].name; });
 $('rankedBtn').addEventListener('click', () => { if (!$('rankedBtn').disabled) startTDM(false, true); });
 $('ksScan').addEventListener('click', useScan); $('ksMsl').addEventListener('click', useMissile);
 $('resumeBtn').addEventListener('click', resume);
@@ -4646,6 +4701,7 @@ function fire() {
     if (!hits.length) continue;
     const h = hits[0], ent = h.object.userData.ent, d = h.distance;
     const fall = d <= w.r0 ? 1 : Math.max(w.fall, 1 - (d - w.r0) / (w.r1 - w.r0) * (1 - w.fall));
+    if (h.object.userData.rangeT) { const rt = h.object.userData.rangeT; rangeHit(rt, w.dmg * fall * (rt.part === 'head' ? w.head : 1)); spark(h.point, 0xffe0a0, 3); hitMarker(rt.part === 'head' ? 'head' : ''); continue; }
     if (ent && (ent.kind === 'drone' || (ent.kind === 'zombie' && ent.hp > 0) || (mode === 'tdm' && isFoe(ent) && ent.alive))) {
       const part = h.object.userData.part, mul = ent.kind === 'drone' ? 1 : part === 'head' ? w.head : part === 'leg' ? 0.75 : 1;
       if (part === 'head' && ent.kind !== 'drone') headHit = true;
