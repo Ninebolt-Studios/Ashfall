@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117131521';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117132308';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -820,7 +820,7 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
       <div class="acct admin" id="adminBox" hidden>
         <span class="label">🛠️ Admin panel · this device only</span>
         <div class="admrow"><button class="btn ghost" data-adm="coins1" type="button">+ ◎ 1,000</button><button class="btn ghost" data-adm="coins10" type="button">+ ◎ 10,000</button><button class="btn ghost" data-adm="all" type="button">Unlock all cosmetics</button><button class="btn ghost" data-adm="guns" type="button">All guns level 100</button><button class="btn ghost" data-adm="prem" type="button">Premium + premium guns</button><button class="btn ghost" id="admGod" data-adm="god" type="button">God mode: OFF</button></div>
-        <div class="admrow"><input type="text" id="admTier" inputmode="numeric" placeholder="Pass tier (1-75)"><button class="btn ghost" data-adm="tier" type="button">Set tier</button><input type="text" id="admRank" inputmode="numeric" placeholder="Rank RP (e.g. 1800)"><button class="btn ghost" data-adm="rank" type="button">Set rank</button></div>
+        <div class="admrow"><input type="text" id="admTier" inputmode="numeric" placeholder="Pass tier (1-75)"><button class="btn ghost" data-adm="tier" type="button">Set tier</button><input type="text" id="admRank" inputmode="numeric" placeholder="RP (1800) or rank name"><button class="btn ghost" data-adm="rank" type="button">Set rank</button></div>
         <span class="label">Make a gift code for a friend</span>
         <div class="admrow"><select id="admGiftType"><option value="C">Coins</option><option value="W">Weapon (key: vx, sc7…)</option><option value="X">Pass XP</option><option value="L">Add pass levels</option><option value="T">Pass tier (at least)</option><option value="P">Premium pass (this season)</option><option value="A">All crate skins &amp; camos</option></select><input type="text" id="admGiftVal" placeholder="Amount or weapon (e.g. 5000 or vx)"><button class="btn go" data-adm="gift" type="button">Make code</button></div>
         <div class="admrow"><button class="btn ghost" data-adm="gTempest" type="button">Tempest code</button><button class="btn ghost" data-adm="gL10" type="button">+10 levels code</button></div>
@@ -3288,6 +3288,7 @@ function showTab(name) {
   ['play', 'loadout', 'pass', 'shop', 'settings', 'career'].forEach(n => { $('pane-' + n).hidden = n !== name; });
   if (name === 'career') renderCareer();
   if (name === 'settings') renderAdmin();
+  if (name === 'play') { try { renderRank(); renderProfile(); } catch (e) {} }
   if (name === 'pass') renderPass();
   if (name === 'shop') renderShop();
   if (name === 'play') renderDaily();
@@ -3764,7 +3765,7 @@ function renderAdmin() {
 const ADM = {
   coins1: () => addCoins(1000), coins10: () => addCoins(10000),
   tier: () => { const t = Math.max(1, Math.min(BP_TIERS, parseInt($('admTier').value, 10) || 1)); BP.xp = (t - 1) * BP_XP; store.set('pass', BP); savePassBest(true); return 'Pass tier set to ' + t; },
-  rank: () => { const r = Math.max(0, parseInt($('admRank').value, 10) || 0); RANK.rp = r; RANK.best = Math.max(RANK.best, r); store.set('rank', RANK); return 'Rank set to ' + r + ' RP'; },
+  rank: () => { const raw = ($('admRank').value || '').trim(), byName = RANKS.find(x => x.n.toLowerCase() === raw.toLowerCase()), digits = raw.replace(/[^0-9]/g, ''); if (!byName && !digits) return 'Type a number of RP (like 1800) or a rank name (like Diamond)'; const r = byName ? byName.min : Math.min(99999, +digits); RANK.rp = r; RANK.best = Math.max(RANK.best, r); store.set('rank', RANK); try { renderRank(); renderProfile(); } catch (e) {} return 'Rank set to ' + RANKS[rankIdx()].n + ' · ' + r + ' RP'; },
   all: () => { applyGift('A'); for (const k of Object.keys(BANNERS)) if (!WALLET.banners.includes(k)) WALLET.banners.push(k); for (const k of Object.keys(EMBLEMS)) if (!WALLET.emblems.includes(k)) WALLET.emblems.push(k); saveWallet(); return 'Unlocked every skin, camo, banner and emblem'; },
   guns: () => { for (const k of Object.keys(WEAPONS)) WL[k] = Math.max(WL[k] || 0, WLV_KILLS[WLV_KILLS.length - 1]); store.set('wlv', WL); return 'Every gun is level 100'; },
   prem: () => { BP.premium = true; for (const k of Object.keys(WEAPONS)) if (WEAPONS[k].premium && !BP.owned.includes('weapon:' + k)) BP.owned.push('weapon:' + k); store.set('pass', BP); return 'Premium on and every premium weapon unlocked'; },
