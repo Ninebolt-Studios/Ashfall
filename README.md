@@ -8,16 +8,17 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v80)](https://gaayyynesss.github.io/Seige/?v=80)
+## ▶️ [PLAY NOW — latest version (v81)](https://gaayyynesss.github.io/Seige/?v=81)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=80
+**Latest:** https://gaayyynesss.github.io/Seige/?v=81
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v80** | https://gaayyynesss.github.io/Seige/?v=80 | **CoD-style graphics pass:** soft contact shadows under every crate and wall, film-style color grading and vignette while you play, floating dust in the air, more realistic gun metal and smooth matte polymer (no more speckled "granite" look), and soldiers now carry a chest radio, frag grenade, rifle sling and team shoulder patches |
+| **v81** | https://gaayyynesss.github.io/Seige/?v=81 | **More realistic textures and soldiers:** wooden crates are now weathered planks with real wood grain, knots, gaps, rusty nails and worn edges; concrete walls have fine air pores and aggregate; sandbags are woven burlap with creases; gun metal is cleaner (less speckle). Soldiers have rounded, more natural shapes and fabric-textured uniforms, helmet covers and balaclavas |
+| v80 | https://gaayyynesss.github.io/Seige/?v=80 | **CoD-style graphics pass:** soft contact shadows under every crate and wall, film-style color grading and vignette while you play, floating dust in the air, more realistic gun metal and smooth matte polymer (no more speckled "granite" look), and soldiers now carry a chest radio, frag grenade, rifle sling and team shoulder patches |
 | v79 | https://gaayyynesss.github.io/Seige/?v=79 | **Louder menu music** (about 2.5x louder, default slider now 70%) with a limiter so it stays clean instead of crackling. You can still change it in Settings → Audio → Menu music |
 | v78 | https://gaayyynesss.github.io/Seige/?v=78 | **CoD-style ammo:** you spawn with a full mag plus 3 spare mags (e.g. 30 / 90), and every reload uses up your spare bullets. Enemies you take down drop an ammo box (Salvager drops a full refill + grenade); Zombies gives 5 spare mags and Max Ammo refills everything. **🌍 Global leaderboard** on the Career tab: top 25 players by Eliminations, Wins, Ranked RP and best Zombies wave (sign in to get on it). The Zombies **Mystery Crate** no longer shows up in other modes |
 | v77 | https://gaayyynesss.github.io/Seige/?v=77 | The **☁️ Account** box is now at the very top of the Career tab. Fixed a wrong "which progress do you want to keep?" popup that could appear after switching devices |

@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117152914';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117153428';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -1386,6 +1386,8 @@ const concTex = canvasTex(512, 512, (g, s) => {
   for (let i = 0; i < 40; i++) { const x = rnd() * s, l = 30 + rnd() * 200, st = g.createLinearGradient(0, 0, 0, l); st.addColorStop(0, 'rgba(50,44,36,0.16)'); st.addColorStop(1, 'rgba(50,44,36,0)'); g.fillStyle = st; g.fillRect(x, 0, 2 + rnd() * 5, l); }
   g.strokeStyle = 'rgba(40,36,30,0.35)'; g.lineWidth = 1;
   for (let i = 0; i < 6; i++) { let x = rnd() * s, y = rnd() * s; g.beginPath(); g.moveTo(x, y); for (let k = 0; k < 8; k++) { x += (rnd() - 0.5) * 30; y += rnd() * 22; g.lineTo(x, y); } g.stroke(); }
+  for (let i = 0; i < 1400; i++) { const x = rnd() * s, y = rnd() * s, r = 0.4 + rnd() * rnd() * 1.1; g.fillStyle = `rgba(55,50,42,${(0.12 + rnd() * 0.18).toFixed(2)})`; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); g.fillStyle = 'rgba(255,250,235,0.08)'; g.beginPath(); g.arc(x + r * 0.5, y + r * 0.5, r * 0.6, 0, 7); g.fill(); } // air pores
+  for (let i = 0; i < 900; i++) { g.fillStyle = `rgba(${rnd() < 0.5 ? '150,140,125' : '95,88,78'},0.35)`; g.fillRect(rnd() * s, rnd() * s, 1 + rnd() * 2.5, 1 + rnd() * 2); } // aggregate
   const dirt = g.createLinearGradient(0, s * 0.78, 0, s); dirt.addColorStop(0, 'rgba(160,128,84,0)'); dirt.addColorStop(1, 'rgba(160,128,84,0.45)'); g.fillStyle = dirt; g.fillRect(0, s * 0.78, s, s * 0.22);
 });
 // Shipping containers: corrugated steel, rust and stencils (one tile per 6.1 m side)
@@ -1413,19 +1415,35 @@ const bagTex = canvasTex(256, 176, (g, w, h) => {
     g.fillStyle = gr; g.beginPath(); g.ellipse(cx, cy, 31, rh / 2 - 1, 0, 0, 7); g.fill();
     g.strokeStyle = 'rgba(60,46,26,0.5)'; g.lineWidth = 1; g.beginPath(); g.moveTo(cx - 24, cy + 2); g.lineTo(cx + 24, cy + 2); g.stroke();
   }
-  g.strokeStyle = 'rgba(255,240,200,0.05)'; for (let i = 0; i < w; i += 3) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i, h); g.stroke(); }
+  for (let i = 0; i < w; i += 2) { g.fillStyle = `rgba(255,236,190,${i % 4 ? 0.05 : 0.09})`; g.fillRect(i, 0, 1, h); } for (let j = 0; j < h; j += 2) { g.fillStyle = `rgba(40,28,14,${j % 4 ? 0.06 : 0.1})`; g.fillRect(0, j, w, 1); } // burlap weave
+  for (let i = 0; i < 120; i++) { g.strokeStyle = 'rgba(50,36,18,0.25)'; g.lineWidth = 0.8; const x = rnd() * w, y = rnd() * h; g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + 6, y + (rnd() - 0.5) * 8, x + 10 + rnd() * 14, y + (rnd() - 0.5) * 6); g.stroke(); } // creases
   grain(g, w, h, 3000, 0.12);
 });
-// Wooden supply crate
-const crateTex = canvasTex(256, 256, (g, s) => {
-  for (let k = 0; k < 6; k++) { const v = 128 + rnd() * 24 | 0; g.fillStyle = `rgb(${v},${v * 0.76 | 0},${v * 0.48 | 0})`; g.fillRect(0, k * s / 6, s, s / 6); g.fillStyle = 'rgba(0,0,0,0.3)'; g.fillRect(0, k * s / 6, s, 2); }
-  g.strokeStyle = 'rgba(70,45,20,0.25)'; g.lineWidth = 1;
-  for (let i = 0; i < 60; i++) { const y = rnd() * s; g.beginPath(); g.moveTo(0, y); for (let x = 0; x <= s; x += 16) g.lineTo(x, y + Math.sin(x / 30 + i) * 2); g.stroke(); }
-  g.strokeStyle = '#5a3f22'; g.lineWidth = 20; g.strokeRect(10, 10, s - 20, s - 20);
-  g.lineWidth = 14; g.beginPath(); g.moveTo(20, s - 20); g.lineTo(s - 20, 20); g.stroke();
-  g.fillStyle = '#2b2a28'; [[10, 10], [s - 10, 10], [10, s - 10], [s - 10, s - 10]].forEach(([a, b]) => { g.beginPath(); g.arc(a, b, 3, 0, 7); g.fill(); });
-  g.fillStyle = 'rgba(25,22,18,0.6)'; g.font = '700 22px monospace'; g.textAlign = 'center'; g.fillText('SUPPLY 07', s / 2, s / 2 + 50);
-  grain(g, s, s, 4000, 0.12);
+// Wooden supply crate: weathered planks with grain, knots, gaps, nails and worn edges
+const crateTex = canvasTex(512, 512, (g, s) => {
+  const planks = 6, ph = s / planks;
+  for (let k = 0; k < planks; k++) {
+    const v = 118 + rnd() * 34 | 0, y0 = k * ph;
+    const base = g.createLinearGradient(0, y0, 0, y0 + ph); base.addColorStop(0, `rgb(${v + 8},${(v * 0.74 + 6) | 0},${(v * 0.47) | 0})`); base.addColorStop(1, `rgb(${v - 14},${(v * 0.7 - 10) | 0},${(v * 0.44 - 8) | 0})`);
+    g.fillStyle = base; g.fillRect(0, y0, s, ph);
+    for (let i = 0; i < 46; i++) { const yy = y0 + 4 + rnd() * (ph - 8), amp = 1 + rnd() * 2.5, fr = 40 + rnd() * 60, ph2 = rnd() * 9; g.strokeStyle = `rgba(${rnd() < 0.7 ? '60,38,18' : '200,160,110'},${(0.08 + rnd() * 0.16).toFixed(2)})`; g.lineWidth = 0.6 + rnd() * 1.2; g.beginPath(); for (let x = 0; x <= s; x += 8) { const y = yy + Math.sin(x / fr + ph2) * amp; x ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); }
+    for (let n = 0; n < (rnd() < 0.6 ? 1 : 0); n++) { const kx = 60 + rnd() * (s - 120), ky = y0 + ph * (0.3 + rnd() * 0.4); for (let r = 14; r > 2; r -= 3) { g.strokeStyle = `rgba(55,32,14,${(0.12 + (14 - r) * 0.03).toFixed(2)})`; g.lineWidth = 1.2; g.beginPath(); g.ellipse(kx, ky, r * 1.6, r * 0.7, 0, 0, 7); g.stroke(); } g.fillStyle = 'rgba(45,25,10,0.7)'; g.beginPath(); g.ellipse(kx, ky, 4, 2.4, 0, 0, 7); g.fill(); }
+    g.fillStyle = 'rgba(20,12,6,0.75)'; g.fillRect(0, y0, s, 3); g.fillStyle = 'rgba(255,220,170,0.12)'; g.fillRect(0, y0 + 3, s, 1);
+  }
+  // frame and diagonal brace (darker, separate boards with their own grain)
+  const board = (draw) => { g.save(); draw(); g.restore(); };
+  g.strokeStyle = '#4e3519'; g.lineWidth = 40; g.strokeRect(20, 20, s - 40, s - 40);
+  g.strokeStyle = 'rgba(25,14,6,0.6)'; g.lineWidth = 2; g.strokeRect(1, 1, s - 2, s - 2); g.strokeRect(40, 40, s - 80, s - 80);
+  g.lineWidth = 30; g.strokeStyle = '#563a1c'; g.beginPath(); g.moveTo(44, s - 44); g.lineTo(s - 44, 44); g.stroke();
+  for (let i = 0; i < 90; i++) { const t = rnd(); g.strokeStyle = `rgba(30,18,8,${(0.1 + rnd() * 0.2).toFixed(2)})`; g.lineWidth = 0.8; g.beginPath(); const o = (rnd() - 0.5) * 24; g.moveTo(44 + o * 0.7, s - 44 + o * 0.7); g.lineTo(s - 44 + o * 0.7, 44 + o * 0.7); g.stroke(); }
+  for (let i = 0; i < 70; i++) { const side = rnd() * 4 | 0, t = 20 + rnd() * (s - 40), o = 4 + rnd() * 32; g.fillStyle = `rgba(30,18,8,${(0.15 + rnd() * 0.25).toFixed(2)})`; if (side < 2) g.fillRect(t, side ? s - o : o, 30 + rnd() * 80, 1); else g.fillRect(side === 2 ? o : s - o, t, 1, 30 + rnd() * 80); }
+  // nails with rust streaks
+  [[22, 22], [s - 22, 22], [22, s - 22], [s - 22, s - 22], [s / 2, 22], [s / 2, s - 22], [22, s / 2], [s - 22, s / 2]].forEach(([a, b]) => { const st = g.createLinearGradient(0, b, 0, b + 26); st.addColorStop(0, 'rgba(110,55,20,0.4)'); st.addColorStop(1, 'rgba(110,55,20,0)'); g.fillStyle = st; g.fillRect(a - 2, b, 4, 26); g.fillStyle = '#3a3836'; g.beginPath(); g.arc(a, b, 4.5, 0, 7); g.fill(); g.fillStyle = 'rgba(200,200,190,0.35)'; g.beginPath(); g.arc(a - 1.2, b - 1.2, 1.6, 0, 7); g.fill(); });
+  // worn, lighter edges and dirt at the bottom
+  g.strokeStyle = 'rgba(220,190,140,0.18)'; g.lineWidth = 3; g.strokeRect(3, 3, s - 6, s - 6);
+  const dirt = g.createLinearGradient(0, s * 0.8, 0, s); dirt.addColorStop(0, 'rgba(60,45,25,0)'); dirt.addColorStop(1, 'rgba(60,45,25,0.35)'); g.fillStyle = dirt; g.fillRect(0, s * 0.8, s, s * 0.2);
+  g.fillStyle = 'rgba(20,16,12,0.55)'; g.font = '700 40px monospace'; g.textAlign = 'center'; g.fillText('SUPPLY 07', s / 2, s / 2 + 96); g.font = '600 18px monospace'; g.fillText('THIS SIDE UP  ↑', s / 2, s / 2 + 126);
+  grain(g, s, s, 9000, 0.08);
 });
 // Asphalt: 8 m tile with aggregate, oil stains and a faded lane line
 const asphaltTex = canvasTex(512, 512, (g, s) => {
@@ -1466,8 +1484,8 @@ const metalTex = canvasTex(256, 256, (g, s) => {
   [[20, 40], [236, 40], [20, 216], [236, 216], [80, 128]].forEach(([x, y]) => { g.fillStyle = '#16181b'; g.beginPath(); g.arc(x, y, 5, 0, 7); g.fill(); g.fillStyle = '#4d535a'; g.beginPath(); g.arc(x, y, 3.6, 0, 7); g.fill(); g.strokeStyle = '#121416'; g.lineWidth = 1.4; g.beginPath(); g.moveTo(x - 3, y); g.lineTo(x + 3, y); g.stroke(); });
   g.font = '700 13px monospace'; g.fillStyle = 'rgba(0,0,0,0.6)'; g.fillText('DUSTLINE ARMS', 104, 110); g.fillStyle = 'rgba(255,255,255,0.16)'; g.fillText('DUSTLINE ARMS', 105, 111);
   g.font = '500 10px monospace'; g.fillStyle = 'rgba(255,255,255,0.15)'; g.fillText('SAFE  SEMI  AUTO', 104, 150);
-  for (let i = 0; i < 900; i++) { const e = rnd() * 4 | 0, t = rnd() * s, d = rnd() * rnd() * 12; const x = e === 0 ? d : e === 1 ? s - d : t, y = e === 2 ? d : e === 3 ? s - d : t; g.fillStyle = `rgba(175,180,186,${(rnd() * 0.4).toFixed(2)})`; g.fillRect(x, y, 1.5, 1.5); }
-  grain(g, s, s, 4000, 0.08);
+  for (let i = 0; i < 900; i++) { const e = rnd() * 4 | 0, t = rnd() * s, d = rnd() * rnd() * 12; const x = e === 0 ? d : e === 1 ? s - d : t, y = e === 2 ? d : e === 3 ? s - d : t; g.fillStyle = `rgba(175,180,186,${(rnd() * 0.16).toFixed(2)})`; g.fillRect(x, y, 1.5, 1.5); }
+  grain(g, s, s, 1500, 0.035);
 });
 const stipple = base => canvasTex(128, 128, (g, s) => {
   g.fillStyle = base; g.fillRect(0, 0, s, s);
@@ -1509,8 +1527,8 @@ const M = {
   sand: std(sandTex, { bumpScale: 0.03, roughness: 1 }),
   asphalt: std(asphaltTex, { roughness: 0.95 }),
   snow: std(snowTex, { roughness: 0.8, bumpScale: 0.04 }),
-  conc: std(concTex, { bumpScale: 0.03 }),
-  bag: std(bagTex, { bumpScale: 0.05 }),
+  conc: std(concTex, { bumpScale: 0.045, roughness: 0.92 }),
+  bag: std(bagTex, { bumpScale: 0.07, roughness: 0.97 }),
   crate: std(crateTex, { roughness: 0.85 }),
   cont: contTex.map(t => std(t, { roughness: 0.6, metalness: 0.35, bumpScale: 0.03 })),
   pine: new THREE.MeshStandardMaterial({ color: 0x163020, roughness: 0.95, envMapIntensity: 0.1 }),
@@ -2856,12 +2874,14 @@ const SG = { torso: new THREE.BoxGeometry(0.54, 0.64, 0.3), vest: new THREE.BoxG
   leg: new THREE.BoxGeometry(0.2, 0.78, 0.23), boot: new THREE.BoxGeometry(0.21, 0.12, 0.32), arm: new THREE.BoxGeometry(0.14, 0.52, 0.14), band: new THREE.BoxGeometry(0.155, 0.07, 0.155),
   gun: new THREE.BoxGeometry(0.07, 0.11, 0.8), pack: new THREE.BoxGeometry(0.4, 0.48, 0.18), mark: new THREE.OctahedronGeometry(0.11, 0) };
 const vestMat = new THREE.MeshStandardMaterial({ color: 0x2d2f28, roughness: 0.85 });
-const faceMat = new THREE.MeshStandardMaterial({ color: 0x24231f, roughness: 0.9 });
+const fabricTex = canvasTex(128, 128, (g, s) => { g.fillStyle = '#808080'; g.fillRect(0, 0, s, s); for (let i = 0; i < s; i += 2) { g.fillStyle = `rgba(255,255,255,${i % 4 ? 0.08 : 0.16})`; g.fillRect(i, 0, 1, s); g.fillStyle = `rgba(0,0,0,${i % 4 ? 0.08 : 0.16})`; g.fillRect(0, i, s, 1); } grain(g, s, s, 1500, 0.15); });
+fabricTex.repeat.set(3, 3);
+const faceMat = new THREE.MeshStandardMaterial({ color: 0x24231f, bumpMap: fabricTex, bumpScale: 0.004, roughness: 0.95 });
 const bootMat = new THREE.MeshStandardMaterial({ color: 0x1c1a17, roughness: 0.9 });
 const sGunMat = new THREE.MeshStandardMaterial({ color: 0x1d1f21, roughness: 0.5, metalness: 0.6 });
 const gogMat = new THREE.MeshStandardMaterial({ color: 0x10161a, roughness: 0.15, metalness: 0.8 });
-const camoMat = { b: new THREE.MeshStandardMaterial({ map: camoTex.b, roughness: 0.95 }), r: new THREE.MeshStandardMaterial({ map: camoTex.r, roughness: 0.95 }) };
-const helmMat = { b: new THREE.MeshStandardMaterial({ color: 0x4d5a68, roughness: 0.7 }), r: new THREE.MeshStandardMaterial({ color: 0x8c7a58, roughness: 0.7 }) };
+const camoMat = { b: new THREE.MeshStandardMaterial({ map: camoTex.b, bumpMap: fabricTex, bumpScale: 0.004, roughness: 0.95 }), r: new THREE.MeshStandardMaterial({ map: camoTex.r, bumpMap: fabricTex, bumpScale: 0.004, roughness: 0.95 }) };
+const helmMat = { b: new THREE.MeshStandardMaterial({ color: 0x4d5a68, bumpMap: fabricTex, bumpScale: 0.006, roughness: 0.8 }), r: new THREE.MeshStandardMaterial({ color: 0x8c7a58, bumpMap: fabricTex, bumpScale: 0.006, roughness: 0.8 }) }; // helmet with fabric cover
 const skinMatCache = new Map();
 function skinMats(team, sk) {
   const d = SKINS[sk]; if (!d || sk === 'std') return { torso: camoMat[team], vest: vestMat, helm: helmMat[team] };
@@ -2876,7 +2896,9 @@ function skinMats(team, sk) {
 const BOT_SKINS = ['std', 'std', 'desert', 'forest', 'urban', 'arctic', 'crimson', 'shadow'];
 function botSkin(id) { let h = 0; for (const ch of String(id)) h = (h * 31 + ch.charCodeAt(0)) | 0; return BOT_SKINS[Math.abs(h) % BOT_SKINS.length]; }
 // detailed soldier geometry (shared by every soldier)
-const SG2 = { box: new THREE.BoxGeometry(1, 1, 1), cyl: new THREE.CylinderGeometry(1, 1, 1, 10), sph: new THREE.SphereGeometry(1, 14, 10),
+const SG2 = { box: (() => { const g = new THREE.BoxGeometry(1, 1, 1, 4, 4, 4), p = g.attributes.position, v = new THREE.Vector3(), c = new THREE.Vector3(), r = 0.16, k = 0.5 - r; // rounded box: softer, more natural shapes
+    for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i); c.set(Math.max(-k, Math.min(k, v.x)), Math.max(-k, Math.min(k, v.y)), Math.max(-k, Math.min(k, v.z))); v.sub(c).normalize().multiplyScalar(r).add(c); p.setXYZ(i, v.x, v.y, v.z); }
+    g.computeVertexNormals(); return g; })(), cyl: new THREE.CylinderGeometry(1, 1, 1, 10), sph: new THREE.SphereGeometry(1, 14, 10),
   helm: new THREE.SphereGeometry(1, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2) };
 const strapMat = new THREE.MeshStandardMaterial({ color: 0x1e1f1a, roughness: 0.9 });
 const gloveMat = new THREE.MeshStandardMaterial({ color: 0x23211d, roughness: 0.75 });
