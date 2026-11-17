@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117130644';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117131521';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -814,7 +814,7 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
       <div class="sets" id="settingsList"></div>
       <div class="acct" id="redeemBox">
         <span class="label">🎁 Codes</span>
-        <span class="amsg" id="redeemWho">Enter a gift, Premium or admin code here. Gift codes work once per device.</span>
+        <span class="amsg" id="redeemWho">Enter a gift or Premium code here. Gift codes work once per device.</span>
         <div class="prow"><input type="text" id="redeemCode" maxlength="32" autocomplete="off" spellcheck="false" placeholder="Gift code" aria-label="Gift code"><button class="btn go" id="redeemBtn" type="button">Redeem</button></div>
       </div>
       <div class="acct admin" id="adminBox" hidden>

@@ -4,16 +4,17 @@
 
 **A free tactical arena shooter you play in your browser. No download, no account, no app store.**
 
-## ▶️ [PLAY NOW — latest version (v69)](https://gaayyynesss.github.io/Seige/?v=69)
+## ▶️ [PLAY NOW — latest version (v70)](https://gaayyynesss.github.io/Seige/?v=70)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=69
+**Latest:** https://gaayyynesss.github.io/Seige/?v=70
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v69** | https://gaayyynesss.github.io/Seige/?v=69 | **Battle pass fix:** your pass level is now backed up in a second save slot, so a glitch can't reset it to tier 1. Players who finished Season 1 at tier 49+ get the VX-9 Tempest even if their old save lost the details. The Pass tab shows what tier you finished last season on. Removed old Season 1 rollback code that could wipe Season 2 progress. Admin gift codes can now restore a pass tier |
+| **v70** | https://gaayyynesss.github.io/Seige/?v=70 | New **Codes** box in **Settings** for gift and Premium codes. New one-time code: **`GIFT-L10-C9B12D8E`** gives **+10 battle pass levels** (works once per device) |
+| v69 | https://gaayyynesss.github.io/Seige/?v=69 | **Battle pass fix:** your pass level is now backed up in a second save slot, so a glitch can't reset it to tier 1. Players who finished Season 1 at tier 49+ get the VX-9 Tempest even if their old save lost the details. The Pass tab shows what tier you finished last season on. Removed old Season 1 rollback code that could wipe Season 2 progress. Admin gift codes can now restore a pass tier |
 | v68 | https://gaayyynesss.github.io/Seige/?v=68 | **Admin panel** (owner only, in Settings) and **gift codes** for friends; the old public Tempest gift code no longer works and secret codes are no longer stored in the game in plain text. The Premium code box now stays visible so premium players can redeem gift codes |
 | v67 | https://gaayyynesss.github.io/Seige/?v=67 | Season 2 started early, so anyone who finished the **Season 1 pass at tier 49 or higher** now gets the **VX-9 Tempest** (with a one-time notice on the Play tab) |
 | v66 | https://gaayyynesss.github.io/Seige/?v=66 | **Calling cards:** unlock 15 banners and 15 emblems with coins (Loadout tab); your card shows when you get someone (KILLED BY) and theirs when you get them (ELIMINATED). **Full-screen MVP moment** at the end of every match with the MVP's card, operator and **best play** |
