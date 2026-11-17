@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v96)](https://ninebolt-studios.github.io/Ashfall/?v=96)
+## ▶️ [PLAY NOW — latest version (v97)](https://ninebolt-studios.github.io/Ashfall/?v=97)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=96
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=97
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,7 +20,8 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v96** | https://ninebolt-studios.github.io/Ashfall/?v=96 | **Weekly leaderboard:** the 🌍 board on the Career tab now has **All-time** and **This week**. The weekly board resets every Monday and ranks eliminations, wins and XP earned that week, so new players can make the top 25 too |
+| **v97** | https://ninebolt-studios.github.io/Ashfall/?v=97 | **Friends with accounts:** when you're signed in you get a 6-letter **friend code**. Add friends by their code to see who's online and what they're playing, and tap **Join party** to hop into their party with no codes to type |
+| v96 | https://ninebolt-studios.github.io/Ashfall/?v=96 | **Weekly leaderboard:** the 🌍 board on the Career tab now has **All-time** and **This week**. The weekly board resets every Monday and ranks eliminations, wins and XP earned that week, so new players can make the top 25 too |
 | v95 | https://ninebolt-studios.github.io/Ashfall/?v=95 | **Player levels & ⭐ Prestige:** a new player level from 1 to 55 built from all the XP you earn (shown next to your name; existing players start at a level based on their career). At level 55, Prestige from the Career tab: level resets to 1 and you get a ★ badge, the "Prestige N" title and ◎ 1,000, up to Prestige 10 |
 | v94 | https://ninebolt-studios.github.io/Ashfall/?v=94 | **New: 🎯 Firing Range.** Steel targets at 10, 25, 50 and 80 m plus a target that slides side to side. Every hit shows distance, body or head, and damage; targets drop after 100 damage and pop back up. Tap **Next gun** to try every gun you own, with unlimited ammo |
 | v93 | https://ninebolt-studios.github.io/Ashfall/?v=93 | Ashfall now lives under **Ninebolt Studios**: new play link https://ninebolt-studios.github.io/Ashfall/ and repo https://github.com/Ninebolt-Studios/Ashfall. **Sign in to your account** (Career tab) to bring your progress to the new address. The app profile was updated too: reinstall it from Settings → 📲 Get the Ashfall app |

@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117200105';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117200552';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -466,6 +466,11 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 #grade { position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0; transition: opacity .6s; background: radial-gradient(ellipse at 50% 48%, rgba(0,0,0,0) 55%, rgba(0,0,0,.42) 100%), linear-gradient(180deg, rgba(255,190,120,.05), rgba(0,40,60,.06)); }
 body.ingame #grade { opacity: 1; }
 body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
+.fr2 { display: grid; gap: 8px; margin: 6px 0 10px; }
+.fr2 input { font: 600 15px var(--mono); color: var(--ink); background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.14); border-radius: 10px; padding: 9px 10px; width: 140px; -webkit-user-select: text; user-select: text; }
+.ofr { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; background: rgba(0,0,0,.25); }
+.ofr b { flex: 1; } .ofr .dot { width: 9px; height: 9px; border-radius: 50%; background: #666; } .ofr .dot.on { background: #6ad46a; box-shadow: 0 0 8px #6ad46a; }
+.ofr .btn { padding: 8px 12px; font-size: 13px; }
 /* admin */
 .admin { border-color: rgba(192,138,255,.5) !important; }
 .admrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -967,6 +972,11 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
         </div>
         <div id="cloudIn" hidden>
           <span class="amsg" id="cloudWho"></span>
+          <div class="fr2">
+            <span class="amsg">Your friend code: <b id="myFcode">…</b> · friends add you with it and can join your party in one tap.</span>
+            <div class="prow"><input type="text" id="fcodeIn" maxlength="6" autocomplete="off" spellcheck="false" placeholder="Friend code" aria-label="Friend code" style="text-transform:uppercase"><button class="btn ghost" id="fcodeAdd" type="button">Add friend</button></div>
+            <div id="onFriends"></div>
+          </div>
           <div class="prow"><button class="btn go" id="cloudSync" type="button">Sync now</button><button class="btn ghost" id="cloudOutBtn" type="button">Sign out</button><button class="btn ghost" id="cloudOld" type="button" hidden>Restore older save</button></div>
         </div>
         <div id="cloudPick" hidden>
@@ -3480,7 +3490,7 @@ let menuMode = 'main';
 function showTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.tab === name)));
   ['play', 'loadout', 'pass', 'shop', 'settings', 'career'].forEach(n => { $('pane-' + n).hidden = n !== name; });
-  if (name === 'career') { renderCareer(); cloudUI(); glbLoad(); }
+  if (name === 'career') { renderCareer(); cloudUI(); glbLoad(); try { friendsRefresh(); } catch (e) {} }
   if (name === 'settings') renderAdmin();
   if (name === 'play') { try { renderRank(); renderProfile(); } catch (e) {} }
   if (name === 'pass') renderPass();
@@ -3933,7 +3943,7 @@ function cloudInit() {
   CLOUD.ready = loadJs(base + 'firebase-app-compat.js').then(() => Promise.all([loadJs(base + 'firebase-auth-compat.js'), loadJs(base + 'firebase-firestore-compat.js')])).then(() => {
     const app = firebase.apps && firebase.apps.length ? firebase.app() : firebase.initializeApp(FB_CFG);
     CLOUD.auth = firebase.auth(); CLOUD.db = firebase.firestore();
-    CLOUD.auth.onAuthStateChanged(u => { CLOUD.user = u || null; store.set('cloudOn', !!u); cloudUI(); if (u) cloudSync(true); });
+    CLOUD.auth.onAuthStateChanged(u => { CLOUD.user = u || null; store.set('cloudOn', !!u); cloudUI(); if (u) { cloudSync(true); presencePut(); friendsRefresh(); } });
     return true;
   }).catch(e => { CLOUD.ready = null; cloudMsg('Could not reach the account server. Check your internet and try again.'); throw e; });
   return CLOUD.ready;
@@ -3955,7 +3965,7 @@ async function cloudPut(code, h, prev) {
   if (prev && prev.code && progOf(prev.code) > progOf(code)) hist = [prev.code, ...hist].slice(0, 3); // never lose a bigger save
   await CLOUD.db.collection('saves').doc(CLOUD.user.uid).set({ code, hash: h, at: Date.now(), name: playerName, v: 1, hist });
   store.set('cloudLocal', h); store.set('cloudSeen', h); store.set('cloudAt', Date.now()); cloudUI();
-  glbPut();
+  glbPut(); presencePut();
 }
 function cloudApply(code, h) {
   const err = loadBackup(code); if (err) { cloudMsg(err); return; }
@@ -4011,6 +4021,43 @@ async function cloudSync(startup) {
   setInterval(() => { if (CLOUD.user && Date.now() - CLOUD.last > 40000) cloudSync(false); }, 10000);
   document.addEventListener('visibilitychange', () => { if (document.hidden && CLOUD.user) cloudSync(false); });
 })();
+/* ---------- account friends: online status + one-tap party join ---------- */
+const FR = { list: store.get('cfriends', []) || [], data: {}, beat: 0 };
+const fcodeOf = uid => (uid || '').replace(/[^A-Za-z0-9]/g, '').slice(0, 6).toUpperCase();
+function presencePut() {
+  if (!CLOUD.user || !CLOUD.db) return;
+  CLOUD.db.collection('presence').doc(CLOUD.user.uid).set({ name: String(playerName).slice(0, 16), code: fcodeOf(CLOUD.user.uid), at: Date.now(), party: party || '', playing: state === 'play' ? (mode === 'tdm' ? 'a battle' : zmb ? 'Zombies' : 'Holdout') : '' }).catch(() => {});
+}
+async function friendsRefresh() {
+  if (!CLOUD.user || !CLOUD.db || !$('onFriends')) return;
+  $('myFcode').textContent = fcodeOf(CLOUD.user.uid);
+  for (const uid of FR.list) { try { const d = await CLOUD.db.collection('presence').doc(uid).get(); if (d.exists) FR.data[uid] = d.data(); } catch (e) {} }
+  renderOnFriends();
+}
+function renderOnFriends() {
+  const box = $('onFriends'); if (!box) return; box.textContent = '';
+  if (!FR.list.length) { const s = document.createElement('span'); s.className = 'amsg'; s.textContent = 'No friends added yet.'; box.appendChild(s); return; }
+  for (const uid of FR.list) {
+    const d = FR.data[uid] || {}, on = d.at && Date.now() - d.at < 150000, row = document.createElement('div'); row.className = 'ofr';
+    const dot = document.createElement('i'); dot.className = 'dot' + (on ? ' on' : ''); row.appendChild(dot);
+    const nm = document.createElement('b'); nm.textContent = (d.name || 'Friend') + (on ? (d.playing ? ' · playing ' + d.playing : ' · online') : ' · offline'); row.appendChild(nm);
+    if (on && d.party) { const j = document.createElement('button'); j.className = 'btn go'; j.type = 'button'; j.textContent = 'Join party'; j.addEventListener('click', () => { $('partyIn').value = d.party; $('partyJoin').click(); showTab('play'); banner('JOINING ' + String(d.name || 'FRIEND').toUpperCase(), 'Party ' + d.party, 2); }); row.appendChild(j); }
+    const x = document.createElement('button'); x.className = 'btn ghost'; x.type = 'button'; x.textContent = '✕'; x.title = 'Remove'; x.addEventListener('click', () => { FR.list = FR.list.filter(u => u !== uid); store.set('cfriends', FR.list); renderOnFriends(); }); row.appendChild(x);
+    box.appendChild(row);
+  }
+}
+$('fcodeAdd').addEventListener('click', async () => {
+  const code = ($('fcodeIn').value || '').trim().toUpperCase(); if (code.length < 6) { cloudMsg('Friend codes are 6 letters/numbers.'); return; }
+  if (!CLOUD.user) { cloudMsg('Sign in first.'); return; }
+  try {
+    const q = await CLOUD.db.collection('presence').where('code', '==', code).limit(1).get();
+    if (!q.docs.length) { cloudMsg('No player with that friend code (they need to sign in once).'); return; }
+    const uid = q.docs[0].id; if (uid === CLOUD.user.uid) { cloudMsg('That’s your own code.'); return; }
+    if (!FR.list.includes(uid)) { FR.list.push(uid); store.set('cfriends', FR.list); }
+    FR.data[uid] = q.docs[0].data(); $('fcodeIn').value = ''; cloudMsg('Friend added: ' + (FR.data[uid].name || 'Player')); renderOnFriends();
+  } catch (e) { cloudMsg(e && e.code === 'permission-denied' ? 'Friends need the database rules update (see the owner).' : errText(e)); }
+});
+setInterval(() => { if (CLOUD.user) { presencePut(); if ($('pane-career') && !$('pane-career').hidden) friendsRefresh(); } }, 45000);
 /* ---------- global leaderboard ---------- */
 const GLB = { by: 'kills', busy: false, period: 'all' };
 // weekly board: weeks start Monday 00:00 UTC; this week's numbers = career now minus career at the start of the week
@@ -4199,7 +4246,7 @@ function renderSettings() {
   }
 }
 $('resetSettings').addEventListener('click', () => { Object.assign(S, DEF); saveS(); renderSettings(); applyQuality(); applySettings(); });
-const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase'];
+const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase', 'cfriends'];
 function makeBackup() {
   const data = {}; for (const k of ACCT_KEYS) { const v = store.get(k, null); if (v !== null) data[k] = v; }
   try { return 'DL1.' + btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/=+$/, ''); } catch (e) { return ''; }
