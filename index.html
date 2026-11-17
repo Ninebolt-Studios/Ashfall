@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117133521';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117134309';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -741,6 +741,7 @@ el.addEventListener('pointerdown',done);var go=function(){requestAnimationFrame(
           </div>
           <span class="pmsg" id="partyMsg">Make a party and send the code to a friend. Party members duel each other and play on the same team in Team Battle.</span>
         </div>
+        <div class="gift" id="freshNote" hidden><span>💾</span><div><b>Played before?</b><span class="pmsg">This device has no saved progress yet. If you had progress somewhere else, tap Restore and paste your backup code. (Tip: always open the game the same way, e.g. in Safari, since other apps and private tabs keep separate saves.)</span></div><button class="btn go" id="freshRestore" type="button">Restore</button><button class="btn ghost" id="freshNo" type="button">I'm new</button></div>
         <div class="gift" id="giftNote" hidden><span>🎁</span><div><b>VX-9 Tempest unlocked!</b><span class="pmsg">You were so close on the Season 1 pass that the Tempest rifle is yours. Equip it on the Loadout tab.</span></div><button class="btn go" id="giftOk" type="button">Nice!</button></div>
         <div class="rankbox" id="rankBox"><span class="rb" id="rkBadge">🥉</span><div style="display:grid;gap:4px;flex:1"><span class="label">Your rank</span><b id="rkName">Bronze</b><span class="rbar"><i id="rkFill"></i></span><span class="pmsg" id="rkNext"></span></div></div>
         <div class="daily" id="dailyBox">
@@ -934,6 +935,8 @@ const angDiff = (a, b) => { let d = (b - a) % (Math.PI * 2); if (d > Math.PI) d 
 const r2 = v => Math.round(v * 100) / 100;
 
 /* ---------- persistence ---------- */
+const FRESH_SAVE = (() => { try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith('dl-')) return false; } return true; } catch (e) { return false; } })();
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) {}
 const store = {
   get(k, d) { try { const v = localStorage.getItem('dl-' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem('dl-' + k, JSON.stringify(v)); } catch (e) {} },
@@ -1120,6 +1123,9 @@ function cardEl(name, bn, em, sub, cls = '') {
 // ---- ranked: rank points (RP) go up when you win a ranked match and down when you lose ----
 const RANKS = [{ n: 'Bronze', i: '🥉', min: 0, c: '#c8844a' }, { n: 'Silver', i: '🥈', min: 300, c: '#c8ccd4' }, { n: 'Gold', i: '🥇', min: 700, c: '#f2c84b' }, { n: 'Platinum', i: '💠', min: 1200, c: '#5fe3d0' }, { n: 'Diamond', i: '💎', min: 1800, c: '#8ab8ff' }];
 const RANK = Object.assign({ rp: 0, best: 0, w: 0, l: 0 }, store.get('rank', {}));
+// one-time reset of everyone's coins and rank (bump ECON to do it again)
+const ECON = 1;
+if ((+store.get('econ', 0) || 0) < ECON) { WALLET.coins = 0; saveWallet(); Object.assign(RANK, { rp: 0, best: 0, w: 0, l: 0 }); store.set('rank', RANK); store.set('econ', ECON); }
 const rankIdx = (rp = RANK.rp) => { let i = 0; RANKS.forEach((r, k) => { if (rp >= r.min) i = k; }); return i; };
 const rankBadge = i => RANKS[Math.max(0, Math.min(RANKS.length - 1, i | 0))].i;
 // ---- perks (3 slots) and wildcards ----
@@ -3737,15 +3743,15 @@ $('partyIn').addEventListener('keydown', e => { if (e.key === 'Enter') enterPart
 $('partyLeave').addEventListener('click', async () => { await leavePartyRoom(); party = ''; store.set('party', ''); partyPeers = []; renderParty(); $('partyMsg').textContent = 'You left the party.'; });
 $('partyCopy').addEventListener('click', () => { const b = $('partyCopy'); try { navigator.clipboard.writeText(party).then(() => { b.textContent = 'Copied'; setTimeout(() => b.textContent = 'Copy', 1500); }, () => {}); } catch (e) {} });
 /* ---------- secret codes: only SHA-256 fingerprints are stored here, never the codes ---------- */
-const H_VX_GIFT = '59bd02673107179b088387e1d02d77873de69e8d7a523c50b54add4d914bea2b', H_ADMIN = '21d3c9b31a0acabaec27b6e4d2fa25852dd5651af11acffe406592de1764a8d0', GIFT_SALT = 'bf3ff5caa6576aae8dc60863';
+const H_VX_GIFT = '59bd02673107179b088387e1d02d77873de69e8d7a523c50b54add4d914bea2b', H_ADMIN = '5298d79bd8d9e189084a9d7eb140d76462af9440c4dbd02c5535b1342e9bc4dc', GIFT_SALT = 'bf3ff5caa6576aae8dc60863';
 async function sha256(t) { try { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); } catch (e) { return ''; } }
-const isAdmin = () => store.get('admin', false) === true;
+const isAdmin = () => store.get('admin', false) === H_ADMIN.slice(0, 16); // tied to the current code: changing the code signs every device out of admin
 let giftOut = ['premCode', 'premWho'];
 const giftMsg = t => { $(giftOut[0]).value = ''; $(giftOut[1]).textContent = t; };
 async function redeemSecret(v) {
   const h = await sha256(v);
   if (h === H_VX_GIFT) { giftTempest(); giftMsg('Gift code accepted: the VX-9 Tempest is yours. Equip it on the Loadout tab.'); banner('VX-9 TEMPEST UNLOCKED', 'Gift code accepted', 3); renderLoadout(); showGift(); return; }
-  if (h === H_ADMIN) { store.set('admin', true); giftMsg('Admin panel unlocked. It is just below this box.'); renderAdmin(); return; }
+  if (h === H_ADMIN) { store.set('admin', H_ADMIN.slice(0, 16)); giftMsg('Admin panel unlocked. It is just below this box.'); renderAdmin(); return; }
   const m = /^GIFT-([A-Z0-9]+)-([0-9A-F]{8})$/.exec(v);
   if (m) {
     const sig = (await sha256(GIFT_SALT + m[1])).slice(0, 8).toUpperCase(), used = store.get('giftsUsed', []) || [];
@@ -3887,7 +3893,7 @@ function renderSettings() {
   }
 }
 $('resetSettings').addEventListener('click', () => { Object.assign(S, DEF); saveS(); renderSettings(); applyQuality(); applySettings(); });
-const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank', 'friends', 'ident'];
+const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank', 'friends', 'ident', 'econ'];
 function makeBackup() {
   const data = {}; for (const k of ACCT_KEYS) { const v = store.get(k, null); if (v !== null) data[k] = v; }
   try { return 'DL1.' + btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/=+$/, ''); } catch (e) { return ''; }
@@ -3898,6 +3904,7 @@ function loadBackup(code) {
   let obj; try { obj = JSON.parse(decodeURIComponent(escape(atob(code.slice(4))))); } catch (e) { return 'That code is damaged or incomplete. Copy the whole thing and try again.'; }
   if (!obj || typeof obj !== 'object') return 'That code did not contain any progress.';
   for (const k of ACCT_KEYS) if (k in obj) store.set(k, obj[k]);
+  if (!((+obj.econ || 0) >= ECON)) { const w = store.get('wallet', {}) || {}; w.coins = 0; store.set('wallet', w); store.set('rank', { rp: 0, best: 0, w: 0, l: 0 }); store.set('econ', ECON); } // old backups can't bring back reset coins/rank
   return '';
 }
 function acctWho() {
@@ -4080,6 +4087,13 @@ async function startTDM(isDuel, isRanked) {
   if (duel) banner(TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? 'Rival found · first to ' + SCORE_LIMIT : 'Waiting for a rival — share code “' + (matchCode || 'open') + '”. First to ' + SCORE_LIMIT + '.', 4);
   else banner((ranked ? 'RANKED · ' + rankBadge(rankIdx()) + ' ' : '') + TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest' : 'No other players online · bots fill every slot', 3);
 }
+(function () {
+  const n = $('freshNote'); if (!n) return;
+  n.hidden = !(FRESH_SAVE || store.get('freshAsk', false)); if (!n.hidden) store.set('freshAsk', true);
+  const close = () => { n.hidden = true; store.set('freshAsk', false); };
+  $('freshNo').addEventListener('click', close);
+  $('freshRestore').addEventListener('click', () => { close(); showTab('career'); $('acctRestore').click(); try { $('acctCode').scrollIntoView({ block: 'center' }); } catch (e) {} });
+})();
 function showGift() { const g = $('giftNote'); if (g) g.hidden = BP.vxGift !== 1; }
 $('giftOk').addEventListener('click', () => { BP.vxGift = 2; store.set('pass', BP); showGift(); showTab('loadout'); });
 function renderRank() {
