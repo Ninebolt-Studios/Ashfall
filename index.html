@@ -95,7 +95,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117190747';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117193857';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -837,6 +837,11 @@ el.addEventListener('pointerdown',done);var go=function(){requestAnimationFrame(
 
     <section class="pane" id="pane-settings" hidden>
       <div class="sets" id="settingsList"></div>
+      <div class="acct" id="appBox">
+        <span class="label">📲 Get the Ashfall app</span>
+        <span class="amsg">Put Ashfall on your Home Screen as a full-screen app. It always opens the newest version. On iPhone/iPad open this page in <b>Safari</b>, tap the button, then go to <b>Settings → Profile Downloaded → Install</b>. (School-managed iPads may block it; then use Safari's <b>Share → Add to Home Screen</b> instead.)</span>
+        <div class="prow"><a class="btn go" href="Ashfall.mobileconfig" download="Ashfall.mobileconfig" style="text-decoration:none">Install the app</a></div>
+      </div>
       <div class="acct" id="redeemBox">
         <span class="label">🎁 Codes</span>
         <span class="amsg" id="redeemWho">Enter a gift or Premium code here. Gift codes work once per device.</span>

@@ -8,16 +8,20 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v89)](https://gaayyynesss.github.io/Ashfall/?v=89)
+## ▶️ [PLAY NOW — latest version (v90)](https://gaayyynesss.github.io/Ashfall/?v=90)
 
-**Latest:** https://gaayyynesss.github.io/Ashfall/?v=89
+**Latest:** https://gaayyynesss.github.io/Ashfall/?v=90
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
+
+### 📲 Get the app (iPhone / iPad)
+Open **[Ashfall.mobileconfig](https://gaayyynesss.github.io/Ashfall/Ashfall.mobileconfig)** in **Safari**, then go to **Settings → Profile Downloaded → Install**. You get an Ashfall icon that opens the game full-screen and always loads the newest version. (School-managed iPads may block profiles; then use Safari's **Share → Add to Home Screen**.)
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v89** | https://gaayyynesss.github.io/Ashfall/?v=89 | **More realistic bullets:** tracers are now a thin white-hot core with a soft orange glow that tapers to a tail and flies faster; enemy rounds are thin glowing tracers instead of chunky boxes; bullet holes are chipped craters with cracks that look different on concrete, wood, metal and sand; every impact kicks up a dust puff colored by the surface |
+| **v90** | https://gaayyynesss.github.io/Ashfall/?v=90 | **Ashfall app for iPhone/iPad:** install `Ashfall.mobileconfig` (button in Settings → 📲 Get the Ashfall app, or the link above) to get a full-screen Ashfall icon that always opens the newest version |
+| v89 | https://gaayyynesss.github.io/Ashfall/?v=89 | **More realistic bullets:** tracers are now a thin white-hot core with a soft orange glow that tapers to a tail and flies faster; enemy rounds are thin glowing tracers instead of chunky boxes; bullet holes are chipped craters with cracks that look different on concrete, wood, metal and sand; every impact kicks up a dust puff colored by the surface |
 | v88 | https://gaayyynesss.github.io/Ashfall/?v=88 | **90 bot names** (real surnames and callsigns like Ghost, Viper, Reyes, Novak); every match picks a fresh set, the same for everyone in the lobby. **5v5 maps resized to 165 m** across (from 190 m) so fights find you faster, still bigger than the original 140 m |
 | v87 | https://gaayyynesss.github.io/Ashfall/?v=87 | The repo is now **Ashfall**. New play link: https://gaayyynesss.github.io/Ashfall/ (all links updated) |
 | v86 | https://gaayyynesss.github.io/Ashfall/?v=86 | The **browser tab icon** and home-screen icon now show the Ashfall badge (they were stuck on the old cached Dustline icon) |
