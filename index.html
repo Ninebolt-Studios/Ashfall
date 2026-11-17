@@ -94,7 +94,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117152330';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117152914';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Dustline</title>
@@ -461,6 +461,9 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 .glbtabs { display: flex; flex-wrap: wrap; gap: 6px; }
 .glbtabs .btn.on { background: var(--accent, #f2a93b); color: #1a1408; }
 #glbTable tr.me td { color: #f2c84b; }
+#grade { position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0; transition: opacity .6s; background: radial-gradient(ellipse at 50% 48%, rgba(0,0,0,0) 55%, rgba(0,0,0,.42) 100%), linear-gradient(180deg, rgba(255,190,120,.05), rgba(0,40,60,.06)); }
+body.ingame #grade { opacity: 1; }
+body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 /* admin */
 .admin { border-color: rgba(192,138,255,.5) !important; }
 .admrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -658,6 +661,7 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 <div id="reveal" hidden><div class="rv" id="rvBox"><div class="rvimg" id="rvImg"></div><div class="rvrar" id="rvRar"></div><div class="rvname" id="rvName"></div><div class="pmsg" id="rvMsg"></div><div class="btnrow"><button class="btn go" id="rvEquip" type="button">Equip</button><button class="btn ghost" id="rvClose" type="button">Close</button></div></div></div>
 <canvas id="view"></canvas>
 
+<div id="grade" aria-hidden="true"></div>
 <div id="hud" hidden>
   <div id="hurt"></div>
   <div class="corner tl">
@@ -1467,8 +1471,8 @@ const metalTex = canvasTex(256, 256, (g, s) => {
 });
 const stipple = base => canvasTex(128, 128, (g, s) => {
   g.fillStyle = base; g.fillRect(0, 0, s, s);
-  for (let i = 0; i < 5000; i++) { g.fillStyle = rnd() < 0.5 ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.08)'; g.beginPath(); g.arc(rnd() * s, rnd() * s, 0.6 + rnd() * 1.1, 0, 7); g.fill(); }
-  grain(g, s, s, 600, 0.08);
+  for (let i = 0; i < 7000; i++) { g.fillStyle = rnd() < 0.5 ? 'rgba(0,0,0,0.11)' : 'rgba(255,255,255,0.035)'; g.beginPath(); g.arc(rnd() * s, rnd() * s, 0.35 + rnd() * 0.5, 0, 7); g.fill(); } // fine, subtle texture like real gun polymer
+  grain(g, s, s, 600, 0.05);
 });
 const polyTex = stipple('#24251f'), fdeTex = stipple('#8b7a5a');
 const barrelTex = canvasTex(128, 128, (g, s) => {
@@ -1513,7 +1517,9 @@ const M = {
   snowcap: new THREE.MeshStandardMaterial({ color: 0xf2f6fa, roughness: 0.8, envMapIntensity: 0.4 }),
   bark: new THREE.MeshStandardMaterial({ color: 0x4a3725, roughness: 1, envMapIntensity: 0.2 }),
 };
+const AO_LIST = []; let aoDirty = false, aoMesh = null;
 function addBox(x, z, w, d, h, mat, su, sv, opt = {}) {
+  if (!opt.y && h > 0.25 && w < 60 && d < 60) { AO_LIST.push(x, z, w, d); aoDirty = true; }
   const m = new THREE.Mesh(boxGeo(w, h, d, su, sv), mat);
   m.position.set(x, (opt.y || 0) + h / 2, z); m.castShadow = true; m.receiveShadow = true;
   mapGroup.add(m); solids.push(m);
@@ -1675,6 +1681,7 @@ function stepSnow(dt) {
 let curMap = null;
 function clearMap() {
   if (typeof clearHoles === 'function') clearHoles();
+  AO_LIST.length = 0; aoDirty = true; aoMesh = null;
   for (const o of [...mapGroup.children]) { mapGroup.remove(o); o.traverse(c => { if (c.geometry && !c.userData.sharedGeo) c.geometry.dispose(); }); }
   solids.length = 0; boxes.length = 0;
 }
@@ -1768,10 +1775,10 @@ function spawnPoint(team) {
 
 /* ---------- weapon models (shared by the first-person view and the Loadout tab) ---------- */
 const GM = {
-  metal: new THREE.MeshStandardMaterial({ map: metalTex, bumpMap: metalTex, bumpScale: 0.0015, roughness: 0.36, metalness: 0.75 }),
-  poly: new THREE.MeshStandardMaterial({ map: polyTex, bumpMap: polyTex, bumpScale: 0.002, roughness: 0.88, metalness: 0 }),
-  fde: new THREE.MeshStandardMaterial({ map: fdeTex, bumpMap: fdeTex, bumpScale: 0.002, roughness: 0.85, metalness: 0 }),
-  barrel: new THREE.MeshStandardMaterial({ map: barrelTex, roughness: 0.55, metalness: 0.7 }),
+  metal: new THREE.MeshStandardMaterial({ map: metalTex, bumpMap: metalTex, bumpScale: 0.0015, roughness: 0.42, metalness: 0.85, envMapIntensity: 1.15 }),
+  poly: new THREE.MeshStandardMaterial({ map: polyTex, bumpMap: polyTex, bumpScale: 0.0008, roughness: 0.72, metalness: 0.05, envMapIntensity: 0.6 }),
+  fde: new THREE.MeshStandardMaterial({ map: fdeTex, bumpMap: fdeTex, bumpScale: 0.0008, roughness: 0.74, metalness: 0.05, envMapIntensity: 0.6 }),
+  barrel: new THREE.MeshStandardMaterial({ map: barrelTex, roughness: 0.48, metalness: 0.8, envMapIntensity: 1 }),
   shell: new THREE.MeshStandardMaterial({ color: 0x8a1f17, roughness: 0.6 }),
   brass: new THREE.MeshStandardMaterial({ color: 0xb08d42, roughness: 0.35, metalness: 0.9 }),
   glass: new THREE.MeshStandardMaterial({ color: 0x0a1820, roughness: 0.05, metalness: 0.9 }),
@@ -2902,6 +2909,12 @@ function makeSoldier(team, ent) {
   mk(SG2.box, strapMat, up, 0, 0.84, -0.15, 0.06, 0.05, 0.05, 'head', false);    // NVG mount
   [-1, 1].forEach(sd => { const e = mk(SG2.cyl, padMat, up, sd * 0.14, 0.71, 0, 0.055, 0.05, 0.055, 'head', false); e.rotation.z = Math.PI / 2; }); // ear protection
   mk(SG2.box, gogMat, up, 0, 0.75, -0.115, 0.2, 0.06, 0.05, 'head', false);      // goggles
+  // extra kit: chest radio, frag grenade, team shoulder patches, rifle sling, knee-high drop pouch
+  mk(SG2.box, strapMat, up, -0.17, 0.42, -0.19, 0.07, 0.12, 0.045, 'body', false);                       // chest radio
+  mk(SG2.cyl, strapMat, up, -0.19, 0.53, -0.19, 0.008, 0.12, 0.008, 'body', false);                      // radio stub antenna
+  mk(SG2.sph, SM.vest, up, 0.19, 0.42, -0.2, 0.045, 0.055, 0.045, 'body', false);                         // frag grenade
+  [-1, 1].forEach(sd => mk(SG2.box, bandMat, up, sd * 0.27, 0.46, -0.02, 0.012, 0.07, 0.09, 'body', false)); // team patches
+  { const sl = mk(SG2.box, strapMat, up, 0.02, 0.33, -0.2, 0.035, 0.62, 0.012, 'body', false); sl.rotation.z = 0.62; }   // sling across the chest
   // arms holding the rifle
   const shR = [0.29, 0.47, 0], elR = [0.3, 0.24, -0.16], hR = [0.13, 0.31, -0.36];
   const shL = [-0.29, 0.47, 0], elL = [-0.25, 0.27, -0.3], hL = [0.06, 0.34, -0.62];
@@ -3351,6 +3364,7 @@ function showTab(name) {
 }
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
 function showMenu(which) {
+  document.body.classList.remove('ingame');
   menuMode = which;
   $('menu').hidden = false; $('hud').hidden = true;
   if (which === 'main') { renderDaily(); renderRank(); showGift(); }
@@ -3374,7 +3388,7 @@ if (window.visualViewport) window.visualViewport.addEventListener('resize', () =
 function hideMenu() {
   fixViewport(); resize();
   const ns=document.getElementById('netstat'); if(ns)ns.hidden=true;
-  $('menu').hidden = true; $('hud').hidden = false;
+  $('menu').hidden = true; $('hud').hidden = false; document.body.classList.add('ingame'); document.body.classList.toggle('hq', S.quality === 'high' || S.quality === 'ultra');
   const tdm = mode === 'tdm';
   if (tdm) { const bl = document.querySelector('#scorebar .tn.t-b'), rl = document.querySelector('#scorebar .tn.t-r'); if (bl && rl) { bl.textContent = gg ? 'YOU' : duel ? (P.team === 'b' ? 'YOU' : 'RIVAL') : 'DELTA'; rl.textContent = gg ? 'LEADER' : duel ? (P.team === 'r' ? 'YOU' : 'RIVAL') : 'VIPER'; } }
   $('scorebar').hidden = !tdm; $('waveTag').hidden = tdm; hud.kd.hidden = !tdm;
@@ -4709,9 +4723,35 @@ function fx(dt) {
 /* ---------- main loop ---------- */
 const clock = new THREE.Clock();
 let musT = 0, sizeT = 0, achT = 0, menuT = 0, radarT = 0, ftAvg = 16, resT = 0, fpsT = 0, fpsN = 0, perfCool = 0, goodN = 0;
+const aoTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'); const img = x.createImageData(64, 64);
+  for (let j = 0; j < 64; j++) for (let i = 0; i < 64; i++) { const dx = Math.max(0, Math.abs(i - 31.5) - 14) / 18, dy = Math.max(0, Math.abs(j - 31.5) - 14) / 18, d = Math.min(1, Math.hypot(dx, dy)); const a = Math.pow(1 - d, 2.2) * 255; const o = (j * 64 + i) * 4; img.data[o] = img.data[o + 1] = img.data[o + 2] = 0; img.data[o + 3] = a; }
+  x.putImageData(img, 0, 0); const t = new THREE.CanvasTexture(c); return t; })();
+const aoMat = new THREE.MeshBasicMaterial({ map: aoTex, color: 0x000000, transparent: true, opacity: 0.5, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+const aoGeo = new THREE.PlaneGeometry(1, 1); aoGeo.rotateX(-Math.PI / 2); aoGeo.userData = {};
+function rebuildAO() {
+  aoDirty = false; if (aoMesh) { mapGroup.remove(aoMesh); aoMesh.dispose && aoMesh.dispose(); aoMesh = null; }
+  if (S.quality === 'low' || !AO_LIST.length) return;
+  const n = AO_LIST.length / 4, im = new THREE.InstancedMesh(aoGeo, aoMat, n), m4 = new THREE.Matrix4();
+  for (let k = 0; k < n; k++) { const x = AO_LIST[k * 4], z = AO_LIST[k * 4 + 1], w = AO_LIST[k * 4 + 2], d = AO_LIST[k * 4 + 3]; m4.makeScale(w + 1.1, 1, d + 1.1); m4.setPosition(x, 0.015, z); im.setMatrixAt(k, m4); }
+  im.renderOrder = 1; im.userData.sharedGeo = true; im.frustumCulled = false; aoMesh = im; mapGroup.add(im);
+}
+/* floating dust in the air around the player (cheap points) */
+const DUST = (() => { const n = 160, g = new THREE.BufferGeometry(), pos = new Float32Array(n * 3); for (let i = 0; i < n * 3; i++) pos[i] = (Math.random() - 0.5) * 24; g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const c = document.createElement('canvas'); c.width = c.height = 32; const x = c.getContext('2d'); const gr = x.createRadialGradient(16, 16, 0, 16, 16, 16); gr.addColorStop(0, 'rgba(255,240,215,1)'); gr.addColorStop(1, 'rgba(255,240,215,0)'); x.fillStyle = gr; x.fillRect(0, 0, 32, 32);
+  const m = new THREE.PointsMaterial({ size: 0.06, map: new THREE.CanvasTexture(c), transparent: true, opacity: 0.55, depthWrite: false, sizeAttenuation: true });
+  const p = new THREE.Points(g, m); p.frustumCulled = false; scene.add(p); return p; })();
+function stepDust(dt) {
+  const show = state === 'play' && S.quality !== 'low' && !zmbAtmo; DUST.visible = show; if (!show) return;
+  const a = DUST.geometry.attributes.position, t = performance.now() * 0.0003;
+  for (let i = 0; i < a.count; i++) { let x = a.getX(i) + Math.sin(t + i) * dt * 0.15, y = a.getY(i) + Math.cos(t * 1.3 + i) * dt * 0.08, z = a.getZ(i) + dt * 0.12;
+    if (x - P.pos.x > 12) x -= 24; if (x - P.pos.x < -12) x += 24; if (z - P.pos.z > 12) z -= 24; if (z - P.pos.z < -12) z += 24; if (y < 0.2) y = 4; if (y > 4.5) y = 0.3; a.setXYZ(i, x, y, z); }
+  a.needsUpdate = true;
+}
 function loop() {
   requestAnimationFrame(loop);
+  if (aoDirty) rebuildAO();
   const raw = clock.getDelta(), dt = Math.min(raw, 0.05);
+  try { stepDust(dt); } catch (e) {}
   fpsT += raw; fpsN++;
   if (fpsT > 0.5) { if (S.fps) hud.fps.textContent = Math.round(fpsN / fpsT) + ' FPS'; fpsT = 0; fpsN = 0; }
   if (state === 'play') {
