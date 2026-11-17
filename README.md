@@ -8,16 +8,17 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v73)](https://gaayyynesss.github.io/Seige/?v=73)
+## ▶️ [PLAY NOW — latest version (v74)](https://gaayyynesss.github.io/Seige/?v=74)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=73
+**Latest:** https://gaayyynesss.github.io/Seige/?v=74
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v73** | https://gaayyynesss.github.io/Seige/?v=73 | Cleaned up the version notes |
+| **v74** | https://gaayyynesss.github.io/Seige/?v=74 | **Coins and rank reset for everyone**: all players start again at ◎ 0 and Bronze 0 RP (skins, camos, guns and battle pass are kept; old backup codes can't bring back old coins or rank). If you open the game somewhere with no save (another app's browser, a private tab, a new device), a **Played before? Restore** card helps you load your backup code. The game also asks your browser to keep your save so it is less likely to be cleared |
+| v73 | https://gaayyynesss.github.io/Seige/?v=73 | Cleaned up the version notes |
 | v72 | https://gaayyynesss.github.io/Seige/?v=72 | **Ninebolt Studios** branding: a studio intro screen when the game opens (tap to skip, shows once per visit), "A Ninebolt Studios game" under the Dustline title, and the studio logo in this README |
 | v71 | https://gaayyynesss.github.io/Seige/?v=71 | Your rank on the Play tab now updates right away instead of after a reload |
 | v70 | https://gaayyynesss.github.io/Seige/?v=70 | New **Codes** box in **Settings** for gift and Premium codes. New one-time code: **`GIFT-L10-C9B12D8E`** gives **+10 battle pass levels** (works once per device) |
