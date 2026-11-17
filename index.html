@@ -6,9 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Dustline">
+<meta name="apple-mobile-web-app-title" content="Ashfall">
 <meta name="theme-color" content="#0f110d">
-<meta name="description" content="Dustline — a tactical arena shooter. 5v5, 1v1 duels, and solo. No install.">
+<meta name="description" content="Ashfall — a tactical arena shooter. 5v5, 1v1 duels, and solo. No install.">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -97,7 +97,7 @@ window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() 
 <script>(function(){var B='20261117162404';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
-<title>Dustline</title>
+<title>Ashfall</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
@@ -209,7 +209,7 @@ button { font-family: inherit; }
 .lefty #tbtns { transform: scaleX(-1); }
 .lefty #tbtns .tbtn > span { transform: scaleX(-1); }
 .tbtn { position: absolute; pointer-events: auto; border-radius: 50%; display: grid; place-items: center; font: 700 11px var(--display); letter-spacing: .14em; color: var(--ink); border: 2px solid rgba(239,232,214,.28); background: rgba(15,17,13,.55); -webkit-tap-highlight-color: transparent; text-align: center; }
-.tbtn.on { background: rgba(242,169,59,.35); border-color: var(--accent); }
+.tbtn.on { background: rgba(var(--accent-rgb, 242,169,59),.35); border-color: var(--accent); }
 #fireBtn { width: 104px; height: 104px; right: calc(max(16px, env(safe-area-inset-right, 0px)) + 4px); bottom: calc(20px + env(safe-area-inset-bottom, 0px)); border-color: rgba(229,83,61,.8); font-size: 15px; }
 #fireBtn small { display: block; font-size: 9px; color: var(--dim); letter-spacing: .1em; }
 #fireBtn.on { background: rgba(229,83,61,.35); }
@@ -716,8 +716,8 @@ el.addEventListener('pointerdown',done);var go=function(){requestAnimationFrame(
   <div class="shell">
     <header class="mhead">
       <div class="logo">
-        <svg viewBox="0 0 42 42" aria-hidden="true"><path d="M21 3 L39 21 L21 39 L3 21 Z" fill="#221e14"/><path d="M12.3 26.5 Q16.6 25.4 21 26.5 T29.7 26.5 L26.5 30 L21 35.5 L15.5 30 Z" fill="#96703a"/><path d="M21 3 L39 21 L21 39 L3 21 Z" fill="none" stroke="#f2a93b" stroke-width="2.5"/><path d="M14 21 L21 14 L28 21" fill="none" stroke="#efe8d6" stroke-width="3" stroke-linejoin="round"/><circle cx="21" cy="27.5" r="2" fill="#f2a93b"/></svg>
-        <div><h1>DUSTLINE</h1><p id="brandSub">Tactical arena</p><p class="nbcred"><img src="studio/ninebolt-icon.png" alt="">A Ninebolt Studios game</p></div>
+        <svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="lgEm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd27a"/><stop offset=".45" stop-color="#ff8a3a"/><stop offset="1" stop-color="#c8361f"/></linearGradient><radialGradient id="lgGl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe2a0"/><stop offset=".4" stop-color="#ff9a3c" stop-opacity=".8"/><stop offset="1" stop-color="#ff6a2a" stop-opacity="0"/></radialGradient></defs><path d="M50 16 L85 82 H69 L50 45 L31 82 H15 Z" fill="url(#lgEm)"/><path d="M36.5 66 H63.5 L60.5 72 H39.5 Z" fill="#ffd27a" opacity=".9"/><circle cx="50" cy="14" r="9" fill="url(#lgGl)"/><g fill="#b9b2a6"><circle cx="22" cy="22" r="1.6" opacity=".7"/><circle cx="30" cy="34" r="1.1" opacity=".55"/><circle cx="74" cy="26" r="1.4" opacity=".65"/><circle cx="80" cy="44" r="1" opacity=".5"/><circle cx="18" cy="50" r="1.2" opacity=".5"/><circle cx="64" cy="10" r="1" opacity=".55"/><circle cx="38" cy="8" r=".9" opacity=".45"/><circle cx="86" cy="62" r="1.2" opacity=".45"/><circle cx="12" cy="70" r=".9" opacity=".4"/></g><circle cx="70" cy="36" r="1.4" fill="#ff9a3c"/><circle cx="27" cy="42" r="1" fill="#ff7a2a" opacity=".85"/></svg>
+        <div><h1>ASHFALL</h1><p id="brandSub">Tactical arena</p><p class="nbcred"><img src="studio/ninebolt-icon.png" alt="">A Ninebolt Studios game</p></div>
       </div>
       <div class="hright">
         <div class="pchip" id="pchip"><span class="pc-rank" id="pcRank">🥉</span><div class="pc-mid"><b id="pcName">Operator</b><span id="pcSub"></span></div><span class="pc-coins" id="pcCoins">◎ 0</span></div>
@@ -1066,7 +1066,7 @@ const WEAPONS_PREMIUM = { vx: 1, sc7: 2 }; // premium weapon -> the season whose
 const SEASON2_START = Date.UTC(2026, 10, 16), SEASON_START = Date.UTC(2026, 10, 27), WEEK_MS = 7 * 864e5; // Season 2: 16-26 Nov; Season 3 starts 27 Nov, then a new season every 7 days
 const SEASONS = {
   1: { name: 'Dust Storm', accent: '#f2a93b' },
-  2: { name: 'Harvest', accent: '#e0a03a', camoName: 'Harvest', camo: [0xc8782a, 0x3a2410, 0xe8c060], deco: 'harvest', light: 0xffa040 },
+  2: { name: 'Harvest', accent: '#ee5a30', camoName: 'Harvest', camo: [0xc8782a, 0x3a2410, 0xe8c060], deco: 'harvest', light: 0xffa040 },
   3: { name: 'Neon Grid', accent: '#2ee6c8', camoName: 'Neon Grid', camo: [0x2ee6c8, 0x081a20, 0xff3ad0], deco: 'neon', light: 0x2ee6c8 },
   4: { name: 'Frostbite', accent: '#7cc8ff', camoName: 'Frostbite', camo: [0x9ad8ff, 0x1a3550, 0xeaf6ff], deco: 'crystals', light: 0x8ad0ff, snowfall: true },
   5: { name: 'Midnight', accent: '#a07aff', camoName: 'Midnight Violet', camo: [0x7a4aff, 0x0c0820, 0xc8b0ff], deco: 'orbs', light: 0xa07aff },
@@ -1082,7 +1082,7 @@ function seasonTheme(n) {
   const base = THEME_ROTATION[Math.max(0, n - 8) % THEME_ROTATION.length];
   return Object.assign({}, base, { name: base.name + ' ' + n, camoName: base.camoName + ' ' + n });
 }
-const SEASON = seasonNum(), THEME = seasonTheme(SEASON);
+const SEASON = seasonNum(), THEME = seasonTheme(SEASON); let ACC_RGB = '242,169,59';
 const seasonXP = n => n <= 1 ? 1000 : 599; // XP per battle-pass tier: Season 1 = 1000, Season 2 and later = 599
 const BP_XP = seasonXP(SEASON);
 for (const n of new Set([...Object.keys(SEASONS).map(Number), SEASON])) { const t = seasonTheme(n); if (!t.camo) continue; CAMOS['s' + n] = { name: t.camoName, c: t.camo, metal: !!t.metal, season: n }; }
@@ -1482,7 +1482,7 @@ const metalTex = canvasTex(256, 256, (g, s) => {
   const seam = (x1, y1, x2, y2) => { g.strokeStyle = 'rgba(0,0,0,0.65)'; g.lineWidth = 2; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); g.strokeStyle = 'rgba(255,255,255,0.13)'; g.lineWidth = 1; g.beginPath(); g.moveTo(x1 + 1.5, y1 + 1.5); g.lineTo(x2 + 1.5, y2 + 1.5); g.stroke(); };
   seam(0, 64, s, 64); seam(0, 192, s, 192); seam(96, 64, 96, 192); seam(200, 0, 200, 64);
   [[20, 40], [236, 40], [20, 216], [236, 216], [80, 128]].forEach(([x, y]) => { g.fillStyle = '#16181b'; g.beginPath(); g.arc(x, y, 5, 0, 7); g.fill(); g.fillStyle = '#4d535a'; g.beginPath(); g.arc(x, y, 3.6, 0, 7); g.fill(); g.strokeStyle = '#121416'; g.lineWidth = 1.4; g.beginPath(); g.moveTo(x - 3, y); g.lineTo(x + 3, y); g.stroke(); });
-  g.font = '700 13px monospace'; g.fillStyle = 'rgba(0,0,0,0.6)'; g.fillText('DUSTLINE ARMS', 104, 110); g.fillStyle = 'rgba(255,255,255,0.16)'; g.fillText('DUSTLINE ARMS', 105, 111);
+  g.font = '700 13px monospace'; g.fillStyle = 'rgba(0,0,0,0.6)'; g.fillText('ASHFALL ARMS', 104, 110); g.fillStyle = 'rgba(255,255,255,0.16)'; g.fillText('ASHFALL ARMS', 105, 111);
   g.font = '500 10px monospace'; g.fillStyle = 'rgba(255,255,255,0.15)'; g.fillText('SAFE  SEMI  AUTO', 104, 150);
   for (let i = 0; i < 900; i++) { const e = rnd() * 4 | 0, t = rnd() * s, d = rnd() * rnd() * 12; const x = e === 0 ? d : e === 1 ? s - d : t, y = e === 2 ? d : e === 3 ? s - d : t; g.fillStyle = `rgba(175,180,186,${(rnd() * 0.16).toFixed(2)})`; g.fillRect(x, y, 1.5, 1.5); }
   grain(g, s, s, 1500, 0.035);
@@ -4246,10 +4246,10 @@ codeIn.addEventListener('input', () => { matchCode = codeIn.value.replace(/[^a-z
   when();
   $('saveFile').addEventListener('click', async () => {
     const c = makeBackup(); if (!c) { $('saveWhen').textContent = 'Could not build a save on this device.'; return; }
-    const d = new Date(), name = 'Dustline-' + String(playerName).replace(/[^\w-]/g, '') + '-' + d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') + '.dlsave';
+    const d = new Date(), name = 'Ashfall-' + String(playerName).replace(/[^\w-]/g, '') + '-' + d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') + '.dlsave';
     const file = new File([c], name, { type: 'text/plain' });
     let ok = false;
-    try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: 'Dustline save' }); ok = true; } } catch (e) { if (e && e.name === 'AbortError') return; }
+    try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: 'Ashfall save' }); ok = true; } } catch (e) { if (e && e.name === 'AbortError') return; }
     if (!ok) { const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); }
     store.set('savedAt', Date.now()); when(); banner('PROGRESS SAVED', name, 2.5);
   });
@@ -4757,7 +4757,7 @@ function drawRadar() {
   }
   rg.restore();
   if (scanT > 0) { const ph = (performance.now() / 1200) % 1; rg.strokeStyle = 'rgba(229,83,61,' + (0.6 * (1 - ph)).toFixed(2) + ')'; rg.lineWidth = 2; rg.beginPath(); rg.arc(c, c, (c - 2) * ph, 0, 7); rg.stroke(); }
-  rg.strokeStyle = 'rgba(242,169,59,0.45)'; rg.lineWidth = 2; rg.beginPath(); rg.arc(c, c, c - 2, 0, 7); rg.stroke();
+  rg.strokeStyle = 'rgba(' + ACC_RGB + ',0.45)'; rg.lineWidth = 2; rg.beginPath(); rg.arc(c, c, c - 2, 0, 7); rg.stroke();
   rg.fillStyle = '#efe8d6'; rg.beginPath(); rg.moveTo(c, c - 9); rg.lineTo(c - 6, c + 6); rg.lineTo(c + 6, c + 6); rg.fill();
 }
 
@@ -4846,8 +4846,11 @@ function loop() {
 }
 
 /* ---------- boot ---------- */
-{ const a = THEME.accent, n = parseInt(a.slice(1), 16), rgb = [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(',');
-  document.documentElement.style.setProperty('--accent', a); document.documentElement.style.setProperty('--line', 'rgba(' + rgb + ',0.3)');
+{ const a = THEME.accent, n = parseInt(a.slice(1), 16), ar = (n >> 16) & 255, ag = (n >> 8) & 255, ab = n & 255, rgb = [ar, ag, ab].join(','), ds = document.documentElement.style;
+  ACC_RGB = rgb; const mix = (k, base) => Math.round(base + (k - base) * 0.09); // tint the dark panels with the season colour
+  ds.setProperty('--accent', a); ds.setProperty('--accent-rgb', rgb); ds.setProperty('--line', 'rgba(' + rgb + ',0.3)');
+  ds.setProperty('--panel', `rgba(${mix(ar, 18)},${mix(ag, 20)},${mix(ab, 15)},0.86)`); ds.setProperty('--panel2', `rgba(${mix(ar, 30)},${mix(ag, 32)},${mix(ab, 24)},0.9)`); ds.setProperty('--bg', `rgb(${mix(ar, 15)},${mix(ag, 17)},${mix(ab, 13)})`);
+  const tc = document.querySelector('meta[name=theme-color]'); if (tc) tc.setAttribute('content', `rgb(${mix(ar, 15)},${mix(ag, 17)},${mix(ab, 13)})`);
   $('brandSub').textContent = 'Season ' + SEASON + ' · ' + THEME.name; }
 buildMap(selMap);
 equip(loadout);
