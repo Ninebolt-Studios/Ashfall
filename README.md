@@ -8,16 +8,17 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v82)](https://gaayyynesss.github.io/Seige/?v=82)
+## ▶️ [PLAY NOW — latest version (v83)](https://gaayyynesss.github.io/Seige/?v=83)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=82
+**Latest:** https://gaayyynesss.github.io/Seige/?v=83
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v82** | https://gaayyynesss.github.io/Seige/?v=82 | **Much bigger 5v5 maps:** Team Battle and Ranked arenas are now about 190 m across (was 140 m), with a whole extra outer ring of buildings, containers, crates, sandbags and walls to fight through. Duels, Gun Game, Holdout and Zombies keep their tighter size |
+| **v83** | https://gaayyynesss.github.io/Seige/?v=83 | **Account fixes:** accounts made on v76 stopped auto-saving after v77 and could ask "which progress to keep?"; that is fixed and they save again. A device with **less** progress than your account can no longer overwrite it by accident (it loads your account instead, or warns you with ⚠️ and asks again). Your account now keeps backups of bigger older saves, with a **Restore older save** button. The choice never pops up in the middle of a match |
+| v82 | https://gaayyynesss.github.io/Seige/?v=82 | **Much bigger 5v5 maps:** Team Battle and Ranked arenas are now about 190 m across (was 140 m), with a whole extra outer ring of buildings, containers, crates, sandbags and walls to fight through. Duels, Gun Game, Holdout and Zombies keep their tighter size |
 | v81 | https://gaayyynesss.github.io/Seige/?v=81 | **More realistic textures and soldiers:** wooden crates are now weathered planks with real wood grain, knots, gaps, rusty nails and worn edges; concrete walls have fine air pores and aggregate; sandbags are woven burlap with creases; gun metal is cleaner (less speckle). Soldiers have rounded, more natural shapes and fabric-textured uniforms, helmet covers and balaclavas |
 | v80 | https://gaayyynesss.github.io/Seige/?v=80 | **CoD-style graphics pass:** soft contact shadows under every crate and wall, film-style color grading and vignette while you play, floating dust in the air, more realistic gun metal and smooth matte polymer (no more speckled "granite" look), and soldiers now carry a chest radio, frag grenade, rifle sling and team shoulder patches |
 | v79 | https://gaayyynesss.github.io/Seige/?v=79 | **Louder menu music** (about 2.5x louder, default slider now 70%) with a limiter so it stays clean instead of crackling. You can still change it in Settings → Audio → Menu music |
