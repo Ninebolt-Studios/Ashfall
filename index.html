@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117195857';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117200105';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -977,7 +977,8 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
       </div>
       <div class="acct" id="glbBox">
         <span class="label">🌍 Global leaderboard · every player</span>
-        <div class="glbtabs" role="tablist"><button class="btn ghost on" data-glb="kills" type="button">Eliminations</button><button class="btn ghost" data-glb="wins" type="button">Wins</button><button class="btn ghost" data-glb="rp" type="button">Ranked RP</button><button class="btn ghost" data-glb="zwave" type="button">Zombies wave</button><button class="btn ghost" id="glbRefresh" type="button">↻</button></div>
+        <div class="glbtabs"><button class="btn ghost on" data-glbp="all" type="button">All-time</button><button class="btn ghost" data-glbp="week" type="button">This week</button></div>
+        <div class="glbtabs" role="tablist"><button class="btn ghost on" data-glb="kills" type="button">Eliminations</button><button class="btn ghost" data-glb="wins" type="button">Wins</button><button class="btn ghost" data-glb="rp" type="button">Ranked RP</button><button class="btn ghost" data-glb="zwave" type="button">Zombies wave</button><button class="btn ghost" data-glb="xp" type="button" hidden>XP</button><button class="btn ghost" id="glbRefresh" type="button">↻</button></div>
         <table class="lb" id="glbTable"></table>
         <span class="amsg" id="glbMsg">Sign in with an account (above) to put your name on the board.</span>
       </div>
@@ -4011,28 +4012,38 @@ async function cloudSync(startup) {
   document.addEventListener('visibilitychange', () => { if (document.hidden && CLOUD.user) cloudSync(false); });
 })();
 /* ---------- global leaderboard ---------- */
-const GLB = { by: 'kills', busy: false };
-const GLB_COL = { kills: 'Eliminations', wins: 'Wins', rp: 'Ranked RP', zwave: 'Best Zombies wave' };
+const GLB = { by: 'kills', busy: false, period: 'all' };
+// weekly board: weeks start Monday 00:00 UTC; this week's numbers = career now minus career at the start of the week
+const weekNum = () => Math.floor((Date.now() - Date.UTC(2026, 0, 5)) / (7 * 864e5));
+const WB = Object.assign({ w: -1, kills: 0, wins: 0, xp: 0 }, store.get('weekBase', {}));
+const weekBase = () => { const n = weekNum(); if (WB.w !== n) { WB.w = n; WB.kills = C.kills | 0; WB.wins = C.wins | 0; WB.xp = C.xpTotal | 0; store.set('weekBase', WB); } return WB; };
+weekBase();
+const weekStats = () => { const b = weekBase(); return { kills: Math.max(0, (C.kills | 0) - b.kills), wins: Math.max(0, (C.wins | 0) - b.wins), xp: Math.max(0, (C.xpTotal | 0) - b.xp) }; };
+const GLB_COL = { kills: 'Eliminations', wins: 'Wins', rp: 'Ranked RP', zwave: 'Best Zombies wave', xp: 'XP this week' };
 function glbPut() {
   if (!CLOUD.user || !CLOUD.db) return;
   const e = { name: String(playerName || 'Operator').slice(0, 16), kills: C.kills | 0, wins: C.wins | 0, rp: RANK.rp | 0, zwave: C.bestRound | 0, hwave: C.bestWave | 0, at: Date.now() };
   CLOUD.db.collection('leaderboard').doc(CLOUD.user.uid).set(e).catch(() => {});
+  const ws = weekStats(); CLOUD.db.collection('lbw_' + weekNum()).doc(CLOUD.user.uid).set({ name: e.name, kills: ws.kills, wins: ws.wins, xp: ws.xp, at: Date.now() }).catch(() => {});
 }
 async function glbLoad() {
   if (GLB.busy || !$('glbTable')) return; GLB.busy = true;
   const msg = $('glbMsg'); msg.textContent = 'Loading the leaderboard…';
   try {
     await cloudInit();
-    const snap = await CLOUD.db.collection('leaderboard').orderBy(GLB.by, 'desc').limit(25).get();
+    const wk = GLB.period === 'week', by = wk && !['kills', 'wins', 'xp'].includes(GLB.by) ? 'kills' : GLB.by;
+    const snap = await CLOUD.db.collection(wk ? 'lbw_' + weekNum() : 'leaderboard').orderBy(by, 'desc').limit(25).get();
     const tb = $('glbTable'); tb.textContent = '';
-    const hr = document.createElement('tr'); ['#', 'Player', GLB_COL[GLB.by]].forEach(h => { const th = document.createElement('th'); th.textContent = h; hr.appendChild(th); }); tb.appendChild(hr);
+    const hr = document.createElement('tr'); ['#', 'Player', GLB_COL[by] + (wk && by !== 'xp' ? ' this week' : '')].forEach(h => { const th = document.createElement('th'); th.textContent = h; hr.appendChild(th); }); tb.appendChild(hr);
     let n = 0, mine = false;
-    snap.docs.forEach(d => { const v = d.data() || {}; n++; const tr = document.createElement('tr'); if (CLOUD.user && d.id === CLOUD.user.uid) { tr.className = 'me'; mine = true; } [n, String(v.name || 'Operator').slice(0, 16), (+v[GLB.by] || 0).toLocaleString()].forEach(x => { const td = document.createElement('td'); td.textContent = x; tr.appendChild(td); }); tb.appendChild(tr); });
-    msg.textContent = !n ? 'Nobody on the board yet. Sign in and play to be first!' : CLOUD.user ? (mine ? 'You are on the board (highlighted). It updates every time your progress saves.' : 'You are not in the top 25 for this one yet. Keep playing!') : 'Sign in with an account (above) to put your name on the board.';
+    snap.docs.forEach(d => { const v = d.data() || {}; n++; const tr = document.createElement('tr'); if (CLOUD.user && d.id === CLOUD.user.uid) { tr.className = 'me'; mine = true; } [n, String(v.name || 'Operator').slice(0, 16), (+v[by] || 0).toLocaleString()].forEach(x => { const td = document.createElement('td'); td.textContent = x; tr.appendChild(td); }); tb.appendChild(tr); });
+    msg.textContent = !n ? (wk ? 'Nobody on this week’s board yet. It resets every Monday. Sign in and play to be first!' : 'Nobody on the board yet. Sign in and play to be first!') : CLOUD.user ? (mine ? 'You are on the board (highlighted). It updates every time your progress saves.' : 'You are not in the top 25 for this one yet. Keep playing!') : 'Sign in with an account (above) to put your name on the board.';
   } catch (e) { msg.textContent = e && e.code === 'permission-denied' ? 'The leaderboard is not switched on yet (the database rules need updating).' : 'Could not load the leaderboard. Check your internet and tap ↻.'; }
   finally { GLB.busy = false; }
 }
 document.addEventListener('click', ev => {
+  const pb = ev.target.closest && ev.target.closest('[data-glbp]');
+  if (pb) { GLB.period = pb.dataset.glbp; document.querySelectorAll('[data-glbp]').forEach(x => x.classList.toggle('on', x === pb)); const xb = document.querySelector('[data-glb="rp"]'), zb = document.querySelector('[data-glb="zwave"]'); if (xb) xb.hidden = GLB.period === 'week'; if (zb) zb.hidden = GLB.period === 'week'; const xpb = document.querySelector('[data-glb="xp"]'); if (xpb) xpb.hidden = GLB.period !== 'week'; if ((GLB.period === 'week' && !['kills', 'wins', 'xp'].includes(GLB.by)) || (GLB.period === 'all' && GLB.by === 'xp')) { GLB.by = 'kills'; document.querySelectorAll('[data-glb]').forEach(x => x.classList.toggle('on', x.dataset.glb === 'kills')); } glbLoad(); return; }
   const b = ev.target.closest && ev.target.closest('[data-glb]'); if (!b) return;
   GLB.by = b.dataset.glb; document.querySelectorAll('[data-glb]').forEach(x => x.classList.toggle('on', x === b)); glbLoad();
 });
@@ -4188,7 +4199,7 @@ function renderSettings() {
   }
 }
 $('resetSettings').addEventListener('click', () => { Object.assign(S, DEF); saveS(); renderSettings(); applyQuality(); applySettings(); });
-const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank', 'friends', 'ident', 'econ'];
+const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase'];
 function makeBackup() {
   const data = {}; for (const k of ACCT_KEYS) { const v = store.get(k, null); if (v !== null) data[k] = v; }
   try { return 'DL1.' + btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/=+$/, ''); } catch (e) { return ''; }
