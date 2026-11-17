@@ -918,7 +918,7 @@ el.addEventListener('pointerdown',done);var go=function(){requestAnimationFrame(
         </div>
         <div id="cloudIn" hidden>
           <span class="amsg" id="cloudWho"></span>
-          <div class="prow"><button class="btn go" id="cloudSync" type="button">Sync now</button><button class="btn ghost" id="cloudOutBtn" type="button">Sign out</button></div>
+          <div class="prow"><button class="btn go" id="cloudSync" type="button">Sync now</button><button class="btn ghost" id="cloudOutBtn" type="button">Sign out</button><button class="btn ghost" id="cloudOld" type="button" hidden>Restore older save</button></div>
         </div>
         <div id="cloudPick" hidden>
           <span class="amsg"><b>Which progress do you want to keep?</b> Your account and this device have different progress.</span>
@@ -3832,6 +3832,7 @@ $('partyCopy').addEventListener('click', () => { const b = $('partyCopy'); try {
 /* ---------- accounts + cloud saves (Firebase) ---------- */
 const FB_CFG = { apiKey: 'AIzaSyAptGcd7k_mjVwkZPdnMLgR-4KPABtBOPU', authDomain: 'dustline-8da4d.firebaseapp.com', projectId: 'dustline-8da4d', storageBucket: 'dustline-8da4d.firebasestorage.app', messagingSenderId: '288529644668', appId: '1:288529644668:web:edb5d96554bc6d647eddf9' };
 const FB_VER = '10.12.2';
+try { const old = store.get('cloudHash', ''); if (old && !store.get('cloudLocal', '')) { store.set('cloudSeen', old); store.set('cloudLocal', '__v76'); } } catch (e) {}
 const CLOUD = { ready: null, auth: null, db: null, user: null, busy: false, last: 0 };
 const fnv = t => { let h = 0x811c9dc5; for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h.toString(16); };
 const loadJs = src => new Promise((ok, no) => { const sc = document.createElement('script'); sc.src = src; sc.async = true; sc.onload = ok; sc.onerror = () => no(new Error('load')); document.head.appendChild(sc); });
@@ -3856,9 +3857,12 @@ function cloudUI() {
 const ERRS = { 'auth/invalid-email': 'That email does not look right.', 'auth/missing-password': 'Type a password.', 'auth/weak-password': 'Password needs at least 6 characters.', 'auth/email-already-in-use': 'There is already an account with that email. Tap Sign in instead.', 'auth/invalid-credential': 'Wrong email or password.', 'auth/wrong-password': 'Wrong email or password.', 'auth/user-not-found': 'No account with that email. Tap Create account.', 'auth/too-many-requests': 'Too many tries. Wait a minute and try again.', 'auth/network-request-failed': 'No internet connection.', 'permission-denied': 'The account server refused the save (the database rules may not be published yet).' };
 const errText = e => ERRS[e && e.code] || ('Something went wrong' + (e && e.code ? ' (' + e.code + ')' : '') + '. Try again.');
 const summ = code => { try { const o = JSON.parse(decodeURIComponent(escape(atob(code.slice(4))))); const xp = (o.pass && +o.pass.xp) || 0, s = (o.pass && +o.pass.season) || SEASON; return (o.name || 'Operator') + ' · S' + s + ' tier ' + Math.min(seasonTiers(s), 1 + Math.floor(xp / seasonXP(s))) + ' · ◎ ' + ((o.wallet && +o.wallet.coins) || 0).toLocaleString() + ' · ' + ((o.career && +o.career.kills) || 0) + ' elims'; } catch (e) { return ''; } };
+const progOf = code => { try { const o = JSON.parse(decodeURIComponent(escape(atob(code.slice(4))))), c = o.career || {}; return (+c.kills || 0) + (+c.matches || 0) * 3 + (+c.wins || 0) * 3 + (+c.zKills || 0); } catch (e) { return 0; } };
 const localTrivial = () => !store.get('name', '') && !(C.kills > 0) && !(BP.xp > 0) && !(WALLET.coins > 0);
-async function cloudPut(code, h) {
-  await CLOUD.db.collection('saves').doc(CLOUD.user.uid).set({ code, hash: h, at: Date.now(), name: playerName, v: 1 });
+async function cloudPut(code, h, prev) {
+  let hist = (prev && Array.isArray(prev.hist)) ? prev.hist.slice(0, 3) : [];
+  if (prev && prev.code && progOf(prev.code) > progOf(code)) hist = [prev.code, ...hist].slice(0, 3); // never lose a bigger save
+  await CLOUD.db.collection('saves').doc(CLOUD.user.uid).set({ code, hash: h, at: Date.now(), name: playerName, v: 1, hist });
   store.set('cloudLocal', h); store.set('cloudSeen', h); store.set('cloudAt', Date.now()); cloudUI();
   glbPut();
 }
@@ -3877,16 +3881,22 @@ async function cloudSync(startup) {
     if (!startup && !localChanged) return; // nothing new to save
     const snap = await CLOUD.db.collection('saves').doc(CLOUD.user.uid).get();
     const cd = snap.exists ? snap.data() : null;
-    if (!cd || !cd.code) { await cloudPut(code, h); if (startup) cloudMsg('Your progress is now saved to your account.'); return; }
+    CLOUD.prev = cd; try { $('cloudOld').hidden = !(cd && Array.isArray(cd.hist) && cd.hist.length); } catch (e) {}
+    if (!cd || !cd.code) { await cloudPut(code, h, null); if (startup) cloudMsg('Your progress is now saved to your account.'); return; }
+    if (lastLocal === '__v76') store.set('cloudLocal', '');
     const cloudChanged = cd.hash !== lastCloud;
     if (cd.hash === h) { store.set('cloudLocal', h); store.set('cloudSeen', h); cloudUI(); if (startup) glbPut(); return; }
-    if (!cloudChanged) { if (localChanged) await cloudPut(code, h); return; } // only this device changed
+    const behind = progOf(code) < progOf(cd.code); // this device has less career progress than the account: it was wiped or is out of date
+    if (!cloudChanged && !behind) { if (localChanged) await cloudPut(code, h, cd); return; } // only this device changed
+    if (behind && (!localChanged || localTrivial() || progOf(code) < 15)) { cloudApply(cd.code, cd.hash); return; } // account clearly has more: load it
     if (!localChanged || localTrivial()) { cloudApply(cd.code, cd.hash); return; } // only the account changed
-    // both changed: ask
+    // both changed: ask (but never in the middle of a match)
+    if (state === 'play') { CLOUD.last = Date.now() - 30000; return; }
     $('cloudPick').hidden = false; showTab('career');
     $('cloudUseCloud').textContent = '☁️ Account: ' + summ(cd.code); $('cloudUseLocal').textContent = '📱 This device: ' + summ(code);
     $('cloudUseCloud').onclick = () => { $('cloudPick').hidden = true; cloudApply(cd.code, cd.hash); };
-    $('cloudUseLocal').onclick = async () => { $('cloudPick').hidden = true; try { await cloudPut(code, h); cloudMsg('Saved this device’s progress to your account.'); } catch (e) { cloudMsg(errText(e)); } };
+    $('cloudUseLocal').textContent = '📱 This device: ' + summ(code) + (behind ? ' ⚠️ LESS progress' : '');
+    $('cloudUseLocal').onclick = async () => { if (behind && !confirm('This device has LESS progress than your account. Replace your account with this device’s progress? (Your account’s current save is kept as a backup.)')) return; $('cloudPick').hidden = true; try { await cloudPut(code, h, cd); cloudMsg('Saved this device’s progress to your account.'); } catch (e) { cloudMsg(errText(e)); } };
   } catch (e) { cloudMsg(errText(e)); } finally { CLOUD.busy = false; CLOUD.last = Date.now(); }
 }
 (function () {
@@ -3899,6 +3909,13 @@ async function cloudSync(startup) {
   $('cloudSync').addEventListener('click', async () => { cloudMsg('Syncing…'); await cloudSync(true); if (!$('cloudMsg').textContent || $('cloudMsg').textContent === 'Syncing…') cloudMsg('Up to date ✓'); });
   $('cloudOutBtn').addEventListener('click', async () => { try { await cloudSync(false); } catch (e) {} try { await CLOUD.auth.signOut(); } catch (e) {} store.set('cloudLocal', ''); store.set('cloudSeen', ''); cloudMsg('Signed out. Your progress stays on this device and in your account.'); });
   $('cloudPass').addEventListener('keydown', e => { if (e.key === 'Enter') $('cloudSignIn').click(); });
+  $('cloudOld').addEventListener('click', () => {
+    const cd = CLOUD.prev; if (!cd || !Array.isArray(cd.hist) || !cd.hist.length) { cloudMsg('No older save in your account.'); return; }
+    const best = cd.hist.slice().sort((a, b) => progOf(b) - progOf(a))[0];
+    if (!confirm('Restore your older account save?\n\n' + summ(best) + '\n\nThis replaces the progress on this device and in your account.')) return;
+    const err = loadBackup(best); if (err) { cloudMsg(err); return; }
+    store.set('cloudLocal', ''); store.set('cloudSeen', cd.hash); banner('OLDER SAVE RESTORED', 'Uploading it to your account…', 2); setTimeout(() => location.reload(), 700);
+  });
   if (store.get('cloudOn', false)) cloudInit().catch(() => {});
   setInterval(() => { if (CLOUD.user && Date.now() - CLOUD.last > 40000) cloudSync(false); }, 10000);
   document.addEventListener('visibilitychange', () => { if (document.hidden && CLOUD.user) cloudSync(false); });
