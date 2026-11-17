@@ -812,12 +812,18 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 
     <section class="pane" id="pane-settings" hidden>
       <div class="sets" id="settingsList"></div>
+      <div class="acct" id="redeemBox">
+        <span class="label">🎁 Codes</span>
+        <span class="amsg" id="redeemWho">Enter a gift, Premium or admin code here. Gift codes work once per device.</span>
+        <div class="prow"><input type="text" id="redeemCode" maxlength="32" autocomplete="off" spellcheck="false" placeholder="Gift code" aria-label="Gift code"><button class="btn go" id="redeemBtn" type="button">Redeem</button></div>
+      </div>
       <div class="acct admin" id="adminBox" hidden>
         <span class="label">🛠️ Admin panel · this device only</span>
         <div class="admrow"><button class="btn ghost" data-adm="coins1" type="button">+ ◎ 1,000</button><button class="btn ghost" data-adm="coins10" type="button">+ ◎ 10,000</button><button class="btn ghost" data-adm="all" type="button">Unlock all cosmetics</button><button class="btn ghost" data-adm="guns" type="button">All guns level 100</button><button class="btn ghost" data-adm="prem" type="button">Premium + premium guns</button><button class="btn ghost" id="admGod" data-adm="god" type="button">God mode: OFF</button></div>
         <div class="admrow"><input type="text" id="admTier" inputmode="numeric" placeholder="Pass tier (1-75)"><button class="btn ghost" data-adm="tier" type="button">Set tier</button><input type="text" id="admRank" inputmode="numeric" placeholder="Rank RP (e.g. 1800)"><button class="btn ghost" data-adm="rank" type="button">Set rank</button></div>
         <span class="label">Make a gift code for a friend</span>
-        <div class="admrow"><select id="admGiftType"><option value="C">Coins</option><option value="W">Weapon (key: vx, sc7…)</option><option value="X">Pass XP</option><option value="T">Pass tier (at least)</option><option value="P">Premium pass (this season)</option><option value="A">All crate skins &amp; camos</option></select><input type="text" id="admGiftVal" placeholder="Amount or weapon (e.g. 5000 or vx)"><button class="btn go" data-adm="gift" type="button">Make code</button></div>
+        <div class="admrow"><select id="admGiftType"><option value="C">Coins</option><option value="W">Weapon (key: vx, sc7…)</option><option value="X">Pass XP</option><option value="L">Add pass levels</option><option value="T">Pass tier (at least)</option><option value="P">Premium pass (this season)</option><option value="A">All crate skins &amp; camos</option></select><input type="text" id="admGiftVal" placeholder="Amount or weapon (e.g. 5000 or vx)"><button class="btn go" data-adm="gift" type="button">Make code</button></div>
+        <div class="admrow"><button class="btn ghost" data-adm="gTempest" type="button">Tempest code</button><button class="btn ghost" data-adm="gL10" type="button">+10 levels code</button></div>
         <input type="text" id="admGiftOut" readonly placeholder="Gift code appears here">
         <span class="amsg" id="admMsg">Admin tools only change this device. Gift codes work once per device.</span>
         <div class="admrow"><button class="btn ghost" data-adm="off" type="button">Turn admin off</button></div>
@@ -3721,11 +3727,12 @@ $('partyCopy').addEventListener('click', () => { const b = $('partyCopy'); try {
 const H_VX_GIFT = '59bd02673107179b088387e1d02d77873de69e8d7a523c50b54add4d914bea2b', H_ADMIN = '21d3c9b31a0acabaec27b6e4d2fa25852dd5651af11acffe406592de1764a8d0', GIFT_SALT = 'bf3ff5caa6576aae8dc60863';
 async function sha256(t) { try { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); } catch (e) { return ''; } }
 const isAdmin = () => store.get('admin', false) === true;
-const giftMsg = t => { $('premCode').value = ''; $('premWho').textContent = t; };
+let giftOut = ['premCode', 'premWho'];
+const giftMsg = t => { $(giftOut[0]).value = ''; $(giftOut[1]).textContent = t; };
 async function redeemSecret(v) {
   const h = await sha256(v);
   if (h === H_VX_GIFT) { giftTempest(); giftMsg('Gift code accepted: the VX-9 Tempest is yours. Equip it on the Loadout tab.'); banner('VX-9 TEMPEST UNLOCKED', 'Gift code accepted', 3); renderLoadout(); showGift(); return; }
-  if (h === H_ADMIN) { store.set('admin', true); giftMsg('Admin panel unlocked. Find it at the bottom of the Settings tab.'); renderAdmin(); return; }
+  if (h === H_ADMIN) { store.set('admin', true); giftMsg('Admin panel unlocked. It is just below this box.'); renderAdmin(); return; }
   const m = /^GIFT-([A-Z0-9]+)-([0-9A-F]{8})$/.exec(v);
   if (m) {
     const sig = (await sha256(GIFT_SALT + m[1])).slice(0, 8).toUpperCase(), used = store.get('giftsUsed', []) || [];
@@ -3742,6 +3749,7 @@ function applyGift(pl) {
   if (t === 'C' && +val > 0) { addCoins(Math.min(100000, +val)); return '◎ ' + (+val).toLocaleString() + ' coins'; }
   if (t === 'W' && WEAPONS[val]) { if (!BP.owned.includes('weapon:' + val)) BP.owned.push('weapon:' + val); store.set('pass', BP); return 'the ' + WEAPONS[val].name; }
   if (t === 'X' && +val > 0) { addXP(Math.min(200000, +val)); return (+val).toLocaleString() + ' battle pass XP'; }
+  if (t === 'L' && +val > 0) { const add = Math.min(75, +val), was = bpTier(), to = Math.min(BP_TIERS, was + add); const need = (to - 1) * BP_XP - BP.xp; if (need > 0) addXP(Math.ceil(need / (BP.premium ? 1.25 : 1)) + 1); renderPass(); return '+' + add + ' battle pass levels (now tier ' + bpTier() + ')'; }
   if (t === 'T' && +val > 0) { const tt = Math.min(BP_TIERS, +val); if (bpTier() < tt) { BP.xp = (tt - 1) * BP_XP; store.set('pass', BP); savePassBest(); renderPass(); } return 'battle pass tier ' + tt; }
   if (t === 'P') { BP.premium = true; store.set('pass', BP); return 'Premium pass for this season'; }
   if (t === 'A') { for (const it of crateItems()) { const l = it.kind === 'skin' ? WALLET.skins : WALLET.camos; if (!l.includes(it.id)) l.push(it.id); } saveWallet(); return 'every crate skin and camo'; }
@@ -3766,18 +3774,27 @@ const ADM = {
 document.addEventListener('click', async ev => {
   const b = ev.target.closest && ev.target.closest('[data-adm]'); if (!b || !isAdmin()) return;
   const k = b.dataset.adm;
+  if (k === 'gTempest' || k === 'gL10') { const code = await makeGift(k === 'gL10' ? 'L10' : 'WVX'); $('admGiftOut').value = code; try { navigator.clipboard.writeText(code).catch(() => {}); } catch (e) {} $('admMsg').textContent = 'Code made (copied). Your friend enters it in Settings → Codes. Works once per device.'; return; }
   if (k === 'gift') {
     const type = $('admGiftType').value, amt = ($('admGiftVal').value || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
     const pl = type === 'W' ? 'W' + (WEAPONS[amt.toLowerCase()] ? amt : 'VX') : type === 'P' || type === 'A' ? type : type + (amt || '1000');
     const code = await makeGift(pl); $('admGiftOut').value = code; try { navigator.clipboard.writeText(code).catch(() => {}); } catch (e) {}
-    $('admMsg').textContent = 'Gift code made (copied). Your friend types it in the Premium code box on the Pass tab. Works once per device.'; return;
+    $('admMsg').textContent = 'Gift code made (copied). Your friend enters it in Settings → Codes. Works once per device.'; return;
   }
   const r = ADM[k] && ADM[k](); $('admMsg').textContent = r || 'Done'; updCoins(); renderAdmin(); try { renderLoadout(); } catch (e) {}
 });
+$('redeemBtn').addEventListener('click', () => {
+  const v = ($('redeemCode').value || '').trim().toUpperCase().replace(/\s+/g, '');
+  if (!v) return;
+  giftOut = ['redeemCode', 'redeemWho'];
+  if (v === premiumCode(SEASON).toUpperCase()) { $('premCode').value = v; $('redeemCode').value = ''; $('premBtn').click(); $('redeemWho').textContent = 'Premium code accepted.'; return; }
+  redeemSecret(v);
+});
+$('redeemCode').addEventListener('keydown', e => { if (e.key === 'Enter') $('redeemBtn').click(); });
 $('premBtn').addEventListener('click', () => {
   const v = ($('premCode').value || '').trim().toUpperCase();
   if (!v) return;
-  if (/^GIFT-/.test(v) || /^[A-Z0-9]+-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(v)) { redeemSecret(v); return; }
+  if (/^GIFT-/.test(v) || /^[A-Z0-9]+-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(v)) { giftOut = ['premCode', 'premWho']; redeemSecret(v); return; }
   if (v === premiumCode(SEASON).toUpperCase()) { BP.premium = true; store.set('pass', BP); if (!myTitle) { myTitle = 'VIP'; store.set('title', myTitle); } banner(bpTier() >= BP_TIERS && PREM_W ? WEAPONS[PREM_W].name.toUpperCase() + ' UNLOCKED' : 'PREMIUM UNLOCKED', bpTier() >= BP_TIERS ? 'Premium active, and you already reached tier ' + BP_TIERS + '. It is in your Loadout.' : 'Exclusive skins + VIP title + 25% XP', 3); renderPass(); renderLoadout(); }
   else { $('premWho').textContent = 'That code was not recognised. Check it and try again.'; }
 });
