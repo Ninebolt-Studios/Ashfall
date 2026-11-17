@@ -454,6 +454,10 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 .friend.on .dot { background: var(--heal); box-shadow: 0 0 8px var(--heal); }
 .friend .fs { font-size: 12px; color: var(--dim); }
 .friend button { background: none; border: 0; color: var(--dim); font-size: 18px; cursor: pointer; padding: 2px 6px; }
+.cform { display: flex; flex-wrap: wrap; gap: 8px; }
+.cform input { flex: 1 1 220px; font: 500 15px var(--mono); color: var(--ink); background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.14); border-radius: 10px; padding: 11px 12px; -webkit-user-select: text; user-select: text; }
+.cloud { border-color: rgba(95,180,255,.45) !important; }
+#cloudPick .btn { white-space: normal; text-align: left; }
 /* admin */
 .admin { border-color: rgba(192,138,255,.5) !important; }
 .admrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -741,7 +745,7 @@ el.addEventListener('pointerdown',done);var go=function(){requestAnimationFrame(
           </div>
           <span class="pmsg" id="partyMsg">Make a party and send the code to a friend. Party members duel each other and play on the same team in Team Battle.</span>
         </div>
-        <div class="gift" id="freshNote" hidden><span>💾</span><div><b>Played before?</b><span class="pmsg">This device has no saved progress yet. If you had progress somewhere else, load your save file or paste your backup code. (Tip: always open the game the same way, e.g. in Safari, since other apps and private tabs keep separate saves.)</span></div><button class="btn go" id="freshRestore" type="button">Restore</button><button class="btn ghost" id="freshFile" type="button">Load file</button><button class="btn ghost" id="freshNo" type="button">I'm new</button></div>
+        <div class="gift" id="freshNote" hidden><span>💾</span><div><b>Played before?</b><span class="pmsg">This device has no saved progress yet. If you have an account, sign in. You can also load a save file or paste a backup code. (Tip: always open the game the same way, e.g. in Safari, since other apps and private tabs keep separate saves.)</span></div><button class="btn go" id="freshSign" type="button">Sign in</button><button class="btn ghost" id="freshRestore" type="button">Restore code</button><button class="btn ghost" id="freshFile" type="button">Load file</button><button class="btn ghost" id="freshNo" type="button">I'm new</button></div>
         <div class="gift" id="giftNote" hidden><span>🎁</span><div><b>VX-9 Tempest unlocked!</b><span class="pmsg">You were so close on the Season 1 pass that the Tempest rifle is yours. Equip it on the Loadout tab.</span></div><button class="btn go" id="giftOk" type="button">Nice!</button></div>
         <div class="rankbox" id="rankBox"><span class="rb" id="rkBadge">🥉</span><div style="display:grid;gap:4px;flex:1"><span class="label">Your rank</span><b id="rkName">Bronze</b><span class="rbar"><i id="rkFill"></i></span><span class="pmsg" id="rkNext"></span></div></div>
         <div class="daily" id="dailyBox">
@@ -904,6 +908,23 @@ el.addEventListener('pointerdown',done);var go=function(){requestAnimationFrame(
         <span class="amsg">Add friends by their exact callsign. You'll see when they're online and what they're playing. To play together, make a party on the Play tab and send them the code.</span>
       </div>
       <div class="acct"><span class="label">Achievements · <span id="achCount"></span></span><div class="achs" id="achList"></div></div>
+      <div class="acct cloud" id="cloudBox">
+        <span class="label">☁️ Account · your progress saves online</span>
+        <div id="cloudOut">
+          <span class="amsg">Sign in and your progress saves to your account automatically. Sign in on any iPad, phone or computer to get it all back.</span>
+          <div class="cform"><input type="email" id="cloudEmail" autocomplete="email" placeholder="Email" aria-label="Email"><input type="password" id="cloudPass" autocomplete="current-password" placeholder="Password (6+ characters)" aria-label="Password"></div>
+          <div class="prow"><button class="btn go" id="cloudSignIn" type="button">Sign in</button><button class="btn ghost" id="cloudSignUp" type="button">Create account</button><button class="btn ghost" id="cloudForgot" type="button">Forgot password</button></div>
+        </div>
+        <div id="cloudIn" hidden>
+          <span class="amsg" id="cloudWho"></span>
+          <div class="prow"><button class="btn go" id="cloudSync" type="button">Sync now</button><button class="btn ghost" id="cloudOutBtn" type="button">Sign out</button></div>
+        </div>
+        <div id="cloudPick" hidden>
+          <span class="amsg"><b>Which progress do you want to keep?</b> Your account and this device have different progress.</span>
+          <div class="prow"><button class="btn go" id="cloudUseCloud" type="button"></button><button class="btn ghost" id="cloudUseLocal" type="button"></button></div>
+        </div>
+        <span class="amsg" id="cloudMsg"></span>
+      </div>
       <div class="acct">
         <span class="label">💾 Save &amp; load · keep your progress</span>
         <span class="amsg" id="acctWho"></span>
@@ -2435,6 +2456,7 @@ function renderChip() {
   let lv = 1; for (const k of Object.keys(WEAPONS)) lv = Math.max(lv, wLevel(k));
   $('pcSub').textContent = RANKS[ri].n + ' · S' + SEASON + ' tier ' + bpTier() + ' · gun lv ' + lv;
   $('pcCoins').textContent = '◎ ' + WALLET.coins.toLocaleString();
+  try { if (CLOUD.user) $('pcName').textContent = playerName + ' ☁️'; } catch (e) {}
 }
 function updCoins() { try { renderChip(); } catch (e) {} const t = $('coinTag'); if (t) t.textContent = '◎ ' + WALLET.coins.toLocaleString() + ' coins'; const sc = $('shopCoins'); if (sc) sc.textContent = WALLET.coins.toLocaleString(); }
 function updHud() {
@@ -3306,7 +3328,7 @@ let menuMode = 'main';
 function showTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.tab === name)));
   ['play', 'loadout', 'pass', 'shop', 'settings', 'career'].forEach(n => { $('pane-' + n).hidden = n !== name; });
-  if (name === 'career') renderCareer();
+  if (name === 'career') { renderCareer(); cloudUI(); }
   if (name === 'settings') renderAdmin();
   if (name === 'play') { try { renderRank(); renderProfile(); } catch (e) {} }
   if (name === 'pass') renderPass();
@@ -3744,6 +3766,75 @@ $('partyJoin').addEventListener('click', () => enterParty($('partyIn').value));
 $('partyIn').addEventListener('keydown', e => { if (e.key === 'Enter') enterParty($('partyIn').value); e.stopPropagation(); });
 $('partyLeave').addEventListener('click', async () => { await leavePartyRoom(); party = ''; store.set('party', ''); partyPeers = []; renderParty(); $('partyMsg').textContent = 'You left the party.'; });
 $('partyCopy').addEventListener('click', () => { const b = $('partyCopy'); try { navigator.clipboard.writeText(party).then(() => { b.textContent = 'Copied'; setTimeout(() => b.textContent = 'Copy', 1500); }, () => {}); } catch (e) {} });
+/* ---------- accounts + cloud saves (Firebase) ---------- */
+const FB_CFG = { apiKey: 'AIzaSyAptGcd7k_mjVwkZPdnMLgR-4KPABtBOPU', authDomain: 'dustline-8da4d.firebaseapp.com', projectId: 'dustline-8da4d', storageBucket: 'dustline-8da4d.firebasestorage.app', messagingSenderId: '288529644668', appId: '1:288529644668:web:edb5d96554bc6d647eddf9' };
+const FB_VER = '10.12.2';
+const CLOUD = { ready: null, auth: null, db: null, user: null, busy: false, last: 0 };
+const fnv = t => { let h = 0x811c9dc5; for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h.toString(16); };
+const loadJs = src => new Promise((ok, no) => { const sc = document.createElement('script'); sc.src = src; sc.async = true; sc.onload = ok; sc.onerror = () => no(new Error('load')); document.head.appendChild(sc); });
+function cloudInit() {
+  if (CLOUD.ready) return CLOUD.ready;
+  const base = 'https://www.gstatic.com/firebasejs/' + FB_VER + '/';
+  CLOUD.ready = loadJs(base + 'firebase-app-compat.js').then(() => Promise.all([loadJs(base + 'firebase-auth-compat.js'), loadJs(base + 'firebase-firestore-compat.js')])).then(() => {
+    const app = firebase.apps && firebase.apps.length ? firebase.app() : firebase.initializeApp(FB_CFG);
+    CLOUD.auth = firebase.auth(); CLOUD.db = firebase.firestore();
+    CLOUD.auth.onAuthStateChanged(u => { CLOUD.user = u || null; store.set('cloudOn', !!u); cloudUI(); if (u) cloudSync(true); });
+    return true;
+  }).catch(e => { CLOUD.ready = null; cloudMsg('Could not reach the account server. Check your internet and try again.'); throw e; });
+  return CLOUD.ready;
+}
+const cloudMsg = t => { const m = $('cloudMsg'); if (m) m.textContent = t || ''; };
+function cloudUI() {
+  if (!$('cloudBox')) return;
+  const u = CLOUD.user; $('cloudOut').hidden = !!u; $('cloudIn').hidden = !u;
+  if (u) { const t = +store.get('cloudAt', 0); $('cloudWho').textContent = 'Signed in as ' + u.email + (t ? ' · saved to your account ' + new Date(t).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : ''); }
+  const pc = $('pcName'); if (pc) pc.textContent = playerName + (u ? ' ☁️' : '');
+}
+const ERRS = { 'auth/invalid-email': 'That email does not look right.', 'auth/missing-password': 'Type a password.', 'auth/weak-password': 'Password needs at least 6 characters.', 'auth/email-already-in-use': 'There is already an account with that email. Tap Sign in instead.', 'auth/invalid-credential': 'Wrong email or password.', 'auth/wrong-password': 'Wrong email or password.', 'auth/user-not-found': 'No account with that email. Tap Create account.', 'auth/too-many-requests': 'Too many tries. Wait a minute and try again.', 'auth/network-request-failed': 'No internet connection.', 'permission-denied': 'The account server refused the save (the database rules may not be published yet).' };
+const errText = e => ERRS[e && e.code] || ('Something went wrong' + (e && e.code ? ' (' + e.code + ')' : '') + '. Try again.');
+const summ = code => { try { const o = JSON.parse(decodeURIComponent(escape(atob(code.slice(4))))); const xp = (o.pass && +o.pass.xp) || 0, s = (o.pass && +o.pass.season) || SEASON; return (o.name || 'Operator') + ' · S' + s + ' tier ' + Math.min(seasonTiers(s), 1 + Math.floor(xp / seasonXP(s))) + ' · ◎ ' + ((o.wallet && +o.wallet.coins) || 0).toLocaleString() + ' · ' + ((o.career && +o.career.kills) || 0) + ' elims'; } catch (e) { return ''; } };
+const localTrivial = () => !store.get('name', '') && !(C.kills > 0) && !(BP.xp > 0) && !(WALLET.coins > 0);
+async function cloudPut(code, h) {
+  await CLOUD.db.collection('saves').doc(CLOUD.user.uid).set({ code, hash: h, at: Date.now(), name: playerName, v: 1 });
+  store.set('cloudHash', h); store.set('cloudAt', Date.now()); cloudUI();
+}
+function cloudApply(code, h) {
+  const err = loadBackup(code); if (err) { cloudMsg(err); return; }
+  store.set('cloudHash', h); store.set('cloudAt', Date.now()); banner('ACCOUNT LOADED', 'Getting your progress…', 2);
+  setTimeout(() => location.reload(), 600);
+}
+async function cloudSync(startup) {
+  if (!CLOUD.user || CLOUD.busy) return; CLOUD.busy = true;
+  try {
+    const code = makeBackup(); if (!code) return; const h = fnv(code), last = store.get('cloudHash', '');
+    if (!startup && h === last) return; // nothing new to save
+    const snap = await CLOUD.db.collection('saves').doc(CLOUD.user.uid).get();
+    const cd = snap.exists ? snap.data() : null;
+    if (!cd || !cd.code) { await cloudPut(code, h); if (startup) cloudMsg('Your progress is now saved to your account.'); return; }
+    if (cd.hash === h) { store.set('cloudHash', h); cloudUI(); return; }
+    if (cd.hash === last) { await cloudPut(code, h); return; } // only this device changed
+    if (h === last || localTrivial()) { cloudApply(cd.code, cd.hash); return; } // only the account changed
+    // both changed: ask once
+    $('cloudPick').hidden = false; showTab('career');
+    $('cloudUseCloud').textContent = '☁️ Account: ' + summ(cd.code); $('cloudUseLocal').textContent = '📱 This device: ' + summ(code);
+    $('cloudUseCloud').onclick = () => { $('cloudPick').hidden = true; cloudApply(cd.code, cd.hash); };
+    $('cloudUseLocal').onclick = async () => { $('cloudPick').hidden = true; try { await cloudPut(code, h); cloudMsg('Saved this device’s progress to your account.'); } catch (e) { cloudMsg(errText(e)); } };
+  } catch (e) { cloudMsg(errText(e)); } finally { CLOUD.busy = false; CLOUD.last = Date.now(); }
+}
+(function () {
+  if (!$('cloudBox')) return;
+  const creds = () => [($('cloudEmail').value || '').trim(), $('cloudPass').value || ''];
+  const go = async (fn, msg) => { cloudMsg(msg); try { await cloudInit(); const [e, p] = creds(); await fn(e, p); $('cloudPass').value = ''; cloudMsg(''); } catch (e) { if (e && e.message !== 'load') cloudMsg(errText(e)); } };
+  $('cloudSignIn').addEventListener('click', () => go((e, p) => CLOUD.auth.signInWithEmailAndPassword(e, p), 'Signing in…'));
+  $('cloudSignUp').addEventListener('click', () => go((e, p) => CLOUD.auth.createUserWithEmailAndPassword(e, p), 'Creating your account…'));
+  $('cloudForgot').addEventListener('click', async () => { const e = creds()[0]; if (!e) { cloudMsg('Type your email first, then tap Forgot password.'); return; } try { await cloudInit(); await CLOUD.auth.sendPasswordResetEmail(e); cloudMsg('Password reset email sent to ' + e + '. Check your inbox (and spam).'); } catch (er) { if (er && er.message !== 'load') cloudMsg(errText(er)); } });
+  $('cloudSync').addEventListener('click', async () => { cloudMsg('Syncing…'); await cloudSync(true); if (!$('cloudMsg').textContent || $('cloudMsg').textContent === 'Syncing…') cloudMsg('Up to date ✓'); });
+  $('cloudOutBtn').addEventListener('click', async () => { try { await cloudSync(false); } catch (e) {} try { await CLOUD.auth.signOut(); } catch (e) {} store.set('cloudHash', ''); cloudMsg('Signed out. Your progress stays on this device and in your account.'); });
+  $('cloudPass').addEventListener('keydown', e => { if (e.key === 'Enter') $('cloudSignIn').click(); });
+  if (store.get('cloudOn', false)) cloudInit().catch(() => {});
+  setInterval(() => { if (CLOUD.user && Date.now() - CLOUD.last > 40000) cloudSync(false); }, 10000);
+  document.addEventListener('visibilitychange', () => { if (document.hidden && CLOUD.user) cloudSync(false); });
+})();
 /* ---------- secret codes: only SHA-256 fingerprints are stored here, never the codes ---------- */
 const H_VX_GIFT = '59bd02673107179b088387e1d02d77873de69e8d7a523c50b54add4d914bea2b', H_ADMIN = '5298d79bd8d9e189084a9d7eb140d76462af9440c4dbd02c5535b1342e9bc4dc', GIFT_SALT = 'bf3ff5caa6576aae8dc60863';
 async function sha256(t) { try { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); } catch (e) { return ''; } }
@@ -4113,6 +4204,7 @@ async function startTDM(isDuel, isRanked) {
   n.hidden = !(FRESH_SAVE || store.get('freshAsk', false)); if (!n.hidden) store.set('freshAsk', true);
   const close = () => { n.hidden = true; store.set('freshAsk', false); };
   $('freshNo').addEventListener('click', close);
+  $('freshSign').addEventListener('click', () => { close(); showTab('career'); try { $('cloudBox').scrollIntoView({ block: 'center' }); $('cloudEmail').focus(); } catch (e) {} });
   $('freshFile').addEventListener('click', () => { close(); showTab('career'); $('loadFile').click(); });
   $('freshRestore').addEventListener('click', () => { close(); showTab('career'); $('acctRestore').click(); try { $('acctCode').scrollIntoView({ block: 'center' }); } catch (e) {} });
 })();
