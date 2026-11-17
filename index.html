@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117201103';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261117201235';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -5007,18 +5007,48 @@ function tryVault(){
   return true;
 }
 
+/* ---------- game controllers (PlayStation / Xbox / Backbone / MFi) ---------- */
+const GP = { prev: [], mx: 0, mz: 0, fire: false, ads: false, sprint: false, on: false };
+window.addEventListener('gamepadconnected', e => { GP.on = true; banner('🎮 CONTROLLER CONNECTED', String(e.gamepad.id || '').replace(/\(.*\)/, '').slice(0, 40) || 'Ready to play', 2.5); });
+window.addEventListener('gamepaddisconnected', () => { GP.on = false; GP.mx = GP.mz = 0; if (GP.fire) input.fire = false; GP.fire = false; });
+function pollPad(dt) {
+  const pads = navigator.getGamepads ? navigator.getGamepads() : []; let g = null; for (const p of pads) if (p && p.connected) { g = p; break; }
+  if (!g) return; GP.on = true;
+  const dz = v => Math.abs(v) < 0.15 ? 0 : (v - Math.sign(v) * 0.15) / 0.85, ax = i => dz(g.axes[i] || 0), btn = i => !!(g.buttons[i] && (g.buttons[i].pressed || g.buttons[i].value > 0.35));
+  const down = i => btn(i) && !GP.prev[i];
+  // start: pause / resume (works in menus too)
+  if (down(9)) { if (state === 'play') { const pb = $('pauseBtn'); if (pb) pb.click(); else pause(); } else if (state === 'paused') resume(); }
+  if (state === 'play' && P.alive) {
+    GP.mx = ax(0); GP.mz = ax(1);
+    const rx = ax(2), ry = ax(3), sens = (S.sens || 1.2) * (P.ads ? (S.adsSens || 0.8) : 1) * 2.6;
+    P.yaw -= rx * Math.abs(rx) * sens * dt; P.pitch = clamp(P.pitch - ry * Math.abs(ry) * sens * dt * (S.invertY ? -1 : 1), -1.4, 1.4);
+    const f = btn(7); if (f !== GP.fire) { GP.fire = f; input.fire = f; }
+    const a = btn(6); if (a !== GP.ads) { GP.ads = a; P.ads = a; }
+    if (down(0)) input.jump = true;
+    if (down(1)) { if (!(P.sprinting && startSlide())) P.crouch = !P.crouch; }
+    if (down(2)) startReload();
+    if (down(3)) doPing();
+    if (down(4)) try { throwNade(); } catch (e) {}
+    if (down(10)) GP.sprint = !GP.sprint;
+    if (down(12)) sendQc(0); if (down(15)) sendQc(2); if (down(13)) sendQc(1); if (down(14)) sendQc(4);
+    if (down(5)) { try { const k = document.querySelector('#ksScan:not([hidden]), #ksMsl:not([hidden])'); if (k) k.click(); } catch (e) {} }
+  } else { GP.mx = GP.mz = 0; if (GP.fire) { GP.fire = false; input.fire = false; } }
+  if (Math.hypot(GP.mx, GP.mz) < 0.3) GP.sprint = false;
+  for (let i = 0; i < g.buttons.length; i++) GP.prev[i] = btn(i);
+}
 /* ---------- player step ---------- */
 function stepPlayer(dt) {
+  try { pollPad(dt); } catch (e) {}
   const kL = Math.min(1, dt * 40), ax = input.ldx * kL, ay = input.ldy * kL;
   input.ldx -= ax; input.ldy -= ay; P.yaw -= ax; P.pitch = clamp(P.pitch - ay, -1.4, 1.4);
-  let mx = input.mx, mz = input.mz;
+  let mx = input.mx + GP.mx, mz = input.mz + GP.mz;
   const k = input.keys;
   if (k.KeyW || k.ArrowUp) mz -= 1;
   if (k.KeyS || k.ArrowDown) mz += 1;
   if (k.KeyA || k.ArrowLeft) mx -= 1;
   if (k.KeyD || k.ArrowRight) mx += 1;
   let len = Math.hypot(mx, mz);
-  const wantSprint = (k.ShiftLeft || k.ShiftRight || (stickId !== null && len > 0.95 && mz < -0.6)) && mz < 0 && !P.crouch && !P.ads;
+  const wantSprint = (k.ShiftLeft || k.ShiftRight || GP.sprint || (stickId !== null && len > 0.95 && mz < -0.6)) && mz < 0 && !P.crouch && !P.ads;
   const sprint = wantSprint && P.stamina > 0;
   if (sprint) { P.stamina = Math.max(0, P.stamina - (hasPerk('fleetfoot') ? 13 : 20) * dt); P.stWait = 0.9; } else { P.stWait -= dt; if (P.stWait <= 0) P.stamina = Math.min(100, P.stamina + 16 * dt); }
   if (sprint && P.ads) P.ads = false;
@@ -5178,6 +5208,7 @@ function loop() {
   try { stepDust(dt); } catch (e) {}
   try { stepDom(dt); } catch (e) {}
   try { stepPings(dt); } catch (e) {}
+  if (state === 'paused') try { pollPad(dt); } catch (e) {}
   try { stepSnd(dt); } catch (e) {}
   fpsT += raw; fpsN++;
   if (fpsT > 0.5) { if (S.fps) hud.fps.textContent = Math.round(fpsN / fpsT) + ' FPS'; fpsT = 0; fpsN = 0; }
