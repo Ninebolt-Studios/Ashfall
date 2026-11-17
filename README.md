@@ -8,16 +8,17 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v75)](https://gaayyynesss.github.io/Seige/?v=75)
+## ▶️ [PLAY NOW — latest version (v76)](https://gaayyynesss.github.io/Seige/?v=76)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=75
+**Latest:** https://gaayyynesss.github.io/Seige/?v=76
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v75** | https://gaayyynesss.github.io/Seige/?v=75 | **Save files:** on the Career tab tap **💾 Save to file** to keep your whole progress as a file (save it to Files, Notes or send it to yourself), and **📂 Load save file** to get it back on any device. Shows when you last saved. The **Played before?** card on a new device can load a save file too |
+| **v76** | https://gaayyynesss.github.io/Seige/?v=76 | **Accounts!** On the Career tab, create an account with your email and a password and your progress saves online automatically (about every 40 seconds and when you leave). Sign in on any iPad, phone or computer to get everything back. If your account and a device have different progress, the game asks which one to keep. Forgot password sends a reset email. A ☁️ next to your name means you are signed in |
+| v75 | https://gaayyynesss.github.io/Seige/?v=75 | **Save files:** on the Career tab tap **💾 Save to file** to keep your whole progress as a file (save it to Files, Notes or send it to yourself), and **📂 Load save file** to get it back on any device. Shows when you last saved. The **Played before?** card on a new device can load a save file too |
 | v74 | https://gaayyynesss.github.io/Seige/?v=74 | **Coins and rank reset for everyone**: all players start again at ◎ 0 and Bronze 0 RP (skins, camos, guns and battle pass are kept; old backup codes can't bring back old coins or rank). If you open the game somewhere with no save (another app's browser, a private tab, a new device), a **Played before? Restore** card helps you load your backup code. The game also asks your browser to keep your save so it is less likely to be cleared |
 | v73 | https://gaayyynesss.github.io/Seige/?v=73 | Cleaned up the version notes |
 | v72 | https://gaayyynesss.github.io/Seige/?v=72 | **Ninebolt Studios** branding: a studio intro screen when the game opens (tap to skip, shows once per visit), "A Ninebolt Studios game" under the Dustline title, and the studio logo in this README |
