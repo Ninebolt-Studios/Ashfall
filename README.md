@@ -8,16 +8,17 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v74)](https://gaayyynesss.github.io/Seige/?v=74)
+## ▶️ [PLAY NOW — latest version (v75)](https://gaayyynesss.github.io/Seige/?v=75)
 
-**Latest:** https://gaayyynesss.github.io/Seige/?v=74
+**Latest:** https://gaayyynesss.github.io/Seige/?v=75
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v74** | https://gaayyynesss.github.io/Seige/?v=74 | **Coins and rank reset for everyone**: all players start again at ◎ 0 and Bronze 0 RP (skins, camos, guns and battle pass are kept; old backup codes can't bring back old coins or rank). If you open the game somewhere with no save (another app's browser, a private tab, a new device), a **Played before? Restore** card helps you load your backup code. The game also asks your browser to keep your save so it is less likely to be cleared |
+| **v75** | https://gaayyynesss.github.io/Seige/?v=75 | **Save files:** on the Career tab tap **💾 Save to file** to keep your whole progress as a file (save it to Files, Notes or send it to yourself), and **📂 Load save file** to get it back on any device. Shows when you last saved. The **Played before?** card on a new device can load a save file too |
+| v74 | https://gaayyynesss.github.io/Seige/?v=74 | **Coins and rank reset for everyone**: all players start again at ◎ 0 and Bronze 0 RP (skins, camos, guns and battle pass are kept; old backup codes can't bring back old coins or rank). If you open the game somewhere with no save (another app's browser, a private tab, a new device), a **Played before? Restore** card helps you load your backup code. The game also asks your browser to keep your save so it is less likely to be cleared |
 | v73 | https://gaayyynesss.github.io/Seige/?v=73 | Cleaned up the version notes |
 | v72 | https://gaayyynesss.github.io/Seige/?v=72 | **Ninebolt Studios** branding: a studio intro screen when the game opens (tap to skip, shows once per visit), "A Ninebolt Studios game" under the Dustline title, and the studio logo in this README |
 | v71 | https://gaayyynesss.github.io/Seige/?v=71 | Your rank on the Play tab now updates right away instead of after a reload |
