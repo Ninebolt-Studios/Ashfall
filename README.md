@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v112)](https://ninebolt-studios.github.io/Ashfall/?v=112)
+## ▶️ [PLAY NOW — latest version (v113)](https://ninebolt-studios.github.io/Ashfall/?v=113)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=112
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=113
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,7 +20,8 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v112** | https://ninebolt-studios.github.io/Ashfall/?v=112 | **Online Gun Game:** the free-for-all now joins an online room, so you can race friends through all 10 guns (bots fill the empty slots). Your gun upgrades the moment you get an elimination, wherever you are |
+| **v113** | https://ninebolt-studios.github.io/Ashfall/?v=113 | When you open Ashfall from the **app icon**, Settings no longer asks you to install the app; it shows ✅ You're using the Ashfall app instead |
+| v112 | https://ninebolt-studios.github.io/Ashfall/?v=112 | **Online Gun Game:** the free-for-all now joins an online room, so you can race friends through all 10 guns (bots fill the empty slots). Your gun upgrades the moment you get an elimination, wherever you are |
 | v111 | https://ninebolt-studios.github.io/Ashfall/?v=111 | **Online Kill Confirmed & Hardpoint:** both now join online rooms like Team Battle, so you can play them with friends (same private battle code or party). Real players can grab dog tags and hold the hill; bots fill the empty slots |
 | v110 | https://ninebolt-studios.github.io/Ashfall/?v=110 | **Online Domination & Search & Destroy:** both modes now join an online room like Team Battle, so you can play them with friends (use the same private battle code or party). Real players count for flag captures, bomb plants and defuses; bots still fill empty slots, so they work solo too. In S&D the bomb goes to a real player on the attacking team, and when you die you can spectate real teammates as well as bots |
 | v109 | https://ninebolt-studios.github.io/Ashfall/?v=109 | **🔍 Weapon inspect:** tap the 🔍 button (I on keyboard, R3 on controller) to turn your gun and show off its camo and attachments, like CoD; shooting, aiming or reloading cancels it. The firing-range bench was also moved so it no longer blocks the view |
