@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v101)](https://ninebolt-studios.github.io/Ashfall/?v=101)
+## ▶️ [PLAY NOW — latest version (v110)](https://ninebolt-studios.github.io/Ashfall/?v=110)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=101
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=110
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,7 +20,16 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v101** | https://ninebolt-studios.github.io/Ashfall/?v=101 | **Aim assist nerfed a little:** it's 20% weaker at every slider setting (less slowdown over enemies and less pull), so gunfights rely more on your own aim |
+| **v110** | https://ninebolt-studios.github.io/Ashfall/?v=110 | **Online Domination & Search & Destroy:** both modes now join an online room like Team Battle, so you can play them with friends (use the same private battle code or party). Real players count for flag captures, bomb plants and defuses; bots still fill empty slots, so they work solo too. In S&D the bomb goes to a real player on the attacking team, and when you die you can spectate real teammates as well as bots |
+| v109 | https://ninebolt-studios.github.io/Ashfall/?v=109 | **🔍 Weapon inspect:** tap the 🔍 button (I on keyboard, R3 on controller) to turn your gun and show off its camo and attachments, like CoD; shooting, aiming or reloading cancels it. The firing-range bench was also moved so it no longer blocks the view |
+| v108 | https://ninebolt-studios.github.io/Ashfall/?v=108 | **🛡️ Clans:** set a 2-4 letter clan tag on the Career tab; it shows next to your name (e.g. **[NBS] Aiden**) and on the leaderboards. New **Clans** tab on the 🌍 leaderboard adds up every member's eliminations (all-time or this week). Friends who use the same tag are in your clan |
+| v107 | https://ninebolt-studios.github.io/Ashfall/?v=107 | **🎮 Controller menus:** use the D-pad or left stick to move a glowing highlight through the menus, A/✕ to press, B/◯ to go back (or resume when paused), LB/RB to switch tabs, and left/right to change sliders |
+| v106 | https://ninebolt-studios.github.io/Ashfall/?v=106 | **Works offline:** after you open Ashfall once with internet, the game, its 3D engine, fonts and images are saved on your device, so the app opens and solo modes (Holdout, Zombies, Firing Range and the bot modes) play with no connection. When you're online it still loads the newest version automatically |
+| v105 | https://ninebolt-studios.github.io/Ashfall/?v=105 | **New mode: ⛰️ Hardpoint.** 5v5 with bots: one glowing hill that moves to a new spot every 60 seconds. Your team scores a point every second it holds the hill uncontested (blue = yours, red = enemy, yellow = contested). First to 150 |
+| v104 | https://ninebolt-studios.github.io/Ashfall/?v=104 | **New mode: 🏷️ Kill Confirmed.** 5v5 with bots: every elimination drops a glowing dog tag. Grab enemy tags to score (+XP), grab your own team's tags to deny the point. Tags vanish after 30 s. First to 50 |
+| v103 | https://ninebolt-studios.github.io/Ashfall/?v=103 | **Spectate in Search & Destroy:** after you're eliminated (and the kill cam ends) you watch a living teammate from behind until the round is over. Tap Fire to switch to another teammate |
+| v102 | https://ninebolt-studios.github.io/Ashfall/?v=102 | **🕹️ Custom touch controls:** Settings → Touch controls layout → **Edit layout**. Drag Fire, Aim, Jump, Crouch, Reload, Slide, Grenade, Ping and Chat anywhere on screen and use the Size slider to make each one bigger or smaller. Saved on your device (and in your account); Reset puts them back |
+| v101 | https://ninebolt-studios.github.io/Ashfall/?v=101 | **Aim assist nerfed a little:** it's 20% weaker at every slider setting (less slowdown over enemies and less pull), so gunfights rely more on your own aim |
 | v100 | https://ninebolt-studios.github.io/Ashfall/?v=100 | **More ranks:** 22 ranks instead of 5. Every rank now has divisions I, II and III, and there are three new top ranks above Diamond: 🔥 **Crimson** (2,500 RP), 🌈 **Iridescent** (3,300 RP) and 👑 **Champion** (4,200 RP). Your RP is unchanged; higher ranks face tougher bots |
 | v99 | https://ninebolt-studios.github.io/Ashfall/?v=99 | **🎮 Controller support** (PlayStation, Xbox, Backbone, other MFi controllers): left stick move, right stick aim, RT fire, LT aim down sights, A/✕ jump, B/◯ crouch or slide, X/▢ reload, Y/△ ping, LB grenade, RB kill streak, L3 sprint, D-pad quick chat, Start pause/resume |
 | v98 | https://ninebolt-studios.github.io/Ashfall/?v=98 | **Quick chat & pings:** tap 📍 to drop a ping where you aim (red if you're aiming at an enemy), and 💬 for quick messages (Enemy spotted, Need ammo, On my way, Cover me, Nice shot, Thanks, Good game). Teammates in online matches see your pings and messages; bot teammates reply. Keyboard: Z to ping, X then 1-7 to chat |
