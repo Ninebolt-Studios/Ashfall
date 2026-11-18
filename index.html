@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118165736';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118170314';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -488,7 +488,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
   #menu { background: linear-gradient(90deg, rgba(6,7,8,.94) 0%, rgba(6,7,8,.86) 38%, rgba(6,7,8,.55) 62%, rgba(6,7,8,.12) 100%) !important; align-items: flex-start; }
   #menu .shell { width: min(1100px, 100%); grid-template-columns: 260px minmax(0, 660px); grid-template-rows: auto 1fr; column-gap: 34px; row-gap: 18px; align-items: start; margin: 0; padding-top: 6px; }
   #menu .mhead { grid-column: 1 / -1; }
-  #menu .pane { grid-column: 2; grid-row: 2; }
+  #menu .shell > .pane { grid-column: 2; grid-row: 2; }
   #menu .tabs { grid-column: 1; grid-row: 2; position: sticky; top: 12px; flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 2px !important; width: auto !important; padding: 0 !important; background: none !important; border: 0 !important; box-shadow: none !important; backdrop-filter: none !important; border-radius: 0 !important; }
   #menu .tab { justify-content: flex-start; text-align: left; padding: 11px 16px !important; font: 700 26px/1.05 var(--display) !important; white-space: nowrap; letter-spacing: .06em !important; text-transform: uppercase; color: rgba(239,232,214,.5) !important; background: none !important; border: 0 !important; border-left: 4px solid transparent !important; border-radius: 0 !important; transition: color .15s, transform .15s, background .15s, border-color .15s !important; }
   #menu .tab:hover { color: rgba(255,255,255,.85) !important; }
@@ -507,6 +507,26 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #menu .gift { flex-wrap: wrap; } #menu .gift > div { flex: 1 1 340px; min-width: 0; }
 #menu .pchip { border-radius: 4px !important; background: rgba(12,13,14,.82) !important; border: 1px solid rgba(255,255,255,.08) !important; }
 #menu .logo h1 { letter-spacing: .14em; }
+/* ===== v115: Play buttons + mode select pop-up ===== */
+.playbig { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.pbig { display: grid; gap: 6px; text-align: left; padding: 22px 20px; min-height: 120px; align-content: end; cursor: pointer; color: #fff; border-radius: 4px; border: 1px solid rgba(255,255,255,.1); border-left: 4px solid var(--accent); background: linear-gradient(160deg, rgba(var(--accent-rgb, 242,169,59), .18), rgba(10,11,12,.85) 60%); transition: transform .15s, background .15s; }
+.pbig.go { background: linear-gradient(160deg, rgba(var(--accent-rgb, 242,169,59), .55), rgba(10,11,12,.85) 70%); }
+.pbig b { font: 700 28px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; } .pbig span { font: 500 13px var(--body); color: rgba(239,232,214,.7); }
+.pbig:hover, .pbig.padfocus { transform: translateY(-3px); }
+#msel { position: fixed; inset: 0; z-index: 30; display: grid; grid-template-rows: auto auto 1fr auto; gap: 12px; padding: calc(16px + env(safe-area-inset-top, 0px)) calc(20px + env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) calc(20px + env(safe-area-inset-left, 0px)); background: linear-gradient(90deg, rgba(6,7,8,.96), rgba(6,7,8,.88) 70%, rgba(6,7,8,.7)); animation: fadeUp .2s both; overflow: hidden; }
+#msel[hidden] { display: none; }
+.mshead { display: flex; align-items: center; gap: 16px; } .mshead > b { font: 700 34px var(--display); letter-spacing: .08em; text-transform: uppercase; color: #fff; margin-right: auto; }
+.mscats { display: flex; gap: 4px; } .mscats button { font: 700 15px var(--display); letter-spacing: .12em; text-transform: uppercase; color: rgba(239,232,214,.6); background: none; border: 0; border-bottom: 3px solid transparent; padding: 8px 12px; cursor: pointer; } .mscats button.on { color: #fff; border-bottom-color: var(--accent); }
+.msx { font-size: 22px; color: #fff; background: rgba(255,255,255,.08); border: 0; border-radius: 4px; width: 44px; height: 44px; cursor: pointer; }
+.msmaps { display: grid; gap: 6px; } #mselMaps .maps { display: grid !important; grid-auto-flow: column; grid-auto-columns: minmax(120px, 1fr); grid-template-columns: none !important; gap: 8px; }
+#mselMaps .maps > * { padding: 8px 10px !important; min-height: 0 !important; } #mselMaps .maps > * span:not(:first-child), #mselMaps .maps > * small { display: none; }
+.msgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 10px; min-height: 0; }
+.msgrid[hidden] { display: none; }
+.msgrid .mode { padding: 14px 14px 12px !important; display: flex !important; flex-direction: column; justify-content: flex-end; min-height: 0; overflow: hidden; }
+.msgrid .mode .mode-desc { font-size: 12.5px !important; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.msgrid .mode .chips { display: none !important; } .msgrid .mode .mode-name { font-size: 19px !important; }
+.mshint { font: 600 12px var(--mono); color: rgba(239,232,214,.4); letter-spacing: .08em; }
+@media (max-width: 819px) { .playbig { grid-template-columns: 1fr; } .msgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); overflow-y: auto; } #msel { overflow-y: auto; } }
 /* admin */
 .admin { border-color: rgba(192,138,255,.5) !important; }
 .admrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -813,6 +833,18 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
     </nav>
 
     <section class="pane" id="pane-play">
+      <div class="playbig">
+        <button class="pbig go" type="button" data-msel="mp"><b>Multiplayer</b><span>Team Battle · Ranked · Domination · S&amp;D · Kill Confirmed · Hardpoint · Gun Game · Duel</span></button>
+        <button class="pbig" type="button" data-msel="solo"><b>Zombies &amp; Solo</b><span>Zombies · Drone Holdout</span></button>
+        <button class="pbig" type="button" data-msel="range"><b>Firing Range</b><span>Practice targets, try every gun</span></button>
+      </div>
+      <div id="msel" hidden>
+        <div class="mshead"><b id="mselTitle">Multiplayer</b><div class="mscats"><button type="button" data-mscat="mp">Multiplayer</button><button type="button" data-mscat="solo">Zombies &amp; Solo</button></div><button type="button" class="msx" id="mselClose" aria-label="Close">✕</button></div>
+        <div class="msmaps"><span class="label">Map</span><div id="mselMaps"></div></div>
+        <div class="msgrid" id="mselMp"></div>
+        <div class="msgrid" id="mselSolo" hidden></div>
+        <div class="mshint">Ⓐ Start · Ⓑ Back</div>
+      </div>
       <div class="pane" id="playMain">
         <div class="row2">
           <label class="field" for="nameIn"><span class="label">Callsign</span><input type="text" id="nameIn" maxlength="16" autocomplete="off" spellcheck="false"></label>
@@ -4548,6 +4580,21 @@ codeIn.addEventListener('input', () => { matchCode = codeIn.value.replace(/[^a-z
 })();
 
 /* ---------- flow ---------- */
+/* ---------- mode select pop-up ---------- */
+(function () {
+  const mp = ['tdmBtn', 'rankedBtn', 'domBtn', 'sndBtn', 'kcfBtn', 'hpBtn', 'ggBtn', 'duelBtn'], solo = ['zmbBtn', 'siegeBtn', 'rangeBtn'];
+  mp.forEach(id => { const b = $(id); if (b) $('mselMp').appendChild(b); }); solo.forEach(id => { const b = $(id); if (b) $('mselSolo').appendChild(b); });
+  const mf = $('mapList'); if (mf) { $('mselMaps').appendChild(mf); const fld = document.querySelector('#playMain .modes'); if (fld) fld.hidden = true; }
+  document.querySelectorAll('#playMain .field').forEach(f => { if (!f.querySelector('input,select') && f.textContent.includes('Map (used')) f.hidden = true; });
+  const cat = c => { $('mselMp').hidden = c !== 'mp'; $('mselSolo').hidden = c !== 'solo'; $('mselTitle').textContent = c === 'mp' ? 'Multiplayer' : 'Zombies & Solo'; document.querySelectorAll('[data-mscat]').forEach(b => b.classList.toggle('on', b.dataset.mscat === c)); };
+  window.openModeSel = c => { cat(c); $('msel').hidden = false; try { padFocus(null); } catch (e) {} };
+  window.closeModeSel = () => { $('msel').hidden = true; };
+  document.querySelectorAll('[data-msel]').forEach(b => b.addEventListener('click', () => { if (b.dataset.msel === 'range') { $('rangeBtn').click(); return; } openModeSel(b.dataset.msel); }));
+  document.querySelectorAll('[data-mscat]').forEach(b => b.addEventListener('click', () => cat(b.dataset.mscat)));
+  $('mselClose').addEventListener('click', closeModeSel);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('msel').hidden) closeModeSel(); });
+  [...mp, ...solo].forEach(id => { const b = $(id); if (b) b.addEventListener('click', () => setTimeout(closeModeSel, 0)); });
+})();
 /* ---------- custom HUD layout (drag + resize touch buttons) ---------- */
 const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn', 'inspBtn'];
 function applyHudLayout() {
@@ -5273,7 +5320,7 @@ function pollPad(dt) {
 }
 // controller menu navigation: D-pad / left stick move a highlight, A presses, B goes back, LB/RB switch tabs
 const PM = { el: null, rep: 0 };
-function padTargets() { return [...document.querySelectorAll('#menu button, #menu [data-tab], #menu input, #menu select, #menu a.btn')].filter(e => { if (e.disabled) return false; const r = e.getBoundingClientRect(); return r.width > 4 && r.height > 4 && e.offsetParent !== null; }); }
+function padTargets() { const open = $('msel') && !$('msel').hidden; return [...document.querySelectorAll(open ? '#msel button, #msel .maps > *' : '#menu button, #menu [data-tab], #menu input, #menu select, #menu a.btn')].filter(e => { if (e.disabled) return false; const r = e.getBoundingClientRect(); return r.width > 4 && r.height > 4 && e.offsetParent !== null; }); }
 function padFocus(el) { if (PM.el) PM.el.classList.remove('padfocus'); PM.el = el; if (!el) return; el.classList.add('padfocus'); try { el.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {} }
 function padMove(dx, dy) {
   const list = padTargets(); if (!list.length) return; if (!PM.el || !list.includes(PM.el)) { padFocus(list[0]); return; }
@@ -5288,6 +5335,7 @@ function padMenu(g, btn, down, ax) {
   if (down(0) && PM.el) { if (PM.el.tagName === 'INPUT' && PM.el.type !== 'range') PM.el.focus(); else PM.el.click(); }
   if (PM.el && PM.el.type === 'range' && (down(14) || down(15))) { const st = +PM.el.step || 0.05; PM.el.value = +PM.el.value + (down(15) ? st : -st); PM.el.dispatchEvent(new Event('input', { bubbles: true })); PM.el.dispatchEvent(new Event('change', { bubbles: true })); }
   if (down(4) || down(5)) { const tabs = [...document.querySelectorAll('[data-tab]')], cur = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true'), nx = tabs[(cur + (down(5) ? 1 : tabs.length - 1)) % tabs.length]; if (nx) { nx.click(); padFocus(nx); } }
+  if (down(1) && $('msel') && !$('msel').hidden) { closeModeSel(); return; }
   if (down(1)) { if (state === 'paused') resume(); else { const pt = document.querySelector('[data-tab=play]'); if (pt) { pt.click(); padFocus(pt); } } }
   if (down(9) && state === 'paused') resume();
 }
