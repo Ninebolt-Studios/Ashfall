@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118140343';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118140359';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -1053,7 +1053,8 @@ const DEF = { haptics: true, assistStr: isTouch ? 0.6 : 0, music: 0.7, botDiff: 
 const S = Object.assign({}, DEF, store.get('settings', {}));
 if (!store.get('musicUp', false)) { if (S.music === 0.45) { S.music = 0.7; const sv = store.get('settings', null); if (sv) { sv.music = 0.7; store.set('settings', sv); } } store.set('musicUp', true); } // old default -> new louder default
 { const raw = store.get('settings', {}) || {}; if (raw.assistStr == null && raw.assist === false) S.assistStr = 0; } // keep old 'off' choice
-const aimA = () => clamp(+S.assistStr || 0, 0, 1);
+const AIM_NERF = 0.8; // v101: aim assist is 20% weaker at every slider setting
+const aimA = () => clamp(+S.assistStr || 0, 0, 1) * AIM_NERF;
 const saveS = () => store.set('settings', S);
 const C = Object.assign({ matches: 0, wins: 0, kills: 0, deaths: 0, heads: 0, bestWave: 0, bestScore: 0, bestStreak: 0, ggWins: 0, maps: {}, bestRound: 0, zKills: 0, nadeKills: 0, mvps: 0, crates: 0 }, store.get('career', {}));
 const saveC = () => store.set('career', C);
