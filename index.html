@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118141930';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118142135';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -997,6 +997,12 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
 
     <section class="pane" id="pane-career" hidden>
       <div class="profile" id="profileCard"></div>
+      <div class="acct" id="clanBox">
+        <span class="label">🛡️ Clan</span>
+        <span class="amsg">Pick a 2-4 letter clan tag. It shows next to your name and puts your eliminations on the Clans leaderboard. Friends who use the same tag are in your clan.</span>
+        <div class="prow"><input type="text" id="clanIn" maxlength="4" autocomplete="off" spellcheck="false" placeholder="TAG" aria-label="Clan tag" style="text-transform:uppercase;width:110px;font:700 16px var(--mono);color:var(--ink);background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 10px"><button class="btn go" id="clanSave" type="button">Save tag</button><button class="btn ghost" id="clanLeave" type="button">Leave clan</button></div>
+        <span class="amsg" id="clanMsg"></span>
+      </div>
       <div class="acct" id="prestigeBox">
         <span class="label">⭐ Player level &amp; Prestige</span>
         <span class="amsg" id="plInfo"></span>
@@ -1028,7 +1034,7 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
       <div class="acct" id="glbBox">
         <span class="label">🌍 Global leaderboard · every player</span>
         <div class="glbtabs"><button class="btn ghost on" data-glbp="all" type="button">All-time</button><button class="btn ghost" data-glbp="week" type="button">This week</button></div>
-        <div class="glbtabs" role="tablist"><button class="btn ghost on" data-glb="kills" type="button">Eliminations</button><button class="btn ghost" data-glb="wins" type="button">Wins</button><button class="btn ghost" data-glb="rp" type="button">Ranked RP</button><button class="btn ghost" data-glb="zwave" type="button">Zombies wave</button><button class="btn ghost" data-glb="xp" type="button" hidden>XP</button><button class="btn ghost" id="glbRefresh" type="button">↻</button></div>
+        <div class="glbtabs" role="tablist"><button class="btn ghost on" data-glb="kills" type="button">Eliminations</button><button class="btn ghost" data-glb="wins" type="button">Wins</button><button class="btn ghost" data-glb="rp" type="button">Ranked RP</button><button class="btn ghost" data-glb="zwave" type="button">Zombies wave</button><button class="btn ghost" data-glb="xp" type="button" hidden>XP</button><button class="btn ghost" data-glb="clan" type="button">Clans</button><button class="btn ghost" id="glbRefresh" type="button">↻</button></div>
         <table class="lb" id="glbTable"></table>
         <span class="amsg" id="glbMsg">Sign in with an account (above) to put your name on the board.</span>
       </div>
@@ -1353,6 +1359,7 @@ let myTitle = String(store.get('title', '') || '');
 let party = String(store.get('party', '') || '').replace(/[^A-Z0-9]/gi, '').slice(0, 6).toUpperCase();
 let proom = null, partyPeers = [];
 let playerName = String(store.get('name', '') || '').slice(0, 16) || ('Op-' + Math.floor(100 + Math.random() * 900));
+let myClan = String(store.get('clan', '') || '').replace(/[^A-Z0-9]/gi, '').slice(0, 4).toUpperCase();
 let matchCode = (location.hash || '').replace(/[^a-z0-9-]/gi, '').slice(0, 20).toLowerCase();
 
 /* ---------- weapons ---------- */
@@ -2632,7 +2639,7 @@ function addCoins(n) {
 }
 function renderChip() {
   const ri = rankIdx(); if (!$('pcName')) return;
-  $('pcRank').textContent = RANKS[ri].i; $('pcName').textContent = playerName;
+  $('pcRank').textContent = RANKS[ri].i; $('pcName').textContent = (myClan ? '[' + myClan + '] ' : '') + playerName;
   let lv = 1; for (const k of Object.keys(WEAPONS)) lv = Math.max(lv, wLevel(k));
   $('pcSub').textContent = prestigeTag() + 'Lv ' + plLevel() + ' · ' + RANKS[ri].n + ' · S' + SEASON + ' tier ' + bpTier();
   $('pcCoins').textContent = '◎ ' + WALLET.coins.toLocaleString();
@@ -4108,6 +4115,11 @@ $('fcodeAdd').addEventListener('click', async () => {
 setInterval(() => { if (CLOUD.user) { presencePut(); if ($('pane-career') && !$('pane-career').hidden) friendsRefresh(); } }, 45000);
 /* ---------- global leaderboard ---------- */
 const GLB = { by: 'kills', busy: false, period: 'all' };
+const clanTag = () => myClan ? '[' + myClan + '] ' : '';
+function renderClan() { if (!$('clanIn')) return; $('clanIn').value = myClan; $('clanMsg').textContent = myClan ? 'You are in clan [' + myClan + '].' : 'Not in a clan.'; $('clanLeave').hidden = !myClan; }
+$('clanSave').addEventListener('click', () => { const t = ($('clanIn').value || '').replace(/[^A-Z0-9]/gi, '').slice(0, 4).toUpperCase(); if (t.length < 2) { $('clanMsg').textContent = 'A clan tag needs 2-4 letters or numbers.'; return; } myClan = t; store.set('clan', myClan); renderClan(); try { renderChip(); glbPut(); } catch (e) {} banner('CLAN [' + myClan + ']', 'Your tag now shows next to your name', 2); });
+$('clanLeave').addEventListener('click', () => { myClan = ''; store.set('clan', ''); renderClan(); try { renderChip(); glbPut(); } catch (e) {} });
+renderClan();
 // weekly board: weeks start Monday 00:00 UTC; this week's numbers = career now minus career at the start of the week
 const weekNum = () => Math.floor((Date.now() - Date.UTC(2026, 0, 5)) / (7 * 864e5));
 const WB = Object.assign({ w: -1, kills: 0, wins: 0, xp: 0 }, store.get('weekBase', {}));
@@ -4117,21 +4129,30 @@ const weekStats = () => { const b = weekBase(); return { kills: Math.max(0, (C.k
 const GLB_COL = { kills: 'Eliminations', wins: 'Wins', rp: 'Ranked RP', zwave: 'Best Zombies wave', xp: 'XP this week' };
 function glbPut() {
   if (!CLOUD.user || !CLOUD.db) return;
-  const e = { name: String(playerName || 'Operator').slice(0, 16), kills: C.kills | 0, wins: C.wins | 0, rp: RANK.rp | 0, zwave: C.bestRound | 0, hwave: C.bestWave | 0, at: Date.now() };
+  const e = { clan: myClan || '', name: String(playerName || 'Operator').slice(0, 16), kills: C.kills | 0, wins: C.wins | 0, rp: RANK.rp | 0, zwave: C.bestRound | 0, hwave: C.bestWave | 0, at: Date.now() };
   CLOUD.db.collection('leaderboard').doc(CLOUD.user.uid).set(e).catch(() => {});
-  const ws = weekStats(); CLOUD.db.collection('lbw_' + weekNum()).doc(CLOUD.user.uid).set({ name: e.name, kills: ws.kills, wins: ws.wins, xp: ws.xp, at: Date.now() }).catch(() => {});
+  const ws = weekStats(); CLOUD.db.collection('lbw_' + weekNum()).doc(CLOUD.user.uid).set({ clan: e.clan, name: e.name, kills: ws.kills, wins: ws.wins, xp: ws.xp, at: Date.now() }).catch(() => {});
 }
 async function glbLoad() {
   if (GLB.busy || !$('glbTable')) return; GLB.busy = true;
   const msg = $('glbMsg'); msg.textContent = 'Loading the leaderboard…';
   try {
     await cloudInit();
+    if (GLB.by === 'clan') { // clan board: add up the top players' eliminations by clan tag
+      const sn = await CLOUD.db.collection(GLB.period === 'week' ? 'lbw_' + weekNum() : 'leaderboard').orderBy('kills', 'desc').limit(200).get(); const agg = {};
+      sn.docs.forEach(d => { const v = d.data() || {}, c = String(v.clan || '').slice(0, 4); if (!c) return; (agg[c] = agg[c] || { k: 0, n: 0 }); agg[c].k += +v.kills || 0; agg[c].n++; });
+      const rows = Object.entries(agg).sort((a, b) => b[1].k - a[1].k).slice(0, 25), tb = $('glbTable'); tb.textContent = '';
+      const hr = document.createElement('tr'); ['#', 'Clan', 'Members', 'Eliminations'].forEach(h => { const th = document.createElement('th'); th.textContent = h; hr.appendChild(th); }); tb.appendChild(hr);
+      rows.forEach(([c, a], i) => { const tr = document.createElement('tr'); if (c === myClan) tr.className = 'me'; [i + 1, '[' + c + ']', a.n, a.k.toLocaleString()].forEach(x => { const td = document.createElement('td'); td.textContent = x; tr.appendChild(td); }); tb.appendChild(tr); });
+      msg.textContent = rows.length ? (myClan ? 'Your clan [' + myClan + '] is highlighted if it’s in the top 25.' : 'Set a clan tag on the Career tab to put your clan on the board.') : 'No clans on the board yet. Set a clan tag on the Career tab!';
+      return;
+    }
     const wk = GLB.period === 'week', by = wk && !['kills', 'wins', 'xp'].includes(GLB.by) ? 'kills' : GLB.by;
     const snap = await CLOUD.db.collection(wk ? 'lbw_' + weekNum() : 'leaderboard').orderBy(by, 'desc').limit(25).get();
     const tb = $('glbTable'); tb.textContent = '';
     const hr = document.createElement('tr'); ['#', 'Player', GLB_COL[by] + (wk && by !== 'xp' ? ' this week' : '')].forEach(h => { const th = document.createElement('th'); th.textContent = h; hr.appendChild(th); }); tb.appendChild(hr);
     let n = 0, mine = false;
-    snap.docs.forEach(d => { const v = d.data() || {}; n++; const tr = document.createElement('tr'); if (CLOUD.user && d.id === CLOUD.user.uid) { tr.className = 'me'; mine = true; } [n, String(v.name || 'Operator').slice(0, 16), (+v[by] || 0).toLocaleString()].forEach(x => { const td = document.createElement('td'); td.textContent = x; tr.appendChild(td); }); tb.appendChild(tr); });
+    snap.docs.forEach(d => { const v = d.data() || {}; n++; const tr = document.createElement('tr'); if (CLOUD.user && d.id === CLOUD.user.uid) { tr.className = 'me'; mine = true; } [n, (v.clan ? '[' + String(v.clan).slice(0, 4) + '] ' : '') + String(v.name || 'Operator').slice(0, 16), (+v[by] || 0).toLocaleString()].forEach(x => { const td = document.createElement('td'); td.textContent = x; tr.appendChild(td); }); tb.appendChild(tr); });
     msg.textContent = !n ? (wk ? 'Nobody on this week’s board yet. It resets every Monday. Sign in and play to be first!' : 'Nobody on the board yet. Sign in and play to be first!') : CLOUD.user ? (mine ? 'You are on the board (highlighted). It updates every time your progress saves.' : 'You are not in the top 25 for this one yet. Keep playing!') : 'Sign in with an account (above) to put your name on the board.';
   } catch (e) { msg.textContent = e && e.code === 'permission-denied' ? 'The leaderboard is not switched on yet (the database rules need updating).' : 'Could not load the leaderboard. Check your internet and tap ↻.'; }
   finally { GLB.busy = false; }
@@ -4294,7 +4315,7 @@ function renderSettings() {
   }
 }
 $('resetSettings').addEventListener('click', () => { Object.assign(S, DEF); saveS(); renderSettings(); applyQuality(); applySettings(); });
-const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase', 'cfriends'];
+const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase', 'cfriends', 'clan'];
 function makeBackup() {
   const data = {}; for (const k of ACCT_KEYS) { const v = store.get(k, null); if (v !== null) data[k] = v; }
   try { return 'DL1.' + btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/=+$/, ''); } catch (e) { return ''; }

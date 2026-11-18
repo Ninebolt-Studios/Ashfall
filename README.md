@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v107)](https://ninebolt-studios.github.io/Ashfall/?v=107)
+## ▶️ [PLAY NOW — latest version (v108)](https://ninebolt-studios.github.io/Ashfall/?v=108)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=107
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=108
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,7 +20,8 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v107** | https://ninebolt-studios.github.io/Ashfall/?v=107 | **🎮 Controller menus:** use the D-pad or left stick to move a glowing highlight through the menus, A/✕ to press, B/◯ to go back (or resume when paused), LB/RB to switch tabs, and left/right to change sliders |
+| **v108** | https://ninebolt-studios.github.io/Ashfall/?v=108 | **🛡️ Clans:** set a 2-4 letter clan tag on the Career tab; it shows next to your name (e.g. **[NBS] Aiden**) and on the leaderboards. New **Clans** tab on the 🌍 leaderboard adds up every member's eliminations (all-time or this week). Friends who use the same tag are in your clan |
+| v107 | https://ninebolt-studios.github.io/Ashfall/?v=107 | **🎮 Controller menus:** use the D-pad or left stick to move a glowing highlight through the menus, A/✕ to press, B/◯ to go back (or resume when paused), LB/RB to switch tabs, and left/right to change sliders |
 | v106 | https://ninebolt-studios.github.io/Ashfall/?v=106 | **Works offline:** after you open Ashfall once with internet, the game, its 3D engine, fonts and images are saved on your device, so the app opens and solo modes (Holdout, Zombies, Firing Range and the bot modes) play with no connection. When you're online it still loads the newest version automatically |
 | v105 | https://ninebolt-studios.github.io/Ashfall/?v=105 | **New mode: ⛰️ Hardpoint.** 5v5 with bots: one glowing hill that moves to a new spot every 60 seconds. Your team scores a point every second it holds the hill uncontested (blue = yours, red = enemy, yellow = contested). First to 150 |
 | v104 | https://ninebolt-studios.github.io/Ashfall/?v=104 | **New mode: 🏷️ Kill Confirmed.** 5v5 with bots: every elimination drops a glowing dog tag. Grab enemy tags to score (+XP), grab your own team's tags to deny the point. Tags vanish after 30 s. First to 50 |
