@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118141526';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118141648';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -597,6 +597,8 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #sndBtn .mode-name::before { content: '💣 '; }
 #rangeBtn .mode-name::before { content: '🎯 '; }
 #kcfBtn .mode-name::before { content: '🏷️ '; }
+#hpBtn .mode-name::before { content: '⛰️ '; }
+#hpBtn { background-image: linear-gradient(135deg, rgba(160,120,255,.24), transparent 65%); border-top-color: #a078ff; }
 #kcfBtn { background-image: linear-gradient(135deg, rgba(255,200,80,.24), transparent 65%); border-top-color: #ffc850; }
 #rangeBtn { background-image: linear-gradient(135deg, rgba(240,220,120,.22), transparent 65%); border-top-color: #e8d070; }
 #rangeHud { position: fixed; top: calc(70px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 6; display: flex; gap: 10px; align-items: center; font: 700 15px var(--display); letter-spacing: .12em; color: #fff; background: rgba(15,15,15,.72); border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 6px 10px 6px 14px; }
@@ -605,6 +607,8 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #sndHud { position: fixed; top: calc(70px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 6; pointer-events: none; text-align: center; font: 700 15px var(--display); letter-spacing: .14em; color: #fff; background: rgba(15,15,15,.7); border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 6px 14px; min-width: 240px; }
 #sndHud .bar { height: 5px; background: rgba(255,255,255,.15); border-radius: 3px; margin-top: 5px; overflow: hidden; } #sndHud .bar i { display: block; height: 100%; width: 0; background: #ffb03a; }
 #domBtn { background-image: linear-gradient(135deg, rgba(90,160,255,.26), transparent 65%); border-top-color: #5aa0ff; }
+#hptHud { position: fixed; top: calc(70px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 6; pointer-events: none; font: 700 15px var(--display); letter-spacing: .14em; color: #fff; background: rgba(15,15,15,.72); border: 2px solid rgba(255,255,255,.25); border-radius: 10px; padding: 6px 14px; }
+#hptHud.b { border-color: #6aa8ff; } #hptHud.r { border-color: #ff6a4a; } #hptHud.c { border-color: #ffd24a; }
 #domHud { position: fixed; top: calc(70px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 6; pointer-events: none; }
 #domHud .fl { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; font: 800 20px var(--display); color: #fff; background: rgba(20,20,20,.7); border: 2px solid rgba(255,255,255,.35); position: relative; overflow: hidden; }
 #domHud .fl i { position: absolute; left: 0; bottom: 0; height: 4px; background: #fff; }
@@ -704,6 +708,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 <div id="hudEdit" hidden><div class="hebar"><b>Drag a button to move it</b><label>Size <input type="range" id="heSize" min="0.6" max="1.6" step="0.05" value="1"></label><button class="btn ghost" id="heReset" type="button">Reset</button><button class="btn go" id="heDone" type="button">Done</button></div></div>
 <div id="rangeHud" hidden><span id="rangeTxt">Shoot a target</span><button id="rangeGun" type="button">Next gun ▸</button></div>
 <div id="sndHud" hidden><div id="sndTxt"></div><div class="bar" id="sndBarW" hidden><i id="sndBar"></i></div></div>
+<div id="hptHud" hidden><span id="hptTxt"></span></div>
 <div id="domHud" hidden><div class="fl" id="flA">A<i></i></div><div class="fl" id="flB">B<i></i></div><div class="fl" id="flC">C<i></i></div></div>
 <div id="hud" hidden>
   <div id="hurt"></div>
@@ -843,6 +848,11 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
             <span class="mode-name">Kill Confirmed</span>
             <span class="mode-desc">5v5 with bots. Eliminations drop dog tags: grab enemy tags to score, grab your team's tags to deny. First to 50.</span>
             <span class="chips"><span class="chip">Solo</span><span class="chip">Dog tags</span><span class="chip">Team</span></span>
+          </button>
+          <button class="mode" id="hpBtn" type="button">
+            <span class="mode-name">Hardpoint</span>
+            <span class="mode-desc">5v5 with bots. Hold the hill to score every second; it moves to a new spot every minute. First to 150.</span>
+            <span class="chips"><span class="chip">Solo</span><span class="chip">Moving hill</span><span class="chip">Team</span></span>
           </button>
           <button class="mode" id="rangeBtn" type="button">
             <span class="mode-name">Firing Range</span>
@@ -2992,7 +3002,7 @@ function clearSiege() {
 /* =========================================================
    TEAM BATTLE 5v5 (online, bots fill empty slots)
    ========================================================= */
-let SCORE_LIMIT = 65, gg = false, ranked = false, dom = false, snd = false, rng = false, kcf = false; // gg = Gun Game (offline free-for-all)
+let SCORE_LIMIT = 65, gg = false, ranked = false, dom = false, snd = false, rng = false, kcf = false, hpt = false; // gg = Gun Game (offline free-for-all)
 const GG_GUNS = ['smg', 'pdw', 'ar', 'br', 'lmg', 'sg', 'dmr', 'snp', 'rev', 'pst'];
 const isFoe = e => gg || e.team !== P.team; const TEAM_SIZE = 5; let duel = false;
 const BOT_NAMES = { b0: 'Hayes', b1: 'Okafor', b2: 'Lindqvist', b3: 'Moreau', b4: 'Tanaka', r0: 'Vance', r1: 'Petrov', r2: 'Silva', r3: 'Kade', r4: 'Ibarra' };
@@ -3157,14 +3167,14 @@ function becomeHost() {
 function onDeath(victim, killer, vteam) {
   if (T.win) return;
   const winner = other(vteam);
-  if (!gg && !dom && !snd && !kcf) T.sc[winner]++;
+  if (!gg && !dom && !snd && !kcf && !hpt) T.sc[winner]++;
   if (kcf) { const vb = victim === myPeer ? { x: P.pos.x, z: P.pos.z } : T.botMap[victim]; if (vb) kcfTag(vb.x, vb.z, vteam); }
   (T.st[victim] = T.st[victim] || [0, 0])[1]++; if (killer && killer !== victim) (T.st[killer] = T.st[killer] || [0, 0])[0]++;
   T.kf.push({ s: ++T.kfSeq, k: nameOf(killer).slice(0, 16), kt: teamOf(killer) || winner, v: nameOf(victim).slice(0, 16), vt: vteam, ki: killer || '' });
   if (T.kf.length > 5) T.kf.shift();
   showFeed(T.kf);
   if (gg) ggKill(victim, killer);
-  else if (!dom && !snd && !kcf && T.sc[winner] >= SCORE_LIMIT) { T.win = winner; T.winT = 5; }
+  else if (!dom && !snd && !kcf && !hpt && T.sc[winner] >= SCORE_LIMIT) { T.win = winner; T.winT = 5; }
 }
 function identOf(id, name) { // calling card for any player or bot
   if (id === myPeer) return { n: playerName, bn: IDN.bn, em: IDN.em };
@@ -3266,6 +3276,7 @@ function newMatchLocal() {
   if (dom) { T.sc = { b: 0, r: 0 }; try { domBuild(); } catch (e) {} DOM.tick = 0; }
   if (snd) { T.sc = { b: 0, r: 0 }; SND.attack = 'b'; try { sndRound(true); } catch (e) {} }
   try { kcfClear(); } catch (e) {} if (kcf) T.sc = { b: 0, r: 0 };
+  if (hpt) { T.sc = { b: 0, r: 0 }; try { hptSetup(); } catch (e) {} }
   P.kills = 0; P.matchDeaths = 0; P.streak = 0; P.mCoins = 0; scanT = 0; respawnPlayer();
   hud.feed.textContent = '';
   banner('MATCH START', TEAM_NAME[P.team] + ' · first to ' + SCORE_LIMIT);
@@ -3293,7 +3304,7 @@ function botStep(b, dt, targets) {
     if (!vis && b.seen && b.seen.t > 0 && b.stuck <= 0.8 && (!b.wp || !b.wp.chase)) { b.wp = { x: b.seen.x, z: b.seen.z, chase: true }; b.stuck = 0; }
     if (!vis && (!b.wp || Math.hypot(b.wp.x - b.x, b.wp.z - b.z) < 2 || b.stuck > 0.8)) {
       const L = HALF - 4;
-      b.wp = kcf && KCF.tags.length && Math.random() < 0.6 ? kcfGoal(b) : snd && SND.sites.length ? sndGoal(b) : dom && DOM.flags.length && Math.random() < 0.75 ? domGoal(b) : best && Math.random() < 0.7 && b.stuck <= 0.8 ? { x: clamp(best.x + (Math.random() - .5) * 14, -L, L), z: clamp(best.z + (Math.random() - .5) * 14, -L, L) } : randomOpenPoint();
+      b.wp = hpt && HPT.spot && Math.random() < 0.8 ? { x: HPT.spot.x + (Math.random() - 0.5) * 8, z: HPT.spot.z + (Math.random() - 0.5) * 8 } : kcf && KCF.tags.length && Math.random() < 0.6 ? kcfGoal(b) : snd && SND.sites.length ? sndGoal(b) : dom && DOM.flags.length && Math.random() < 0.75 ? domGoal(b) : best && Math.random() < 0.7 && b.stuck <= 0.8 ? { x: clamp(best.x + (Math.random() - .5) * 14, -L, L), z: clamp(best.z + (Math.random() - .5) * 14, -L, L) } : randomOpenPoint();
       b.stuck = 0; if (b.seen) b.seen.t = 0;
     }
     if (Math.random() < 0.15) b.strafe *= -1;
@@ -4578,7 +4589,7 @@ function startRange() {
   banner('FIRING RANGE', 'Targets at 10, 25, 50 and 80 m. Tap Next gun to switch.', 3);
 }
 function startSiege() {
-  ensureAudio(); leaveBattle(); clearSiege(); zmb = false; kcf = false; dom = false; snd = false; rng = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
+  ensureAudio(); leaveBattle(); clearSiege(); zmb = false; hpt = false; kcf = false; dom = false; snd = false; rng = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
   mode = 'siege'; duel = false; buildMap(selMap); equip(loadout);
   Object.assign(P, { yaw: 0, pitch: 0, hp: 100, alive: true, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, prot: 0 });
   P.pos.set(0, 1.6, 9); if (insideSolid(P.pos, 0.6)) { const o = randomOpenPoint(); P.pos.set(o.x, 1.6, o.z); }
@@ -4591,7 +4602,7 @@ async function startTDM(isDuel, isRanked) {
   ensureAudio(); clearSiege(); lockPointer();
   duel = !!isDuel; SCORE_LIMIT = duel ? 7 : 65;
   const btn = duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
-  btn.disabled = true; mode = 'tdm'; kcf = false; dom = false; snd = false; rng = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
+  btn.disabled = true; mode = 'tdm'; hpt = false; kcf = false; dom = false; snd = false; rng = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
   resetTDM(); ranked = !!isRanked && !duel;
   if (room) {
     desc.textContent = duel ? 'Finding your rival…' : 'Joining the battle…';
@@ -4641,7 +4652,7 @@ function rankResult(win, quit) {
 }
 function startGunGame() {
   ensureAudio(); clearSiege(); leaveBattle(); lockPointer();
-  duel = false; mode = 'tdm'; gg = true; kcf = false; dom = false; snd = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 1e9; P.team = 'b';
+  duel = false; mode = 'tdm'; gg = true; hpt = false; kcf = false; dom = false; snd = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 1e9; P.team = 'b';
   buildMap(selMap); newMatchLocal();
   state = 'play'; hideMenu(); updHud();
   banner('GUN GAME · ' + MAPS[curMap].name.toUpperCase(), 'Every elimination gives you the next gun. Get one with all ' + GG_GUNS.length + ' to win.', 4);
@@ -4751,7 +4762,7 @@ function stepSnd(dt) {
 }
 function startSnd() {
   ensureAudio(); clearSiege(); leaveBattle(); lockPointer();
-  duel = false; mode = 'tdm'; gg = false; kcf = false; dom = false; snd = true; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 4; P.team = 'b'; ranked = false;
+  duel = false; mode = 'tdm'; gg = false; hpt = false; kcf = false; dom = false; snd = true; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 4; P.team = 'b'; ranked = false;
   equip(loadout); buildMap(selMap); newMatchLocal();
   state = 'play'; hideMenu(); updHud();
 }
@@ -4787,9 +4798,40 @@ function startKcf() {
   state = 'play'; hideMenu(); updHud();
   banner('KILL CONFIRMED · ' + MAPS[curMap].name.toUpperCase(), 'Grab enemy dog tags to score, your team’s tags to deny. First to ' + SCORE_LIMIT + '.', 4);
 }
+/* ---------- Hardpoint (solo 5v5 with bots) ---------- */
+const HPT = { spots: [], i: 0, t: 60, tick: 0, spot: null, ring: null, beam: null };
+function hptSetup() {
+  if (HPT.ring) { scene.remove(HPT.ring); scene.remove(HPT.beam); }
+  HPT.spots = []; const cand = [[0, 0], [-HALF * 0.45, HALF * 0.15], [HALF * 0.45, -HALF * 0.15], [HALF * 0.2, HALF * 0.35], [-HALF * 0.2, -HALF * 0.35]];
+  for (const [x0, z0] of cand) { let x = x0, z = z0; for (let k = 0; k < 60 && insideSolid({ x, z }, 5); k++) { x = x0 + (Math.random() - 0.5) * 16; z = z0 + (Math.random() - 0.5) * 16; } HPT.spots.push({ x, z }); }
+  HPT.ring = new THREE.Mesh(new THREE.RingGeometry(5.6, 6.2, 48), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6, side: THREE.DoubleSide, depthWrite: false })); HPT.ring.rotation.x = -Math.PI / 2;
+  HPT.beam = new THREE.Mesh(new THREE.CylinderGeometry(6, 6, 8, 40, 1, true), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.07, side: THREE.DoubleSide, depthWrite: false }));
+  scene.add(HPT.ring, HPT.beam); HPT.i = 0; HPT.t = 60; HPT.tick = 0; hptMove(0);
+}
+function hptMove(i) { HPT.spot = HPT.spots[i % HPT.spots.length]; HPT.ring.position.set(HPT.spot.x, 0.05, HPT.spot.z); HPT.beam.position.set(HPT.spot.x, 4, HPT.spot.z); T.bots.forEach(b => { b.wp = null; }); }
+function stepHpt(dt) {
+  const show = hpt && state === 'play'; $('hptHud').hidden = !show; if (HPT.ring) HPT.ring.visible = HPT.beam.visible = hpt;
+  if (!hpt || T.win || !HPT.spot) return;
+  HPT.t -= dt; if (HPT.t <= 0) { HPT.i++; HPT.t = 60; hptMove(HPT.i); banner('HARDPOINT MOVED', 'Get to the new hill', 1.8); try { tone(500, 0.2, 'square', 0.08); } catch (e) {} }
+  const n = { b: 0, r: 0 }; let meIn = false;
+  if (P.alive && Math.hypot(P.pos.x - HPT.spot.x, P.pos.z - HPT.spot.z) < 6) { n[P.team]++; meIn = true; }
+  for (const b of T.bots) if (b.alive && Math.hypot(b.x - HPT.spot.x, b.z - HPT.spot.z) < 6) n[b.team]++;
+  const owner = n.b && !n.r ? 'b' : n.r && !n.b ? 'r' : null, contested = n.b && n.r;
+  const col = owner === 'b' ? 0x4a8ae0 : owner === 'r' ? 0xe0543c : contested ? 0xffd24a : 0xffffff; HPT.ring.material.color.setHex(col); HPT.beam.material.color.setHex(col);
+  HPT.tick += dt; if (HPT.tick >= 1) { HPT.tick = 0; if (owner) { T.sc[owner]++; if (meIn && owner === P.team) addXP(5); updHud(); if (T.sc[owner] >= SCORE_LIMIT) { T.win = owner; T.winT = 5; } } }
+  const el = $('hptHud'); el.className = owner || (contested ? 'c' : '');
+  $('hptTxt').textContent = 'HARDPOINT · moves in ' + Math.ceil(HPT.t) + 's · ' + (contested ? 'CONTESTED' : owner ? (owner === P.team ? 'YOUR TEAM HOLDS IT' : 'ENEMY HOLDS IT') : 'NOBODY ON IT') + (meIn ? ' · YOU’RE IN' : '');
+}
+function startHpt() {
+  ensureAudio(); clearSiege(); leaveBattle(); lockPointer();
+  duel = false; mode = 'tdm'; gg = false; dom = false; snd = false; kcf = false; hpt = true; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 150; P.team = 'b'; ranked = false;
+  equip(loadout); buildMap(selMap); newMatchLocal();
+  state = 'play'; hideMenu(); updHud();
+  banner('HARDPOINT · ' + MAPS[curMap].name.toUpperCase(), 'Hold the hill to score. It moves every minute. First to ' + SCORE_LIMIT + '.', 4);
+}
 function startDomination() {
   ensureAudio(); clearSiege(); leaveBattle(); lockPointer();
-  duel = false; mode = 'tdm'; gg = false; kcf = false; dom = true; snd = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 150; P.team = 'b'; ranked = false;
+  duel = false; mode = 'tdm'; gg = false; hpt = false; kcf = false; dom = true; snd = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 150; P.team = 'b'; ranked = false;
   equip(loadout); buildMap(selMap); newMatchLocal(); domBuild(); DOM.tick = 0;
   state = 'play'; hideMenu(); updHud();
   banner('DOMINATION · ' + MAPS[curMap].name.toUpperCase(), 'Capture A, B and C. Each flag you hold scores. First to ' + SCORE_LIMIT + '.', 4);
@@ -4853,6 +4895,7 @@ $('domBtn').addEventListener('click', startDomination);
 $('sndBtn').addEventListener('click', startSnd);
 $('rangeBtn').addEventListener('click', startRange);
 $('kcfBtn').addEventListener('click', startKcf);
+$('hpBtn').addEventListener('click', startHpt);
 $('rangeGun').addEventListener('click', () => { const ks = Object.keys(WEAPONS).filter(k => weaponOwned(k)); RNG.gunI = (RNG.gunI + 1) % ks.length; equip(ks[RNG.gunI]); P.res = 999; updHud(); $('rangeTxt').textContent = WEAPONS[ks[RNG.gunI]].name; });
 $('rankedBtn').addEventListener('click', () => { if (!$('rankedBtn').disabled) startTDM(false, true); });
 $('ksScan').addEventListener('click', useScan); $('ksMsl').addEventListener('click', useMissile);
@@ -5307,6 +5350,7 @@ function loop() {
   try { stepDom(dt); } catch (e) {}
   try { stepPings(dt); } catch (e) {}
   try { stepKcf(dt); } catch (e) {}
+  try { stepHpt(dt); } catch (e) {}
   if (state === 'paused') try { pollPad(dt); } catch (e) {}
   try { stepSnd(dt); } catch (e) {}
   fpsT += raw; fpsN++;
