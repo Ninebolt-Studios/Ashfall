@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118171200';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118173413';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -508,7 +508,14 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #menu .pchip { border-radius: 4px !important; background: rgba(12,13,14,.82) !important; border: 1px solid rgba(255,255,255,.08) !important; }
 #menu .logo h1 { letter-spacing: .14em; }
 /* ===== v115: Play buttons + mode select pop-up ===== */
-.playbig { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.playbig { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+#tutBox { position: fixed; top: calc(64px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 7; width: min(440px, calc(100vw - 32px)); background: rgba(12,12,12,.82); border: 1px solid rgba(255,255,255,.18); border-left: 4px solid var(--accent); border-radius: 8px; padding: 10px 14px; color: #fff; pointer-events: none; }
+#tutBox .tstep { font: 700 11px var(--display); letter-spacing: .18em; color: var(--accent); }
+#tutBox .ttxt { font: 700 18px/1.25 var(--display); letter-spacing: .04em; margin-top: 3px; }
+#tutBox .tbar { height: 4px; background: rgba(255,255,255,.15); border-radius: 2px; margin-top: 8px; overflow: hidden; } #tutBox .tbar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+#tutBox button { pointer-events: auto; float: right; margin-top: 6px; font: 700 11px var(--display); letter-spacing: .12em; color: #fff; background: transparent; border: 1px solid rgba(255,255,255,.3); border-radius: 6px; padding: 4px 8px; }
+#tutNote { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 10px 14px; border-left: 4px solid var(--accent); background: rgba(var(--accent-rgb, 242,169,59), .14); border-radius: 4px; }
+#tutNote[hidden] { display: none; } #tutNote b { font: 700 15px var(--display); letter-spacing: .06em; }
 .pbig { display: grid; gap: 6px; text-align: left; padding: 22px 20px; min-height: 120px; align-content: end; cursor: pointer; color: #fff; border-radius: 4px; border: 1px solid rgba(255,255,255,.1); border-left: 4px solid var(--accent); background: linear-gradient(160deg, rgba(var(--accent-rgb, 242,169,59), .18), rgba(10,11,12,.85) 60%); transition: transform .15s, background .15s; }
 .pbig.go { background: linear-gradient(160deg, rgba(var(--accent-rgb, 242,169,59), .55), rgba(10,11,12,.85) 70%); }
 .pbig b { font: 700 28px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; } .pbig span { font: 500 13px var(--body); color: rgba(239,232,214,.7); }
@@ -766,6 +773,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 <div id="grade" aria-hidden="true"></div>
 <div id="chatFeed"></div>
 <div id="hudEdit" hidden><div class="hebar"><b>Drag a button to move it</b><label>Size <input type="range" id="heSize" min="0.6" max="1.6" step="0.05" value="1"></label><button class="btn ghost" id="heReset" type="button">Reset</button><button class="btn go" id="heDone" type="button">Done</button></div></div>
+<div id="tutBox" hidden><div class="tstep" id="tutStep">STEP 1 / 7</div><div class="ttxt" id="tutTxt"></div><div class="tbar"><i id="tutFill"></i></div><button id="tutEnd" type="button">Skip training</button></div>
 <div id="rangeHud" hidden><span id="rangeTxt">Shoot a target</span><button id="rangeGun" type="button">Next gun ▸</button></div>
 <div id="sndHud" hidden><div id="sndTxt"></div><div class="bar" id="sndBarW" hidden><i id="sndBar"></i></div></div>
 <div id="hptHud" hidden><span id="hptTxt"></span></div>
@@ -852,7 +860,9 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
         <button class="pbig go" type="button" data-msel="mp"><b>Multiplayer</b><span>Team Battle · Ranked · Domination · S&amp;D · Kill Confirmed · Hardpoint · Gun Game · Duel</span></button>
         <button class="pbig" type="button" data-msel="solo"><b>Zombies &amp; Solo</b><span>Zombies · Drone Holdout</span></button>
         <button class="pbig" type="button" data-msel="range"><b>Firing Range</b><span>Practice targets, try every gun</span></button>
+        <button class="pbig" type="button" data-msel="tut"><b>Training</b><span>1-minute tutorial: move, aim, shoot, grenades, slide</span></button>
       </div>
+      <div id="tutNote" hidden><div><b>New to Ashfall?</b><div class="hint">Take the 1-minute training and earn 250 coins.</div></div><div class="btnrow"><button class="btn go" id="tutGo" type="button">Start training</button><button class="btn ghost" id="tutSkip" type="button">Skip</button></div></div>
       <div id="msel" hidden>
         <div class="mshead"><b id="mselTitle">Multiplayer</b><div class="mscats"><button type="button" data-mscat="mp">Multiplayer</button><button type="button" data-mscat="solo">Zombies &amp; Solo</button></div><button type="button" class="msx" id="mselClose" aria-label="Close">✕</button></div>
         <div class="msmaps"><span class="label">Map</span><div id="mselMaps"></div></div>
@@ -3643,7 +3653,7 @@ function showTab(name) {
 }
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
 function showMenu(which) {
-  try { $('rangeHud').hidden = true; } catch (e) {}
+  try { $('rangeHud').hidden = true; TUT.on = false; $('tutBox').hidden = true; $('rangeGun').hidden = false; $('tutNote').hidden = !!store.get('tutDone', false) || !!store.get('tutSkip', false) || (C && C.kills > 20); } catch (e) {}
   document.body.classList.remove('ingame');
   menuMode = which;
   $('menu').hidden = false; $('hud').hidden = true;
@@ -4605,7 +4615,7 @@ codeIn.addEventListener('input', () => { matchCode = codeIn.value.replace(/[^a-z
   const cat = c => { $('mselMp').hidden = c !== 'mp'; $('mselSolo').hidden = c !== 'solo'; $('mselTitle').textContent = c === 'mp' ? 'Multiplayer' : 'Zombies & Solo'; document.querySelectorAll('[data-mscat]').forEach(b => b.classList.toggle('on', b.dataset.mscat === c)); };
   window.openModeSel = c => { cat(c); $('msel').hidden = false; try { padFocus(null); } catch (e) {} };
   window.closeModeSel = () => { $('msel').hidden = true; };
-  document.querySelectorAll('[data-msel]').forEach(b => b.addEventListener('click', () => { if (b.dataset.msel === 'range') { $('rangeBtn').click(); return; } openModeSel(b.dataset.msel); }));
+  document.querySelectorAll('[data-msel]').forEach(b => b.addEventListener('click', () => { if (b.dataset.msel === 'range') { $('rangeBtn').click(); return; } if (b.dataset.msel === 'tut') { startTutorial(); return; } openModeSel(b.dataset.msel); }));
   document.querySelectorAll('[data-mscat]').forEach(b => b.addEventListener('click', () => cat(b.dataset.mscat)));
   $('mselClose').addEventListener('click', closeModeSel);
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('msel').hidden) closeModeSel(); });
@@ -4629,6 +4639,64 @@ function stepMenuOp(dt) {
   g.position.set(x, -1.75 + Math.sin(MOP.t * 1.6) * 0.01, -4.6);
   g.rotation.set(0, Math.PI * 0.82 + Math.sin(MOP.t * 0.35) * 0.18, 0);
 }
+
+/* ---------- v118: training tutorial ---------- */
+const TUT = { on: false, i: 0, v: 0, hits: 0, nades: 0, lx: 0, lz: 0, ly: 0, lp: 0, doneT: 0 };
+function tutCtl() { return GP.on ? 'pad' : isTouch ? 'touch' : 'kb'; }
+const TUT_STEPS = [
+  { need: 6, txt: { kb: 'Move around with W A S D', touch: 'Move with the left stick', pad: 'Move with the left stick' } },
+  { need: 3, txt: { kb: 'Look around with the mouse', touch: 'Drag the right side of the screen to look around', pad: 'Look around with the right stick' } },
+  { need: 0.8, txt: { kb: 'Aim down sights: hold right-click', touch: 'Aim down sights: tap the ADS button', pad: 'Aim down sights: hold LT / L2' } },
+  { need: 3, txt: { kb: 'Shoot the targets: left-click (3 hits)', touch: 'Shoot the targets: tap FIRE (3 hits)', pad: 'Shoot the targets: RT / R2 (3 hits)' } },
+  { need: 1, txt: { kb: 'Reload: press R', touch: 'Reload: tap the reload button', pad: 'Reload: press X / Square' } },
+  { need: 1, txt: { kb: 'Throw a grenade down range: press G', touch: 'Throw a grenade: tap the 💣 button', pad: 'Throw a grenade: press LB / L1' } },
+  { need: 1, txt: { kb: 'Slide: sprint with Shift, then press C', touch: 'Slide: run forward and tap the slide button', pad: 'Slide: sprint (click L3), then press B / Circle' } },
+];
+function startTutorial() {
+  startRange(); TUT.on = true; TUT.i = 0; TUT.v = 0; TUT.hits = 0; TUT.doneT = 0; TUT.slid = 0;
+  TUT.lx = P.pos.x; TUT.lz = P.pos.z; TUT.ly = P.yaw; TUT.lp = P.pitch;
+  P.nades = Math.max(P.nades || 0, 2); updNade();
+  $('rangeGun').hidden = true; $('rangeHud').hidden = true; $('tutBox').hidden = false;
+  banner('TRAINING', 'Follow the steps at the top · about 1 minute', 2.5); tutShow();
+}
+function tutShow() {
+  const st = TUT_STEPS[TUT.i];
+  if (!st) { $('tutStep').textContent = 'COMPLETE'; $('tutTxt').textContent = "You're ready. Good luck out there!"; $('tutFill').style.width = '100%'; return; }
+  $('tutStep').textContent = 'STEP ' + (TUT.i + 1) + ' / ' + TUT_STEPS.length; $('tutTxt').textContent = st.txt[tutCtl()];
+  $('tutFill').style.width = Math.min(100, TUT.v / st.need * 100) + '%';
+}
+function stepTut(dt) {
+  if (TUT.doneT > 0) { TUT.doneT -= dt; if (TUT.doneT <= 0) { TUT.on = false; $('quitBtn').click(); } return; }
+  const st = TUT_STEPS[TUT.i]; if (!st) return;
+  const dyaw = Math.abs(P.yaw - TUT.ly) + Math.abs(P.pitch - TUT.lp), dmov = Math.hypot(P.pos.x - TUT.lx, P.pos.z - TUT.lz);
+  TUT.lx = P.pos.x; TUT.lz = P.pos.z; TUT.ly = P.yaw; TUT.lp = P.pitch;
+  const k = TUT.i;
+  if (k === 0) TUT.v += Math.min(dmov, 1);
+  else if (k === 1) TUT.v += Math.min(dyaw, 0.5);
+  else if (k === 2) { if (P.ads) TUT.v += dt; }
+  else if (k === 3) TUT.v = TUT.hits;
+  else if (k === 4) { if (P.reloading > 0) TUT.v = 1; else if (P.ammo >= magOf(P.w)) P.ammo = Math.max(1, magOf(P.w) - 5); }
+  else if (k === 5) { if ((P.nades || 0) < TUT.nades) TUT.v = 1; TUT.nades = P.nades || 0; if (!P.nades) { P.nades = 2; TUT.nades = 2; updNade(); updHud(); } }
+  else if (k === 6) { if (TUT.slid || P.slideT > 0) TUT.v = 1; }
+  if (k !== 5) TUT.nades = P.nades || 0;
+  if (TUT.v >= st.need) {
+    TUT.i++; TUT.v = 0; if (TUT.i === 3) TUT.hits = 0; if (TUT.i === 6) TUT.slid = 0;
+    try { tone(880, 0.07, 'triangle', 0.12); setTimeout(() => tone(1320, 0.08, 'triangle', 0.12), 80); } catch (e) {}
+    if (TUT.i >= TUT_STEPS.length) {
+      const first = !store.get('tutDone', false); store.set('tutDone', true);
+      if (first) addCoins(250);
+      banner('TRAINING COMPLETE', first ? '+250 coins · head to Multiplayer when you are ready' : 'Nice work', 3.5); TUT.doneT = 4;
+    }
+  }
+  tutShow();
+}
+(function () {
+  const n = $('tutNote'); if (!n) return;
+  $('tutGo').addEventListener('click', () => startTutorial());
+  $('tutSkip').addEventListener('click', () => { store.set('tutSkip', true); n.hidden = true; });
+  $('tutEnd').addEventListener('click', () => { TUT.on = false; $('quitBtn').click(); });
+  try { n.hidden = !!store.get('tutDone', false) || !!store.get('tutSkip', false) || (C && C.kills > 20); } catch (e) { n.hidden = true; }
+})();
 /* ---------- custom HUD layout (drag + resize touch buttons) ---------- */
 const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn', 'inspBtn'];
 function applyHudLayout() {
@@ -4721,9 +4789,11 @@ function rangeHit(rt, dmg) {
   plate.userData.hp -= dmg;
   $('rangeTxt').textContent = rt.dist + ' m · ' + (rt.part === 'head' ? 'HEAD' : 'BODY') + ' · ' + Math.round(dmg) + ' dmg' + (plate.userData.hp <= 0 ? ' · DOWN' : '');
   try { tone(rt.part === 'head' ? 1500 : 1100, 0.06, 'triangle', 0.12); } catch (e) {}
+  if (TUT.on) TUT.hits++;
   if (plate.userData.hp <= 0) { plate.userData.down = 2; plate.rotation.x = -Math.PI / 2.2; }
 }
 function stepRange(dt) {
+  if (TUT.on) try { stepTut(dt); } catch (e) {}
   for (const p of RNG.targets) if (p.userData.down > 0) { p.userData.down -= dt; if (p.userData.down <= 0) { p.rotation.x = 0; p.userData.hp = 100; } }
   if (RNG.mover) RNG.mover.position.x = Math.sin(performance.now() / 1400) * 6;
   P.res = 999; // unlimited ammo
@@ -5294,7 +5364,7 @@ function startSlide(){
   if (!P.alive || !onGround() || P.slideT > 0 || P.slideCd > 0 || P.vault || state !== 'play') return false;
   const hsp = Math.hypot(P.vx, P.vz); if (hsp < 3.4) return false;
   const k = 10.5 / hsp; P.vx *= k; P.vz *= k;
-  P.slideT = 0.75; P.slideCd = 1.1; P.ads = false;
+  P.slideT = 0.75; P.slideCd = 1.1; P.ads = false; if (TUT.on) TUT.slid = 1;
   sfx.slide();
   return true;
 }
