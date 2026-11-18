@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118175148';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118175550';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -553,6 +553,15 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #xmasCard { margin-bottom: 14px; padding: 14px 16px; border-radius: 6px; border: 1px solid rgba(255,255,255,.12); border-left: 4px solid #e8443a; background: linear-gradient(120deg, rgba(14,90,42,.55), rgba(140,20,20,.45)); }
 #xmasCard[hidden] { display: none; } #xmasCard .xh { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; } #xmasCard b.t { font: 700 20px var(--display); letter-spacing: .06em; }
 #xmasCh .dch { margin-top: 8px; }
+#privBox { margin-bottom: 14px; border: 1px solid rgba(255,255,255,.12); border-left: 4px solid var(--accent); border-radius: 6px; background: rgba(10,11,12,.7); }
+#privBox > summary { cursor: pointer; padding: 12px 16px; font: 700 16px var(--display); letter-spacing: .06em; list-style: none; } #privBox > summary::-webkit-details-marker { display: none; }
+#privBox > summary small { font: 500 12px var(--body); color: var(--dim); letter-spacing: 0; margin-left: 8px; }
+#privBox .pgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 0 16px 10px; }
+#privBox select, #privBox input { width: 100%; box-sizing: border-box; background: rgba(255,255,255,.06); color: inherit; border: 1px solid rgba(255,255,255,.18); border-radius: 6px; padding: 9px 10px; font: 600 14px var(--body); }
+#privBox select option { background: #1a1b1e; }
+#privBox .prow { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding: 0 16px 14px; }
+#privCode { font: 700 18px var(--mono); letter-spacing: .12em; color: var(--accent); }
+@media (max-width: 819px) { #privBox .pgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 /* admin */
 .admin { border-color: rgba(192,138,255,.5) !important; }
 .admrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -869,6 +878,16 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
         <button class="pbig" type="button" data-msel="tut"><b>Training</b><span>1-minute tutorial: move, aim, shoot, grenades, slide</span></button>
       </div>
       <div id="tutNote" hidden><div><b>New to Ashfall?</b><div class="hint">Take the 1-minute training and earn 250 coins.</div></div><div class="btnrow"><button class="btn go" id="tutGo" type="button">Start training</button><button class="btn ghost" id="tutSkip" type="button">Skip</button></div></div>
+      <details id="privBox"><summary>🔒 Private match <small>pick the mode, map and bots, then share the code</small></summary>
+        <div class="pgrid">
+          <label><span class="label">Mode</span><select id="pvMode"></select></label>
+          <label><span class="label">Map</span><select id="pvMap"></select></label>
+          <label><span class="label">Match length</span><select id="pvLen"><option value="s">Short</option><option value="n" selected>Normal</option><option value="l">Long</option></select></label>
+          <label><span class="label">Bots</span><select id="pvBots"><option value="o">Off (players only)</option><option value="e">Easy</option><option value="n" selected>Normal</option><option value="h">Hard</option><option value="a">Adaptive</option></select></label>
+        </div>
+        <div class="prow"><button class="btn go" id="pvCreate" type="button">Create &amp; start</button><span id="privCode"></span><button class="btn ghost" id="pvCopy" type="button" hidden>Copy code</button></div>
+        <div class="prow"><input id="pvJoinCode" placeholder="Friend's code, e.g. pk7q2-d3nh" maxlength="12" style="max-width: 260px"><button class="btn ghost" id="pvJoin" type="button">Join</button><span class="hint" id="pvMsg"></span></div>
+      </details>
       <div id="xmasCard" hidden><div class="xh"><div><b class="t">🎄 Christmas Event</b><div class="hint" id="xmasEnds"></div></div><button class="btn go" id="xmasPlay" type="button">☃️ Play Snowball Fight</button></div><div id="xmasCh"></div></div>
       <div id="msel" hidden>
         <div class="mshead"><b id="mselTitle">Multiplayer</b><div class="mscats"><button type="button" data-mscat="mp">Multiplayer</button><button type="button" data-mscat="solo">Zombies &amp; Solo</button></div><button type="button" class="msx" id="mselClose" aria-label="Close">✕</button></div>
@@ -2642,6 +2661,7 @@ let scanT = 0, missile = null;
 const AD = Object.assign({ k: 3, d: 3 }, store.get('aidiff', {}));
 function adNote(kill) { AD.k = AD.k * 0.93 + (kill ? 1 : 0); AD.d = AD.d * 0.93 + (kill ? 0 : 1); store.set('aidiff', AD); }
 function botSkill() { // 0.6 = much easier, 1 = normal, 1.4 = much harder
+  if (PRIV && PRIV.bots !== 'a' && PRIV.bots !== 'o') return PRIV.bots === 'e' ? 0.65 : PRIV.bots === 'h' ? 1.3 : 1;
   if (ranked) return [0.85, 0.95, 1.05, 1.18, 1.3, 1.38, 1.45, 1.52][RANKS[rankIdx()].t];
   if (S.botDiff === 'easy') return 0.65; if (S.botDiff === 'normal') return 1; if (S.botDiff === 'hard') return 1.3;
   const ratio = (AD.k + 1.5) / (AD.d + 1.5);
@@ -3461,7 +3481,7 @@ function ensureRoster(hs) {
   if (duel) { for (const id in T.botMap) { T.bots.splice(T.bots.indexOf(T.botMap[id]), 1); delete T.botMap[id]; } return; }
   const counts = { b: 0, r: 0 }; hs.forEach(h => counts[h.pr.tm]++);
   for (const team of ['b', 'r']) {
-    const need = Math.max(0, TEAM_SIZE - counts[team]);
+    const need = PRIV && PRIV.bots === 'o' ? 0 : Math.max(0, TEAM_SIZE - counts[team]);
     for (let i = 0; i < TEAM_SIZE; i++) {
       const id = team + i;
       if (i < need && !T.botMap[id]) makeBot(id);
@@ -4913,7 +4933,7 @@ function stepTut(dt) {
 })();
 
 /* ---------- v121: Christmas event · Snowball Fight + holiday challenges ---------- */
-let snowb = false;
+var snowb = false;
 const SNOWB = { list: [], cd: 0 };
 const snowMat = new THREE.MeshStandardMaterial({ color: 0xf6f9ff, roughness: 0.85, envMapIntensity: 0.6 }), snowGeo = new THREE.SphereGeometry(0.11, 12, 9);
 const snowHand = new THREE.Mesh(new THREE.SphereGeometry(0.032, 14, 10), snowMat); snowHand.position.set(0.15, -0.12, -0.45); snowHand.visible = false; camera.add(snowHand);
@@ -4979,6 +4999,44 @@ function renderXmas() {
   $('snowBtn').addEventListener('click', () => startTDM(false, false, 'snow'));
   $('xmasPlay').addEventListener('click', () => startTDM(false, false, 'snow'));
   try { renderXmas(); } catch (e) {}
+})();
+
+/* ---------- v122: private matches (the code carries the settings) ---------- */
+var PRIV = null;
+const PV_MODES = [['t', '', 'Team Battle'], ['d', 'dom', 'Domination'], ['s', 'snd', 'Search & Destroy'], ['k', 'kcf', 'Kill Confirmed'], ['h', 'hpt', 'Hardpoint'], ['g', 'gg', 'Gun Game'], ['w', 'snow', 'Snowball Fight']];
+const PV_LEN = { s: 0.6, n: 1, l: 1.5 };
+function privParse(code) {
+  const m = /^p[a-z0-9]{4}-([a-z])([0-9a-z])([snl])([oenha])$/.exec((code || '').trim().toLowerCase()); if (!m) return null;
+  const md = PV_MODES.find(x => x[0] === m[1]), mk = Object.keys(MAPS)[parseInt(m[2], 36)]; if (!md || !mk) return null;
+  return { code: m[0], obj: md[1] || undefined, label: md[2], map: mk, len: PV_LEN[m[3]], bots: m[4] };
+}
+function privMake() {
+  const r = Array.from({ length: 4 }, () => 'abcdefghjkmnpqrstuvwxyz23456789'[Math.random() * 31 | 0]).join('');
+  return 'p' + r + '-' + $('pvMode').value + Object.keys(MAPS).indexOf($('pvMap').value).toString(36) + $('pvLen').value + $('pvBots').value;
+}
+function renderPriv() {
+  const ms = $('pvMode'); if (!ms) return; const cur = ms.value || 't'; ms.textContent = '';
+  for (const [c, , n] of PV_MODES) { if (c === 'w' && !xmasOn()) continue; const o = document.createElement('option'); o.value = c; o.textContent = n; ms.appendChild(o); }
+  ms.value = [...ms.options].some(o => o.value === cur) ? cur : 't';
+  const mp = $('pvMap'); if (!mp.options.length) for (const [k, m] of Object.entries(MAPS)) { const o = document.createElement('option'); o.value = k; o.textContent = m.name; mp.appendChild(o); }
+  if (!mp.value || !MAPS[mp.value]) mp.value = selMap;
+}
+(function () {
+  renderPriv(); $('pvMap').value = MAPS[selMap] ? selMap : 'outpost';
+  $('privBox').addEventListener('toggle', () => { if ($('privBox').open) renderPriv(); });
+  $('pvCreate').addEventListener('click', () => {
+    const code = privMake(), pv = privParse(code); if (!pv) return;
+    $('privCode').textContent = code.toUpperCase(); $('pvCopy').hidden = false; $('pvCopy').dataset.code = code;
+    try { navigator.clipboard.writeText(code.toUpperCase()).catch(() => {}); } catch (e) {}
+    startTDM(false, false, pv.obj, pv);
+  });
+  $('pvCopy').addEventListener('click', () => { const b = $('pvCopy'); try { navigator.clipboard.writeText((b.dataset.code || '').toUpperCase()).then(() => { b.textContent = 'Copied'; setTimeout(() => b.textContent = 'Copy code', 1500); }, () => {}); } catch (e) {} });
+  $('pvJoin').addEventListener('click', () => {
+    const pv = privParse($('pvJoinCode').value);
+    if (!pv) { $('pvMsg').textContent = 'That code doesn’t look right. It looks like PK7Q2-D3NH.'; return; }
+    if (pv.obj === 'snow' && !xmasOn()) { $('pvMsg').textContent = 'Snowball Fight is only on during the Christmas event.'; return; }
+    $('pvMsg').textContent = ''; startTDM(false, false, pv.obj, pv);
+  });
 })();
 /* ---------- custom HUD layout (drag + resize touch buttons) ---------- */
 const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn', 'inspBtn'];
@@ -5095,17 +5153,19 @@ function startSiege() {
   score = 0; wave = 0; betweenWaves = 1; toSpawn = 0; P.nades = nadesPerLife(); updNade(); P.ks = {}; clearKS(); updKS(); P.streak = 0; P.mCoins = 0; scanT = 0;
   state = 'play'; hideMenu(); updHud(); lockPointer();
 }
-async function startTDM(isDuel, isRanked, obj) {
+async function startTDM(isDuel, isRanked, obj, priv) {
+  PRIV = priv || null; if (PRIV) { isDuel = false; isRanked = false; obj = PRIV.obj; }
   if (isDuel && !party) { const pm = $('partyMsg'); pm.textContent = 'Duel 1v1 needs a party. Tap Create party and send the code to your friend, or type their code and tap Join.'; pm.style.color = 'var(--accent)'; $('partyBox').scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
   ensureAudio(); clearSiege(); lockPointer();
   duel = !!isDuel; SCORE_LIMIT = duel ? 7 : 65;
   const btn = obj === 'gg' ? $('ggBtn') : obj === 'dom' ? $('domBtn') : obj === 'snd' ? $('sndBtn') : obj === 'kcf' ? $('kcfBtn') : obj === 'hpt' ? $('hpBtn') : obj === 'snow' ? $('snowBtn') : duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = obj ? btn.querySelector('.mode-desc') : duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
   btn.disabled = true; mode = 'tdm'; hpt = obj === 'hpt'; kcf = obj === 'kcf'; dom = obj === 'dom'; snd = obj === 'snd'; rng = false; gg = obj === 'gg'; zmb = false; if (gg) { SCORE_LIMIT = 1e9; T.gg = {}; T.ggWin = ''; } if (dom || hpt) SCORE_LIMIT = 150; if (snd) SCORE_LIMIT = 4; if (kcf) SCORE_LIMIT = 50; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
   resetTDM(); ranked = !!isRanked && !duel && !obj; snowb = obj === 'snow'; if (snowb) SCORE_LIMIT = 30; clearSnow();
+  if (PRIV && !gg) SCORE_LIMIT = Math.max(obj === 'snd' ? 2 : 10, Math.round(SCORE_LIMIT * PRIV.len));
   if (obj === 'gg') { gg = true; SCORE_LIMIT = 1e9; T.gg = {}; T.ggWin = ''; }
   if (room) {
     desc.textContent = duel ? 'Finding your rival…' : 'Joining the battle…';
-    try { troom = await Promise.race([room.join(duel ? 'duel-p-' + party.toLowerCase() : ranked ? 'ranked-main' : (obj ? obj + '-' : 'battle-') + (matchCode || 'main')), sleep(6000).then(() => null)]); } catch (e) { troom = null; }
+    try { troom = await Promise.race([room.join(duel ? 'duel-p-' + party.toLowerCase() : ranked ? 'ranked-main' : (obj ? obj + '-' : 'battle-') + (PRIV ? PRIV.code : matchCode || 'main')), sleep(6000).then(() => null)]); } catch (e) { troom = null; }
     if (troom) await sleep(1200);
   }
   const counts = { b: 0, r: 0 };
@@ -5114,7 +5174,7 @@ async function startTDM(isDuel, isRanked, obj) {
   if (troom && party && !duel) { const mate = troom.peers().find(p => !p.sameTab && p.presence && p.presence.pt === party && (p.presence.tm === 'b' || p.presence.tm === 'r')); if (mate) P.team = mate.presence.tm; }
   let hostMap = null;
   if (troom) for (const p of troom.peers()) if (!p.sameTab && p.presence && MAPS[p.presence.mp]) hostMap = p.presence.mp;
-  buildMap(hostMap || (snowb ? (['frostline', 'village', 'dam'].includes(selMap) ? selMap : ['frostline', 'village', 'dam'][Math.random() * 3 | 0]) : selMap));
+  buildMap(hostMap || (PRIV ? PRIV.map : snowb ? (['frostline', 'village', 'dam'].includes(selMap) ? selMap : ['frostline', 'village', 'dam'][Math.random() * 3 | 0]) : selMap));
   if (snowb) setPrecip('snow');
   btn.disabled = false; desc.textContent = oldDesc;
   newMatchLocal();
@@ -5123,6 +5183,7 @@ async function startTDM(isDuel, isRanked, obj) {
   if (obj) banner(({ gg: 'GUN GAME · ', dom: 'DOMINATION · ', snd: 'SEARCH & DESTROY · ', kcf: 'KILL CONFIRMED · ', hpt: 'HARDPOINT · ', snow: '☃️ SNOWBALL FIGHT · ' })[obj] + MAPS[curMap].name.toUpperCase(), (others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest · ' : 'No other players online · bots fill every slot · ') + ({ gg: 'every elimination = next gun', dom: 'capture A, B and C', snd: 'first to 4 rounds', kcf: 'grab the dog tags', hpt: 'hold the hill', snow: 'snowballs only · first to 30' })[obj], 4);
   else if (duel) banner(TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? 'Rival found · first to ' + SCORE_LIMIT : 'Waiting for a rival — share code “' + (matchCode || 'open') + '”. First to ' + SCORE_LIMIT + '.', 4);
   else banner((ranked ? 'RANKED · ' + rankBadge(rankIdx()) + ' ' : '') + TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest' : 'No other players online · bots fill every slot', 3);
+  if (PRIV) banner('🔒 PRIVATE · ' + PRIV.label.toUpperCase() + ' · ' + MAPS[curMap].name.toUpperCase(), 'Code ' + PRIV.code.toUpperCase() + ' · ' + (others > 0 ? others + ' friend' + (others > 1 ? 's' : '') + ' here' : 'share the code so friends can join') + (PRIV.bots === 'o' ? ' · no bots' : ''), 4.5);
 }
 (function () {
   const n = $('freshNote'); if (!n) return;
