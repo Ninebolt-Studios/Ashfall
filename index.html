@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118141406';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118141526';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -596,6 +596,8 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #domBtn .mode-name::before { content: '🚩 '; }
 #sndBtn .mode-name::before { content: '💣 '; }
 #rangeBtn .mode-name::before { content: '🎯 '; }
+#kcfBtn .mode-name::before { content: '🏷️ '; }
+#kcfBtn { background-image: linear-gradient(135deg, rgba(255,200,80,.24), transparent 65%); border-top-color: #ffc850; }
 #rangeBtn { background-image: linear-gradient(135deg, rgba(240,220,120,.22), transparent 65%); border-top-color: #e8d070; }
 #rangeHud { position: fixed; top: calc(70px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 6; display: flex; gap: 10px; align-items: center; font: 700 15px var(--display); letter-spacing: .12em; color: #fff; background: rgba(15,15,15,.72); border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 6px 10px 6px 14px; }
 #rangeHud button { font: 700 13px var(--display); letter-spacing: .12em; color: #1a1408; background: var(--accent); border: 0; border-radius: 8px; padding: 8px 12px; pointer-events: auto; }
@@ -836,6 +838,11 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
             <span class="mode-name">Search &amp; Destroy</span>
             <span class="mode-desc">5v5 with bots, one life per round. Attack: plant the bomb on site A or B. Defend: stop the plant or defuse it. First to 4 rounds.</span>
             <span class="chips"><span class="chip">Solo</span><span class="chip">Rounds</span><span class="chip">One life</span></span>
+          </button>
+          <button class="mode" id="kcfBtn" type="button">
+            <span class="mode-name">Kill Confirmed</span>
+            <span class="mode-desc">5v5 with bots. Eliminations drop dog tags: grab enemy tags to score, grab your team's tags to deny. First to 50.</span>
+            <span class="chips"><span class="chip">Solo</span><span class="chip">Dog tags</span><span class="chip">Team</span></span>
           </button>
           <button class="mode" id="rangeBtn" type="button">
             <span class="mode-name">Firing Range</span>
@@ -2985,7 +2992,7 @@ function clearSiege() {
 /* =========================================================
    TEAM BATTLE 5v5 (online, bots fill empty slots)
    ========================================================= */
-let SCORE_LIMIT = 65, gg = false, ranked = false, dom = false, snd = false, rng = false; // gg = Gun Game (offline free-for-all)
+let SCORE_LIMIT = 65, gg = false, ranked = false, dom = false, snd = false, rng = false, kcf = false; // gg = Gun Game (offline free-for-all)
 const GG_GUNS = ['smg', 'pdw', 'ar', 'br', 'lmg', 'sg', 'dmr', 'snp', 'rev', 'pst'];
 const isFoe = e => gg || e.team !== P.team; const TEAM_SIZE = 5; let duel = false;
 const BOT_NAMES = { b0: 'Hayes', b1: 'Okafor', b2: 'Lindqvist', b3: 'Moreau', b4: 'Tanaka', r0: 'Vance', r1: 'Petrov', r2: 'Silva', r3: 'Kade', r4: 'Ibarra' };
@@ -3150,13 +3157,14 @@ function becomeHost() {
 function onDeath(victim, killer, vteam) {
   if (T.win) return;
   const winner = other(vteam);
-  if (!gg && !dom && !snd) T.sc[winner]++;
+  if (!gg && !dom && !snd && !kcf) T.sc[winner]++;
+  if (kcf) { const vb = victim === myPeer ? { x: P.pos.x, z: P.pos.z } : T.botMap[victim]; if (vb) kcfTag(vb.x, vb.z, vteam); }
   (T.st[victim] = T.st[victim] || [0, 0])[1]++; if (killer && killer !== victim) (T.st[killer] = T.st[killer] || [0, 0])[0]++;
   T.kf.push({ s: ++T.kfSeq, k: nameOf(killer).slice(0, 16), kt: teamOf(killer) || winner, v: nameOf(victim).slice(0, 16), vt: vteam, ki: killer || '' });
   if (T.kf.length > 5) T.kf.shift();
   showFeed(T.kf);
   if (gg) ggKill(victim, killer);
-  else if (!dom && !snd && T.sc[winner] >= SCORE_LIMIT) { T.win = winner; T.winT = 5; }
+  else if (!dom && !snd && !kcf && T.sc[winner] >= SCORE_LIMIT) { T.win = winner; T.winT = 5; }
 }
 function identOf(id, name) { // calling card for any player or bot
   if (id === myPeer) return { n: playerName, bn: IDN.bn, em: IDN.em };
@@ -3257,6 +3265,7 @@ function newMatchLocal() {
   if (gg) { T.gg = {}; T.ggWin = ''; T.sc = { b: 0, r: 0 }; }
   if (dom) { T.sc = { b: 0, r: 0 }; try { domBuild(); } catch (e) {} DOM.tick = 0; }
   if (snd) { T.sc = { b: 0, r: 0 }; SND.attack = 'b'; try { sndRound(true); } catch (e) {} }
+  try { kcfClear(); } catch (e) {} if (kcf) T.sc = { b: 0, r: 0 };
   P.kills = 0; P.matchDeaths = 0; P.streak = 0; P.mCoins = 0; scanT = 0; respawnPlayer();
   hud.feed.textContent = '';
   banner('MATCH START', TEAM_NAME[P.team] + ' · first to ' + SCORE_LIMIT);
@@ -3284,7 +3293,7 @@ function botStep(b, dt, targets) {
     if (!vis && b.seen && b.seen.t > 0 && b.stuck <= 0.8 && (!b.wp || !b.wp.chase)) { b.wp = { x: b.seen.x, z: b.seen.z, chase: true }; b.stuck = 0; }
     if (!vis && (!b.wp || Math.hypot(b.wp.x - b.x, b.wp.z - b.z) < 2 || b.stuck > 0.8)) {
       const L = HALF - 4;
-      b.wp = snd && SND.sites.length ? sndGoal(b) : dom && DOM.flags.length && Math.random() < 0.75 ? domGoal(b) : best && Math.random() < 0.7 && b.stuck <= 0.8 ? { x: clamp(best.x + (Math.random() - .5) * 14, -L, L), z: clamp(best.z + (Math.random() - .5) * 14, -L, L) } : randomOpenPoint();
+      b.wp = kcf && KCF.tags.length && Math.random() < 0.6 ? kcfGoal(b) : snd && SND.sites.length ? sndGoal(b) : dom && DOM.flags.length && Math.random() < 0.75 ? domGoal(b) : best && Math.random() < 0.7 && b.stuck <= 0.8 ? { x: clamp(best.x + (Math.random() - .5) * 14, -L, L), z: clamp(best.z + (Math.random() - .5) * 14, -L, L) } : randomOpenPoint();
       b.stuck = 0; if (b.seen) b.seen.t = 0;
     }
     if (Math.random() < 0.15) b.strafe *= -1;
@@ -4569,7 +4578,7 @@ function startRange() {
   banner('FIRING RANGE', 'Targets at 10, 25, 50 and 80 m. Tap Next gun to switch.', 3);
 }
 function startSiege() {
-  ensureAudio(); leaveBattle(); clearSiege(); zmb = false; dom = false; snd = false; rng = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
+  ensureAudio(); leaveBattle(); clearSiege(); zmb = false; kcf = false; dom = false; snd = false; rng = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
   mode = 'siege'; duel = false; buildMap(selMap); equip(loadout);
   Object.assign(P, { yaw: 0, pitch: 0, hp: 100, alive: true, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, prot: 0 });
   P.pos.set(0, 1.6, 9); if (insideSolid(P.pos, 0.6)) { const o = randomOpenPoint(); P.pos.set(o.x, 1.6, o.z); }
@@ -4582,7 +4591,7 @@ async function startTDM(isDuel, isRanked) {
   ensureAudio(); clearSiege(); lockPointer();
   duel = !!isDuel; SCORE_LIMIT = duel ? 7 : 65;
   const btn = duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
-  btn.disabled = true; mode = 'tdm'; dom = false; snd = false; rng = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
+  btn.disabled = true; mode = 'tdm'; kcf = false; dom = false; snd = false; rng = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
   resetTDM(); ranked = !!isRanked && !duel;
   if (room) {
     desc.textContent = duel ? 'Finding your rival…' : 'Joining the battle…';
@@ -4632,7 +4641,7 @@ function rankResult(win, quit) {
 }
 function startGunGame() {
   ensureAudio(); clearSiege(); leaveBattle(); lockPointer();
-  duel = false; mode = 'tdm'; gg = true; dom = false; snd = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 1e9; P.team = 'b';
+  duel = false; mode = 'tdm'; gg = true; kcf = false; dom = false; snd = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 1e9; P.team = 'b';
   buildMap(selMap); newMatchLocal();
   state = 'play'; hideMenu(); updHud();
   banner('GUN GAME · ' + MAPS[curMap].name.toUpperCase(), 'Every elimination gives you the next gun. Get one with all ' + GG_GUNS.length + ' to win.', 4);
@@ -4742,13 +4751,45 @@ function stepSnd(dt) {
 }
 function startSnd() {
   ensureAudio(); clearSiege(); leaveBattle(); lockPointer();
-  duel = false; mode = 'tdm'; gg = false; dom = false; snd = true; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 4; P.team = 'b'; ranked = false;
+  duel = false; mode = 'tdm'; gg = false; kcf = false; dom = false; snd = true; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 4; P.team = 'b'; ranked = false;
   equip(loadout); buildMap(selMap); newMatchLocal();
   state = 'play'; hideMenu(); updHud();
 }
+/* ---------- Kill Confirmed (solo 5v5 with bots) ---------- */
+const KCF = { tags: [] };
+const kcfGeo = new THREE.BoxGeometry(0.22, 0.32, 0.03), kcfMats = { b: new THREE.MeshStandardMaterial({ color: 0x6aa8ff, emissive: 0x2a5aa8, emissiveIntensity: 0.9, metalness: 0.6, roughness: 0.3 }), r: new THREE.MeshStandardMaterial({ color: 0xff7a5a, emissive: 0xa83a22, emissiveIntensity: 0.9, metalness: 0.6, roughness: 0.3 }) };
+function kcfTag(x, z, team) {
+  const g = new THREE.Group(); g.position.set(x, 0.9, z);
+  const a = new THREE.Mesh(kcfGeo, kcfMats[team]); a.rotation.z = 0.15; g.add(a); const b = new THREE.Mesh(kcfGeo, kcfMats[team]); b.position.set(0.06, -0.04, 0.03); b.rotation.z = -0.2; g.add(b);
+  scene.add(g); KCF.tags.push({ g, x, z, team, life: 30 });
+}
+function kcfClear() { KCF.tags.forEach(t => scene.remove(t.g)); KCF.tags.length = 0; }
+function kcfGoal(b) { let best = null, bd = 28; for (const t of KCF.tags) { const d = Math.hypot(t.x - b.x, t.z - b.z); if (d < bd) { bd = d; best = t; } } return best ? { x: best.x, z: best.z } : randomOpenPoint(); }
+function stepKcf(dt) {
+  if (!kcf) { if (KCF.tags.length) kcfClear(); return; } if (T.win) return;
+  for (let i = KCF.tags.length - 1; i >= 0; i--) {
+    const t = KCF.tags[i]; t.life -= dt; t.g.rotation.y += dt * 2.5; t.g.position.y = 0.9 + Math.sin(performance.now() / 300 + i) * 0.08;
+    let who = null, me = false;
+    if (P.alive && Math.hypot(P.pos.x - t.x, P.pos.z - t.z) < 1.4) { who = P.team; me = true; }
+    else for (const b of T.bots) if (b.alive && Math.hypot(b.x - t.x, b.z - t.z) < 1.2) { who = b.team; break; }
+    if (who || t.life <= 0) {
+      scene.remove(t.g); KCF.tags.splice(i, 1);
+      if (who && who !== t.team) { T.sc[who]++; if (me) { banner('KILL CONFIRMED', '+1 for your team', 1.4); addXP(40); addCoins(5); try { tone(990, 0.08, 'triangle', 0.12); } catch (e) {} } }
+      else if (who && me) { banner('KILL DENIED', 'You saved a teammate’s tag', 1.4); addXP(30); try { tone(660, 0.08, 'triangle', 0.12); } catch (e) {} }
+      updHud(); for (const tm of ['b', 'r']) if (T.sc[tm] >= SCORE_LIMIT && !T.win) { T.win = tm; T.winT = 5; }
+    }
+  }
+}
+function startKcf() {
+  ensureAudio(); clearSiege(); leaveBattle(); lockPointer();
+  duel = false; mode = 'tdm'; gg = false; dom = false; snd = false; kcf = true; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 50; P.team = 'b'; ranked = false;
+  equip(loadout); buildMap(selMap); newMatchLocal();
+  state = 'play'; hideMenu(); updHud();
+  banner('KILL CONFIRMED · ' + MAPS[curMap].name.toUpperCase(), 'Grab enemy dog tags to score, your team’s tags to deny. First to ' + SCORE_LIMIT + '.', 4);
+}
 function startDomination() {
   ensureAudio(); clearSiege(); leaveBattle(); lockPointer();
-  duel = false; mode = 'tdm'; gg = false; dom = true; snd = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 150; P.team = 'b'; ranked = false;
+  duel = false; mode = 'tdm'; gg = false; kcf = false; dom = true; snd = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; SCORE_LIMIT = 150; P.team = 'b'; ranked = false;
   equip(loadout); buildMap(selMap); newMatchLocal(); domBuild(); DOM.tick = 0;
   state = 'play'; hideMenu(); updHud();
   banner('DOMINATION · ' + MAPS[curMap].name.toUpperCase(), 'Capture A, B and C. Each flag you hold scores. First to ' + SCORE_LIMIT + '.', 4);
@@ -4811,6 +4852,7 @@ $('ggBtn').addEventListener('click', startGunGame);
 $('domBtn').addEventListener('click', startDomination);
 $('sndBtn').addEventListener('click', startSnd);
 $('rangeBtn').addEventListener('click', startRange);
+$('kcfBtn').addEventListener('click', startKcf);
 $('rangeGun').addEventListener('click', () => { const ks = Object.keys(WEAPONS).filter(k => weaponOwned(k)); RNG.gunI = (RNG.gunI + 1) % ks.length; equip(ks[RNG.gunI]); P.res = 999; updHud(); $('rangeTxt').textContent = WEAPONS[ks[RNG.gunI]].name; });
 $('rankedBtn').addEventListener('click', () => { if (!$('rankedBtn').disabled) startTDM(false, true); });
 $('ksScan').addEventListener('click', useScan); $('ksMsl').addEventListener('click', useMissile);
@@ -5264,6 +5306,7 @@ function loop() {
   try { stepDust(dt); } catch (e) {}
   try { stepDom(dt); } catch (e) {}
   try { stepPings(dt); } catch (e) {}
+  try { stepKcf(dt); } catch (e) {}
   if (state === 'paused') try { pollPad(dt); } catch (e) {}
   try { stepSnd(dt); } catch (e) {}
   fpsT += raw; fpsN++;
