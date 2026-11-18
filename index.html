@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118143732';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118165736';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -483,6 +483,30 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #hudEdit .hebar .btn { padding: 8px 14px; font-size: 13px; }
 .tbtn.hesel { outline: 3px dashed var(--accent); outline-offset: 4px; }
 .padfocus { outline: 3px solid var(--accent) !important; outline-offset: 3px; box-shadow: 0 0 18px rgba(var(--accent-rgb, 242,169,59), .55) !important; }
+/* ===== v114: side-menu layout (dark, clean, modern shooter style) ===== */
+@media (min-width: 820px) {
+  #menu { background: linear-gradient(90deg, rgba(6,7,8,.94) 0%, rgba(6,7,8,.86) 38%, rgba(6,7,8,.55) 62%, rgba(6,7,8,.12) 100%) !important; align-items: flex-start; }
+  #menu .shell { width: min(1100px, 100%); grid-template-columns: 260px minmax(0, 660px); grid-template-rows: auto 1fr; column-gap: 34px; row-gap: 18px; align-items: start; margin: 0; padding-top: 6px; }
+  #menu .mhead { grid-column: 1 / -1; }
+  #menu .pane { grid-column: 2; grid-row: 2; }
+  #menu .tabs { grid-column: 1; grid-row: 2; position: sticky; top: 12px; flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 2px !important; width: auto !important; padding: 0 !important; background: none !important; border: 0 !important; box-shadow: none !important; backdrop-filter: none !important; border-radius: 0 !important; }
+  #menu .tab { justify-content: flex-start; text-align: left; padding: 11px 16px !important; font: 700 26px/1.05 var(--display) !important; white-space: nowrap; letter-spacing: .06em !important; text-transform: uppercase; color: rgba(239,232,214,.5) !important; background: none !important; border: 0 !important; border-left: 4px solid transparent !important; border-radius: 0 !important; transition: color .15s, transform .15s, background .15s, border-color .15s !important; }
+  #menu .tab:hover { color: rgba(255,255,255,.85) !important; }
+  #menu .tab[aria-selected="true"] { color: #fff !important; border-left-color: var(--accent) !important; background: linear-gradient(90deg, rgba(var(--accent-rgb, 242,169,59), .30), rgba(var(--accent-rgb, 242,169,59), 0) 85%) !important; transform: translateX(8px); text-shadow: 0 0 18px rgba(var(--accent-rgb, 242,169,59), .45); }
+  #menu .tab::before, #menu .tab::after { display: none !important; content: none !important; }
+  #menu .navhint { display: grid; gap: 4px; margin-top: 22px; padding-left: 20px; font: 600 12px var(--mono); color: rgba(239,232,214,.38); letter-spacing: .08em; }
+}
+@media (max-width: 819px) { #menu .navhint { display: none; } }
+/* clean flat panels */
+#menu .mode, #menu .acct, #menu .party, #menu .rankbox, #menu .daily, #menu .profile, #menu .gift, #menu .wcard { border-radius: 4px !important; background: rgba(12,13,14,.78) !important; border: 1px solid rgba(255,255,255,.07) !important; box-shadow: none !important; }
+#menu .mode { border-left: 3px solid var(--accent) !important; transition: background .15s, transform .15s !important; }
+#menu .mode:hover, #menu .mode.padfocus { background: rgba(var(--accent-rgb, 242,169,59), .16) !important; transform: translateX(4px); }
+#menu .mode::before, #menu .mode::after { display: none !important; }
+#menu .mode .mode-name { font-size: 21px !important; letter-spacing: .08em; text-transform: uppercase; }
+#menu .btn { border-radius: 3px !important; }
+#menu .gift { flex-wrap: wrap; } #menu .gift > div { flex: 1 1 340px; min-width: 0; }
+#menu .pchip { border-radius: 4px !important; background: rgba(12,13,14,.82) !important; border: 1px solid rgba(255,255,255,.08) !important; }
+#menu .logo h1 { letter-spacing: .14em; }
 /* admin */
 .admin { border-color: rgba(192,138,255,.5) !important; }
 .admrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -781,10 +805,11 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
     <nav class="tabs" role="tablist">
       <button class="tab" role="tab" data-tab="play" id="tabPlay" aria-selected="true" type="button">Play</button>
       <button class="tab" role="tab" data-tab="loadout" aria-selected="false" type="button">Loadout</button>
-      <button class="tab" role="tab" data-tab="settings" aria-selected="false" type="button">Settings</button>
-      <button class="tab" role="tab" data-tab="pass" aria-selected="false" type="button">Pass</button>
-      <button class="tab" role="tab" data-tab="shop" aria-selected="false" type="button">Shop</button>
+      <button class="tab" role="tab" data-tab="pass" aria-selected="false" type="button">Battle Pass</button>
+      <button class="tab" role="tab" data-tab="shop" aria-selected="false" type="button">Store</button>
       <button class="tab" role="tab" data-tab="career" aria-selected="false" type="button">Career</button>
+      <button class="tab" role="tab" data-tab="settings" aria-selected="false" type="button">Settings</button>
+      <div class="navhint" aria-hidden="true"><span>Ⓐ Select</span><span>Ⓑ Back</span><span>LB / RB Switch</span></div>
     </nav>
 
     <section class="pane" id="pane-play">
