@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118170314';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118170950';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -527,6 +527,21 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 .msgrid .mode .chips { display: none !important; } .msgrid .mode .mode-name { font-size: 19px !important; }
 .mshint { font: 600 12px var(--mono); color: rgba(239,232,214,.4); letter-spacing: .08em; }
 @media (max-width: 819px) { .playbig { grid-template-columns: 1fr; } .msgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); overflow-y: auto; } #msel { overflow-y: auto; } }
+/* ===== v116: mode tile artwork ===== */
+.msgrid .mode { position: relative; isolation: isolate; }
+#menu .msgrid .mode::after { display: block !important; content: '' ; position: absolute; left: auto !important; bottom: auto !important; right: 10% !important; top: 12% !important; width: auto !important; height: auto !important; border: 0 !important; font-size: clamp(48px, 7vw, 92px); line-height: 1; opacity: .9; filter: drop-shadow(0 6px 18px rgba(0,0,0,.6)); z-index: -1; transform: rotate(-8deg); transition: transform .2s; }
+#menu .msgrid .mode:hover::after, #menu .msgrid .mode.padfocus::after { transform: rotate(0) scale(1.08); }
+.msgrid #tdmBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #ff7a3a55, transparent 60%), linear-gradient(160deg, #3a1a10 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #tdmBtn::after { content: '⚔️'; }
+.msgrid #rankedBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #ffd24a55, transparent 60%), linear-gradient(160deg, #3a2a08 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #rankedBtn::after { content: '🏆'; }
+.msgrid #domBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #5aa0ff55, transparent 60%), linear-gradient(160deg, #0e1e3a 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #domBtn::after { content: '🚩'; }
+.msgrid #sndBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #ff4a3a55, transparent 60%), linear-gradient(160deg, #3a0e0a 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #sndBtn::after { content: '💣'; }
+.msgrid #kcfBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #ffc85055, transparent 60%), linear-gradient(160deg, #3a2a0a 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #kcfBtn::after { content: '🏷️'; }
+.msgrid #hpBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #a078ff55, transparent 60%), linear-gradient(160deg, #1e1238 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #hpBtn::after { content: '⛰️'; }
+.msgrid #ggBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #7dd87a55, transparent 60%), linear-gradient(160deg, #0f2a10 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #ggBtn::after { content: '🔫'; }
+.msgrid #duelBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #5fe3d055, transparent 60%), linear-gradient(160deg, #08302a 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #duelBtn::after { content: '🤝'; }
+.msgrid #zmbBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #8acd4a55, transparent 60%), linear-gradient(160deg, #14260a 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #zmbBtn::after { content: '🧟'; }
+.msgrid #siegeBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #6ac8ff55, transparent 60%), linear-gradient(160deg, #0a2030 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #siegeBtn::after { content: '🛸'; }
+.msgrid #rangeBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #e8d07055, transparent 60%), linear-gradient(160deg, #2a2408 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #rangeBtn::after { content: '🎯'; }
 /* admin */
 .admin { border-color: rgba(192,138,255,.5) !important; }
 .admrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
