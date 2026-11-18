@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261117201235';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118140359';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -903,7 +903,7 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
       <div class="acct admin" id="adminBox" hidden>
         <span class="label">🛠️ Admin panel · this device only</span>
         <div class="admrow"><button class="btn ghost" data-adm="coins1" type="button">+ ◎ 1,000</button><button class="btn ghost" data-adm="coins10" type="button">+ ◎ 10,000</button><button class="btn ghost" data-adm="all" type="button">Unlock all cosmetics</button><button class="btn ghost" data-adm="guns" type="button">All guns level 100</button><button class="btn ghost" data-adm="prem" type="button">Premium + premium guns</button><button class="btn ghost" id="admGod" data-adm="god" type="button">God mode: OFF</button></div>
-        <div class="admrow"><input type="text" id="admTier" inputmode="numeric" placeholder="Pass tier (1-75)"><button class="btn ghost" data-adm="tier" type="button">Set tier</button><input type="text" id="admRank" inputmode="numeric" placeholder="RP (1800) or rank name"><button class="btn ghost" data-adm="rank" type="button">Set rank</button></div>
+        <div class="admrow"><input type="text" id="admTier" inputmode="numeric" placeholder="Pass tier (1-75)"><button class="btn ghost" data-adm="tier" type="button">Set tier</button><input type="text" id="admRank" inputmode="numeric" placeholder="RP (1800) or rank (Gold II)"><button class="btn ghost" data-adm="rank" type="button">Set rank</button></div>
         <span class="label">Make a gift code for a friend</span>
         <div class="admrow"><select id="admGiftType"><option value="C">Coins</option><option value="W">Weapon (key: vx, sc7…)</option><option value="X">Pass XP</option><option value="L">Add pass levels</option><option value="T">Pass tier (at least)</option><option value="P">Premium pass (this season)</option><option value="A">All crate skins &amp; camos</option></select><input type="text" id="admGiftVal" placeholder="Amount or weapon (e.g. 5000 or vx)"><button class="btn go" data-adm="gift" type="button">Make code</button></div>
         <div class="admrow"><button class="btn ghost" data-adm="gTempest" type="button">Tempest code</button><button class="btn ghost" data-adm="gL10" type="button">+10 levels code</button></div>
@@ -1053,7 +1053,8 @@ const DEF = { haptics: true, assistStr: isTouch ? 0.6 : 0, music: 0.7, botDiff: 
 const S = Object.assign({}, DEF, store.get('settings', {}));
 if (!store.get('musicUp', false)) { if (S.music === 0.45) { S.music = 0.7; const sv = store.get('settings', null); if (sv) { sv.music = 0.7; store.set('settings', sv); } } store.set('musicUp', true); } // old default -> new louder default
 { const raw = store.get('settings', {}) || {}; if (raw.assistStr == null && raw.assist === false) S.assistStr = 0; } // keep old 'off' choice
-const aimA = () => clamp(+S.assistStr || 0, 0, 1);
+const AIM_NERF = 0.8; // v101: aim assist is 20% weaker at every slider setting
+const aimA = () => clamp(+S.assistStr || 0, 0, 1) * AIM_NERF;
 const saveS = () => store.set('settings', S);
 const C = Object.assign({ matches: 0, wins: 0, kills: 0, deaths: 0, heads: 0, bestWave: 0, bestScore: 0, bestStreak: 0, ggWins: 0, maps: {}, bestRound: 0, zKills: 0, nadeKills: 0, mvps: 0, crates: 0 }, store.get('career', {}));
 const saveC = () => store.set('career', C);
@@ -1234,7 +1235,10 @@ function cardEl(name, bn, em, sub, cls = '') {
   d.querySelector('.cem').textContent = (EMBLEMS[em] || EMBLEMS.star).e; d.querySelector('small').textContent = sub || ''; d.querySelector('b').textContent = name; return d;
 }const FRIENDS = (Array.isArray(store.get('friends', [])) ? store.get('friends', []) : []).filter(x => typeof x === 'string').slice(0, 30);
 // ---- ranked: rank points (RP) go up when you win a ranked match and down when you lose ----
-const RANKS = [{ n: 'Bronze', i: '🥉', min: 0, c: '#c8844a' }, { n: 'Silver', i: '🥈', min: 300, c: '#c8ccd4' }, { n: 'Gold', i: '🥇', min: 700, c: '#f2c84b' }, { n: 'Platinum', i: '💠', min: 1200, c: '#5fe3d0' }, { n: 'Diamond', i: '💎', min: 1800, c: '#8ab8ff' }];
+// 8 rank tiers, each split into divisions I-III (Champion is one top rank): 22 ranks in all
+const RANK_TIERS = [{ n: 'Bronze', i: '🥉', min: 0, c: '#c8844a' }, { n: 'Silver', i: '🥈', min: 300, c: '#c8ccd4' }, { n: 'Gold', i: '🥇', min: 700, c: '#f2c84b' }, { n: 'Platinum', i: '💠', min: 1200, c: '#5fe3d0' },
+  { n: 'Diamond', i: '💎', min: 1800, c: '#8ab8ff' }, { n: 'Crimson', i: '🔥', min: 2500, c: '#ff4a5a' }, { n: 'Iridescent', i: '🌈', min: 3300, c: '#d49bff' }, { n: 'Champion', i: '👑', min: 4200, c: '#ffd24a' }];
+const RANKS = []; RANK_TIERS.forEach((t, ti) => { const nx = RANK_TIERS[ti + 1]; if (!nx) { RANKS.push(Object.assign({ t: ti, tier: t.n }, t)); return; } const step = (nx.min - t.min) / 3; ['I', 'II', 'III'].forEach((d, k) => RANKS.push({ n: t.n + ' ' + d, tier: t.n, t: ti, i: t.i, c: t.c, min: Math.round(t.min + step * k) })); });
 const RANK = Object.assign({ rp: 0, best: 0, w: 0, l: 0 }, store.get('rank', {}));
 // one-time reset of everyone's coins and rank (bump ECON to do it again)
 const ECON = 1;
@@ -2417,7 +2421,7 @@ let scanT = 0, missile = null;
 const AD = Object.assign({ k: 3, d: 3 }, store.get('aidiff', {}));
 function adNote(kill) { AD.k = AD.k * 0.93 + (kill ? 1 : 0); AD.d = AD.d * 0.93 + (kill ? 0 : 1); store.set('aidiff', AD); }
 function botSkill() { // 0.6 = much easier, 1 = normal, 1.4 = much harder
-  if (ranked) return [0.85, 0.95, 1.05, 1.18, 1.3][rankIdx()];
+  if (ranked) return [0.85, 0.95, 1.05, 1.18, 1.3, 1.38, 1.45, 1.52][RANKS[rankIdx()].t];
   if (S.botDiff === 'easy') return 0.65; if (S.botDiff === 'normal') return 1; if (S.botDiff === 'hard') return 1.3;
   const ratio = (AD.k + 1.5) / (AD.d + 1.5);
   return clamp(1 + 0.4 * Math.log2(ratio), 0.6, 1.4);
@@ -4148,7 +4152,7 @@ function renderAdmin() {
 const ADM = {
   coins1: () => addCoins(1000), coins10: () => addCoins(10000),
   tier: () => { const t = Math.max(1, Math.min(BP_TIERS, parseInt($('admTier').value, 10) || 1)); BP.xp = (t - 1) * BP_XP; store.set('pass', BP); savePassBest(true); return 'Pass tier set to ' + t; },
-  rank: () => { const raw = ($('admRank').value || '').trim(), byName = RANKS.find(x => x.n.toLowerCase() === raw.toLowerCase()), digits = raw.replace(/[^0-9]/g, ''); if (!byName && !digits) return 'Type a number of RP (like 1800) or a rank name (like Diamond)'; const r = byName ? byName.min : Math.min(99999, +digits); RANK.rp = r; RANK.best = Math.max(RANK.best, r); store.set('rank', RANK); try { renderRank(); renderProfile(); } catch (e) {} return 'Rank set to ' + RANKS[rankIdx()].n + ' · ' + r + ' RP'; },
+  rank: () => { const raw = ($('admRank').value || '').trim(), byName = RANKS.find(x => x.n.toLowerCase() === raw.toLowerCase()) || RANKS.find(x => x.tier.toLowerCase() === raw.toLowerCase()), digits = raw.replace(/[^0-9]/g, ''); if (!byName && !digits) return 'Type a number of RP (like 1800) or a rank name (like Diamond)'; const r = byName ? byName.min : Math.min(99999, +digits); RANK.rp = r; RANK.best = Math.max(RANK.best, r); store.set('rank', RANK); try { renderRank(); renderProfile(); } catch (e) {} return 'Rank set to ' + RANKS[rankIdx()].n + ' · ' + r + ' RP'; },
   all: () => { applyGift('A'); for (const k of Object.keys(BANNERS)) if (!WALLET.banners.includes(k)) WALLET.banners.push(k); for (const k of Object.keys(EMBLEMS)) if (!WALLET.emblems.includes(k)) WALLET.emblems.push(k); saveWallet(); return 'Unlocked every skin, camo, banner and emblem'; },
   guns: () => { for (const k of Object.keys(WEAPONS)) WL[k] = Math.max(WL[k] || 0, WLV_KILLS[WLV_KILLS.length - 1]); store.set('wlv', WL); return 'Every gun is level 100'; },
   prem: () => { BP.premium = true; for (const k of Object.keys(WEAPONS)) if (WEAPONS[k].premium && !BP.owned.includes('weapon:' + k)) BP.owned.push('weapon:' + k); store.set('pass', BP); return 'Premium on and every premium weapon unlocked'; },
