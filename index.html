@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118142135';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118142258';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -472,7 +472,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 .ofr b { flex: 1; } .ofr .dot { width: 9px; height: 9px; border-radius: 50%; background: #666; } .ofr .dot.on { background: #6ad46a; box-shadow: 0 0 8px #6ad46a; }
 .ofr .btn { padding: 8px 12px; font-size: 13px; }
 #pingBtn, #qcBtn { width: 48px; height: 48px; font-size: 22px; display: grid; place-items: center; position: fixed; right: calc(150px + env(safe-area-inset-right, 0px)); z-index: 7; }
-#pingBtn { top: calc(250px + env(safe-area-inset-top, 0px)); } #qcBtn { top: calc(306px + env(safe-area-inset-top, 0px)); }
+#pingBtn { top: calc(250px + env(safe-area-inset-top, 0px)); } #inspBtn { width: 48px; height: 48px; font-size: 22px; display: grid; place-items: center; position: fixed; right: calc(150px + env(safe-area-inset-right, 0px)); top: calc(362px + env(safe-area-inset-top, 0px)); z-index: 7; pointer-events: auto; } #qcBtn { top: calc(306px + env(safe-area-inset-top, 0px)); }
 #qcPanel, #qcPanel button, #pingBtn, #qcBtn { pointer-events: auto; }
 #qcPanel { position: fixed; right: calc(206px + env(safe-area-inset-right, 0px)); top: calc(230px + env(safe-area-inset-top, 0px)); z-index: 8; display: grid; gap: 6px; }
 #qcPanel button { font: 700 14px var(--display); letter-spacing: .08em; color: #fff; background: rgba(15,15,15,.85); border: 1px solid rgba(255,255,255,.25); border-radius: 10px; padding: 10px 14px; text-align: left; }
@@ -749,6 +749,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
     <div id="ksScan" class="tbtn ks" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-6"/></svg><span>SCAN</span><small></small></div>
     <div id="ksMsl" class="tbtn ks" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l7 7-9 9-3-3-3 1 1-3-3-3z"/><path d="M5 19l-2 2"/></svg><span>MISSILE</span><small></small></div>
     <div id="pingBtn" class="tbtn small2" title="Ping (Z)">📍</div>
+    <div id="inspBtn" class="tbtn small2" title="Inspect (I)">🔍</div>
     <div id="qcBtn" class="tbtn small2" title="Quick chat (X)">💬</div>
     <div id="qcPanel" hidden></div>
     <div id="zBuy" class="tbtn" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M3 12h18M12 8v12M8 8l4-4 4 4"/></svg><span>CRATE</span><small>◎ 1,500</small></div>
@@ -4508,7 +4509,7 @@ codeIn.addEventListener('input', () => { matchCode = codeIn.value.replace(/[^a-z
 
 /* ---------- flow ---------- */
 /* ---------- custom HUD layout (drag + resize touch buttons) ---------- */
-const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn'];
+const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn', 'inspBtn'];
 function applyHudLayout() {
   const L = (S.hudL && typeof S.hudL === 'object') ? S.hudL : {};
   for (const id of HUD_IDS) { const el = $(id); if (!el) continue; const l = L[id];
@@ -4555,6 +4556,7 @@ function pingMark(x, y, z, enemy, who) {
   const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: pingTex, color: enemy ? 0xff4a3a : 0xffd24a, depthTest: false, transparent: true })); sp.position.set(x, y + 1.2, z); sp.scale.set(0.8, 0.8, 1); sp.renderOrder = 999; scene.add(sp);
   QC.marks.push({ sp, life: 6 }); if (who) chatLine(who, enemy ? 'Enemy here!' : 'Ping'); try { tone(enemy ? 700 : 1000, 0.08, 'sine', 0.1); } catch (e) {}
 }
+function startInspect() { if (state !== 'play' || !P.alive || P.reloading > 0) return; P.inspT = 3.2; P.ads = false; try { sfx.reload && tone(320, 0.05, 'triangle', 0.05); } catch (e) {} }
 function doPing() {
   if (state !== 'play') return;
   ray.setFromCamera({ x: 0, y: 0 }, camera); const hits = ray.intersectObjects(solids.concat(hitMeshes(), [ground]), true); if (!hits.length) return;
@@ -4567,7 +4569,7 @@ function netQc(hs) { // messages and pings from teammates online
     if (Array.isArray(h.pr.qc) && QC.seenMsg[h.peer] !== h.pr.qc[0]) { const first = QC.seenMsg[h.peer] == null; QC.seenMsg[h.peer] = h.pr.qc[0]; if (!first && QC_MSGS[h.pr.qc[1]] && (same || h.pr.qc[1] >= 4)) chatLine(nm, QC_MSGS[h.pr.qc[1]]); }
     if (same && Array.isArray(h.pr.pg) && QC.seenPing[h.peer] !== h.pr.pg[0]) { const first = QC.seenPing[h.peer] == null; QC.seenPing[h.peer] = h.pr.pg[0]; if (!first) pingMark(+h.pr.pg[1], +h.pr.pg[2], +h.pr.pg[3], !!h.pr.pg[4], nm); } }
 }
-if (!isTouch) { $('pingBtn').addEventListener('click', doPing); $('qcBtn').addEventListener('click', () => { $('qcPanel').hidden = !$('qcPanel').hidden; }); $('qcPanel').addEventListener('click', ev => { const b = ev.target.closest('[data-qc]'); if (b) sendQc(+b.dataset.qc); }); }
+if (!isTouch) { $('inspBtn').addEventListener('click', startInspect); $('pingBtn').addEventListener('click', doPing); $('qcBtn').addEventListener('click', () => { $('qcPanel').hidden = !$('qcPanel').hidden; }); $('qcPanel').addEventListener('click', ev => { const b = ev.target.closest('[data-qc]'); if (b) sendQc(+b.dataset.qc); }); }
 $('qcPanel').innerHTML = QC_MSGS.map((m, i) => '<button type="button" data-qc="' + i + '">' + (i + 1) + '. ' + m + '</button>').join('');
 /* ---------- Firing range ---------- */
 const RNG = { targets: [], mover: null, gunI: 0 };
@@ -4589,7 +4591,7 @@ function buildRange() {
   scene.fog.color.setHex(0xd3cbb6); scene.background.setHex(0xd3cbb6); scene.fog.near = 60; scene.fog.far = 220;
   RNG.targets = [];
   addBox(-9, -45, 0.6, 100, 2.4, M.conc, 4, 4); addBox(9, -45, 0.6, 100, 2.4, M.conc, 4, 4); addBox(0, -96, 20, 1, 5, M.conc, 4, 4); // lane walls + backstop
-  addBox(0, 1.6, 7, 0.5, 0.85, M.crate, 1.4, 1.4); // firing-line bench
+  addBox(0, -0.6, 7, 0.4, 0.7, M.crate, 1.4, 1.4); // firing-line bench
   [[-5, -10, 10], [-1.5, -25, 25], [2, -50, 50], [5.5, -80, 80]].forEach(([x, z, d]) => rangeTarget(x, z, d));
   RNG.mover = rangeTarget(0, -30, 30);
 }
@@ -5031,6 +5033,7 @@ window.addEventListener('keydown', ev => {
     if (ev.code === 'KeyG') throwNade();
     if (ev.code === 'KeyB' && zmb) zBuyGun();
     if (ev.code === 'KeyZ') doPing();
+    if (ev.code === 'KeyI') startInspect();
     if (ev.code === 'KeyX') $('qcPanel').hidden = !$('qcPanel').hidden;
     if (!$('qcPanel').hidden && /^Digit[1-7]$/.test(ev.code)) sendQc(+ev.code.slice(5) - 1);
     if (ev.code === 'KeyZ') useScan();
@@ -5082,6 +5085,7 @@ function onTouchStart(ev) {
     if (el.closest('#nadeBtn')) { throwNade(); continue; }
     if (el.closest('#zBuy')) { zBuyGun(); continue; }
     if (el.closest('#pingBtn')) { doPing(); continue; }
+    if (el.closest('#inspBtn')) { startInspect(); continue; }
     if (el.closest('#qcBtn')) { $('qcPanel').hidden = !$('qcPanel').hidden; continue; }
     { const qb = el.closest('[data-qc]'); if (qb) { sendQc(+qb.dataset.qc); continue; } }
     if (el.closest('#ksScan')) { useScan(); continue; }
@@ -5186,6 +5190,7 @@ function pollPad(dt) {
     if (down(3)) doPing();
     if (down(4)) try { throwNade(); } catch (e) {}
     if (down(10)) GP.sprint = !GP.sprint;
+    if (down(11)) startInspect();
     if (down(12)) sendQc(0); if (down(15)) sendQc(2); if (down(13)) sendQc(1); if (down(14)) sendQc(4);
     if (down(5)) { try { const k = document.querySelector('#ksScan:not([hidden]), #ksMsl:not([hidden])'); if (k) k.click(); } catch (e) {} }
   } else { GP.mx = GP.mz = 0; if (GP.fire) { GP.fire = false; input.fire = false; } }
@@ -5320,6 +5325,13 @@ function stepPlayer(dt) {
     THREE.MathUtils.lerp(GUN_HIP.y, GUN_ADS.y, P.adsT) - dip - Math.abs(Math.sin(P.bob)) * 0.012 * moveAmt * hb + P.swayY - P.jvy * 0.003 * motion - sprintTilt * 0.03,
     THREE.MathUtils.lerp(GUN_HIP.z, GUN_ADS.z, P.adsT) + P.kick * 1.6);
   gun.rotation.set(P.kick * 1.2 - dip + P.swayY * 1.5, P.sway * 2 + sprintTilt * 0.5, -P.sway * 1.5 + sprintTilt * 0.25);
+  // weapon inspect: turn the gun to show its side and camo, then flip to the other side
+  if (P.inspT > 0) {
+    if (input.fire || P.ads || P.reloading > 0 || sprint) P.inspT = 0;
+    else { P.inspT -= dt; const t = 1 - P.inspT / 3.2, e = Math.sin(Math.min(1, t) * Math.PI), side = t < 0.5 ? 1 : -1, sw = Math.sin(t * Math.PI * 2);
+      gun.position.x += -0.12 * e; gun.position.y += 0.05 * e; gun.position.z += 0.08 * e;
+      gun.rotation.y += (0.95 * sw) * e; gun.rotation.z += 0.55 * side * e; gun.rotation.x += 0.12 * e; }
+  }
   if (isTouch) { adsBtn.classList.toggle('on', P.ads); crouchBtn.classList.toggle('on', P.crouch); slideBtn.classList.toggle('on', P.slideT > 0); }
   hud.st.style.width = P.stamina.toFixed(0) + '%';
 }
