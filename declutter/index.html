@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Declutter</title>
+<meta name="description" content="Remove Pages, Numbers, Keynote, iMovie and GarageBand from your Mac, and clean up the Apple apps on your iPhone or iPad.">
+<link rel="icon" href="icon.png">
+<style>
+  :root {
+    --bg: #f6f8f7; --card: #ffffff; --text: #16201d; --muted: #5b6763;
+    --line: #dfe5e3; --accent: #0e7490; --accent-2: #10b981; --warn-bg: #fff7e6; --warn: #8a5a00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1514; --card: #172120; --text: #e7efec; --muted: #9aa8a3;
+      --line: #263331; --accent: #38bdf8; --accent-2: #34d399; --warn-bg: #2a2212; --warn: #f5c56b;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1514; --card: #172120; --text: #e7efec; --muted: #9aa8a3;
+    --line: #263331; --accent: #38bdf8; --accent-2: #34d399; --warn-bg: #2a2212; --warn: #f5c56b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 40px 16px 64px; }
+  header { display: flex; gap: 18px; align-items: center; margin-bottom: 28px; }
+  header img { width: 76px; height: 76px; flex: none; }
+  h1 { margin: 0; font-size: 2rem; letter-spacing: -.02em; }
+  header p { margin: 4px 0 0; color: var(--muted); }
+  .tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .tabs button { font: inherit; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--card); color: var(--text); cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; margin-bottom: 16px; }
+  section[hidden] { display: none; }
+  h2 { margin: 0 0 12px; font-size: 1.25rem; }
+  h3 { margin: 22px 0 8px; font-size: 1.02rem; }
+  .download { display: inline-block; background: var(--accent); color: #fff; text-decoration: none;
+    padding: 12px 22px; border-radius: 12px; font-weight: 600; margin: 6px 0 4px; }
+  .small { color: var(--muted); font-size: .9rem; }
+  ol, ul { padding-left: 22px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  .note { background: var(--warn-bg); color: var(--warn); border-radius: 12px; padding: 12px 14px; margin-top: 16px; font-size: .95rem; }
+  .apps { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px 14px;
+    list-style: none; padding: 0; }
+  .yes::before { content: "✓ "; color: var(--accent-2); font-weight: 700; }
+  .no::before { content: "✕ "; color: var(--muted); }
+  code, kbd { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9em;
+    background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 1px 5px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="icon.png" alt="">
+    <div>
+      <h1>Declutter</h1>
+      <p>Get rid of the Apple apps you never use.</p>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tab-mac" aria-selected="true" aria-controls="mac">Mac</button>
+    <button role="tab" id="tab-ios" aria-selected="false" aria-controls="ios">iPhone &amp; iPad</button>
+  </div>
+
+  <section id="mac" role="tabpanel" aria-labelledby="tab-mac">
+    <h2>Declutter for Mac</h2>
+    <p>Pick which apps to remove from a checklist and Declutter moves them to the Trash. It shows the size of each app and only lists what's actually on your Mac.</p>
+    <a class="download" href="Declutter.zip" download>Download Declutter for Mac</a>
+    <div class="small">Version 1.0 · 80 KB · macOS 10.15 or later · Apple silicon and Intel</div>
+
+    <h3>What it can remove</h3>
+    <ul class="apps">
+      <li class="yes">Pages</li><li class="yes">Numbers</li><li class="yes">Keynote</li>
+      <li class="yes">iMovie</li><li class="yes">GarageBand</li><li class="yes">GarageBand sound library (often several GB)</li>
+    </ul>
+    <p class="small">The GarageBand sound library is only offered when Logic Pro and MainStage aren't installed, because they share it.</p>
+
+    <h3>First time opening it</h3>
+    <p>Declutter isn't from the App Store, so macOS asks you to confirm the first time:</p>
+    <ol>
+      <li>Open <b>Declutter.zip</b> in Downloads and drag <b>Declutter</b> into Applications.</li>
+      <li>Double-click it. If macOS says it can't be opened, click <b>Done</b>.</li>
+      <li>Go to <b>System Settings → Privacy &amp; Security</b>, scroll down, click <b>Open Anyway</b> and confirm.</li>
+      <li>If you're asked to let Declutter control Finder, click <b>Allow</b>. Finder does the moving, which is what lets you use <b>Put Back</b> later.</li>
+    </ol>
+
+    <h3>Changed your mind?</h3>
+    <p>Until you empty the Trash, right-click the app in the Trash and choose <b>Put Back</b>. After that, all of these apps can be downloaded again for free from the App Store.</p>
+
+    <div class="note">
+      <b>Why Safari, Mail and the rest aren't on the list:</b> Safari, Mail, Music, TV, Photos, Messages, FaceTime, Maps, News, Podcasts, Books, Stocks, Home, Freeform, Notes and Calendar are part of macOS itself. They live on a sealed, read-only part of the disk. Removing them means turning off System Integrity Protection, which makes your Mac less secure and can break updates, so Declutter won't do it. You can still make another browser your default in <b>System Settings → Desktop &amp; Dock → Default web browser</b> and take Safari off your Dock.
+    </div>
+  </section>
+
+  <section id="ios" role="tabpanel" aria-labelledby="tab-ios" hidden>
+    <h2>iPhone &amp; iPad</h2>
+    <p>Apple doesn't let any app delete other apps on iPhone or iPad, so there's nothing to download here. You don't need one: most Apple apps can be deleted by hand, and the rest can be hidden.</p>
+
+    <h3>Delete an Apple app</h3>
+    <ol>
+      <li>Touch and hold the app's icon on the Home Screen.</li>
+      <li>Tap <b>Remove App</b>, then <b>Delete App</b>.</li>
+    </ol>
+    <p>Works for these, among others:</p>
+    <ul class="apps">
+      <li class="yes">Pages</li><li class="yes">Numbers</li><li class="yes">Keynote</li>
+      <li class="yes">iMovie</li><li class="yes">GarageBand</li><li class="yes">Clips</li>
+      <li class="yes">Books</li><li class="yes">Podcasts</li><li class="yes">Stocks</li>
+      <li class="yes">News</li><li class="yes">Tips</li><li class="yes">Home</li>
+      <li class="yes">Freeform</li><li class="yes">Journal</li><li class="yes">Weather</li>
+      <li class="yes">Translate</li><li class="yes">Measure</li><li class="yes">Voice Memos</li>
+    </ul>
+
+    <h3>Hide Safari (it can't be deleted)</h3>
+    <ol>
+      <li>Open <b>Settings → Screen Time</b>. Turn Screen Time on if it isn't.</li>
+      <li>Tap <b>Content &amp; Privacy Restrictions</b> and turn it on.</li>
+      <li>Tap <b>Allowed Apps &amp; Features</b> and turn off <b>Safari</b>.</li>
+    </ol>
+    <p>Safari disappears from the Home Screen. Turn the switch back on to bring it back. In the EU, Safari can be deleted like any other app.</p>
+
+    <h3>Can't be deleted</h3>
+    <ul class="apps">
+      <li class="no">Settings</li><li class="no">Phone</li><li class="no">Messages</li>
+      <li class="no">Photos</li><li class="no">Camera</li><li class="no">App Store</li>
+      <li class="no">Wallet</li><li class="no">Health</li><li class="no">Find My</li>
+    </ul>
+
+    <div class="note">On a school or work iPad, the organization may stop you from deleting or hiding apps. Ask them if the options above are greyed out.</div>
+  </section>
+</main>
+<script>
+  const tabs = document.querySelectorAll('[role="tab"]');
+  function show(id) {
+    tabs.forEach(t => {
+      const on = t.getAttribute('aria-controls') === id;
+      t.setAttribute('aria-selected', on);
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+  }
+  tabs.forEach(t => t.addEventListener('click', () => show(t.getAttribute('aria-controls'))));
+  if (/iPhone|iPad|iPod/.test(navigator.userAgent) && !/Macintosh/.test(navigator.userAgent)) show('ios');
+</script>
+</body>
+</html>

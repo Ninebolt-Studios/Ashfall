@@ -17,6 +17,9 @@ If the game looks like an older version, open the latest link above (the `?v=` n
 ### 📲 Get the app (iPhone / iPad)
 Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall.mobileconfig)** in **Safari**, then go to **Settings → Profile Downloaded → Install**. You get an Ashfall icon that opens the game full-screen and always loads the newest version. (School-managed iPads may block profiles; then use Safari's **Share → Add to Home Screen**.)
 
+### 🧹 Declutter (Mac app)
+Remove Pages, Numbers, Keynote, iMovie and GarageBand from your Mac: **[download page](declutter/)**. It also has a guide to removing Apple apps on iPhone and iPad.
+
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
