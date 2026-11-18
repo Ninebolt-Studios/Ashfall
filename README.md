@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v120)](https://ninebolt-studios.github.io/Ashfall/?v=120)
+## ▶️ [PLAY NOW — latest version (v121)](https://ninebolt-studios.github.io/Ashfall/?v=121)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=120
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=121
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,6 +20,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v121** | https://ninebolt-studios.github.io/Ashfall/?v=121 | **Christmas event (Dec 18–31):** a limited-time **Snowball Fight** mode (5v5 online with bots filling in, snowballs only: 2 hits to knock someone out, 1 to the head, first to 30, always on a snowy map) and a **Christmas Event** card on the Play tab with 4 holiday challenges: play 3 Snowball Fights (◎ 500), 25 snowball eliminations (“Snowball Sniper” title), win 2 Snowball Fights (◎ 750) and 100 eliminations during the event (“Frostbitten” title). It switches on by itself when the Christmas season starts |
 | **v120** | https://ninebolt-studios.github.io/Ashfall/?v=120 | **More kill streaks:** pick any 3 in **Loadout → Kill streaks**: Map Scan (10), **Care Package** (12: a crate parachutes in with full ammo & health or a surprise streak), **Sentry Gun** (16: an auto turret guards your spot for 30 s), **Attack Drone** (20: circles above you and fires at enemies for 25 s) and Missile (30). Hardline takes 2–3 off each. On keyboard the 3 slots are **Z, F and V**; on a controller RB uses the first ready one |
 | **v119** | https://ninebolt-studios.github.io/Ashfall/?v=119 | **3 new maps:** **Skyline** (city rooftops at night with lit skyscrapers all around, AC units, water towers, neon and helipads), **Glacier Dam** (a frozen dam across the middle with spillway gaps, turbine houses, ice blocks and snowfall) and **Jade Temple** (a stepped temple in a misty jungle with pillars, ruins and palm trees). All of them work in every mode and in the end-of-match map vote (press 0 for the 10th map) |
 | **v118** | https://ninebolt-studios.github.io/Ashfall/?v=118 | **Training:** a new 1-minute tutorial (Play → Training) that walks you through moving, looking, aiming, shooting, reloading, grenades and sliding, with instructions for keyboard, touch or controller. New players see a "New to Ashfall?" card; finishing it the first time gives 250 coins |
