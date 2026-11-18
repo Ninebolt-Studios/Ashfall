@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v101)](https://ninebolt-studios.github.io/Ashfall/?v=101)
+## ▶️ [PLAY NOW — latest version (v102)](https://ninebolt-studios.github.io/Ashfall/?v=102)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=101
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=102
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,7 +20,8 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v101** | https://ninebolt-studios.github.io/Ashfall/?v=101 | **Aim assist nerfed a little:** it's 20% weaker at every slider setting (less slowdown over enemies and less pull), so gunfights rely more on your own aim |
+| **v102** | https://ninebolt-studios.github.io/Ashfall/?v=102 | **🕹️ Custom touch controls:** Settings → Touch controls layout → **Edit layout**. Drag Fire, Aim, Jump, Crouch, Reload, Slide, Grenade, Ping and Chat anywhere on screen and use the Size slider to make each one bigger or smaller. Saved on your device (and in your account); Reset puts them back |
+| v101 | https://ninebolt-studios.github.io/Ashfall/?v=101 | **Aim assist nerfed a little:** it's 20% weaker at every slider setting (less slowdown over enemies and less pull), so gunfights rely more on your own aim |
 | v100 | https://ninebolt-studios.github.io/Ashfall/?v=100 | **More ranks:** 22 ranks instead of 5. Every rank now has divisions I, II and III, and there are three new top ranks above Diamond: 🔥 **Crimson** (2,500 RP), 🌈 **Iridescent** (3,300 RP) and 👑 **Champion** (4,200 RP). Your RP is unchanged; higher ranks face tougher bots |
 | v99 | https://ninebolt-studios.github.io/Ashfall/?v=99 | **🎮 Controller support** (PlayStation, Xbox, Backbone, other MFi controllers): left stick move, right stick aim, RT fire, LT aim down sights, A/✕ jump, B/◯ crouch or slide, X/▢ reload, Y/△ ping, LB grenade, RB kill streak, L3 sprint, D-pad quick chat, Start pause/resume |
 | v98 | https://ninebolt-studios.github.io/Ashfall/?v=98 | **Quick chat & pings:** tap 📍 to drop a ping where you aim (red if you're aiming at an enemy), and 💬 for quick messages (Enemy spotted, Need ammo, On my way, Cover me, Nice shot, Thanks, Good game). Teammates in online matches see your pings and messages; bot teammates reply. Keyboard: Z to ping, X then 1-7 to chat |

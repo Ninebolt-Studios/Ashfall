@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118140359';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118141230';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -478,6 +478,10 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #qcPanel button { font: 700 14px var(--display); letter-spacing: .08em; color: #fff; background: rgba(15,15,15,.85); border: 1px solid rgba(255,255,255,.25); border-radius: 10px; padding: 10px 14px; text-align: left; }
 #chatFeed { position: fixed; left: calc(16px + env(safe-area-inset-left, 0px)); bottom: calc(230px + env(safe-area-inset-bottom, 0px)); z-index: 6; display: grid; gap: 4px; pointer-events: none; }
 #chatFeed div { font: 600 14px var(--body); color: #fff; background: rgba(0,0,0,.55); padding: 5px 10px; border-radius: 8px; animation: fadeUp .25s both; } #chatFeed b { color: var(--accent); }
+#hudEdit { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.25); touch-action: none; }
+#hudEdit .hebar { position: absolute; top: calc(14px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); display: flex; gap: 12px; align-items: center; background: rgba(15,15,15,.9); border: 1px solid rgba(255,255,255,.2); border-radius: 12px; padding: 8px 12px; color: #fff; font: 600 14px var(--body); }
+#hudEdit .hebar .btn { padding: 8px 14px; font-size: 13px; }
+.tbtn.hesel { outline: 3px dashed var(--accent); outline-offset: 4px; }
 /* admin */
 .admin { border-color: rgba(192,138,255,.5) !important; }
 .admrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -694,6 +698,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 
 <div id="grade" aria-hidden="true"></div>
 <div id="chatFeed"></div>
+<div id="hudEdit" hidden><div class="hebar"><b>Drag a button to move it</b><label>Size <input type="range" id="heSize" min="0.6" max="1.6" step="0.05" value="1"></label><button class="btn ghost" id="heReset" type="button">Reset</button><button class="btn go" id="heDone" type="button">Done</button></div></div>
 <div id="rangeHud" hidden><span id="rangeTxt">Shoot a target</span><button id="rangeGun" type="button">Next gun ▸</button></div>
 <div id="sndHud" hidden><div id="sndTxt"></div><div class="bar" id="sndBarW" hidden><i id="sndBar"></i></div></div>
 <div id="domHud" hidden><div class="fl" id="flA">A<i></i></div><div class="fl" id="flB">B<i></i></div><div class="fl" id="flC">C<i></i></div></div>
@@ -890,6 +895,11 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
 
     <section class="pane" id="pane-settings" hidden>
       <div class="sets" id="settingsList"></div>
+      <div class="acct" id="hudBox">
+        <span class="label">🕹️ Touch controls layout</span>
+        <span class="amsg">Drag the buttons anywhere and make them bigger or smaller.</span>
+        <div class="prow"><button class="btn go" id="hudEditBtn" type="button">Edit layout</button><button class="btn ghost" id="hudResetBtn" type="button">Reset to default</button></div>
+      </div>
       <div class="acct" id="appBox">
         <span class="label">📲 Get the Ashfall app</span>
         <span class="amsg">Put Ashfall on your Home Screen as a full-screen app. It always opens the newest version. On iPhone/iPad open this page in <b>Safari</b>, tap the button, then go to <b>Settings → Profile Downloaded → Install</b>. (School-managed iPads may block it; then use Safari's <b>Share → Add to Home Screen</b> instead.)</span>
@@ -4454,6 +4464,38 @@ codeIn.addEventListener('input', () => { matchCode = codeIn.value.replace(/[^a-z
 })();
 
 /* ---------- flow ---------- */
+/* ---------- custom HUD layout (drag + resize touch buttons) ---------- */
+const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn'];
+function applyHudLayout() {
+  const L = (S.hudL && typeof S.hudL === 'object') ? S.hudL : {};
+  for (const id of HUD_IDS) { const el = $(id); if (!el) continue; const l = L[id];
+    if (l) { el.style.left = (l.x * 100) + 'vw'; el.style.top = (l.y * 100) + 'vh'; el.style.right = 'auto'; el.style.bottom = 'auto'; el.style.transform = 'translate(-50%,-50%) scale(' + (l.s || 1) + ')'; }
+    else { el.style.left = el.style.top = el.style.right = el.style.bottom = el.style.transform = ''; } }
+}
+const HE = { sel: null, drag: null, wasHidden: true };
+function startHudEdit() {
+  HE.wasHidden = $('hud').hidden; $('menu').hidden = true; $('hud').hidden = false; $('hudEdit').hidden = false; document.body.classList.add('ingame');
+  HUD_IDS.forEach(id => { const el = $(id); if (el) { el.dataset.wasHidden = el.hidden ? '1' : ''; el.hidden = false; } });
+}
+function endHudEdit() {
+  $('hudEdit').hidden = true; if (HE.sel) $(HE.sel).classList.remove('hesel'); HE.sel = null;
+  HUD_IDS.forEach(id => { const el = $(id); if (el && el.dataset.wasHidden === '1') el.hidden = true; });
+  saveS(); $('hud').hidden = true; document.body.classList.remove('ingame'); $('menu').hidden = false;
+}
+const heHit = (x, y) => { for (const id of HUD_IDS) { const el = $(id); if (!el || el.hidden) continue; const r = el.getBoundingClientRect(); if (x >= r.left - 6 && x <= r.right + 6 && y >= r.top - 6 && y <= r.bottom + 6) return id; } return null; };
+$('hudEdit').addEventListener('pointerdown', ev => {
+  if (ev.target.closest('.hebar')) return; const id = heHit(ev.clientX, ev.clientY); if (!id) return;
+  if (HE.sel) $(HE.sel).classList.remove('hesel'); HE.sel = id; $(id).classList.add('hesel'); HE.drag = id;
+  S.hudL = S.hudL || {}; const r = $(id).getBoundingClientRect(); const cur = S.hudL[id] || { x: (r.left + r.width / 2) / innerWidth, y: (r.top + r.height / 2) / innerHeight, s: 1 }; S.hudL[id] = cur; $('heSize').value = cur.s || 1; applyHudLayout();
+});
+$('hudEdit').addEventListener('pointermove', ev => { if (!HE.drag) return; const l = S.hudL[HE.drag]; l.x = clamp(ev.clientX / innerWidth, 0.04, 0.96); l.y = clamp(ev.clientY / innerHeight, 0.06, 0.94); applyHudLayout(); });
+window.addEventListener('pointerup', () => { HE.drag = null; });
+$('heSize').addEventListener('input', () => { if (!HE.sel || !S.hudL || !S.hudL[HE.sel]) return; S.hudL[HE.sel].s = +$('heSize').value; applyHudLayout(); });
+$('heDone').addEventListener('click', endHudEdit);
+$('heReset').addEventListener('click', () => { S.hudL = {}; applyHudLayout(); });
+$('hudEditBtn').addEventListener('click', startHudEdit);
+$('hudResetBtn').addEventListener('click', () => { S.hudL = {}; saveS(); applyHudLayout(); banner('CONTROLS RESET', 'Default touch layout', 1.5); });
+applyHudLayout();
 /* ---------- quick chat + pings (teammates online see them too) ---------- */
 const QC_MSGS = ['Enemy spotted!', 'Need ammo', 'On my way', 'Cover me', 'Nice shot!', 'Thanks!', 'Good game'];
 const QC = { seq: 0, msg: null, pseq: 0, ping: null, seenMsg: {}, seenPing: {}, marks: [] };
