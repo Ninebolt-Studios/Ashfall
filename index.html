@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118141810';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118141930';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -482,6 +482,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #hudEdit .hebar { position: absolute; top: calc(14px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); display: flex; gap: 12px; align-items: center; background: rgba(15,15,15,.9); border: 1px solid rgba(255,255,255,.2); border-radius: 12px; padding: 8px 12px; color: #fff; font: 600 14px var(--body); }
 #hudEdit .hebar .btn { padding: 8px 14px; font-size: 13px; }
 .tbtn.hesel { outline: 3px dashed var(--accent); outline-offset: 4px; }
+.padfocus { outline: 3px solid var(--accent) !important; outline-offset: 3px; box-shadow: 0 0 18px rgba(var(--accent-rgb, 242,169,59), .55) !important; }
 /* admin */
 .admin { border-color: rgba(192,138,255,.5) !important; }
 .admrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -5149,6 +5150,7 @@ function pollPad(dt) {
   if (!g) return; GP.on = true;
   const dz = v => Math.abs(v) < 0.15 ? 0 : (v - Math.sign(v) * 0.15) / 0.85, ax = i => dz(g.axes[i] || 0), btn = i => !!(g.buttons[i] && (g.buttons[i].pressed || g.buttons[i].value > 0.35));
   const down = i => btn(i) && !GP.prev[i];
+  if (!$('menu').hidden && state !== 'play') { padMenu(g, btn, down, ax); for (let i = 0; i < g.buttons.length; i++) GP.prev[i] = btn(i); return; }
   // start: pause / resume (works in menus too)
   if (down(9)) { if (state === 'play') { const pb = $('pauseBtn'); if (pb) pb.click(); else pause(); } else if (state === 'paused') resume(); }
   if (state === 'play' && P.alive) {
@@ -5168,6 +5170,26 @@ function pollPad(dt) {
   } else { GP.mx = GP.mz = 0; if (GP.fire) { GP.fire = false; input.fire = false; } }
   if (Math.hypot(GP.mx, GP.mz) < 0.3) GP.sprint = false;
   for (let i = 0; i < g.buttons.length; i++) GP.prev[i] = btn(i);
+}
+// controller menu navigation: D-pad / left stick move a highlight, A presses, B goes back, LB/RB switch tabs
+const PM = { el: null, rep: 0 };
+function padTargets() { return [...document.querySelectorAll('#menu button, #menu [data-tab], #menu input, #menu select, #menu a.btn')].filter(e => { if (e.disabled) return false; const r = e.getBoundingClientRect(); return r.width > 4 && r.height > 4 && e.offsetParent !== null; }); }
+function padFocus(el) { if (PM.el) PM.el.classList.remove('padfocus'); PM.el = el; if (!el) return; el.classList.add('padfocus'); try { el.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch (e) {} }
+function padMove(dx, dy) {
+  const list = padTargets(); if (!list.length) return; if (!PM.el || !list.includes(PM.el)) { padFocus(list[0]); return; }
+  const a = PM.el.getBoundingClientRect(), ax0 = a.left + a.width / 2, ay0 = a.top + a.height / 2; let best = null, bs = 1e9;
+  for (const e of list) { if (e === PM.el) continue; const r = e.getBoundingClientRect(), x = r.left + r.width / 2 - ax0, y = r.top + r.height / 2 - ay0, along = x * dx + y * dy; if (along <= 4) continue; const side = Math.abs(x * dy - y * dx), sc = along + side * 2.2; if (sc < bs) { bs = sc; best = e; } }
+  if (best) padFocus(best);
+}
+function padMenu(g, btn, down, ax) {
+  PM.rep -= 1 / 60; const sx = ax(0), sy = ax(1);
+  const dir = down(12) || (sy < -0.6 && PM.rep <= 0) ? [0, -1] : down(13) || (sy > 0.6 && PM.rep <= 0) ? [0, 1] : down(14) || (sx < -0.6 && PM.rep <= 0) ? [-1, 0] : down(15) || (sx > 0.6 && PM.rep <= 0) ? [1, 0] : null;
+  if (dir) { padMove(dir[0], dir[1]); PM.rep = 0.22; }
+  if (down(0) && PM.el) { if (PM.el.tagName === 'INPUT' && PM.el.type !== 'range') PM.el.focus(); else PM.el.click(); }
+  if (PM.el && PM.el.type === 'range' && (down(14) || down(15))) { const st = +PM.el.step || 0.05; PM.el.value = +PM.el.value + (down(15) ? st : -st); PM.el.dispatchEvent(new Event('input', { bubbles: true })); PM.el.dispatchEvent(new Event('change', { bubbles: true })); }
+  if (down(4) || down(5)) { const tabs = [...document.querySelectorAll('[data-tab]')], cur = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true'), nx = tabs[(cur + (down(5) ? 1 : tabs.length - 1)) % tabs.length]; if (nx) { nx.click(); padFocus(nx); } }
+  if (down(1)) { if (state === 'paused') resume(); else { const pt = document.querySelector('[data-tab=play]'); if (pt) { pt.click(); padFocus(pt); } } }
+  if (down(9) && state === 'paused') resume();
 }
 /* ---------- player step ---------- */
 function stepPlayer(dt) {
@@ -5351,7 +5373,7 @@ function loop() {
   try { stepPings(dt); } catch (e) {}
   try { stepKcf(dt); } catch (e) {}
   try { stepHpt(dt); } catch (e) {}
-  if (state === 'paused') try { pollPad(dt); } catch (e) {}
+  if (state !== 'play') try { pollPad(dt); } catch (e) {}
   try { stepSnd(dt); } catch (e) {}
   fpsT += raw; fpsN++;
   if (fpsT > 0.5) { if (S.fps) hud.fps.textContent = Math.round(fpsN / fpsT) + ' FPS'; fpsT = 0; fpsN = 0; }
