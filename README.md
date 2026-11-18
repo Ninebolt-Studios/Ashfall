@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v105)](https://ninebolt-studios.github.io/Ashfall/?v=105)
+## ▶️ [PLAY NOW — latest version (v106)](https://ninebolt-studios.github.io/Ashfall/?v=106)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=105
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=106
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,7 +20,8 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v105** | https://ninebolt-studios.github.io/Ashfall/?v=105 | **New mode: ⛰️ Hardpoint.** 5v5 with bots: one glowing hill that moves to a new spot every 60 seconds. Your team scores a point every second it holds the hill uncontested (blue = yours, red = enemy, yellow = contested). First to 150 |
+| **v106** | https://ninebolt-studios.github.io/Ashfall/?v=106 | **Works offline:** after you open Ashfall once with internet, the game, its 3D engine, fonts and images are saved on your device, so the app opens and solo modes (Holdout, Zombies, Firing Range and the bot modes) play with no connection. When you're online it still loads the newest version automatically |
+| v105 | https://ninebolt-studios.github.io/Ashfall/?v=105 | **New mode: ⛰️ Hardpoint.** 5v5 with bots: one glowing hill that moves to a new spot every 60 seconds. Your team scores a point every second it holds the hill uncontested (blue = yours, red = enemy, yellow = contested). First to 150 |
 | v104 | https://ninebolt-studios.github.io/Ashfall/?v=104 | **New mode: 🏷️ Kill Confirmed.** 5v5 with bots: every elimination drops a glowing dog tag. Grab enemy tags to score (+XP), grab your own team's tags to deny the point. Tags vanish after 30 s. First to 50 |
 | v103 | https://ninebolt-studios.github.io/Ashfall/?v=103 | **Spectate in Search & Destroy:** after you're eliminated (and the kill cam ends) you watch a living teammate from behind until the round is over. Tap Fire to switch to another teammate |
 | v102 | https://ninebolt-studios.github.io/Ashfall/?v=102 | **🕹️ Custom touch controls:** Settings → Touch controls layout → **Edit layout**. Drag Fire, Aim, Jump, Crouch, Reload, Slide, Grenade, Ping and Chat anywhere on screen and use the Size slider to make each one bigger or smaller. Saved on your device (and in your account); Reset puts them back |
