@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v109)](https://ninebolt-studios.github.io/Ashfall/?v=109)
+## ▶️ [PLAY NOW — latest version (v110)](https://ninebolt-studios.github.io/Ashfall/?v=110)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=109
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=110
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,7 +20,8 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v109** | https://ninebolt-studios.github.io/Ashfall/?v=109 | **🔍 Weapon inspect:** tap the 🔍 button (I on keyboard, R3 on controller) to turn your gun and show off its camo and attachments, like CoD; shooting, aiming or reloading cancels it. The firing-range bench was also moved so it no longer blocks the view |
+| **v110** | https://ninebolt-studios.github.io/Ashfall/?v=110 | **Online Domination & Search & Destroy:** both modes now join an online room like Team Battle, so you can play them with friends (use the same private battle code or party). Real players count for flag captures, bomb plants and defuses; bots still fill empty slots, so they work solo too. In S&D the bomb goes to a real player on the attacking team, and when you die you can spectate real teammates as well as bots |
+| v109 | https://ninebolt-studios.github.io/Ashfall/?v=109 | **🔍 Weapon inspect:** tap the 🔍 button (I on keyboard, R3 on controller) to turn your gun and show off its camo and attachments, like CoD; shooting, aiming or reloading cancels it. The firing-range bench was also moved so it no longer blocks the view |
 | v108 | https://ninebolt-studios.github.io/Ashfall/?v=108 | **🛡️ Clans:** set a 2-4 letter clan tag on the Career tab; it shows next to your name (e.g. **[NBS] Aiden**) and on the leaderboards. New **Clans** tab on the 🌍 leaderboard adds up every member's eliminations (all-time or this week). Friends who use the same tag are in your clan |
 | v107 | https://ninebolt-studios.github.io/Ashfall/?v=107 | **🎮 Controller menus:** use the D-pad or left stick to move a glowing highlight through the menus, A/✕ to press, B/◯ to go back (or resume when paused), LB/RB to switch tabs, and left/right to change sliders |
 | v106 | https://ninebolt-studios.github.io/Ashfall/?v=106 | **Works offline:** after you open Ashfall once with internet, the game, its 3D engine, fonts and images are saved on your device, so the app opens and solo modes (Holdout, Zombies, Firing Range and the bot modes) play with no connection. When you're online it still loads the newest version automatically |

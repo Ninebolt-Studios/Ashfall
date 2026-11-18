@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118142258';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118142657';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -838,13 +838,13 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
           </button>
           <button class="mode" id="domBtn" type="button">
             <span class="mode-name">Domination</span>
-            <span class="mode-desc">5v5 with bots. Capture and hold flags A, B and C. Every flag you hold scores points; first team to 150 wins.</span>
-            <span class="chips"><span class="chip">Solo</span><span class="chip">Objective</span><span class="chip">3 flags</span></span>
+            <span class="mode-desc">5v5 online (bots fill empty slots). Capture and hold flags A, B and C. Every flag you hold scores points; first team to 150 wins.</span>
+            <span class="chips"><span class="chip">Online</span><span class="chip">Objective</span><span class="chip">3 flags</span></span>
           </button>
           <button class="mode" id="sndBtn" type="button">
             <span class="mode-name">Search &amp; Destroy</span>
-            <span class="mode-desc">5v5 with bots, one life per round. Attack: plant the bomb on site A or B. Defend: stop the plant or defuse it. First to 4 rounds.</span>
-            <span class="chips"><span class="chip">Solo</span><span class="chip">Rounds</span><span class="chip">One life</span></span>
+            <span class="mode-desc">5v5 online (bots fill empty slots), one life per round. Attack: plant the bomb on site A or B. Defend: stop the plant or defuse it. First to 4 rounds.</span>
+            <span class="chips"><span class="chip">Online</span><span class="chip">Rounds</span><span class="chip">One life</span></span>
           </button>
           <button class="mode" id="kcfBtn" type="button">
             <span class="mode-name">Kill Confirmed</span>
@@ -3438,6 +3438,8 @@ function netTick(dt) {
     const hp = host.pr;
     if (MAPS[hp.mp] && hp.mp !== curMap) { buildMap(hp.mp); if (P.alive && insideSolid(P.pos, 0.3)) respawnPlayer(); }
     if (Array.isArray(hp.sc)) { T.sc.b = +hp.sc[0] || 0; T.sc.r = +hp.sc[1] || 0; }
+    if (dom && Array.isArray(hp.ob)) { hp.ob.forEach((o, i) => { const f = DOM.flags[i]; if (!f || !Array.isArray(o)) return; if (Math.abs(f.x - o[0]) > 0.5 || Math.abs(f.z - o[1]) > 0.5) { f.x = +o[0]; f.z = +o[1]; DOM.group.children[i].position.set(f.x, 0, f.z); } f.p = +o[2] || 0; const ow = o[3] === 'b' || o[3] === 'r' ? o[3] : null; if (ow !== f.owner) { f.owner = ow; domColor(); if (ow) banner('FLAG ' + f.n + (ow === P.team ? ' SECURED' : ' LOST'), '', 1.5); } }); }
+    if (snd && hp.ob) sndApply(hp.ob);
     if (typeof hp.ep === 'number' && hp.ep !== T.ep) { T.ep = hp.ep; newMatchLocal(); }
     T.win = hp.w === 'b' || hp.w === 'r' ? hp.w : ''; T.winT = +hp.wt || 0;
     if (Array.isArray(hp.kf)) showFeed(hp.kf);
@@ -3498,8 +3500,8 @@ function netTick(dt) {
     const keys = Object.keys(T.myDm);
     if (keys.length > 24) keys.forEach(k => { if (!BOT_NAMES[k] && !hs.some(h => h.peer === k)) delete T.myDm[k]; });
     const pr = { qc: QC.msg, pg: QC.ping, n: playerName, tm: P.team, x: r2(P.pos.x), z: r2(P.pos.z), y: r2(P.yaw), p: r2(P.pitch), j: r2(P.jy), c: P.crouch || P.slideT > 0 ? 1 : 0, h: Math.round(P.hp), a: P.alive ? 1 : 0, d: P.deaths, kb: P.killer || null, sh: P.shots, dm: T.myDm, mv: T.win ? (myVote || null) : null, sk: mySkin, pt: party || null, rk: rankIdx(), bn: IDN.bn, em: IDN.em, t: T.beat };
-    if (T.isHost) Object.assign(pr, { hb: T.bots.map(b => [b.id, r2(b.x), r2(b.z), r2(b.yaw), Math.round(b.hp), b.alive ? 1 : 0, b.shots]), hd: T.hd, hk: T.hk, sc: [T.sc.b, T.sc.r], ep: T.ep, w: T.win || null, wt: r2(T.winT), kf: T.kf, mp: curMap, st: T.st });
-    else Object.assign(pr, { hb: null, hd: null, hk: null, sc: null, ep: null, w: null, wt: null, kf: null, mp: null, st: null });
+    if (T.isHost) Object.assign(pr, { ob: dom ? DOM.flags.map(f => [r2(f.x), r2(f.z), r2(f.p), f.owner || '']) : snd ? sndPack() : null, hb: T.bots.map(b => [b.id, r2(b.x), r2(b.z), r2(b.yaw), Math.round(b.hp), b.alive ? 1 : 0, b.shots]), hd: T.hd, hk: T.hk, sc: [T.sc.b, T.sc.r], ep: T.ep, w: T.win || null, wt: r2(T.winT), kf: T.kf, mp: curMap, st: T.st });
+    else Object.assign(pr, { ob: null, hb: null, hd: null, hk: null, sc: null, ep: null, w: null, wt: null, kf: null, mp: null, st: null });
     troom.presence(pr).catch(() => {});
   }
 }
@@ -4621,16 +4623,16 @@ function startSiege() {
   score = 0; wave = 0; betweenWaves = 1; toSpawn = 0; P.nades = nadesPerLife(); updNade(); P.ks = { scan: 0, msl: 0 }; updKS(); P.streak = 0; P.mCoins = 0; scanT = 0;
   state = 'play'; hideMenu(); updHud(); lockPointer();
 }
-async function startTDM(isDuel, isRanked) {
+async function startTDM(isDuel, isRanked, obj) {
   if (isDuel && !party) { const pm = $('partyMsg'); pm.textContent = 'Duel 1v1 needs a party. Tap Create party and send the code to your friend, or type their code and tap Join.'; pm.style.color = 'var(--accent)'; $('partyBox').scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
   ensureAudio(); clearSiege(); lockPointer();
   duel = !!isDuel; SCORE_LIMIT = duel ? 7 : 65;
-  const btn = duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
-  btn.disabled = true; mode = 'tdm'; hpt = false; kcf = false; dom = false; snd = false; rng = false; zmb = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
+  const btn = obj === 'dom' ? $('domBtn') : obj === 'snd' ? $('sndBtn') : duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = obj ? btn.querySelector('.mode-desc') : duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
+  btn.disabled = true; mode = 'tdm'; hpt = false; kcf = false; dom = obj === 'dom'; snd = obj === 'snd'; rng = false; gg = false; zmb = false; if (dom) SCORE_LIMIT = 150; if (snd) SCORE_LIMIT = 4; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
   resetTDM(); ranked = !!isRanked && !duel;
   if (room) {
     desc.textContent = duel ? 'Finding your rival…' : 'Joining the battle…';
-    try { troom = await Promise.race([room.join(duel ? 'duel-p-' + party.toLowerCase() : ranked ? 'ranked-main' : 'battle-' + (matchCode || 'main')), sleep(6000).then(() => null)]); } catch (e) { troom = null; }
+    try { troom = await Promise.race([room.join(duel ? 'duel-p-' + party.toLowerCase() : ranked ? 'ranked-main' : (obj ? obj + '-' : 'battle-') + (matchCode || 'main')), sleep(6000).then(() => null)]); } catch (e) { troom = null; }
     if (troom) await sleep(1200);
   }
   const counts = { b: 0, r: 0 };
@@ -4644,7 +4646,8 @@ async function startTDM(isDuel, isRanked) {
   newMatchLocal();
   state = 'play'; hideMenu(); updHud();
   const others = counts.b + counts.r;
-  if (duel) banner(TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? 'Rival found · first to ' + SCORE_LIMIT : 'Waiting for a rival — share code “' + (matchCode || 'open') + '”. First to ' + SCORE_LIMIT + '.', 4);
+  if (obj) banner((dom ? 'DOMINATION · ' : 'SEARCH & DESTROY · ') + MAPS[curMap].name.toUpperCase(), (others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest · ' : 'No other players online · bots fill every slot · ') + (dom ? 'capture A, B and C' : 'first to 4 rounds'), 4);
+  else if (duel) banner(TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? 'Rival found · first to ' + SCORE_LIMIT : 'Waiting for a rival — share code “' + (matchCode || 'open') + '”. First to ' + SCORE_LIMIT + '.', 4);
   else banner((ranked ? 'RANKED · ' + rankBadge(rankIdx()) + ' ' : '') + TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest' : 'No other players online · bots fill every slot', 3);
 }
 (function () {
@@ -4706,14 +4709,14 @@ function stepDom(dt) {
   DOM.group.visible = dom; $('domHud').hidden = !(dom && state === 'play'); if (!dom || T.win) return;
   for (const f of DOM.flags) {
     const n = { b: 0, r: 0 }; let meIn = false;
-    if (P.alive && Math.hypot(P.pos.x - f.x, P.pos.z - f.z) < 5) { n[P.team]++; meIn = true; }
-    for (const b of T.bots) if (b.alive && Math.hypot(b.x - f.x, b.z - f.z) < 5) n[b.team]++;
+    for (const u of fieldUnits()) if (Math.hypot(u.x - f.x, u.z - f.z) < 5) { n[u.team]++; if (u.me) meIn = true; }
     const dir = n.b && !n.r ? 1 : n.r && !n.b ? -1 : 0, before = f.owner;
-    if (dir) f.p = clamp(f.p + dir * dt * 0.22 * Math.min(3, n.b + n.r), -1, 1);
-    if (f.p >= 1) f.owner = 'b'; else if (f.p <= -1) f.owner = 'r'; else if ((f.owner === 'b' && f.p <= 0) || (f.owner === 'r' && f.p >= 0)) f.owner = null;
+    if (!objClient()) { if (dir) f.p = clamp(f.p + dir * dt * 0.22 * Math.min(3, n.b + n.r), -1, 1);
+    if (f.p >= 1) f.owner = 'b'; else if (f.p <= -1) f.owner = 'r'; else if ((f.owner === 'b' && f.p <= 0) || (f.owner === 'r' && f.p >= 0)) f.owner = null; }
     if (f.owner !== before) { domColor(); if (f.owner) { banner('FLAG ' + f.n + (f.owner === P.team ? ' SECURED' : ' LOST'), f.owner === P.team ? 'Hold it to score' : 'Take it back!', 2); if (f.owner === P.team && meIn) { addXP(100); addCoins(15); } try { tone(f.owner === P.team ? 880 : 300, 0.15, 'triangle', 0.12); } catch (e) {} } }
     const el = $('fl' + f.n); el.className = 'fl' + (f.owner ? ' ' + f.owner : '') + (meIn ? ' here' : ''); el.firstElementChild.style.width = Math.round(Math.abs(f.p) * 100) + '%'; el.firstElementChild.style.background = f.p > 0 ? '#8ec0ff' : '#ff9a86';
   }
+  if (objClient()) return;
   DOM.tick += dt;
   if (DOM.tick >= 1.5) { DOM.tick = 0; for (const f of DOM.flags) if (f.owner) T.sc[f.owner]++; for (const t of ['b', 'r']) if (T.sc[t] >= SCORE_LIMIT && !T.win) { T.win = t; T.winT = 5; } updHud(); }
 }
@@ -4722,7 +4725,14 @@ const SPEC = { i: 0, fireWas: false };
 const SND = { seen: { b: false, r: false }, sites: [], group: new THREE.Group(), attack: 'b', planted: false, bomb: null, bombT: 0, plantP: 0, defP: 0, roundT: 0, over: 0, carrier: null, round: 0 }; scene.add(SND.group);
 const sndBombMesh = (() => { const g = new THREE.Group(); const b = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.18, 0.3), new THREE.MeshStandardMaterial({ color: 0x3a3f2a, roughness: 0.7 })); b.position.y = 0.09; g.add(b);
   const l = new THREE.Mesh(new THREE.SphereGeometry(0.04, 8, 6), new THREE.MeshBasicMaterial({ color: 0xff2a1a, toneMapped: false })); l.position.set(0.12, 0.2, 0); g.add(l); g.userData.led = l; g.visible = false; scene.add(g); return g; })();
-function sndAlive(team) { let n = 0; if (P.team === team && P.alive) n++; for (const b of T.bots) if (b.team === team && b.alive) n++; return n; }
+function fieldUnits() { // everyone who can stand on an objective: me, bots (host) and other players
+  const out = []; if (P.alive) out.push({ id: myPeer, team: P.team, x: P.pos.x, z: P.pos.z, me: true });
+  for (const b of T.bots) if (b.alive) out.push({ id: b.id, team: b.team, x: b.x, z: b.z });
+  for (const e of T.ents.values()) if (e.kind === 'human' && e.alive) out.push({ id: e.id, team: e.team, x: e.rx, z: e.rz });
+  return out;
+}
+const objClient = () => !!(troom && !T.isHost); // online and someone else runs the objective
+function sndAlive(team) { return fieldUnits().filter(u => u.team === team).length; }
 function sndRound(first) {
   SND.round = first ? 1 : SND.round + 1; SND.planted = false; SND.bombT = 0; SND.plantP = 0; SND.defP = 0; SND.roundT = 90; SND.over = 0; SND.seen = { b: false, r: false }; sndBombMesh.visible = false;
   const def = other(SND.attack), dz = def === 'b' ? 1 : -1; // sites sit on the defenders' half
@@ -4736,8 +4746,23 @@ function sndRound(first) {
   });
   // everyone back to life at their spawn
   if (!first) respawnPlayer(); for (const b of T.bots) { const sp = spawnPoint(b.team); Object.assign(b, { x: sp.x, z: sp.z, hp: 100, alive: true, target: null, wp: null, vx: 0, vz: 0 }); }
-  SND.carrier = SND.attack === P.team ? 'me' : (T.bots.find(b => b.team === SND.attack) || {}).id || null;
-  banner('ROUND ' + SND.round + ' · ' + (SND.attack === P.team ? 'ATTACK' : 'DEFEND'), SND.attack === P.team ? 'Plant the bomb on A or B (stand in the ring)' : 'Stop the plant, or defuse the bomb', 3);
+  { const att = fieldUnits().filter(u => u.team === SND.attack && !String(u.id).match(/^[br][0-9]$/)).sort((a, b) => a.id < b.id ? -1 : 1); SND.carrier = att.length ? att[0].id : (T.bots.find(b => b.team === SND.attack) || {}).id || null; }
+  banner('ROUND ' + SND.round + ' · ' + (SND.attack === P.team ? 'ATTACK' : 'DEFEND'), SND.attack === P.team ? (SND.carrier === myPeer ? 'You have the bomb: plant it on A or B (stand in the ring)' : 'Escort the bomb to A or B') : 'Stop the plant, or defuse the bomb', 3);
+}
+function sndPack() { return [SND.round, SND.attack, SND.planted ? 1 : 0, SND.bomb ? r2(SND.bomb.x) : 0, SND.bomb ? r2(SND.bomb.z) : 0, r2(SND.bombT), r2(SND.plantP), r2(SND.defP), r2(SND.over), SND.sites.map(st => [r2(st.x), r2(st.z)]), SND.carrier || '', r2(SND.roundT)]; }
+function sndApply(a) { // a client mirrors the host's round
+  if (!Array.isArray(a)) return; const round = +a[0] || 1, newRound = round !== SND.round;
+  SND.attack = a[1] === 'r' ? 'r' : 'b';
+  if (newRound) { SND.round = round - 1; sndRound(round === 1); SND.round = round; }
+  if (Array.isArray(a[9]) && a[9].length === 2) a[9].forEach((p, i) => { const st = SND.sites[i]; if (st && (Math.abs(st.x - p[0]) > 0.5 || Math.abs(st.z - p[1]) > 0.5)) { st.x = p[0]; st.z = p[1]; const ring = SND.group.children[i * 2], spr = SND.group.children[i * 2 + 1]; if (ring) ring.position.set(st.x, 0.04, st.z); if (spr) spr.position.set(st.x, 3.2, st.z); } });
+  const wasPlanted = SND.planted; SND.planted = !!a[2]; SND.bombT = +a[5] || 0; SND.plantP = +a[6] || 0; SND.defP = +a[7] || 0; SND.over = +a[8] || 0; SND.carrier = a[10] || null; SND.roundT = +a[11] || 0;
+  if (SND.planted) { SND.bomb = { x: +a[3], z: +a[4] }; sndBombMesh.position.set(SND.bomb.x, 0, SND.bomb.z); sndBombMesh.visible = true; if (!wasPlanted) banner('BOMB PLANTED', SND.attack === P.team ? 'Defend it' : 'Defuse it!', 2); } else sndBombMesh.visible = false;
+}
+function sndClientHud() {
+  const att = SND.attack, prog = SND.planted ? SND.defP : SND.plantP;
+  if (SND.planted) { sndBombMesh.userData.led.visible = (SND.bombT % (SND.bombT < 10 ? 0.3 : 1)) < 0.15; $('sndTxt').textContent = 'BOMB · ' + Math.ceil(SND.bombT) + 's' + (SND.defP > 0 ? ' · DEFUSING' : ''); }
+  else { const m = Math.floor(Math.max(0, SND.roundT) / 60), sec = Math.floor(Math.max(0, SND.roundT) % 60); $('sndTxt').textContent = 'ROUND ' + SND.round + ' · ' + (att === P.team ? 'ATTACK' : 'DEFEND') + ' · ' + m + ':' + String(sec).padStart(2, '0') + (SND.plantP > 0 ? ' · PLANTING' : '') + (SND.carrier === myPeer ? ' · YOU HAVE THE BOMB' : ''); }
+  $('sndBarW').hidden = !prog; $('sndBar').style.width = Math.round(Math.min(1, prog) * 100) + '%';
 }
 function sndGoal(b) {
   if (SND.planted && SND.bomb) return { x: SND.bomb.x + (Math.random() - 0.5) * 6, z: SND.bomb.z + (Math.random() - 0.5) * 6 };
@@ -4753,6 +4778,7 @@ function sndEnd(w, why) {
 function stepSnd(dt) {
   SND.group.visible = snd; const hudEl = $('sndHud'); hudEl.hidden = !(snd && state === 'play');
   if (!snd || T.win) { if (!snd) sndBombMesh.visible = false; return; }
+  if (objClient()) { sndClientHud(); return; }
   if (SND.over) { SND.over -= dt; if (SND.over <= 0) { SND.over = 0; SND.attack = other(SND.attack); sndRound(false); } return; }
   const att = SND.attack, def = other(att);
   for (const t of ['b', 'r']) if (sndAlive(t) > 0) SND.seen[t] = true; // a team only counts as wiped out after it has been on the field
@@ -4765,9 +4791,10 @@ function stepSnd(dt) {
     if (SND.roundT <= 0) return sndEnd(def, 'Time ran out');
     // planting
     let planter = null;
-    if (SND.carrier === 'me' && P.alive) { for (const st of SND.sites) if (Math.hypot(P.pos.x - st.x, P.pos.z - st.z) < 4) planter = { x: P.pos.x, z: P.pos.z, me: true }; }
-    else { const c = T.bots.find(b => b.id === SND.carrier && b.alive); if (!c && SND.carrier !== 'me') { const nb = T.bots.find(b => b.team === att && b.alive); SND.carrier = nb ? nb.id : null; } else if (c) for (const st of SND.sites) if (Math.hypot(c.x - st.x, c.z - st.z) < 3) planter = { x: c.x, z: c.z }; }
-    if (planter) { SND.plantP += dt / (planter.me ? 3 : 4); prog = SND.plantP; label = planter.me ? 'PLANTING…' : 'ENEMY PLANTING'; } else SND.plantP = Math.max(0, SND.plantP - dt);
+    { const units = fieldUnits(), c = units.find(u => u.id === SND.carrier);
+      if (!c) { const nb = units.find(u => u.team === att); SND.carrier = nb ? nb.id : null; }
+      else for (const st of SND.sites) if (Math.hypot(c.x - st.x, c.z - st.z) < (String(c.id).match(/^[br][0-9]$/) ? 3 : 4)) planter = { x: c.x, z: c.z, me: !!c.me, human: !String(c.id).match(/^[br][0-9]$/) }; }
+    if (planter) { SND.plantP += dt / (planter.human ? 3 : 4); prog = SND.plantP; label = planter.me ? 'PLANTING…' : att === P.team ? 'TEAMMATE PLANTING' : 'ENEMY PLANTING'; } else SND.plantP = Math.max(0, SND.plantP - dt);
     if (SND.plantP >= 1) { SND.planted = true; SND.bombT = 40; SND.bomb = { x: planter.x, z: planter.z }; sndBombMesh.position.set(planter.x, 0, planter.z); sndBombMesh.visible = true; banner('BOMB PLANTED', att === P.team ? 'Defend it for 40 seconds' : 'Defuse it!', 2.5); try { tone(1200, 0.2, 'square', 0.1); } catch (e) {} if (planter.me) { addXP(80); addCoins(10); } T.bots.forEach(b => { b.wp = null; }); }
     const m = Math.floor(Math.max(0, SND.roundT) / 60), sec = Math.floor(Math.max(0, SND.roundT) % 60);
     $('sndTxt').textContent = 'ROUND ' + SND.round + ' · ' + (att === P.team ? 'ATTACK' : 'DEFEND') + ' · ' + m + ':' + String(sec).padStart(2, '0') + (label ? ' · ' + label : '');
@@ -4776,9 +4803,8 @@ function stepSnd(dt) {
     if (SND.bombT <= 0) { explosionFX(SND.bomb.x, 0, SND.bomb.z, 3); sndBombMesh.visible = false; if (P.alive && Math.hypot(P.pos.x - SND.bomb.x, P.pos.z - SND.bomb.z) < 10) takeDamage(200, null); return sndEnd(att, 'The bomb detonated'); }
     if (gone(def)) return sndEnd(att, 'Defenders eliminated');
     let defuser = null;
-    if (def === P.team && P.alive && Math.hypot(P.pos.x - SND.bomb.x, P.pos.z - SND.bomb.z) < 2.2) defuser = 'me';
-    else for (const b of T.bots) if (b.team === def && b.alive && Math.hypot(b.x - SND.bomb.x, b.z - SND.bomb.z) < 2.2) defuser = b;
-    if (defuser) { SND.defP += dt / (defuser === 'me' ? 5 : 7); prog = SND.defP; label = defuser === 'me' ? 'DEFUSING…' : 'ENEMY DEFUSING'; } else SND.defP = 0;
+    for (const u of fieldUnits()) if (u.team === def && Math.hypot(u.x - SND.bomb.x, u.z - SND.bomb.z) < 2.2) { defuser = u.me ? 'me' : u; break; }
+    if (defuser) { SND.defP += dt / (defuser === 'me' || !String(defuser.id).match(/^[br][0-9]$/) ? 5 : 7); prog = SND.defP; label = defuser === 'me' ? 'DEFUSING…' : 'ENEMY DEFUSING'; } else SND.defP = 0;
     if (SND.defP >= 1) { sndBombMesh.visible = false; if (defuser === 'me') { addXP(120); addCoins(15); } return sndEnd(def, 'Bomb defused'); }
     $('sndTxt').textContent = 'BOMB · ' + Math.ceil(SND.bombT) + 's' + (label ? ' · ' + label : '');
   }
@@ -4915,8 +4941,8 @@ $('tdmBtn').addEventListener('click', () => { if (!$('tdmBtn').disabled) startTD
 $('duelBtn').addEventListener('click', () => { if (!$('duelBtn').disabled) startTDM(true); });
 $('siegeBtn').addEventListener('click', startSiege);
 $('ggBtn').addEventListener('click', startGunGame);
-$('domBtn').addEventListener('click', startDomination);
-$('sndBtn').addEventListener('click', startSnd);
+$('domBtn').addEventListener('click', () => { if (!$('domBtn').disabled) startTDM(false, false, 'dom'); });
+$('sndBtn').addEventListener('click', () => { if (!$('sndBtn').disabled) startTDM(false, false, 'snd'); });
 $('rangeBtn').addEventListener('click', startRange);
 $('kcfBtn').addEventListener('click', startKcf);
 $('hpBtn').addEventListener('click', startHpt);
@@ -5290,7 +5316,8 @@ function stepPlayer(dt) {
   // Search & Destroy: once the kill cam ends, spectate a living teammate (tap Fire to switch)
   let spec = null;
   if (!P.alive && snd && !kc && !SND.over) {
-    const mates = T.bots.filter(b => b.team === P.team && b.alive);
+    const mates = T.bots.filter(b => b.team === P.team && b.alive).map(b => ({ id: b.id, x: b.x, z: b.z, yaw: b.yaw }));
+    for (const e of T.ents.values()) if (e.team === P.team && e.alive && !mates.some(m => m.id === e.id)) mates.push({ id: e.id, x: e.rx, z: e.rz, yaw: e.ryaw });
     if (input.fire && !SPEC.fireWas) SPEC.i++; SPEC.fireWas = input.fire;
     if (mates.length) { spec = mates[SPEC.i % mates.length]; P.yaw += angDiff(P.yaw, spec.yaw) * Math.min(1, dt * 6); P.pitch = -0.12; }
   }
