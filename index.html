@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118175550';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118180419';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -700,6 +700,8 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #zBuy { --ring: #c08aff; width: 70px; height: 70px; left: max(16px, env(safe-area-inset-left, 0px)); bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
 #zBuy small { font: 700 11px var(--mono); color: #e0c8ff; }
 #zBuy.off { opacity: .45; }
+#coopTip { position: absolute; left: 50%; top: calc(96px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); font: 700 13px var(--display); letter-spacing: .1em; color: #e8f0e0; text-shadow: 0 1px 6px #000; text-align: center; white-space: pre-line; pointer-events: none; }
+#coopTip .dn { color: #ff6a4a; font-size: 16px; }
 #zPow { position: absolute; left: 50%; top: calc(70px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); font: 700 14px var(--display); letter-spacing: .14em; color: #f2c84b; text-shadow: 0 1px 6px #000; }
 #siegeBtn { background-image: linear-gradient(135deg, rgba(160,110,255,.28), transparent 65%); border-top-color: #a07aff; }
 .mode:hover .mode-name { color: var(--accent); }
@@ -836,6 +838,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
     <div id="qcPanel" hidden></div>
     <div id="zBuy" class="tbtn" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M3 12h18M12 8v12M8 8l4-4 4 4"/></svg><span>CRATE</span><small>◎ 1,500</small></div>
     <div id="zPow" hidden></div>
+    <div id="coopTip" hidden></div>
     <div id="nadeBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="11" cy="15" rx="6" ry="7"/><path d="M8 8h6v-3H8z"/><path d="M14 6l4 3"/><circle cx="18" cy="4" r="2"/><path d="M6 15h10M11 9v13"/></svg><small id="nadeN">2</small></div>
     <div id="adsBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg><span>AIM</span></div>
     <div id="reloadBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 3v5h5"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 21v-5h-5"/></svg><span>RELOAD</span></div>
@@ -873,7 +876,7 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
     <section class="pane" id="pane-play">
       <div class="playbig">
         <button class="pbig go" type="button" data-msel="mp"><b>Multiplayer</b><span>Team Battle · Ranked · Domination · S&amp;D · Kill Confirmed · Hardpoint · Gun Game · Duel</span></button>
-        <button class="pbig" type="button" data-msel="solo"><b>Zombies &amp; Solo</b><span>Zombies · Drone Holdout</span></button>
+        <button class="pbig" type="button" data-msel="solo"><b>Zombies &amp; Solo</b><span>Zombies (solo or co-op) · Drone Holdout</span></button>
         <button class="pbig" type="button" data-msel="range"><b>Firing Range</b><span>Practice targets, try every gun</span></button>
         <button class="pbig" type="button" data-msel="tut"><b>Training</b><span>1-minute tutorial: move, aim, shoot, grenades, slide</span></button>
       </div>
@@ -976,8 +979,8 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
           </button>
           <button class="mode" id="zmbBtn" type="button">
             <span class="mode-name">Zombies</span>
-            <span class="mode-desc">Survive endless waves of the undead. Earn points for hits and kills, spend them on the Mystery Crate for a random gun, and grab power-ups.</span>
-            <span class="chips"><span class="chip">Solo</span><span class="chip">Waves</span><span class="chip" id="zBestChip">Best wave —</span></span>
+            <span class="mode-desc">Survive endless waves of the undead, solo or online co-op with friends (same private code = same squad). Earn your own points, open the Mystery Crate for a random gun, and revive downed teammates.</span>
+            <span class="chips"><span class="chip">Co-op</span><span class="chip">Waves</span><span class="chip" id="zBestChip">Best wave —</span></span>
           </button>
           <button class="mode" id="siegeBtn" type="button">
             <span class="mode-name">Drone Holdout</span>
@@ -2761,7 +2764,7 @@ function nadeBlast(x, y, z) {
   const dp = Math.hypot(P.pos.x - x, P.pos.z - z); P.shake = Math.max(P.shake, Math.max(0, 0.8 - dp / 20)); if (dp < 25) haptic('boom');
   P.nadeT = performance.now();
   const RAD = hasPerk('demo') ? 9 : 7, dmgAt = d => d >= RAD ? 0 : Math.round(140 * (1 - d / RAD));
-  if (mode === 'siege') { for (const e of [...enemies]) { const dm = dmgAt(e.g.position.distanceTo(c)); if (dm > 0) { e.hp -= dm; e.flash = 0.08; if (e.hp <= 0) killEnemy(e); } } return; }
+  if (mode === 'siege') { for (const e of [...enemies]) { const dm = dmgAt(e.g.position.distanceTo(c)); if (dm > 0) dmgEnemy(e, dm); } return; }
   if (T.win) return;
   let hit = false;
   for (const e of T.ents.values()) {
@@ -2832,7 +2835,7 @@ function ksTargets() {
 }
 function ksDamage(t, dm) {
   const e = t.e;
-  if (mode === 'siege') { if (!(e.hp > 0)) return; e.hp -= dm; e.flash = 0.08; if (e.hp <= 0) killEnemy(e); return; }
+  if (mode === 'siege') { if (!(e.hp > 0)) return; dmgEnemy(e, dm); return; }
   if (!e.alive) return; if (e.v) e.v.flashT = 0.06;
   if (e.kind === 'bot' && T.isHost) botDamage(e.id, dm, myPeer); else T.myDm[e.id] = (T.myDm[e.id] || 0) + dm;
 }
@@ -2938,7 +2941,7 @@ function stepMissile(dt) {
   explosionFX(x, 0, z, 2.6); haptic('boom');
   try { noise(1.4, 0.9, 260); tone(70, 0.9, 'sine', 0.5, 30); } catch (e) {}
   P.shake = Math.max(P.shake, Math.max(0.15, 1 - Math.hypot(P.pos.x - x, P.pos.z - z) / 45));
-  if (mode === 'siege') { for (const e of [...enemies]) if (Math.hypot(e.g.position.x - x, e.g.position.z - z) < 12) killEnemy(e); return; }
+  if (mode === 'siege') { for (const e of [...enemies]) if (Math.hypot(e.g.position.x - x, e.g.position.z - z) < 12) dmgEnemy(e, 99999); return; }
   if (T.win) return;
   let hitAny = false;
   for (const e of T.ents.values()) {
@@ -3130,7 +3133,7 @@ function makeAmmoBox(glow = true) { // olive ammo can with stencil, lid latch, b
   g.userData.body = body; return g;
 }
 function dropPickup(pos) {
-  const m = makeMedkit(); m.position.set(pos.x, 0.35, pos.z); scene.add(m); pickups.push({ m, life: 20 });
+  const m = makeMedkit(); m.position.set(pos.x, 0.35, pos.z); scene.add(m); pickups.push({ m, life: 20, id: COOP.zid++ });
 }
 function oldDropPickup(pos) {
   const m = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.25, 0.3), new THREE.MeshStandardMaterial({ color: 0x3d4a33, emissive: 0x2f6b2a, emissiveIntensity: 0.6 }));
@@ -3196,13 +3199,14 @@ const ZM = { skins: [0x7a9a5a, 0x8aa070, 0x6a8a6a, 0x9aa080].map(c => new THREE.
   cloth: [0x3a3020, 0x2a3040, 0x40302a, 0x30302a].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 1 })),
   eye: new THREE.MeshBasicMaterial({ color: 0xffe040, toneMapped: false }), blood: new THREE.MeshStandardMaterial({ color: 0x5a0a08, roughness: 0.8 }) };
 function zSpawnPoint() {
-  for (let i = 0; i < 40; i++) { const a = Math.random() * Math.PI * 2, d = 20 + Math.random() * 18, x = clamp(P.pos.x + Math.cos(a) * d, -HALF + 2, HALF - 2), z = clamp(P.pos.z + Math.sin(a) * d, -HALF + 2, HALF - 2);
-    if (!insideSolid({ x, z }, 0.8) && Math.hypot(x - P.pos.x, z - P.pos.z) > 14) return { x, z }; }
+  const tg = coopTargets(), c = tg[Math.random() * tg.length | 0] || { x: P.pos.x, z: P.pos.z };
+  for (let i = 0; i < 40; i++) { const a = Math.random() * Math.PI * 2, d = 20 + Math.random() * 18, x = clamp(c.x + Math.cos(a) * d, -HALF + 2, HALF - 2), z = clamp(c.z + Math.sin(a) * d, -HALF + 2, HALF - 2);
+    if (!insideSolid({ x, z }, 0.8) && tg.every(t => Math.hypot(x - t.x, z - t.z) > 14)) return { x, z }; }
   return randomOpenPoint();
 }
-function makeZombie() {
-  const R = wave, g = new THREE.Group(), skin = ZM.skins[Math.random() * 4 | 0], cloth = ZM.cloth[Math.random() * 4 | 0];
-  const runner = R >= 4 && Math.random() < Math.min(0.45, 0.08 + R * 0.03);
+function makeZombie(rep) {
+  const R = wave, g = new THREE.Group(), skin = ZM.skins[rep ? rep.id % 4 : Math.random() * 4 | 0], cloth = ZM.cloth[rep ? (rep.id >> 2) % 4 : Math.random() * 4 | 0];
+  const runner = rep ? !!rep.r : R >= 4 && Math.random() < Math.min(0.45, 0.08 + R * 0.03);
   const e = { kind: 'zombie', g, hp: 60 + 45 * R, speed: (runner ? 1.8 : 1) * Math.min(4.2, 1.5 + R * 0.22) * (0.85 + Math.random() * 0.3), radius: 0.42, aimY: 1.3, cd: 0.5, t: Math.random() * 9, flash: 0, strafe: Math.random() < 0.5 ? 1 : -1, stuck: 0, runner };
   const part = (geo, mat, parent, x, y, z, sx, sy, sz, p = 'body') => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.scale.set(sx, sy, sz); m.castShadow = true; m.userData.ent = e; m.userData.part = p; parent.add(m); return m; };
   const hipL = new THREE.Group(), hipR = new THREE.Group(); hipL.position.set(-0.11, 0.88, 0); hipR.position.set(0.11, 0.88, 0); g.add(hipL, hipR);
@@ -3214,18 +3218,23 @@ function makeZombie() {
   [armL, armR].forEach(a => { part(SG2.box, cloth, a, 0, 0, -0.16, 0.12, 0.12, 0.32); part(SG2.box, skin, a, 0, 0, -0.43, 0.1, 0.1, 0.26); });
   armL.rotation.x = -0.2; armR.rotation.x = -0.1;
   Object.assign(e, { hipL, hipR, armL, armR, up });
-  const sp = zSpawnPoint(); g.position.set(sp.x, -1.6, sp.z); e.rise = 1; // climbs out of the ground
-  scene.add(g); enemies.push(e);
+  const sp = rep ? { x: rep.x, z: rep.z } : zSpawnPoint(); g.position.set(sp.x, -1.6, sp.z); e.rise = 1; // climbs out of the ground
+  e.zid = rep ? rep.id : COOP.zid++; if (rep) { e.rep = true; e.rise = rep.rs; g.position.y = -1.6 * rep.rs; }
+  scene.add(g); enemies.push(e); return e;
 }
 function zPts(n) { score += n * (zDouble > 0 ? 2 : 1); updHud(); updZBuy(); }
 function hitZombie(e, dmg, head) {
+  if (e.rep && COOP.on && !COOP.host) { COOP.zd[e.zid] = Math.round((COOP.zd[e.zid] || 0) + dmg); if (head) COOP.zh[e.zid] = 1; e.flash = 0.08; zPts(10); if (head) sfx.head(); else sfx.hit(); hitMarker(head ? 'head' : ''); return; }
   e.hp -= dmg; e.flash = 0.08; zPts(10);
   if (e.hp <= 0) killZombie(e, head); else { if (head) sfx.head(); else sfx.hit(); hitMarker(head ? 'head' : ''); }
 }
-function killZombie(e, head) {
+function killZombie(e, head, by) {
   if (!enemies.includes(e)) return;
-  spark(new THREE.Vector3(e.g.position.x, 1.2, e.g.position.z), 0x6a1010, 16); try { sfx.kill(); noise(0.4, 0.15, 300); } catch (er) {} hitMarker('kill');
-  C.zKills = (C.zKills || 0) + 1; zPts(head ? 100 : 60); addXP(12); addWeaponKill(); addCoins(10); onMyKill(!!head); if (hasPerk('salvager')) salvageDrop(e.g.position.x, e.g.position.z);
+  if (e.rep && COOP.on && !COOP.host) { dmgEnemy(e, 9999); return; }
+  spark(new THREE.Vector3(e.g.position.x, 1.2, e.g.position.z), 0x6a1010, 16);
+  if (by && COOP.on) { COOP.kl.push([++COOP.kseq, by, head ? 1 : 0]); if (COOP.kl.length > 30) COOP.kl.shift(); }
+  else { try { sfx.kill(); noise(0.4, 0.15, 300); } catch (er) {} hitMarker('kill');
+  C.zKills = (C.zKills || 0) + 1; zPts(head ? 100 : 60); addXP(12); addWeaponKill(); addCoins(10); onMyKill(!!head); if (hasPerk('salvager')) salvageDrop(e.g.position.x, e.g.position.z); }
   if (Math.random() < 0.06) zDropPower(e.g.position);
   else if (Math.random() < (P.hp < 60 ? 0.14 : 0.07)) dropPickup(e.g.position);
   scene.remove(e.g); enemies.splice(enemies.indexOf(e), 1);
@@ -3236,7 +3245,7 @@ function zDropPower(pos) {
   const keys = Object.keys(POW_TYPES), k = keys[Math.random() * keys.length | 0], t = POW_TYPES[k];
   let m; if (k === 'ammo') { m = makeAmmoBox(); m.scale.setScalar(1.3); } else m = new THREE.Mesh(new THREE.OctahedronGeometry(0.32), new THREE.MeshBasicMaterial({ color: t.c, toneMapped: false }));
   m.position.set(pos.x, 1, pos.z); scene.add(m);
-  POWS.push({ m, k, life: 25 });
+  POWS.push({ m, k, life: 25, id: COOP.zid++ });
 }
 function zPickup(k) {
   banner(POW_TYPES[k].n, k === 'ammo' ? 'Max ammo and grenades' : k === 'double' ? 'Double points for 30 seconds' : 'Every zombie nearby is gone', 2);
@@ -3266,9 +3275,12 @@ function startZombies() {
   score = 0; wave = 0; betweenWaves = 2; toSpawn = 0; P.nades = nadesPerLife(); updNade(); P.ks = {}; clearKS(); updKS(); P.streak = 0; P.mCoins = 0; scanT = 0;
   state = 'play'; hideMenu(); updHud(); updZBuy(); lockPointer();
   banner('ZOMBIES · ' + MAPS[curMap].name.toUpperCase(), 'You start with a pistol. Earn points and open the Mystery Crate (◎ 1,500) for a better gun.', 4);
+  P.downed = false; P.out = false; coopJoin();
 }
 function stepZombies(dt) {
+  if (COOP.on) { coopTick(dt); if (state !== 'play') return; if (!COOP.host) { coopClientStep(dt); return; } }
   if (toSpawn === 0 && enemies.length === 0) { betweenWaves -= dt; if (betweenWaves <= 0) {
+    coopWaveStart(wave + 1);
     if (wave > 0) { addXP(40); dailyProgress('waves', 1); P.nades = Math.min(nadesPerLife() + 1, (P.nades || 0) + 1); updNade(); }
     wave++; toSpawn = 5 + wave * 3; spawnTimer = 0; banner('WAVE ' + wave, wave === 1 ? 'They are coming…' : 'Zombies get tougher and faster', 2.5);
     try { tone(110, 1.2, 'sawtooth', 0.06, 70); tone(82, 1.4, 'sine', 0.12, 55, 0.2); } catch (e) {} updHud(); } }
@@ -3278,8 +3290,9 @@ function stepZombies(dt) {
     if (e.kind !== 'zombie') continue;
     e.t += dt; const g = e.g;
     if (e.rise > 0) { e.rise = Math.max(0, e.rise - dt * 0.9); g.position.y = -1.6 * e.rise; continue; }
-    const dx = P.pos.x - g.position.x, dz = P.pos.z - g.position.z, dist = Math.hypot(dx, dz) || 1, ux = dx / dist, uz = dz / dist;
-    const mv = dist > 1.0 ? 1 : 0, ox = g.position.x, oz = g.position.z;
+    const tgt = coopNearest(g.position.x, g.position.z);
+    const dx = tgt.x - g.position.x, dz = tgt.z - g.position.z, dist = Math.hypot(dx, dz) || 1, ux = dx / dist, uz = dz / dist;
+    const mv = dist > 1.0 && !tgt.none ? 1 : 0, ox = g.position.x, oz = g.position.z;
     let mx = ux, mz = uz; if (e.stuck > 0.25) { mx = -uz * e.strafe; mz = ux * e.strafe; }
     g.position.x += mx * e.speed * mv * dt; g.position.z += mz * e.speed * mv * dt;
     collide(g.position, e.radius);
@@ -3291,7 +3304,8 @@ function stepZombies(dt) {
     e.armL.rotation.x = -0.2 + Math.sin(e.t * 3) * 0.15; e.armR.rotation.x = -0.1 - Math.sin(e.t * 3) * 0.15;
     if (Math.random() < dt * 0.15 && dist < 20) try { tone(70 + Math.random() * 40, 0.6, 'sawtooth', 0.025 * (1 - dist / 20), 50); } catch (er) {}
     e.cd -= dt;
-    if (dist < 1.25 && e.cd <= 0 && P.alive) { e.cd = 0.9; e.armL.rotation.x = e.armR.rotation.x = -0.9; siegeHurt(e.runner ? 22 : 28, g.position.x, g.position.z); if (state !== 'play') return; }
+    if (dist < 1.25 && e.cd <= 0 && !tgt.none) { e.cd = 0.9; e.armL.rotation.x = e.armR.rotation.x = -0.9; const dmz = e.runner ? 22 : 28;
+      if (tgt.peer) { COOP.hu[tgt.peer] = (COOP.hu[tgt.peer] || 0) + dmz; } else if (P.alive) { siegeHurt(dmz, g.position.x, g.position.z); if (state !== 'play') return; } }
   }
   for (let i = POWS.length - 1; i >= 0; i--) { const pw = POWS[i]; pw.life -= dt; pw.m.rotation.y += dt * 2; pw.m.position.y = 1 + Math.sin(pw.life * 3) * 0.15; pw.m.visible = pw.life > 5 || Math.sin(pw.life * 12) > 0;
     if (Math.hypot(pw.m.position.x - P.pos.x, pw.m.position.z - P.pos.z) < 1.3) { zPickup(pw.k); pw.life = 0; }
@@ -3305,15 +3319,16 @@ function stepZombies(dt) {
 }
 function siegeHurt(dmg, sx, sz) {
   if (S.god && isAdmin()) return;
+  if (P.downed || P.out) return;
   haptic('hurt');
   if (sx != null) showDmgDir(sx, sz);
   P.lastHurt = 0; P.shake = Math.max(P.shake, 0.25); P.hp -= dmg; hurtT = 0.35; sfx.hurt(); updHud();
-  if (P.hp < 1) { P.hp = 0; updHud(); siegeOver(); }
+  if (P.hp < 1) { P.hp = 0; updHud(); if (zmb && COOP.on && coopMateCount() > 0) coopDown(); else siegeOver(); }
 }
 function siegeOver() {
   state = 'over';
   const lbl = document.querySelectorAll('#playOver .stats .label');
-  if (zmb) { C.bestRound = Math.max(C.bestRound || 0, wave); if (lbl[0]) { lbl[0].textContent = 'Points'; lbl[1].textContent = 'Wave'; } $('overMsg').textContent = 'The horde got you on wave ' + wave + '.'; $('zBestChip').textContent = 'Best wave ' + C.bestRound; }
+  if (zmb) { C.bestRound = Math.max(C.bestRound || 0, wave); if (lbl[0]) { lbl[0].textContent = 'Points'; lbl[1].textContent = 'Wave'; } $('overMsg').textContent = COOP.on && Object.keys(COOP.mates).length ? 'Your squad fell on wave ' + wave + '.' : 'The horde got you on wave ' + wave + '.'; try { if (COOP.on && COOP.host) { COOP.go = 1; coopSend(); } } catch (e) {} $('zBestChip').textContent = 'Best wave ' + C.bestRound; }
   else { if (lbl[0]) { lbl[0].textContent = 'Score'; lbl[1].textContent = 'Wave'; } $('overMsg').textContent = 'The outpost has fallen.'; }
   if (!C.maps || typeof C.maps !== 'object') C.maps = {}; C.maps[curMap] = (C.maps[curMap] || 0) + 1;
   if (!zmb) { C.bestWave = Math.max(C.bestWave, wave); C.bestScore = Math.max(C.bestScore, score); } C.deaths++; saveC();
@@ -3322,6 +3337,7 @@ function siegeOver() {
   showMenu('over');
 }
 function clearSiege() {
+  try { coopLeave(); } catch (e) {}
   clearNades();
   if (missile) { scene.remove(missile.m); missile = null; } scanT = 0; clearKS();
   [...enemies.map(e => e.g), ...shots.map(s => s.m), ...pickups.map(p => p.m), ...POWS.map(p => p.m)].forEach(o => scene.remove(o)); POWS.length = 0; zDouble = 0;
@@ -5038,6 +5054,147 @@ function renderPriv() {
     $('pvMsg').textContent = ''; startTDM(false, false, pv.obj, pv);
   });
 })();
+
+/* ---------- v123: co-op Zombies online (host runs the horde; shared waves, own points, revives) ---------- */
+var COOP = { on: false, room: null, host: true, me: 'me', jt: 0, mates: {}, zid: 1, kl: [], kseq: 0, kseen: 0, hu: {}, huSeen: 0, zd: {}, zh: {}, zdSeen: {}, rv: {}, rvT: {}, rvSeen: {}, cl: [], clSeen: {}, go: 0, wave: 0, sendT: 0, hostId: '', reps: {}, rpk: {}, banT: 0 };
+function coopMateCount() { return Object.keys(COOP.mates).length; }
+function coopTargets() {
+  const out = []; if (P.alive && !P.downed && !P.out) out.push({ x: P.pos.x, z: P.pos.z });
+  if (COOP.on) for (const [id, m] of Object.entries(COOP.mates)) if (!m.dn) out.push({ x: m.x, z: m.z, peer: id });
+  return out;
+}
+function coopNearest(x, z) { let best = null, bd = 1e9; for (const t of coopTargets()) { const d = Math.hypot(t.x - x, t.z - z); if (d < bd) { bd = d; best = t; } } return best || { x: P.pos.x, z: P.pos.z, none: true }; }
+function dmgEnemy(e, dm) {
+  if (e.rep && COOP.on && !COOP.host) { if (e.kind === 'zombie') { COOP.zd[e.zid] = Math.round((COOP.zd[e.zid] || 0) + Math.min(dm, 5000)); e.flash = 0.08; } return; }
+  e.hp -= dm; e.flash = 0.08; if (e.hp <= 0) killEnemy(e);
+}
+async function coopJoin() {
+  Object.assign(COOP, { on: false, room: null, host: true, mates: {}, kl: [], kseq: 0, kseen: 0, hu: {}, huSeen: 0, zd: {}, zh: {}, zdSeen: {}, rv: {}, rvT: {}, rvSeen: {}, cl: [], clSeen: {}, go: 0, wave: 0, hostId: '', reps: {}, rpk: {}, jt: Date.now() });
+  if (!room) return;
+  let r = null; try { r = await Promise.race([room.join('zmb-' + (matchCode || 'main')), sleep(6000).then(() => null)]); } catch (e) { r = null; }
+  if (!r || !zmb || mode !== 'siege' || state === 'menu') { try { r && r.leave(); } catch (e) {} return; }
+  COOP.room = r; COOP.on = true; coopSend();
+}
+function coopLeave() {
+  if (COOP.room) { try { COOP.room.leave(); } catch (e) {} }
+  for (const m of Object.values(COOP.mates)) { scene.remove(m.sol.g); if (m.tag) scene.remove(m.tag); }
+  for (const pk of Object.values(COOP.rpk)) scene.remove(pk.m);
+  COOP.room = null; COOP.on = false; COOP.mates = {}; COOP.rpk = {}; P.downed = false; P.out = false;
+  try { $('coopTip').hidden = true; } catch (e) {}
+}
+const cr2 = v => Math.round(v * 100) / 100;
+function coopSend() {
+  if (!COOP.room) return;
+  const pr = { zc: 1, jt: COOP.jt, n: playerName, sk: mySkin, x: cr2(P.pos.x), z: cr2(P.pos.z), y: cr2(P.yaw), dn: P.out ? 2 : P.downed ? 1 : 0, zd: COOP.zd, zh: COOP.zh, rv: COOP.rv, cl: COOP.cl, pts: score };
+  if (COOP.host) pr.zs = { w: wave, z: enemies.filter(e => e.kind === 'zombie').map(e => [e.zid, cr2(e.g.position.x), cr2(e.g.position.z), cr2(e.g.rotation.y), e.runner ? 1 : 0, cr2(e.rise || 0)]),
+    pk: pickups.map(p => [p.id, cr2(p.m.position.x), cr2(p.m.position.z)]), pw: POWS.map(p => [p.id, cr2(p.m.position.x), cr2(p.m.position.z), p.k]), kl: COOP.kl, hu: COOP.hu, go: COOP.go };
+  try { COOP.room.presence(pr); } catch (e) {}
+}
+function coopMateMesh(id, pr) {
+  const sol = makeSoldier('b', { sk: pr.sk || 'std' }); if (sol.mark) sol.mark.visible = false; scene.add(sol.g);
+  const c = document.createElement('canvas'); c.width = 256; c.height = 64; const cx = c.getContext('2d'); cx.fillStyle = '#9fe08a'; cx.font = '700 34px sans-serif'; cx.textAlign = 'center'; cx.fillText(String(pr.n || 'Player').slice(0, 14), 128, 44);
+  const tag = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthTest: false })); tag.scale.set(1.6, 0.4, 1); scene.add(tag);
+  return { sol, tag, x: pr.x || 0, z: pr.z || 0, yaw: 0, walk: 0, n: pr.n || 'Player', dn: 0, pts: 0 };
+}
+function coopTick(dt) {
+  if (!COOP.room) return;
+  const peers = COOP.room.peers(), me = peers.find(p => p.sameTab); if (me) COOP.me = me.peer;
+  const zp = peers.filter(p => !p.sameTab && p.presence && p.presence.zc);
+  // who runs the horde: whoever joined first
+  let hostId = COOP.me, hjt = COOP.jt; for (const p of zp) if (p.presence.jt < hjt || (p.presence.jt === hjt && p.peer < hostId)) { hjt = p.presence.jt; hostId = p.peer; }
+  const wasHost = COOP.host; COOP.host = hostId === COOP.me; COOP.hostId = hostId;
+  if (wasHost && !COOP.host) { for (const e of [...enemies]) { scene.remove(e.g); } enemies.length = 0; for (const p of pickups) scene.remove(p.m); pickups.length = 0; for (const p of POWS) scene.remove(p.m); POWS.length = 0; toSpawn = 0; P.pos.set(clamp(P.pos.x + 2.5, -HALF + 2, HALF - 2), 1.6, clamp(P.pos.z + 1.2, -HALF + 2, HALF - 2)); if (insideSolid(P.pos, 0.6)) { const o = randomOpenPoint(); P.pos.set(o.x, 1.6, o.z); } banner('CO-OP ZOMBIES', 'Joined a squad · shared waves, your own points', 3); }
+  if (!wasHost && COOP.host) { for (const e of enemies) e.rep = false; toSpawn = 0; betweenWaves = 3; }
+  // teammates
+  const seen = {};
+  for (const p of zp) {
+    const pr = p.presence; seen[p.peer] = 1;
+    let m = COOP.mates[p.peer]; if (!m) { m = COOP.mates[p.peer] = coopMateMesh(p.peer, pr); banner('SQUAD', (pr.n || 'A player') + ' joined your Zombies game', 2.5); }
+    const nx = pr.x || 0, nz = pr.z || 0, mv = Math.hypot(nx - m.x, nz - m.z);
+    m.x += (nx - m.x) * Math.min(1, dt * 12); m.z += (nz - m.z) * Math.min(1, dt * 12); m.yaw = pr.y || 0; m.dn = pr.dn || 0; m.n = pr.n || m.n; m.pts = pr.pts || 0; m.walk += Math.min(mv, 0.5) * 6;
+    const g = m.sol.g; g.visible = m.dn !== 2; g.position.set(m.x, m.dn === 1 ? 0.25 : 0, m.z); g.rotation.set(m.dn === 1 ? -1.35 : 0, m.yaw, 0);
+    const sw = Math.sin(m.walk) * 0.5 * Math.min(1, mv * 8); m.sol.hipL.rotation.x = sw; m.sol.hipR.rotation.x = -sw;
+    m.tag.position.set(m.x, m.dn === 1 ? 1.0 : 2.25, m.z); m.tag.visible = m.dn !== 2;
+    // revives they did for me
+    const rv = (pr.rv || {})[COOP.me] || 0; if (rv > (COOP.rvSeen[p.peer] || 0)) { COOP.rvSeen[p.peer] = rv; if (P.downed && !P.out) { P.downed = false; P.hp = 50; updHud(); banner('REVIVED', 'by ' + m.n, 2); try { sfx.heal(); } catch (e) {} } }
+    if (COOP.host) {
+      // damage they did to zombies
+      const zd = pr.zd || {}, zh = pr.zh || {}, sd = COOP.zdSeen[p.peer] || (COOP.zdSeen[p.peer] = {});
+      for (const id in zd) { const d = zd[id] - (sd[id] || 0); if (d <= 0) continue; sd[id] = zd[id]; const e = enemies.find(z => z.zid === +id); if (!e) continue; e.hp -= d; e.flash = 0.08; if (e.hp <= 0) killZombie(e, !!zh[id], p.peer); }
+      // pickups they grabbed
+      const cs = COOP.clSeen[p.peer] || (COOP.clSeen[p.peer] = {});
+      for (const id of pr.cl || []) { if (cs[id]) continue; cs[id] = 1;
+        const pi = pickups.findIndex(q => q.id === id); if (pi >= 0) { scene.remove(pickups[pi].m); pickups.splice(pi, 1); }
+        const wi = POWS.findIndex(q => q.id === id); if (wi >= 0) { const w = POWS[wi]; scene.remove(w.m); POWS.splice(wi, 1); if (w.k === 'blast') for (const e of [...enemies]) if (Math.hypot(e.g.position.x - m.x, e.g.position.z - m.z) < 45) { explosionFX(e.g.position.x, 0, e.g.position.z, 0.6); killZombie(e, false, p.peer); } } }
+    }
+  }
+  for (const id of Object.keys(COOP.mates)) if (!seen[id]) { const m = COOP.mates[id]; scene.remove(m.sol.g); scene.remove(m.tag); delete COOP.mates[id]; banner('SQUAD', m.n + ' left', 2); }
+  // host's world state for me
+  const hp = !COOP.host && zp.find(p => p.peer === hostId), zs = hp && hp.presence.zs;
+  if (zs) {
+    const hu = (zs.hu || {})[COOP.me] || 0; if (hu > COOP.huSeen) { const d = hu - COOP.huSeen; COOP.huSeen = hu; siegeHurt(d); if (state !== 'play') return; }
+    for (const k of zs.kl || []) if (k[0] > COOP.kseen) { COOP.kseen = k[0]; if (k[1] === COOP.me) { try { sfx.kill(); } catch (e) {} hitMarker('kill'); C.zKills = (C.zKills || 0) + 1; zPts(k[2] ? 100 : 60); addXP(12); addWeaponKill(); addCoins(10); onMyKill(!!k[2]); } }
+    if (zs.w !== wave && zs.w > 0) coopWaveStart(zs.w);
+    COOP.snap = zs;
+    if (zs.go && state === 'play') { siegeOver(); return; }
+  }
+  // reviving a downed teammate: stand next to them for 3 seconds
+  let tip = '';
+  if (P.alive && !P.downed && !P.out) for (const [id, m] of Object.entries(COOP.mates)) {
+    if (m.dn !== 1) { COOP.rvT[id] = 0; continue; }
+    if (Math.hypot(m.x - P.pos.x, m.z - P.pos.z) < 2.3) { COOP.rvT[id] = (COOP.rvT[id] || 0) + dt; tip = 'REVIVING ' + m.n.toUpperCase() + ' · ' + Math.min(100, Math.round(COOP.rvT[id] / 3 * 100)) + '%';
+      if (COOP.rvT[id] >= 3) { COOP.rvT[id] = 0; COOP.rv[id] = (COOP.rv[id] || 0) + 1; zPts(100); banner('REVIVED ' + m.n.toUpperCase(), '+100 points', 1.8); } }
+    else { COOP.rvT[id] = 0; if (!tip) tip = '⚠ ' + m.n + ' is down · get to them'; }
+  }
+  if (P.downed && !P.out) { P.bleed -= dt; tip = '<span class="dn">YOU\'RE DOWN · ' + Math.ceil(P.bleed) + 's</span>\nA teammate can revive you · you can still shoot'; if (P.bleed <= 0) { P.out = true; P.alive = false; banner('BLED OUT', 'You come back at the start of the next wave', 3); } }
+  else if (P.out) tip = 'You come back next wave';
+  if (COOP.host && (P.downed || P.out) && coopMateCount() > 0 && Object.values(COOP.mates).every(m => m.dn)) { siegeOver(); return; }
+  const squad = Object.values(COOP.mates).map(m => m.n + ' ' + m.pts.toLocaleString() + (m.dn ? ' ✚' : '')).join(' · ');
+  const el = $('coopTip'); el.hidden = !tip && !squad; el.innerHTML = ''; if (tip) { const t = document.createElement('div'); if (tip.startsWith('<span')) t.innerHTML = tip; else t.textContent = tip; el.appendChild(t); }
+  if (squad) { const q = document.createElement('div'); q.style.opacity = '.8'; q.style.fontSize = '11px'; q.textContent = 'SQUAD · ' + squad; el.appendChild(q); }
+  COOP.sendT -= dt; if (COOP.sendT <= 0) { COOP.sendT = 0.066; coopSend(); }
+}
+function coopDown() {
+  P.downed = true; P.bleed = 30; P.hp = 0; P.ads = false; P.slideT = 0; updHud();
+  banner("YOU'RE DOWN", 'A teammate can revive you · keep shooting!', 3); haptic('hurt');
+}
+function coopWaveStart(n) {
+  if (COOP.on && (P.downed || P.out) && n > wave) { P.downed = false; P.out = false; P.alive = true; P.hp = 100; const m = Object.values(COOP.mates).find(q => !q.dn); if (m) P.pos.set(m.x + 1, 1.6, m.z + 1); hud.death.hidden = true; updHud(); }
+  if (!COOP.on || COOP.host) return;
+  if (n > wave && wave > 0) { addXP(40); dailyProgress('waves', 1); P.nades = Math.min(nadesPerLife() + 1, (P.nades || 0) + 1); updNade(); }
+  wave = n; banner('WAVE ' + wave, wave === 1 ? 'They are coming…' : 'Zombies get tougher and faster', 2.5); updHud();
+  try { tone(110, 1.2, 'sawtooth', 0.06, 70); } catch (e) {}
+}
+function coopClientStep(dt) {
+  const zs = COOP.snap; if (!zs) return;
+  const live = {};
+  for (const [id, x, z, ry, rn, rs] of zs.z || []) {
+    live[id] = 1; let e = enemies.find(q => q.zid === id);
+    if (!e) e = makeZombie({ id, x, z, r: rn, rs });
+    const g = e.g, mv = Math.hypot(x - g.position.x, z - g.position.z); e.t += dt;
+    g.position.x += (x - g.position.x) * Math.min(1, dt * 10); g.position.z += (z - g.position.z) * Math.min(1, dt * 10); g.position.y = -1.6 * rs; g.rotation.y = ry;
+    const sw = Math.sin(e.t * e.speed * 2.6) * 0.5 * Math.min(1, mv * 10); e.hipL.rotation.x = sw; e.hipR.rotation.x = -sw;
+    e.flash = Math.max(0, (e.flash || 0) - dt);
+  }
+  for (const e of [...enemies]) if (e.kind === 'zombie' && !live[e.zid]) { spark(new THREE.Vector3(e.g.position.x, 1.2, e.g.position.z), 0x6a1010, 12); scene.remove(e.g); enemies.splice(enemies.indexOf(e), 1); delete COOP.zd[e.zid]; delete COOP.zh[e.zid]; }
+  // pickups & power-ups the host dropped
+  const want = {};
+  for (const [id, x, z] of zs.pk || []) want[id] = { x, z, k: 'hp' };
+  for (const [id, x, z, k] of zs.pw || []) want[id] = { x, z, k };
+  for (const id of Object.keys(COOP.rpk)) if (!want[id] || COOP.cl.includes(+id)) { scene.remove(COOP.rpk[id].m); delete COOP.rpk[id]; }
+  for (const [id, w] of Object.entries(want)) {
+    if (COOP.cl.includes(+id)) continue;
+    let r = COOP.rpk[id];
+    if (!r) { let m; if (w.k === 'hp') m = makeMedkit(); else if (w.k === 'ammo') { m = makeAmmoBox(); m.scale.setScalar(1.3); } else m = new THREE.Mesh(new THREE.OctahedronGeometry(0.32), new THREE.MeshBasicMaterial({ color: POW_TYPES[w.k] ? POW_TYPES[w.k].c : 0xffffff, toneMapped: false }));
+      m.position.set(w.x, w.k === 'hp' ? 0.35 : 1, w.z); scene.add(m); r = COOP.rpk[id] = { m, k: w.k }; }
+    r.m.rotation.y += dt * 1.8;
+    if (P.alive && !P.downed && Math.hypot(w.x - P.pos.x, w.z - P.pos.z) < 1.2 && (w.k !== 'hp' || P.hp < 100)) {
+      COOP.cl.push(+id); if (COOP.cl.length > 40) COOP.cl.shift(); scene.remove(r.m); delete COOP.rpk[id];
+      if (w.k === 'hp') { P.hp = Math.min(100, P.hp + 40); sfx.heal(); banner('HEALTH PACK', '+40 health', 1.2); updHud(); } else if (w.k === 'blast') { banner('BLAST', 'Every zombie nearby is gone', 2); zPts(400); } else zPickup(w.k);
+    }
+  }
+  if (zDouble > 0) { zDouble -= dt; $('zPow').hidden = false; $('zPow').textContent = '2X POINTS · ' + Math.ceil(zDouble) + 's'; } else if (!$('zPow').hidden) $('zPow').hidden = true;
+}
 /* ---------- custom HUD layout (drag + resize touch buttons) ---------- */
 const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn', 'inspBtn'];
 function applyHudLayout() {
@@ -5147,7 +5304,7 @@ function startRange() {
 function startSiege() {
   ensureAudio(); leaveBattle(); clearSiege(); snowb = false; clearSnow(); zmb = false; hpt = false; kcf = false; dom = false; snd = false; rng = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
   mode = 'siege'; duel = false; buildMap(selMap); equip(loadout);
-  Object.assign(P, { yaw: 0, pitch: 0, hp: 100, alive: true, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, prot: 0 });
+  Object.assign(P, { yaw: 0, pitch: 0, hp: 100, alive: true, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, prot: 0, downed: false, out: false });
   P.pos.set(0, 1.6, 9); if (insideSolid(P.pos, 0.6)) { const o = randomOpenPoint(); P.pos.set(o.x, 1.6, o.z); }
   hud.death.hidden = true;
   score = 0; wave = 0; betweenWaves = 1; toSpawn = 0; P.nades = nadesPerLife(); updNade(); P.ks = {}; clearKS(); updKS(); P.streak = 0; P.mCoins = 0; scanT = 0;
@@ -5807,7 +5964,7 @@ function stepPlayer(dt) {
   if (sprint) { P.stamina = Math.max(0, P.stamina - (hasPerk('fleetfoot') ? 13 : 20) * dt); P.stWait = 0.9; } else { P.stWait -= dt; if (P.stWait <= 0) P.stamina = Math.min(100, P.stamina + 16 * dt); }
   if (sprint && P.ads) P.ads = false;
   if (len > 1) { mx /= len; mz /= len; len = 1; }
-  const mob = (W().mob || 1) * (hasPerk('fleetfoot') ? 1.08 : 1), speed = (sprint ? 8.2 : P.crouch ? 2.7 : 5.2 * (P.ads ? 0.65 : 1)) * mob, sin = Math.sin(P.yaw), cos = Math.cos(P.yaw);
+  const mob = (W().mob || 1) * (hasPerk('fleetfoot') ? 1.08 : 1), speed = (P.downed ? 0.6 : sprint ? 8.2 : P.crouch ? 2.7 : 5.2 * (P.ads ? 0.65 : 1)) * mob, sin = Math.sin(P.yaw), cos = Math.cos(P.yaw);
   const tvx = P.alive ? (mx * cos + mz * sin) * speed : 0, tvz = P.alive ? (-mx * sin + mz * cos) * speed : 0;
   const acc = Math.min(1, dt * (len > 0.05 ? 10 : 13) * (onGround() ? 1 : 0.3));
   P.sprinting = sprint;
@@ -5856,7 +6013,7 @@ function stepPlayer(dt) {
   const scoped = drawScope(optic, P.adsT);
   const breath = scoped ? Math.sin(performance.now() / 900) * (optic === 'sniper' ? 0.0013 : 0.0008) : 0;
 
-  const eye = 1.6 - P.crouchT * 0.48;
+  const eye = P.downed ? 0.55 : 1.6 - P.crouchT * 0.48;
   // kill cam: while waiting to respawn, watch from just behind the player who got you
   let kc = null;
   if (!P.alive && mode === 'tdm' && P.killer && P.respawn > 0.35) { const ke = T.ents.get(P.killer); if (ke && ke.v && ke.v.g.visible) kc = ke; }

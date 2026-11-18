@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v122)](https://ninebolt-studios.github.io/Ashfall/?v=122)
+## ▶️ [PLAY NOW — latest version (v123)](https://ninebolt-studios.github.io/Ashfall/?v=123)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=122
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=123
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,6 +20,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v123** | https://ninebolt-studios.github.io/Ashfall/?v=123 | **Co-op Zombies online:** Zombies is now multiplayer. Everyone who starts Zombies with the same private battle code (or none) joins one squad: the same horde and waves for everybody, but **your own points**. Teammates show up with their name over their head and points at the top. Lose all your health and you go **down** instead of dying: you can still shoot, and a teammate who stands next to you for 3 seconds revives you (+100 points for them). Bleed out after 30 s and you come back at the next wave. The game ends when the whole squad is down. Solo still works exactly as before |
 | **v122** | https://ninebolt-studios.github.io/Ashfall/?v=122 | **Private matches:** open **🔒 Private match** on the Play tab, pick the mode (Team Battle, Domination, S&D, Kill Confirmed, Hardpoint, Gun Game, and Snowball Fight during Christmas), the map, the match length (short / normal / long) and bots (off, easy, normal, hard or adaptive), then tap **Create & start**. You get a code like PK7Q2-D3NH (copied for you); friends type it under Join and land in the same match with the same settings |
 | **v121** | https://ninebolt-studios.github.io/Ashfall/?v=121 | **Christmas event (Dec 18–31):** a limited-time **Snowball Fight** mode (5v5 online with bots filling in, snowballs only: 2 hits to knock someone out, 1 to the head, first to 30, always on a snowy map) and a **Christmas Event** card on the Play tab with 4 holiday challenges: play 3 Snowball Fights (◎ 500), 25 snowball eliminations (“Snowball Sniper” title), win 2 Snowball Fights (◎ 750) and 100 eliminations during the event (“Frostbitten” title). It switches on by itself when the Christmas season starts |
 | **v120** | https://ninebolt-studios.github.io/Ashfall/?v=120 | **More kill streaks:** pick any 3 in **Loadout → Kill streaks**: Map Scan (10), **Care Package** (12: a crate parachutes in with full ammo & health or a surprise streak), **Sentry Gun** (16: an auto turret guards your spot for 30 s), **Attack Drone** (20: circles above you and fires at enemies for 25 s) and Missile (30). Hardline takes 2–3 off each. On keyboard the 3 slots are **Z, F and V**; on a controller RB uses the first ready one |
