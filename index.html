@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118142951';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118143308';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -833,8 +833,8 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
           </button>
           <button class="mode" id="ggBtn" type="button">
             <span class="mode-name">Gun Game</span>
-            <span class="mode-desc">Free-for-all against 9 bots. Every elimination gives you the next gun. Get one with all 10 guns to win.</span>
-            <span class="chips"><span class="chip">Solo</span><span class="chip">Free-for-all</span><span class="chip">10 guns</span></span>
+            <span class="mode-desc">Online free-for-all (bots fill empty slots). Every elimination gives you the next gun. Get one with all 10 guns to win.</span>
+            <span class="chips"><span class="chip">Online</span><span class="chip">Free-for-all</span><span class="chip">10 guns</span></span>
           </button>
           <button class="mode" id="domBtn" type="button">
             <span class="mode-name">Domination</span>
@@ -3439,6 +3439,12 @@ function netTick(dt) {
     if (MAPS[hp.mp] && hp.mp !== curMap) { buildMap(hp.mp); if (P.alive && insideSolid(P.pos, 0.3)) respawnPlayer(); }
     if (Array.isArray(hp.sc)) { T.sc.b = +hp.sc[0] || 0; T.sc.r = +hp.sc[1] || 0; }
     if (dom && Array.isArray(hp.ob)) { hp.ob.forEach((o, i) => { const f = DOM.flags[i]; if (!f || !Array.isArray(o)) return; if (Math.abs(f.x - o[0]) > 0.5 || Math.abs(f.z - o[1]) > 0.5) { f.x = +o[0]; f.z = +o[1]; DOM.group.children[i].position.set(f.x, 0, f.z); } f.p = +o[2] || 0; const ow = o[3] === 'b' || o[3] === 'r' ? o[3] : null; if (ow !== f.owner) { f.owner = ow; domColor(); if (ow) banner('FLAG ' + f.n + (ow === P.team ? ' SECURED' : ' LOST'), '', 1.5); } }); }
+    if (gg && hp.ob && typeof hp.ob === 'object' && !Array.isArray(hp.ob)) { // Gun Game levels come from the host
+      const g = hp.ob.g && typeof hp.ob.g === 'object' ? hp.ob.g : {}, mine = +g[myPeer] || 0, prev = +T.gg[myPeer] || 0; T.gg = g; T.ggWin = String(hp.ob.w || '');
+      if (mine !== prev && mine < GG_GUNS.length) { equip(GG_GUNS[mine]); if (mine > prev) banner('GUN ' + (mine + 1) + ' / ' + GG_GUNS.length, WEAPONS[GG_GUNS[mine]].name, 1.4); }
+      T.sc.b = mine; T.sc.r = Math.max(0, ...Object.entries(g).filter(([k]) => k !== myPeer).map(([, v]) => +v || 0));
+      if (T.win) { const iWon = T.ggWin && T.ggWin === playerName; T.win = iWon ? P.team : other(P.team); if (iWon && !T.ggCounted) { T.ggCounted = true; C.ggWins = (C.ggWins || 0) + 1; saveC(); } } else T.ggCounted = false;
+    }
     if (snd && hp.ob) sndApply(hp.ob);
     if (kcf && hp.ob) kcfApply(hp.ob);
     if (hpt && hp.ob) hptApply(hp.ob);
@@ -3502,7 +3508,7 @@ function netTick(dt) {
     const keys = Object.keys(T.myDm);
     if (keys.length > 24) keys.forEach(k => { if (!BOT_NAMES[k] && !hs.some(h => h.peer === k)) delete T.myDm[k]; });
     const pr = { qc: QC.msg, pg: QC.ping, n: playerName, tm: P.team, x: r2(P.pos.x), z: r2(P.pos.z), y: r2(P.yaw), p: r2(P.pitch), j: r2(P.jy), c: P.crouch || P.slideT > 0 ? 1 : 0, h: Math.round(P.hp), a: P.alive ? 1 : 0, d: P.deaths, kb: P.killer || null, sh: P.shots, dm: T.myDm, mv: T.win ? (myVote || null) : null, sk: mySkin, pt: party || null, rk: rankIdx(), bn: IDN.bn, em: IDN.em, t: T.beat };
-    if (T.isHost) Object.assign(pr, { ob: dom ? DOM.flags.map(f => [r2(f.x), r2(f.z), r2(f.p), f.owner || '']) : snd ? sndPack() : kcf ? KCF.tags.map(t => [t.id, r2(t.x), r2(t.z), t.team]) : hpt ? [HPT.i, r2(HPT.t), HPT.spots.map(p => [r2(p.x), r2(p.z)])] : null, hb: T.bots.map(b => [b.id, r2(b.x), r2(b.z), r2(b.yaw), Math.round(b.hp), b.alive ? 1 : 0, b.shots]), hd: T.hd, hk: T.hk, sc: [T.sc.b, T.sc.r], ep: T.ep, w: T.win || null, wt: r2(T.winT), kf: T.kf, mp: curMap, st: T.st });
+    if (T.isHost) Object.assign(pr, { ob: gg ? { g: T.gg, w: T.ggWin || '' } : dom ? DOM.flags.map(f => [r2(f.x), r2(f.z), r2(f.p), f.owner || '']) : snd ? sndPack() : kcf ? KCF.tags.map(t => [t.id, r2(t.x), r2(t.z), t.team]) : hpt ? [HPT.i, r2(HPT.t), HPT.spots.map(p => [r2(p.x), r2(p.z)])] : null, hb: T.bots.map(b => [b.id, r2(b.x), r2(b.z), r2(b.yaw), Math.round(b.hp), b.alive ? 1 : 0, b.shots]), hd: T.hd, hk: T.hk, sc: [T.sc.b, T.sc.r], ep: T.ep, w: T.win || null, wt: r2(T.winT), kf: T.kf, mp: curMap, st: T.st });
     else Object.assign(pr, { ob: null, hb: null, hd: null, hk: null, sc: null, ep: null, w: null, wt: null, kf: null, mp: null, st: null });
     troom.presence(pr).catch(() => {});
   }
@@ -4629,9 +4635,10 @@ async function startTDM(isDuel, isRanked, obj) {
   if (isDuel && !party) { const pm = $('partyMsg'); pm.textContent = 'Duel 1v1 needs a party. Tap Create party and send the code to your friend, or type their code and tap Join.'; pm.style.color = 'var(--accent)'; $('partyBox').scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
   ensureAudio(); clearSiege(); lockPointer();
   duel = !!isDuel; SCORE_LIMIT = duel ? 7 : 65;
-  const btn = obj === 'dom' ? $('domBtn') : obj === 'snd' ? $('sndBtn') : obj === 'kcf' ? $('kcfBtn') : obj === 'hpt' ? $('hpBtn') : duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = obj ? btn.querySelector('.mode-desc') : duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
-  btn.disabled = true; mode = 'tdm'; hpt = obj === 'hpt'; kcf = obj === 'kcf'; dom = obj === 'dom'; snd = obj === 'snd'; rng = false; gg = false; zmb = false; if (dom || hpt) SCORE_LIMIT = 150; if (snd) SCORE_LIMIT = 4; if (kcf) SCORE_LIMIT = 50; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
-  resetTDM(); ranked = !!isRanked && !duel;
+  const btn = obj === 'gg' ? $('ggBtn') : obj === 'dom' ? $('domBtn') : obj === 'snd' ? $('sndBtn') : obj === 'kcf' ? $('kcfBtn') : obj === 'hpt' ? $('hpBtn') : duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = obj ? btn.querySelector('.mode-desc') : duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
+  btn.disabled = true; mode = 'tdm'; hpt = obj === 'hpt'; kcf = obj === 'kcf'; dom = obj === 'dom'; snd = obj === 'snd'; rng = false; gg = obj === 'gg'; zmb = false; if (gg) { SCORE_LIMIT = 1e9; T.gg = {}; T.ggWin = ''; } if (dom || hpt) SCORE_LIMIT = 150; if (snd) SCORE_LIMIT = 4; if (kcf) SCORE_LIMIT = 50; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
+  resetTDM(); ranked = !!isRanked && !duel && !obj;
+  if (obj === 'gg') { gg = true; SCORE_LIMIT = 1e9; T.gg = {}; T.ggWin = ''; }
   if (room) {
     desc.textContent = duel ? 'Finding your rival…' : 'Joining the battle…';
     try { troom = await Promise.race([room.join(duel ? 'duel-p-' + party.toLowerCase() : ranked ? 'ranked-main' : (obj ? obj + '-' : 'battle-') + (matchCode || 'main')), sleep(6000).then(() => null)]); } catch (e) { troom = null; }
@@ -4648,7 +4655,7 @@ async function startTDM(isDuel, isRanked, obj) {
   newMatchLocal();
   state = 'play'; hideMenu(); updHud();
   const others = counts.b + counts.r;
-  if (obj) banner(({ dom: 'DOMINATION · ', snd: 'SEARCH & DESTROY · ', kcf: 'KILL CONFIRMED · ', hpt: 'HARDPOINT · ' })[obj] + MAPS[curMap].name.toUpperCase(), (others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest · ' : 'No other players online · bots fill every slot · ') + ({ dom: 'capture A, B and C', snd: 'first to 4 rounds', kcf: 'grab the dog tags', hpt: 'hold the hill' })[obj], 4);
+  if (obj) banner(({ gg: 'GUN GAME · ', dom: 'DOMINATION · ', snd: 'SEARCH & DESTROY · ', kcf: 'KILL CONFIRMED · ', hpt: 'HARDPOINT · ' })[obj] + MAPS[curMap].name.toUpperCase(), (others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest · ' : 'No other players online · bots fill every slot · ') + ({ gg: 'every elimination = next gun', dom: 'capture A, B and C', snd: 'first to 4 rounds', kcf: 'grab the dog tags', hpt: 'hold the hill' })[obj], 4);
   else if (duel) banner(TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? 'Rival found · first to ' + SCORE_LIMIT : 'Waiting for a rival — share code “' + (matchCode || 'open') + '”. First to ' + SCORE_LIMIT + '.', 4);
   else banner((ranked ? 'RANKED · ' + rankBadge(rankIdx()) + ' ' : '') + TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest' : 'No other players online · bots fill every slot', 3);
 }
@@ -4951,7 +4958,7 @@ function resume() { state = 'play'; hideMenu(); lockPointer(); clock.getDelta();
 $('tdmBtn').addEventListener('click', () => { if (!$('tdmBtn').disabled) startTDM(false); });
 $('duelBtn').addEventListener('click', () => { if (!$('duelBtn').disabled) startTDM(true); });
 $('siegeBtn').addEventListener('click', startSiege);
-$('ggBtn').addEventListener('click', startGunGame);
+$('ggBtn').addEventListener('click', () => { if (!$('ggBtn').disabled) startTDM(false, false, 'gg'); });
 $('domBtn').addEventListener('click', () => { if (!$('domBtn').disabled) startTDM(false, false, 'dom'); });
 $('sndBtn').addEventListener('click', () => { if (!$('sndBtn').disabled) startTDM(false, false, 'snd'); });
 $('rangeBtn').addEventListener('click', startRange);
