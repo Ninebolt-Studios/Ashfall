@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v117)](https://ninebolt-studios.github.io/Ashfall/?v=117)
+## ▶️ [PLAY NOW — latest version (v118)](https://ninebolt-studios.github.io/Ashfall/?v=118)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=117
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=118
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,6 +20,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v118** | https://ninebolt-studios.github.io/Ashfall/?v=118 | **Training:** a new 1-minute tutorial (Play → Training) that walks you through moving, looking, aiming, shooting, reloading, grenades and sliding, with instructions for keyboard, touch or controller. New players see a "New to Ashfall?" card; finishing it the first time gives 250 coins |
 | **v117** | https://ninebolt-studios.github.io/Ashfall/?v=117 | **Your soldier in the menu:** your operator, in the skin you picked, now stands on the right side of the menu over the live map, breathing and slowly turning. It changes as soon as you pick a new skin |
 | v116 | https://ninebolt-studios.github.io/Ashfall/?v=116 | **Mode tile artwork:** every tile in the mode pop-up now has its own colours and a big icon (crossed swords, trophy, flag, bomb, dog tag, mountain, pistol, handshake, zombie, drone, target) that tilts upright when you point at it |
 | v115 | https://ninebolt-studios.github.io/Ashfall/?v=115 | **Mode select pop-up:** the Play tab now starts with three big buttons (**Multiplayer**, **Zombies & Solo**, **Firing Range**). Tapping one pops up every mode as a tile with the map picker on top, all on one screen with no scrolling. ✕, Esc or B closes it |
