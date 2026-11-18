@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261118173918';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
+<script>(function(){var B='20261118174801';try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B&&sessionStorage.getItem('ds-rl')!==m[1]){sessionStorage.setItem('ds-rl',m[1]);location.replace(location.pathname+'?v='+m[1]+location.hash);}}).catch(function(){});}catch(e){}})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -583,7 +583,8 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 .perk[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset, 0 4px 18px rgba(0,0,0,.35); background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 18%, transparent), var(--panel2) 70%); }
 #perkRows .label { display: block; margin-top: 8px; }
 .tbtn.ks { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); width: 74px; height: 74px; pointer-events: auto; font-size: 10px; display: grid; place-items: center; align-content: center; border-color: #ff9a5a; background: rgba(120,40,10,.55); box-shadow: 0 0 16px rgba(255,140,60,.45); animation: kspulse 1.4s ease-in-out infinite; }
-#ksScan { top: 46%; } #ksMsl { top: calc(46% + 86px); }
+#ks0, #ks1, #ks2 { top: 46%; } .tbtn.ks .ksi { font-style: normal; font-size: 24px; line-height: 1; }
+#ksList .perk[aria-pressed="true"] .pi::after { content: ' ✓'; font-size: 13px; }
 .tbtn.ks small { font: 700 11px var(--mono); color: #ffd0a0; }
 @keyframes kspulse { 50% { box-shadow: 0 0 26px rgba(255,140,60,.8); } }
 .mode, .acct, .daily, .crate, .ditem, .bj, .skin, .wcard, .bp-head, .bp-tier, .ach, .sets > *, .party, #reveal .rv, #oddsBox .ob { border-radius: 12px; }
@@ -813,8 +814,9 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
     <div id="slideBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18h16"/><path d="M6 14l5-3 3 2 5-4"/><circle cx="17" cy="6" r="2"/></svg><span>SLIDE</span></div>
     <div id="crouchBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/><path d="M6 4l6 6 6-6"/></svg><span>CROUCH</span></div>
     <div id="jumpBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/><path d="M6 20l6-6 6 6"/></svg><span>JUMP</span></div>
-    <div id="ksScan" class="tbtn ks" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-6"/></svg><span>SCAN</span><small></small></div>
-    <div id="ksMsl" class="tbtn ks" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l7 7-9 9-3-3-3 1 1-3-3-3z"/><path d="M5 19l-2 2"/></svg><span>MISSILE</span><small></small></div>
+    <div id="ks0" class="tbtn ks" data-slot="0" hidden><i class="ksi"></i><span></span><small></small></div>
+    <div id="ks1" class="tbtn ks" data-slot="1" hidden><i class="ksi"></i><span></span><small></small></div>
+    <div id="ks2" class="tbtn ks" data-slot="2" hidden><i class="ksi"></i><span></span><small></small></div>
     <div id="pingBtn" class="tbtn small2" title="Ping (Z)">📍</div>
     <div id="inspBtn" class="tbtn small2" title="Inspect (I)">🔍</div>
     <div id="qcBtn" class="tbtn small2" title="Quick chat (X)">💬</div>
@@ -982,6 +984,8 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
       <div class="perks" id="wcList"></div>
       <h3 class="subh" id="perkHead">Perks</h3>
       <div id="perkRows"></div>
+      <h3 class="subh">Kill streaks · pick 3</h3>
+      <div class="perks" id="ksList"></div>
       <h3 class="subh">Calling card</h3>
       <div class="ccprev" id="ccPrev"></div>
       <span class="label">Banners</span><div class="ccgrid" id="bnList"></div>
@@ -1377,7 +1381,7 @@ const PERKS = [
   { id: 'fasthands', t: 2, i: '🔄', n: 'Fast Hands', d: 'Reload 25% faster.' },
   { id: 'steady', t: 2, i: '🎯', n: 'Steady Aim', d: '30% tighter spread when firing from the hip.' },
   { id: 'tracker', t: 3, i: '👁️', n: 'Tracker', d: 'Enemies you hit show on your minimap for 4 seconds.' },
-  { id: 'hardline', t: 3, i: '📶', n: 'Hardline', d: 'Kill streaks need fewer eliminations: Map Scan at 8, Missile at 27.' },
+  { id: 'hardline', t: 3, i: '📶', n: 'Hardline', d: 'Kill streaks need 2–3 fewer eliminations (Map Scan at 8, Missile at 27).' },
   { id: 'demo', t: 3, i: '💥', n: 'Demolitions', d: '+1 grenade every life and a bigger blast.' } ];
 const WILDCARDS = [
   { id: 'none', i: '—', n: 'None', d: 'No wildcard.' },
@@ -2742,27 +2746,142 @@ function onMyKill(head) {
   if (mode === 'tdm') { adNote(true); try { sfx.killc(); } catch (e) {} }
   P.streak = (P.streak || 0) + 1; P.mBestStreak = Math.max(P.mBestStreak || 0, P.streak); if (P.streak > (C.bestStreak || 0)) { C.bestStreak = P.streak; saveC(); }
   dailyProgress('kills', 1); if (head) dailyProgress('heads', 1); dailyProgress('streak', P.streak, true);
-  const need = ksNeed();
-  if (!P.ks) P.ks = { scan: 0, msl: 0 };
-  if (P.streak === need[0] || P.streak === need[1]) haptic('streak');
-  if (P.streak === need[0]) { P.ks.scan++; dailyProgress('scan', 1); banner('MAP SCAN READY', need[0] + ' streak · tap SCAN (or press Z) when you want it', 2.5); try { tone(900, 0.15, 'sine', 0.12); } catch (e) {} }
-  if (P.streak === need[1]) { P.ks.msl++; banner('MISSILE READY', need[1] + ' streak · tap MISSILE (or press X) when you want it', 2.5); try { tone(500, 0.2, 'square', 0.08); } catch (e) {} }
+  if (!P.ks) P.ks = {};
+  let got = null;
+  for (const k of KSEL) if (P.streak === ksNeedOf(k)) { P.ks[k] = (P.ks[k] || 0) + 1; got = k; if (k === 'scan') dailyProgress('scan', 1); }
+  if (got) { haptic('streak'); banner(KSDEF[got].n.toUpperCase() + ' READY', P.streak + ' streak · tap ' + KSDEF[got].btn + (isTouch ? '' : ' (or press ' + 'ZFV'[KSEL.indexOf(got)] + ')') + ' when you want it', 2.5); try { tone(got === 'msl' ? 500 : 900, 0.18, got === 'msl' ? 'square' : 'sine', 0.1); } catch (e) {} }
   updKS();
 }
-const ksNeed = () => hasPerk('hardline') ? [8, 27] : [10, 30];
-function useScan() {
-  if (state !== 'play' || !P.ks || P.ks.scan <= 0) return;
-  P.ks.scan--; scanT = 15; updKS(); banner('MAP SCAN', 'Every enemy shows on your minimap for 15s', 2);
-  try { tone(600, 0.3, 'sine', 0.12, 1400); tone(600, 0.3, 'sine', 0.1, 1400, 0.35); } catch (e) {}
+const KSDEF = {
+  scan: { n: 'Map Scan', i: '📡', need: 10, d: 'Every enemy shows on your minimap for 15 s', btn: 'SCAN' },
+  pkg: { n: 'Care Package', i: '📦', need: 12, d: 'A crate drops in front of you: full ammo & health, or a surprise streak', btn: 'PACKAGE' },
+  sentry: { n: 'Sentry Gun', i: '🔫', need: 16, d: 'An auto turret guards the spot in front of you for 30 s', btn: 'SENTRY' },
+  drone: { n: 'Attack Drone', i: '🛸', need: 20, d: 'A drone circles above you and fires at enemies for 25 s', btn: 'DRONE' },
+  msl: { n: 'Missile', i: '🚀', need: 30, d: 'Strikes the biggest group of enemies', btn: 'MISSILE' },
+};
+const KS_ORDER = Object.keys(KSDEF);
+function ksSort(a) { return a.filter((k, i) => KSDEF[k] && a.indexOf(k) === i).sort((x, y) => KSDEF[x].need - KSDEF[y].need); }
+let KSEL = ksSort(store.get('streaks', null) || ['scan', 'sentry', 'msl']); if (KSEL.length !== 3) KSEL = ['scan', 'sentry', 'msl'];
+const ksNeedOf = k => KSDEF[k].need - (hasPerk('hardline') ? (KSDEF[k].need < 20 ? 2 : 3) : 0);
+const ksNeed = () => [ksNeedOf(KSEL[0]), ksNeedOf(KSEL[2])];
+function useKS(k) {
+  if (!k || state !== 'play' || !P.ks || !(P.ks[k] > 0) || !P.alive || (mode === 'tdm' && T.win)) return;
+  if (k === 'msl' && missile) return;
+  P.ks[k]--; updKS();
+  if (k === 'scan') { scanT = 15; banner('MAP SCAN', 'Every enemy shows on your minimap for 15s', 2); try { tone(600, 0.3, 'sine', 0.12, 1400); tone(600, 0.3, 'sine', 0.1, 1400, 0.35); } catch (e) {} }
+  else if (k === 'msl') launchMissile();
+  else if (k === 'pkg') dropPackage();
+  else if (k === 'sentry') placeSentry();
+  else if (k === 'drone') launchDrone();
 }
-function useMissile() {
-  if (state !== 'play' || !P.ks || P.ks.msl <= 0 || missile || (mode === 'tdm' && T.win)) return;
-  P.ks.msl--; updKS(); launchMissile();
-}
+function useScan() { useKS('scan'); }
+function useMissile() { useKS('msl'); }
 function updKS() {
-  const k = P.ks || { scan: 0, msl: 0 }, a = $('ksScan'), b = $('ksMsl');
-  if (a) { a.hidden = k.scan <= 0; a.querySelector('small').textContent = k.scan > 1 ? '×' + k.scan : ''; }
-  if (b) { b.hidden = k.msl <= 0; b.querySelector('small').textContent = k.msl > 1 ? '×' + k.msl : ''; }
+  const k = P.ks || {}; let row = 0;
+  for (let i = 0; i < 3; i++) {
+    const el = $('ks' + i); if (!el) continue; const key = KSEL[i], n = k[key] || 0;
+    el.hidden = n <= 0; if (n <= 0) continue;
+    el.querySelector('.ksi').textContent = KSDEF[key].i; el.querySelector('span').textContent = KSDEF[key].btn; el.querySelector('small').textContent = n > 1 ? '×' + n : '';
+    el.style.top = 'calc(46% + ' + (row++ * 86) + 'px)';
+  }
+}
+/* v120: care package, sentry gun, attack drone */
+const PKGS = [], SENTRIES = [], KDRONES = [];
+function fwdSpot(dist) {
+  const d = new THREE.Vector3(); camera.getWorldDirection(d); d.y = 0; if (d.lengthSq() < 1e-4) d.set(0, 0, -1); d.normalize();
+  for (let r = dist; r > 0.5; r -= 0.5) { const x = P.pos.x + d.x * r, z = P.pos.z + d.z * r; if (!insideSolid({ x, z }, 0.9) && !losBlocked(P.pos.x, P.pos.z, x, z)) return { x, z }; }
+  return { x: P.pos.x, z: P.pos.z };
+}
+function ksTargets() {
+  const out = [];
+  if (mode === 'siege') { for (const e of enemies) if (e.hp > 0) out.push({ x: e.g.position.x, y: e.g.position.y + (e.kind === 'zombie' ? 1.2 : 0), z: e.g.position.z, e }); }
+  else if (!T.win) for (const e of T.ents.values()) if (e.alive && isFoe(e)) out.push({ x: e.rx, y: 1.2, z: e.rz, e });
+  return out;
+}
+function ksDamage(t, dm) {
+  const e = t.e;
+  if (mode === 'siege') { if (!(e.hp > 0)) return; e.hp -= dm; e.flash = 0.08; if (e.hp <= 0) killEnemy(e); return; }
+  if (!e.alive) return; if (e.v) e.v.flashT = 0.06;
+  if (e.kind === 'bot' && T.isHost) botDamage(e.id, dm, myPeer); else T.myDm[e.id] = (T.myDm[e.id] || 0) + dm;
+}
+function dropPackage() {
+  const { x, z } = fwdSpot(4), g = new THREE.Group();
+  const box = new THREE.Mesh(new THREE.BoxGeometry(1.3, 1, 1.3), M.crate); box.position.y = 0.5; box.castShadow = true; g.add(box);
+  for (const sx of [-1, 1]) { const st = new THREE.Mesh(new THREE.BoxGeometry(0.16, 1.04, 1.34), dmat(0x3a5a2a)); st.position.set(sx * 0.35, 0.5, 0); g.add(st); }
+  const fl = new THREE.Mesh(new THREE.SphereGeometry(0.13, 8, 6), new THREE.MeshBasicMaterial({ color: 0x50ff70, toneMapped: false })); fl.position.y = 1.15; g.add(fl);
+  const chute = new THREE.Mesh(new THREE.SphereGeometry(2.2, 12, 6, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0x6a7a4a, roughness: 1, side: THREE.DoubleSide })); chute.position.y = 4.2; g.add(chute);
+  g.position.set(x, 45, z); scene.add(g);
+  PKGS.push({ g, chute, fl, x, z, landed: false, life: 45 });
+  banner('CARE PACKAGE INBOUND', 'Walk up to the crate to open it', 2.5);
+  try { tone(300, 0.6, 'sawtooth', 0.04, 180); } catch (e) {}
+}
+function openPkg(p) {
+  const r = Math.random(), what = r < 0.4 ? 'ammo' : r < 0.6 ? 'scan' : r < 0.8 ? 'sentry' : r < 0.95 ? 'drone' : 'msl';
+  try { tone(700, 0.1, 'triangle', 0.12); tone(1050, 0.12, 'triangle', 0.12, null, 0.1); } catch (e) {}
+  if (what === 'ammo') { P.ammo = magOf(P.w); P.res = reserveOf(P.w); P.reloading = 0; P.nades = nadesPerLife() + 1; P.hp = 100; updNade(); updHud(); banner('CARE PACKAGE', 'Full ammo, grenades and health', 2.5); return; }
+  banner('CARE PACKAGE · ' + KSDEF[what].n.toUpperCase(), KSDEF[what].d, 2.5);
+  if (what === 'scan') scanT = 15; else if (what === 'sentry') placeSentry(p.x, p.z); else if (what === 'drone') launchDrone(); else if (!missile) launchMissile(); else { P.ks.msl = (P.ks.msl || 0) + 1; updKS(); }
+}
+function placeSentry(x, z) {
+  if (x == null) ({ x, z } = fwdSpot(4));
+  const g = new THREE.Group(), head = new THREE.Group(), dark = M.metal;
+  for (let k = 0; k < 3; k++) { const a = k / 3 * Math.PI * 2, l = new THREE.Mesh(new THREE.BoxGeometry(0.07, 1.1, 0.07), dark); l.position.set(Math.cos(a) * 0.32, 0.5, Math.sin(a) * 0.32); l.rotation.set(Math.sin(a) * 0.4, 0, -Math.cos(a) * 0.4); g.add(l); }
+  const body = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.36, 0.6), new THREE.MeshStandardMaterial({ color: 0x3a4030, roughness: 0.7, metalness: 0.3, envMapIntensity: 0.3 })); body.castShadow = true; head.add(body);
+  const shield = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.5, 0.05), dark); shield.position.set(0, 0.05, -0.34); head.add(shield);
+  const brl = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.9, 8), dark); brl.rotation.x = Math.PI / 2; brl.position.set(0, 0.04, -0.7); head.add(brl);
+  const eye = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 6), new THREE.MeshBasicMaterial({ color: 0xff3020, toneMapped: false })); eye.position.set(0.2, 0.18, -0.38); head.add(eye);
+  head.position.y = 1.1; g.add(head); g.position.set(x, 0, z); scene.add(g);
+  SENTRIES.push({ g, head, x, z, life: 30, cd: 0.6 });
+  if (!PKGS.some(p => p.x === x && p.z === z)) banner('SENTRY GUN', 'Guarding this spot for 30 s', 2);
+}
+function launchDrone() {
+  const g = new THREE.Group(), dk = dmat(0x2a2e34);
+  const body = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.25, 0.9), dk); g.add(body);
+  for (const [ax, az] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) { const arm = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.06, 0.9), dk); arm.position.set(ax * 0.45, 0.05, az * 0.45); arm.rotation.y = Math.PI / 4 * ax * az; g.add(arm);
+    const rot = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.02, 12), new THREE.MeshBasicMaterial({ color: 0x111111, transparent: true, opacity: 0.45 })); rot.position.set(ax * 0.7, 0.14, az * 0.7); g.add(rot); }
+  const lt = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 6), new THREE.MeshBasicMaterial({ color: 0xff2a2a, toneMapped: false })); lt.position.y = -0.18; g.add(lt);
+  g.position.set(P.pos.x, 30, P.pos.z); scene.add(g);
+  KDRONES.push({ g, a: Math.random() * 6, life: 25, cd: 1.2 });
+  banner('ATTACK DRONE', 'Circling above you for 25 s', 2);
+  try { tone(180, 1.2, 'sawtooth', 0.03, 260); } catch (e) {}
+}
+function stepKS(dt) {
+  for (let i = PKGS.length - 1; i >= 0; i--) {
+    const p = PKGS[i]; p.life -= dt; p.fl.material.color.setHex(Math.sin(performance.now() / 120) > 0 ? 0x50ff70 : 0x1a5a24);
+    if (!p.landed) { p.g.position.y = Math.max(0, p.g.position.y - dt * 14); if (p.g.position.y <= 0) { p.landed = true; p.g.remove(p.chute); try { noise(0.3, 0.5, 500); } catch (e) {} } }
+    else if (P.alive && Math.hypot(P.pos.x - p.x, P.pos.z - p.z) < 2.2) { p.life = 0; openPkg(p); }
+    if (p.life <= 0) { scene.remove(p.g); PKGS.splice(i, 1); }
+  }
+  if (!SENTRIES.length && !KDRONES.length) return;
+  const tg = ksTargets();
+  for (let i = SENTRIES.length - 1; i >= 0; i--) {
+    const s = SENTRIES[i]; s.life -= dt; s.cd -= dt;
+    let best = null, bd = 34;
+    for (const t of tg) { const d = Math.hypot(t.x - s.x, t.z - s.z); if (d < bd && !losBlocked(s.x, s.z, t.x, t.z)) { bd = d; best = t; } }
+    if (best) { const want = Math.atan2(-(best.x - s.x), -(best.z - s.z)); let da = want - s.head.rotation.y; da = Math.atan2(Math.sin(da), Math.cos(da)); s.head.rotation.y += da * Math.min(1, dt * 10);
+      if (s.cd <= 0 && Math.abs(da) < 0.25) { s.cd = 0.2; const from = new THREE.Vector3(s.x - Math.sin(s.head.rotation.y) * 1.1, 1.14, s.z - Math.cos(s.head.rotation.y) * 1.1);
+        tracer(from, new THREE.Vector3(best.x + (Math.random() - .5) * 0.4, best.y, best.z + (Math.random() - .5) * 0.4), 0xffc060); spark(from, 0xffd080, 3); ksDamage(best, 13);
+        try { const vol = Math.max(0, 0.05 * (1 - Math.hypot(P.pos.x - s.x, P.pos.z - s.z) / 50)); if (vol > 0.004) noise(0.05, vol, 2400); } catch (e) {} } }
+    else s.head.rotation.y += dt * 0.6;
+    if (s.life <= 0) { explosionFX(s.x, 0.3, s.z, 0.4); scene.remove(s.g); SENTRIES.splice(i, 1); }
+  }
+  for (let i = KDRONES.length - 1; i >= 0; i--) {
+    const d = KDRONES[i]; d.life -= dt; d.cd -= dt; d.a += dt * 0.5;
+    const cx = P.pos.x + Math.cos(d.a) * 9, cz = P.pos.z + Math.sin(d.a) * 9, cy = d.life < 1.5 ? 16 + (1.5 - d.life) * 20 : 16;
+    d.g.position.x += (cx - d.g.position.x) * Math.min(1, dt * 2); d.g.position.z += (cz - d.g.position.z) * Math.min(1, dt * 2); d.g.position.y += (cy - d.g.position.y) * Math.min(1, dt * 1.5); d.g.rotation.y += dt * 0.8;
+    if (d.cd <= 0 && d.life > 1.5 && Math.abs(d.g.position.y - 16) < 3) {
+      let best = null, bd = 60; for (const t of tg) { const dd = Math.hypot(t.x - d.g.position.x, t.z - d.g.position.z); if (dd < bd) { bd = dd; best = t; } }
+      if (best) { d.cd = 1.1; const from = d.g.position.clone().add(new THREE.Vector3(0, -0.25, 0)); tracer(from, new THREE.Vector3(best.x, best.y, best.z), 0xff5040); spark(new THREE.Vector3(best.x, best.y, best.z), 0xffa060, 5); ksDamage(best, 45); try { tone(1600, 0.06, 'square', 0.03, 600); } catch (e) {} }
+    }
+    if (d.life <= 0) { scene.remove(d.g); KDRONES.splice(i, 1); }
+  }
+}
+function clearKS() { for (const a of [PKGS, SENTRIES, KDRONES]) { for (const o of a) scene.remove(o.g); a.length = 0; } }
+function renderKSList() {
+  const box = $('ksList'); if (!box) return; box.textContent = '';
+  KS_ORDER.forEach(k => { const d = KSDEF[k]; box.appendChild(perkCard({ i: d.i, n: d.n + ' · ' + ksNeedOf(k), d: d.d }, KSEL.includes(k), () => {
+    if (KSEL.includes(k)) return; KSEL = ksSort([...KSEL.slice(1), k]); if (KSEL.length !== 3) KSEL = ['scan', 'sentry', 'msl']; store.set('streaks', KSEL); renderKSList();
+  })); });
 }
 function launchMissile() {
   const pts = [];
@@ -2800,7 +2919,7 @@ function stepMissile(dt) {
 function updStreak() {
   const el = $('streakTag'); if (!el) return;
   const k = P.streak || 0;
-  const nd = ksNeed(), txt = (k > 0 ? '🔥 ' + k + (k < nd[0] ? ' · scan at ' + nd[0] : k < nd[1] ? ' · missile at ' + nd[1] : '') : '') + (scanT > 0 ? ' · SCAN ' + Math.ceil(scanT) + 's' : '');
+  const nx = KSEL.find(q => ksNeedOf(q) > k), txt = (k > 0 ? '🔥 ' + k + (nx ? ' · ' + KSDEF[nx].n.toLowerCase() + ' at ' + ksNeedOf(nx) : '') : '') + (scanT > 0 ? ' · SCAN ' + Math.ceil(scanT) + 's' : '');
   if (el.textContent !== txt) el.textContent = txt;
 }
 function addCoins(n) {
@@ -3112,7 +3231,7 @@ function startZombies() {
   Object.assign(P, { yaw: 0, pitch: 0, hp: 100, alive: true, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, prot: 0, lastHurt: 99 });
   P.pos.set(0, 1.6, 9); if (insideSolid(P.pos, 0.6)) { const o = randomOpenPoint(); P.pos.set(o.x, 1.6, o.z); }
   hud.death.hidden = true; zDouble = 0;
-  score = 0; wave = 0; betweenWaves = 2; toSpawn = 0; P.nades = nadesPerLife(); updNade(); P.ks = { scan: 0, msl: 0 }; updKS(); P.streak = 0; P.mCoins = 0; scanT = 0;
+  score = 0; wave = 0; betweenWaves = 2; toSpawn = 0; P.nades = nadesPerLife(); updNade(); P.ks = {}; clearKS(); updKS(); P.streak = 0; P.mCoins = 0; scanT = 0;
   state = 'play'; hideMenu(); updHud(); updZBuy(); lockPointer();
   banner('ZOMBIES · ' + MAPS[curMap].name.toUpperCase(), 'You start with a pistol. Earn points and open the Mystery Crate (◎ 1,500) for a better gun.', 4);
 }
@@ -3172,7 +3291,7 @@ function siegeOver() {
 }
 function clearSiege() {
   clearNades();
-  if (missile) { scene.remove(missile.m); missile = null; } scanT = 0;
+  if (missile) { scene.remove(missile.m); missile = null; } scanT = 0; clearKS();
   [...enemies.map(e => e.g), ...shots.map(s => s.m), ...pickups.map(p => p.m), ...POWS.map(p => p.m)].forEach(o => scene.remove(o)); POWS.length = 0; zDouble = 0;
   enemies.length = shots.length = pickups.length = 0;
 }
@@ -3449,7 +3568,7 @@ function respawnPlayer() {
 }
 function newMatchLocal() {
   P.killLog = []; P.mBestStreak = 0; $('mvpFull').hidden = true;
-  P.ks = { scan: 0, msl: 0 }; updKS();
+  P.ks = {}; clearKS(); updKS();
   if (gg) { T.gg = {}; T.ggWin = ''; T.sc = { b: 0, r: 0 }; }
   if (dom) { T.sc = { b: 0, r: 0 }; try { domBuild(); } catch (e) {} DOM.tick = 0; }
   if (snd) { T.sc = { b: 0, r: 0 }; SND.attack = 'b'; try { sndRound(true); } catch (e) {} }
@@ -3848,7 +3967,7 @@ function renderAtts() {
   }
 }
 function renderPerks() {
-  renderAtts();
+  renderAtts(); try { renderKSList(); } catch (e) {}
   const wl = $('wcList'); wl.textContent = '';
   WILDCARDS.forEach(w => wl.appendChild(perkCard(w, PK.wc === w.id, () => { PK.wc = w.id; normalizePerks(); store.set('perks', PK); renderPerks(); })));
   const rows = $('perkRows'); rows.textContent = '';
@@ -4496,7 +4615,7 @@ function renderSettings() {
   }
 }
 $('resetSettings').addEventListener('click', () => { Object.assign(S, DEF); saveS(); renderSettings(); applyQuality(); applySettings(); });
-const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase', 'cfriends', 'clan'];
+const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'streaks', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase', 'cfriends', 'clan'];
 function makeBackup() {
   const data = {}; for (const k of ACCT_KEYS) { const v = store.get(k, null); if (v !== null) data[k] = v; }
   try { return 'DL1.' + btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/=+$/, ''); } catch (e) { return ''; }
@@ -4891,7 +5010,7 @@ function startSiege() {
   Object.assign(P, { yaw: 0, pitch: 0, hp: 100, alive: true, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, prot: 0 });
   P.pos.set(0, 1.6, 9); if (insideSolid(P.pos, 0.6)) { const o = randomOpenPoint(); P.pos.set(o.x, 1.6, o.z); }
   hud.death.hidden = true;
-  score = 0; wave = 0; betweenWaves = 1; toSpawn = 0; P.nades = nadesPerLife(); updNade(); P.ks = { scan: 0, msl: 0 }; updKS(); P.streak = 0; P.mCoins = 0; scanT = 0;
+  score = 0; wave = 0; betweenWaves = 1; toSpawn = 0; P.nades = nadesPerLife(); updNade(); P.ks = {}; clearKS(); updKS(); P.streak = 0; P.mCoins = 0; scanT = 0;
   state = 'play'; hideMenu(); updHud(); lockPointer();
 }
 async function startTDM(isDuel, isRanked, obj) {
@@ -5229,7 +5348,7 @@ $('kcfBtn').addEventListener('click', () => { if (!$('kcfBtn').disabled) startTD
 $('hpBtn').addEventListener('click', () => { if (!$('hpBtn').disabled) startTDM(false, false, 'hpt'); });
 $('rangeGun').addEventListener('click', () => { const ks = Object.keys(WEAPONS).filter(k => weaponOwned(k)); RNG.gunI = (RNG.gunI + 1) % ks.length; equip(ks[RNG.gunI]); P.res = 999; updHud(); $('rangeTxt').textContent = WEAPONS[ks[RNG.gunI]].name; });
 $('rankedBtn').addEventListener('click', () => { if (!$('rankedBtn').disabled) startTDM(false, true); });
-$('ksScan').addEventListener('click', useScan); $('ksMsl').addEventListener('click', useMissile);
+[0, 1, 2].forEach(i => $('ks' + i).addEventListener('click', () => useKS(KSEL[i])));
 $('resumeBtn').addEventListener('click', resume);
 $('quitBtn').addEventListener('click', () => { leaveBattle(); clearSiege(); state = 'menu'; buildMap(selMap); showMenu('main'); });
 $('againBtn').addEventListener('click', () => zmb ? startZombies() : startSiege());
@@ -5343,8 +5462,9 @@ window.addEventListener('keydown', ev => {
     if (ev.code === 'KeyI') startInspect();
     if (ev.code === 'KeyX') $('qcPanel').hidden = !$('qcPanel').hidden;
     if (!$('qcPanel').hidden && /^Digit[1-7]$/.test(ev.code)) sendQc(+ev.code.slice(5) - 1);
-    if (ev.code === 'KeyZ') useScan();
-    if (ev.code === 'KeyX') useMissile();
+    if (ev.code === 'KeyZ') useKS(KSEL[0]);
+    if (ev.code === 'KeyF') useKS(KSEL[1]);
+    if (ev.code === 'KeyV') useKS(KSEL[2]);
     if (/^Digit[0-9]$/.test(ev.code) && mode === 'tdm' && T.win) castVote(Object.keys(MAPS)[(+ev.code.slice(5) || 10) - 1]);
     if (ev.code === 'Space') { input.jump = true; ev.preventDefault(); }
     if (ev.code === 'KeyC' || ev.code === 'ControlLeft'){ if (!(P.sprinting && startSlide())) P.crouch = !P.crouch; }
@@ -5395,8 +5515,7 @@ function onTouchStart(ev) {
     if (el.closest('#inspBtn')) { startInspect(); continue; }
     if (el.closest('#qcBtn')) { $('qcPanel').hidden = !$('qcPanel').hidden; continue; }
     { const qb = el.closest('[data-qc]'); if (qb) { sendQc(+qb.dataset.qc); continue; } }
-    if (el.closest('#ksScan')) { useScan(); continue; }
-    if (el.closest('#ksMsl')) { useMissile(); continue; }
+    { const kb = el.closest('[data-slot]'); if (kb) { useKS(KSEL[+kb.dataset.slot]); continue; } }
     if (el.closest('#adsBtn')) { adsId = t.identifier; adsX = t.clientX; adsY = t.clientY; P.ads = !P.ads; adsBtn.classList.toggle('on', P.ads); continue; }
     if (el.closest('#slideBtn')) { startSlide(); continue; }
     if (el.closest('#crouchBtn')) { P.crouch = !P.crouch; continue; }
@@ -5499,7 +5618,7 @@ function pollPad(dt) {
     if (down(10)) GP.sprint = !GP.sprint;
     if (down(11)) startInspect();
     if (down(12)) sendQc(0); if (down(15)) sendQc(2); if (down(13)) sendQc(1); if (down(14)) sendQc(4);
-    if (down(5)) { try { const k = document.querySelector('#ksScan:not([hidden]), #ksMsl:not([hidden])'); if (k) k.click(); } catch (e) {} }
+    if (down(5)) { try { const k = document.querySelector('.tbtn.ks:not([hidden])'); if (k) k.click(); } catch (e) {} }
   } else { GP.mx = GP.mz = 0; if (GP.fire) { GP.fire = false; input.fire = false; } }
   if (Math.hypot(GP.mx, GP.mz) < 0.3) GP.sprint = false;
   for (let i = 0; i < g.buttons.length; i++) GP.prev[i] = btn(i);
@@ -5752,7 +5871,7 @@ function loop() {
   // iPad browsers don't always report toolbar size changes, so check the visible size ourselves
   sizeT -= raw; if (sizeT <= 0) { sizeT = 0.5; const vh = appH(), cv = document.getElementById('view').clientHeight; if (vh !== lastAppH || Math.abs(cv - vh) > 2 || window.innerWidth !== lastAppW) resize(); }
   stepBulletFx(dt); stepFX(dt);
-  if (state === 'play') { stepNades(dt); stepSalvage(dt); stepMissile(dt); if (scanT > 0) scanT = Math.max(0, scanT - dt); updStreak(); }
+  if (state === 'play') { stepNades(dt); stepSalvage(dt); stepMissile(dt); try { stepKS(dt); } catch (e) {} if (scanT > 0) scanT = Math.max(0, scanT - dt); updStreak(); }
   if (state === 'play' || (state === 'paused' && mode === 'tdm')) fx(dt);
   radarT -= dt; if (state === 'play' && S.radar && radarT <= 0) { radarT = 0.1; drawRadar(); if (window.scrollY || (document.scrollingElement && document.scrollingElement.scrollTop)) fixViewport(); }
   renderer.render(scene, camera);
