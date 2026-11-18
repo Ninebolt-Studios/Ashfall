@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v114)](https://ninebolt-studios.github.io/Ashfall/?v=114)
+## ▶️ [PLAY NOW — latest version (v115)](https://ninebolt-studios.github.io/Ashfall/?v=115)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=114
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=115
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,7 +20,8 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
-| **v114** | https://ninebolt-studios.github.io/Ashfall/?v=114 | **New menu layout:** a big left-side menu (Play, Loadout, Battle Pass, Store, Career, Settings) with a glowing highlight, the 3D map visible on the right, controller hints, and clean flat dark panels with season-colour accents. Phones in portrait keep the top bar |
+| **v115** | https://ninebolt-studios.github.io/Ashfall/?v=115 | **Mode select pop-up:** the Play tab now starts with three big buttons (**Multiplayer**, **Zombies & Solo**, **Firing Range**). Tapping one pops up every mode as a tile with the map picker on top, all on one screen with no scrolling. ✕, Esc or B closes it |
+| v114 | https://ninebolt-studios.github.io/Ashfall/?v=114 | **New menu layout:** a big left-side menu (Play, Loadout, Battle Pass, Store, Career, Settings) with a glowing highlight, the 3D map visible on the right, controller hints, and clean flat dark panels with season-colour accents. Phones in portrait keep the top bar |
 | v113 | https://ninebolt-studios.github.io/Ashfall/?v=113 | When you open Ashfall from the **app icon**, Settings no longer asks you to install the app; it shows ✅ You're using the Ashfall app instead |
 | v112 | https://ninebolt-studios.github.io/Ashfall/?v=112 | **Online Gun Game:** the free-for-all now joins an online room, so you can race friends through all 10 guns (bots fill the empty slots). Your gun upgrades the moment you get an elimination, wherever you are |
 | v111 | https://ninebolt-studios.github.io/Ashfall/?v=111 | **Online Kill Confirmed & Hardpoint:** both now join online rooms like Team Battle, so you can play them with friends (same private battle code or party). Real players can grab dog tags and hold the hill; bots fill the empty slots |
