@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261119153220',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261119162816',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -460,6 +460,8 @@ details.kb summary { cursor: pointer; font: 600 12px var(--display); letter-spac
 .cform input { flex: 1 1 220px; font: 500 15px var(--mono); color: var(--ink); background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.14); border-radius: 10px; padding: 11px 12px; -webkit-user-select: text; user-select: text; }
 .cloud { border-color: rgba(95,180,255,.45) !important; }
 #cloudPick .btn { white-space: normal; text-align: left; }
+#cloudPick:not([hidden]) { position: fixed; z-index: 9000; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(520px, calc(100vw - 32px)); background: #16171a; border: 1px solid rgba(255,255,255,.18); border-left: 4px solid var(--accent); border-radius: 10px; padding: 18px; box-shadow: 0 0 0 100vmax rgba(0,0,0,.6), 0 20px 50px rgba(0,0,0,.6); }
+#cloudPick .prow { flex-direction: column; align-items: stretch; }
 .glbtabs { display: flex; flex-wrap: wrap; gap: 6px; }
 .glbtabs .btn.on { background: var(--accent, #f2a93b); color: #1a1408; }
 #glbTable tr.me td { color: #f2c84b; }
@@ -4442,7 +4444,7 @@ function cloudUI() {
   if (u) { const t = +store.get('cloudAt', 0); $('cloudWho').textContent = 'Signed in as ' + u.email + (t ? ' · saved to your account ' + new Date(t).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : ''); }
   const pc = $('pcName'); if (pc) pc.textContent = playerName + (u ? ' ☁️' : '');
 }
-const ERRS = { 'auth/invalid-email': 'That email does not look right.', 'auth/missing-password': 'Type a password.', 'auth/weak-password': 'Password needs at least 6 characters.', 'auth/email-already-in-use': 'There is already an account with that email. Tap Sign in instead.', 'auth/invalid-credential': 'Wrong email or password.', 'auth/wrong-password': 'Wrong email or password.', 'auth/user-not-found': 'No account with that email. Tap Create account.', 'auth/too-many-requests': 'Too many tries. Wait a minute and try again.', 'auth/network-request-failed': 'No internet connection.', 'permission-denied': 'The account server refused the save (the database rules may not be published yet).' };
+const ERRS = { 'auth/invalid-email': 'That email does not look right.', 'auth/missing-password': 'Type a password.', 'auth/weak-password': 'Password needs at least 6 characters.', 'auth/email-already-in-use': 'There is already an account with that email. Tap Sign in instead.', 'auth/invalid-credential': 'Wrong email or password, or there is no account with this email yet. Check the spelling. If you never made an account, tap Create account (your progress on this iPad gets saved to it).', 'auth/wrong-password': 'Wrong email or password, or there is no account with this email yet. Check the spelling. If you never made an account, tap Create account (your progress on this iPad gets saved to it).', 'auth/user-not-found': 'No account with that email. Tap Create account.', 'auth/too-many-requests': 'Too many tries. Wait a minute and try again.', 'auth/network-request-failed': 'No internet connection.', 'permission-denied': 'The account server refused the save (the database rules may not be published yet).' };
 const errText = e => ERRS[e && e.code] || ('Something went wrong' + (e && e.code ? ' (' + e.code + ')' : '') + '. Try again.');
 const summ = code => { try { const o = JSON.parse(decodeURIComponent(escape(atob(code.slice(4))))); const xp = (o.pass && +o.pass.xp) || 0, s = (o.pass && +o.pass.season) || SEASON; return (o.name || 'Operator') + ' · S' + s + ' tier ' + Math.min(seasonTiers(s), 1 + Math.floor(xp / seasonXP(s))) + ' · ◎ ' + ((o.wallet && +o.wallet.coins) || 0).toLocaleString() + ' · ' + ((o.career && +o.career.kills) || 0) + ' elims'; } catch (e) { return ''; } };
 const progOf = code => { try { const o = JSON.parse(decodeURIComponent(escape(atob(code.slice(4))))), c = o.career || {}; return (+c.kills || 0) + (+c.matches || 0) * 3 + (+c.wins || 0) * 3 + (+c.zKills || 0); } catch (e) { return 0; } };
@@ -4470,17 +4472,17 @@ async function cloudSync(startup) {
     const snap = await CLOUD.db.collection('saves').doc(CLOUD.user.uid).get();
     const cd = snap.exists ? snap.data() : null;
     CLOUD.prev = cd; try { $('cloudOld').hidden = !(cd && Array.isArray(cd.hist) && cd.hist.length); } catch (e) {}
-    if (!cd || !cd.code) { await cloudPut(code, h, null); if (startup) cloudMsg('Your progress is now saved to your account.'); return; }
+    if (!cd || !cd.code) { await cloudPut(code, h, null); if (startup) { cloudMsg('This account (' + CLOUD.user.email + ') had no saved progress yet, so the progress on this device is now saved to it. If you expected your old progress, you may have used a different email before.'); banner('ACCOUNT CONNECTED', 'This account had no saved progress yet', 3); } return; }
     if (lastLocal === '__v76') store.set('cloudLocal', '');
     const cloudChanged = cd.hash !== lastCloud;
-    if (cd.hash === h) { store.set('cloudLocal', h); store.set('cloudSeen', h); cloudUI(); if (startup) glbPut(); return; }
+    if (cd.hash === h) { store.set('cloudLocal', h); store.set('cloudSeen', h); cloudUI(); if (startup) { glbPut(); if (/Checking/.test($('cloudMsg').textContent)) cloudMsg('Your progress matches your account ✓'); } return; }
     const behind = progOf(code) < progOf(cd.code); // this device has less career progress than the account: it was wiped or is out of date
     if (!cloudChanged && !behind) { if (localChanged) await cloudPut(code, h, cd); return; } // only this device changed
     if (behind && (!localChanged || localTrivial() || progOf(code) < 15)) { cloudApply(cd.code, cd.hash); return; } // account clearly has more: load it
     if (!localChanged || localTrivial()) { cloudApply(cd.code, cd.hash); return; } // only the account changed
     // both changed: ask (but never in the middle of a match)
     if (state === 'play') { CLOUD.last = Date.now() - 30000; return; }
-    $('cloudPick').hidden = false; showTab('career');
+    $('cloudPick').hidden = false; showTab('career'); banner('CHOOSE YOUR PROGRESS', 'Your account and this iPad have different progress', 3);
     $('cloudUseCloud').textContent = '☁️ Account: ' + summ(cd.code); $('cloudUseLocal').textContent = '📱 This device: ' + summ(code);
     $('cloudUseCloud').onclick = () => { $('cloudPick').hidden = true; cloudApply(cd.code, cd.hash); };
     $('cloudUseLocal').textContent = '📱 This device: ' + summ(code) + (behind ? ' ⚠️ LESS progress' : '');
@@ -4490,7 +4492,7 @@ async function cloudSync(startup) {
 (function () {
   if (!$('cloudBox')) return;
   const creds = () => [($('cloudEmail').value || '').trim(), $('cloudPass').value || ''];
-  const go = async (fn, msg) => { cloudMsg(msg); try { await cloudInit(); const [e, p] = creds(); await fn(e, p); $('cloudPass').value = ''; cloudMsg(''); } catch (e) { if (e && e.message !== 'load') cloudMsg(errText(e)); } };
+  const go = async (fn, msg) => { cloudMsg(msg); try { await cloudInit(); const [e, p] = creds(); await fn(e, p); $('cloudPass').value = ''; if ($('cloudMsg').textContent === msg) cloudMsg('Signed in ✓ Checking your saved progress…'); } catch (e) { if (e && e.message !== 'load') cloudMsg(errText(e)); } };
   $('cloudSignIn').addEventListener('click', () => go((e, p) => CLOUD.auth.signInWithEmailAndPassword(e, p), 'Signing in…'));
   $('cloudSignUp').addEventListener('click', () => go((e, p) => CLOUD.auth.createUserWithEmailAndPassword(e, p), 'Creating your account…'));
   $('cloudForgot').addEventListener('click', async () => { const e = creds()[0]; if (!e) { cloudMsg('Type your email first, then tap Forgot password.'); return; } try { await cloudInit(); await CLOUD.auth.sendPasswordResetEmail(e); cloudMsg('Password reset email sent to ' + e + '. Check your inbox (and spam).'); } catch (er) { if (er && er.message !== 'load') cloudMsg(errText(er)); } });

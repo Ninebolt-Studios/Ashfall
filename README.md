@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v125)](https://ninebolt-studios.github.io/Ashfall/?v=125)
+## ▶️ [PLAY NOW — latest version (v126)](https://ninebolt-studios.github.io/Ashfall/?v=126)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=125
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=126
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,6 +20,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v126** | https://ninebolt-studios.github.io/Ashfall/?v=126 | **Clearer sign-in:** if the email has no account (or the password is wrong) it now says so and tells you to check the spelling or tap Create account; if an account had no saved progress yet it tells you, so you know you may have used a different email before; and when your account and your iPad have different progress, the "which progress do you want to keep?" choice now pops up in the middle of the screen instead of hiding at the bottom of the Career tab |
 | **v125** | https://ninebolt-studios.github.io/Ashfall/?v=125 | **Freeze fixes for the iPad app:** the app no longer hangs on a blank screen when Wi-Fi is slow (it opens the saved copy after 4 seconds); if the iPad drops the 3D view because memory runs low, the game restarts itself instead of freezing (your progress is always saved); each soldier is now drawn with far fewer pieces (about 105 → 42) so matches are lighter on the iPad, and removed soldiers free their memory |
 | **v124** | https://ninebolt-studios.github.io/Ashfall/?v=124 | **Human operators:** soldiers now have a shaped body instead of blocks (chest, waist, hips, tapered arms and legs, gloved hands, boots with soles) and a real face: eyes, brows, nose, mouth and jaw, with different skin tones, beards or a face mask on each operator, a deeper helmet, headset and goggles pushed up. Gear colours are fixed so vests and rifles look dark instead of washed-out grey. **Friends** is now the first box on the Career tab (friend code + callsign list together). The app now also checks for updates when you come back to it and every 10 minutes, and installs them as soon as you are back in the menu |
 | **v123** | https://ninebolt-studios.github.io/Ashfall/?v=123 | **Co-op Zombies online:** Zombies is now multiplayer. Everyone who starts Zombies with the same private battle code (or none) joins one squad: the same horde and waves for everybody, but **your own points**. Teammates show up with their name over their head and points at the top. Lose all your health and you go **down** instead of dying: you can still shoot, and a teammate who stands next to you for 3 seconds revives you (+100 points for them). Bleed out after 30 s and you come back at the next wave. The game ends when the whole squad is down. Solo still works exactly as before |
