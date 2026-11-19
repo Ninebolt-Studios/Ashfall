@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v123)](https://ninebolt-studios.github.io/Ashfall/?v=123)
+## ▶️ [PLAY NOW — latest version (v124)](https://ninebolt-studios.github.io/Ashfall/?v=124)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=123
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=124
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,6 +20,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v124** | https://ninebolt-studios.github.io/Ashfall/?v=124 | **Human operators:** soldiers now have a shaped body instead of blocks (chest, waist, hips, tapered arms and legs, gloved hands, boots with soles) and a real face: eyes, brows, nose, mouth and jaw, with different skin tones, beards or a face mask on each operator, a deeper helmet, headset and goggles pushed up. Gear colours are fixed so vests and rifles look dark instead of washed-out grey. **Friends** is now the first box on the Career tab (friend code + callsign list together). The app now also checks for updates when you come back to it and every 10 minutes, and installs them as soon as you are back in the menu |
 | **v123** | https://ninebolt-studios.github.io/Ashfall/?v=123 | **Co-op Zombies online:** Zombies is now multiplayer. Everyone who starts Zombies with the same private battle code (or none) joins one squad: the same horde and waves for everybody, but **your own points**. Teammates show up with their name over their head and points at the top. Lose all your health and you go **down** instead of dying: you can still shoot, and a teammate who stands next to you for 3 seconds revives you (+100 points for them). Bleed out after 30 s and you come back at the next wave. The game ends when the whole squad is down. Solo still works exactly as before |
 | **v122** | https://ninebolt-studios.github.io/Ashfall/?v=122 | **Private matches:** open **🔒 Private match** on the Play tab, pick the mode (Team Battle, Domination, S&D, Kill Confirmed, Hardpoint, Gun Game, and Snowball Fight during Christmas), the map, the match length (short / normal / long) and bots (off, easy, normal, hard or adaptive), then tap **Create & start**. You get a code like PK7Q2-D3NH (copied for you); friends type it under Join and land in the same match with the same settings |
 | **v121** | https://ninebolt-studios.github.io/Ashfall/?v=121 | **Christmas event (Dec 18–31):** a limited-time **Snowball Fight** mode (5v5 online with bots filling in, snowballs only: 2 hits to knock someone out, 1 to the head, first to 30, always on a snowy map) and a **Christmas Event** card on the Play tab with 4 holiday challenges: play 3 Snowball Fights (◎ 500), 25 snowball eliminations (“Snowball Sniper” title), win 2 Snowball Fights (◎ 750) and 100 eliminations during the event (“Frostbitten” title). It switches on by itself when the Christmas season starts |
