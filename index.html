@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261119152613',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261119153220',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -1519,6 +1519,15 @@ const rnd = () => { seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed 
 /* ---------- renderer & scene ---------- */
 const canvas = $('view');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+// v125: iPads sometimes drop the 3D view when memory runs low, which used to leave a frozen picture.
+// Progress is saved all the time, so just restart the game cleanly (at most twice a minute, so it can never loop).
+canvas.addEventListener('webglcontextlost', ev => {
+  ev.preventDefault();
+  let n = []; try { n = JSON.parse(sessionStorage.getItem('dl-glr') || '[]').filter(t => Date.now() - t < 60000); } catch (e) {}
+  if (n.length >= 2) return; n.push(Date.now()); try { sessionStorage.setItem('dl-glr', JSON.stringify(n)); } catch (e) {}
+  try { const d = document.createElement('div'); d.textContent = 'Graphics reset · restarting…'; d.style.cssText = 'position:fixed;inset:0;display:grid;place-items:center;background:#0b0c0d;color:#efe8d6;font:700 18px sans-serif;letter-spacing:.1em;z-index:99999'; document.body.appendChild(d); } catch (e) {}
+  setTimeout(() => location.reload(), 900);
+}, false);
 renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
@@ -2395,7 +2404,7 @@ function addSkinPreviews(r) {
       sol.mark.visible = false;
       sc.add(g); g.position.set(0, 0, 0); g.rotation.set(0, 0.55, 0); g.updateMatrixWorld(true);
       r.render(sc, cam); const u = r.domElement.toDataURL('image/png'); if (u && u.length > 2000) SKINPREV[key] = u;
-      sc.remove(g);
+      sc.remove(g); freeSoldier(sol);
     }
   } catch (e) {}
 }
@@ -3422,6 +3431,31 @@ const HUM = (() => {
 [vestMat, bootMat, gogMat, strapMat, gloveMat, padMat, faceMat, camoMat.b, camoMat.r, helmMat.b, helmMat.r].forEach(m => { m.envMapIntensity = 0.22; }); sGunMat.envMapIntensity = 0.45;
 // these colours were picked as screen colours: convert them so dark gear really looks dark and skin looks like skin
 [vestMat, bootMat, gogMat, strapMat, gloveMat, padMat, faceMat, sGunMat, helmMat.b, helmMat.r, HUM.eyeW, HUM.iris, HUM.lip, HUM.gaiter, HUM.sole, ...HUM.skin, ...HUM.hair].forEach(m => m.color.convertSRGBToLinear());
+// v125: a soldier is ~100 small parts; merge the parts that share a material and body part into one mesh
+// (same look, ~6x fewer draw calls, so iPads stay smooth with 10 soldiers on screen)
+function mergeParts(grp, ent) {
+  const buckets = new Map();
+  for (const m of [...grp.children]) {
+    if (!m.isMesh || m.userData.keep || !m.geometry || !m.geometry.attributes.uv) continue;
+    const k = m.material.uuid + '|' + m.userData.part + '|' + (m.castShadow ? 1 : 0);
+    if (!buckets.has(k)) buckets.set(k, []); buckets.get(k).push(m);
+  }
+  for (const list of buckets.values()) {
+    if (list.length < 2) continue;
+    const pos = [], nor = [], uv = [];
+    for (const m of list) {
+      m.updateMatrix(); let geo = m.geometry.index ? m.geometry.toNonIndexed() : m.geometry.clone(); geo.applyMatrix4(m.matrix);
+      pos.push(geo.attributes.position.array); nor.push(geo.attributes.normal.array); uv.push(geo.attributes.uv.array); geo.dispose();
+      grp.remove(m);
+    }
+    const cat = arrs => { const out = new Float32Array(arrs.reduce((n, a) => n + a.length, 0)); let o = 0; for (const a of arrs) { out.set(a, o); o += a.length; } return out; };
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(cat(pos), 3)); geo.setAttribute('normal', new THREE.BufferAttribute(cat(nor), 3)); geo.setAttribute('uv', new THREE.BufferAttribute(cat(uv), 2));
+    geo.computeBoundingSphere(); geo.computeBoundingBox();
+    const mm = new THREE.Mesh(geo, list[0].material); mm.castShadow = list[0].castShadow; mm.receiveShadow = list[0].receiveShadow;
+    mm.userData.ent = ent; mm.userData.part = list[0].userData.part; mm.userData.merged = true; grp.add(mm);
+  }
+}
 function makeSoldier(team, ent) {
   const SM = skinMats(team, (ent && ent.sk) || 'std');
   const g = new THREE.Group();
@@ -3507,10 +3541,13 @@ function makeSoldier(team, ent) {
   });
   const mark = new THREE.Mesh(SG.mark, new THREE.MeshBasicMaterial({ color: TEAM_COL[team], toneMapped: false })); mark.position.y = 2.2; mark.raycast = () => {}; g.add(mark);
   const fl = new THREE.Mesh(new THREE.BoxGeometry(0.66, 1.9, 0.5), flashMat); fl.position.y = 0.95; fl.raycast = () => {}; g.add(fl);
+  band.userData.keep = true;
+  for (const grp of [up, hd, hipL, hipR, kneeL, kneeR]) mergeParts(grp, ent);
   scene.add(g);
   return { g, up, hipL, hipR, kneeL, kneeR, mark, flashMat, bandMat, flashT: 0, band };
 }
-function removeEnt(e) { scene.remove(e.v.g); e.v.flashMat.dispose(); e.v.bandMat.dispose(); T.ents.delete(e.id); }
+function freeSoldier(v) { try { v.g.traverse(o => { if (o.userData && o.userData.merged && o.geometry) o.geometry.dispose(); }); } catch (e) {} }
+function removeEnt(e) { scene.remove(e.v.g); freeSoldier(e.v); e.v.flashMat.dispose(); e.v.bandMat.dispose(); T.ents.delete(e.id); }
 function nameOf(id) { if (!id) return 'Someone'; if (id === myPeer) return playerName; if (BOT_NAMES[id]) return BOT_NAMES[id]; return T.names[id] || 'Someone'; }
 function teamOf(id) { if (id === myPeer) return P.team; if (BOT_NAMES[id]) return id[0]; const e = T.ents.get(id); return e ? e.team : ''; }
 
@@ -4925,8 +4962,8 @@ function stepMenuOp(dt) {
   if (!want) { if (MOP.sol) MOP.sol.g.visible = false; return; }
   const key = mySkin + '|' + loadout;
   if (!MOP.sol || MOP.key !== key) {
-    if (MOP.sol) camera.remove(MOP.sol.g);
-    MOP.sol = makeSoldier(P.team || 'b', { sk: mySkin }); MOP.key = key; if (MOP.sol.mark) MOP.sol.mark.visible = false;
+    if (MOP.sol) { camera.remove(MOP.sol.g); freeSoldier(MOP.sol); }
+    MOP.sol = makeSoldier(P.team || 'b', { sk: mySkin, n: playerName }); MOP.key = key; if (MOP.sol.mark) MOP.sol.mark.visible = false;
     MOP.sol.g.traverse(o => { if (o.isMesh) { o.castShadow = false; o.frustumCulled = false; } });
     camera.add(MOP.sol.g);
     if (!MOP.light) { MOP.light = new THREE.PointLight(0xffe2c0, 1.4, 9); MOP.light.position.set(2.2, 1.2, -2.6); camera.add(MOP.light); }
@@ -5124,7 +5161,7 @@ async function coopJoin() {
 }
 function coopLeave() {
   if (COOP.room) { try { COOP.room.leave(); } catch (e) {} }
-  for (const m of Object.values(COOP.mates)) { scene.remove(m.sol.g); if (m.tag) scene.remove(m.tag); }
+  for (const m of Object.values(COOP.mates)) { scene.remove(m.sol.g); freeSoldier(m.sol); if (m.tag) scene.remove(m.tag); }
   for (const pk of Object.values(COOP.rpk)) scene.remove(pk.m);
   COOP.room = null; COOP.on = false; COOP.mates = {}; COOP.rpk = {}; P.downed = false; P.out = false;
   try { $('coopTip').hidden = true; } catch (e) {}
@@ -5175,7 +5212,7 @@ function coopTick(dt) {
         const wi = POWS.findIndex(q => q.id === id); if (wi >= 0) { const w = POWS[wi]; scene.remove(w.m); POWS.splice(wi, 1); if (w.k === 'blast') for (const e of [...enemies]) if (Math.hypot(e.g.position.x - m.x, e.g.position.z - m.z) < 45) { explosionFX(e.g.position.x, 0, e.g.position.z, 0.6); killZombie(e, false, p.peer); } } }
     }
   }
-  for (const id of Object.keys(COOP.mates)) if (!seen[id]) { const m = COOP.mates[id]; scene.remove(m.sol.g); scene.remove(m.tag); delete COOP.mates[id]; banner('SQUAD', m.n + ' left', 2); }
+  for (const id of Object.keys(COOP.mates)) if (!seen[id]) { const m = COOP.mates[id]; scene.remove(m.sol.g); freeSoldier(m.sol); scene.remove(m.tag); delete COOP.mates[id]; banner('SQUAD', m.n + ' left', 2); }
   // host's world state for me
   const hp = !COOP.host && zp.find(p => p.peer === hostId), zs = hp && hp.presence.zs;
   if (zs) {
