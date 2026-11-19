@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261119162816',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261119164654',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -1208,7 +1208,8 @@ const FRESH_SAVE = (() => { try { for (let i = 0; i < localStorage.length; i++) 
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) {}
 const store = {
   get(k, d) { try { const v = localStorage.getItem('dl-' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
-  set(k, v) { try { localStorage.setItem('dl-' + k, JSON.stringify(v)); } catch (e) {} },
+  set(k, v) { if (store.frozen) return; try { localStorage.setItem('dl-' + k, JSON.stringify(v)); } catch (e) {} },
+  frozen: false, // v127: set right after loading a save, so nothing on the old page can overwrite it before the reload
 };
 const DEF = { haptics: true, assistStr: isTouch ? 0.6 : 0, music: 0.7, botDiff: 'adaptive', sens: 1.2, adsSens: 0.8, invertY: false, assist: isTouch, auto: isTouch, holdAds: true, lefty: false,
   quality: isTouch ? 'medium' : 'high', fov: 72, motion: true, fps: false, uncap: false, volume: 0.8, steps: true, xhColor: 'white', xhSize: 1, radar: true };
@@ -4458,7 +4459,7 @@ async function cloudPut(code, h, prev) {
 }
 function cloudApply(code, h) {
   const err = loadBackup(code); if (err) { cloudMsg(err); return; }
-  store.set('cloudSeen', h); store.set('cloudAdopt', true); store.set('cloudAt', Date.now()); banner('ACCOUNT LOADED', 'Getting your progress…', 2);
+  store.set('cloudSeen', h); store.set('cloudAdopt', true); store.set('cloudAt', Date.now()); store.frozen = true; banner('ACCOUNT LOADED', 'Getting your progress…', 2);
   setTimeout(() => location.reload(), 600);
 }
 async function cloudSync(startup) {
@@ -4504,7 +4505,7 @@ async function cloudSync(startup) {
     const best = cd.hist.slice().sort((a, b) => progOf(b) - progOf(a))[0];
     if (!confirm('Restore your older account save?\n\n' + summ(best) + '\n\nThis replaces the progress on this device and in your account.')) return;
     const err = loadBackup(best); if (err) { cloudMsg(err); return; }
-    store.set('cloudLocal', ''); store.set('cloudSeen', cd.hash); banner('OLDER SAVE RESTORED', 'Uploading it to your account…', 2); setTimeout(() => location.reload(), 700);
+    store.set('cloudLocal', ''); store.set('cloudSeen', cd.hash); store.frozen = true; banner('OLDER SAVE RESTORED', 'Uploading it to your account…', 2); setTimeout(() => location.reload(), 700);
   });
   if (store.get('cloudOn', false)) cloudInit().catch(() => {});
   setInterval(() => { if (CLOUD.user && Date.now() - CLOUD.last > 40000) cloudSync(false); }, 10000);
