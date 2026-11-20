@@ -98,7 +98,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261120180142',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120180337',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -754,6 +754,8 @@ body:not(.is-touch) #micBtn { top: auto; bottom: 18px; right: auto; left: 160px;
 #vcTalk { position: fixed; left: 16px; top: calc(230px + env(safe-area-inset-top, 0px)); z-index: 6; font: 700 12px var(--display); letter-spacing: .06em; color: #9fe8a8; text-shadow: 0 1px 4px #000; pointer-events: none; white-space: pre-line; } #vcTalk[hidden] { display: none; }
 #specTag { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 8; font: 700 14px var(--display); letter-spacing: .08em; color: #fff; background: rgba(10,10,10,.75); border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 10px 16px; pointer-events: auto; cursor: pointer; text-align: center; } #specTag[hidden] { display: none; } #specTag small { display: block; font: 500 11px var(--body); opacity: .75; letter-spacing: 0; margin-top: 2px; }
 body.spectating .wpn, body.spectating .vit, body.spectating #cross, body.spectating .tbtn, body.spectating #stick { display: none !important; }
+#recap { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(225px + env(safe-area-inset-top, 0px)); width: min(320px, calc(100vw - 32px)); background: rgba(10,10,12,.82); border: 1px solid rgba(255,255,255,.15); border-left: 4px solid #e8443a; border-radius: 8px; padding: 10px 14px; font: 600 13px var(--body); color: #efe8d6; pointer-events: none; } #recap[hidden] { display: none; }
+#recap .rh { font: 700 12px var(--display); letter-spacing: .14em; color: #ff8a7a; margin-bottom: 6px; } #recap .rk { font: 700 16px var(--display); letter-spacing: .04em; margin-bottom: 6px; } #recap .rr { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 2px 0; } #recap .rr i { font-style: normal; opacity: .7; } #recap .bar { height: 3px; background: rgba(255,255,255,.12); margin: 2px 0 4px; } #recap .bar b { display: block; height: 100%; background: #e8443a; }
 #finBars { position: fixed; inset: 0; pointer-events: none; z-index: 5; } #finBars::before, #finBars::after { content: ''; position: absolute; left: 0; right: 0; height: 11vh; background: #000; } #finBars::before { top: 0; } #finBars::after { bottom: 0; } #finBars[hidden] { display: none; }
 #knifeBtn { width: 48px; height: 48px; right: calc(max(16px, env(safe-area-inset-right, 0px)) + 34px); bottom: calc(276px + env(safe-area-inset-bottom, 0px)); display: grid; place-items: center; --ring: #d8d8d8; }
 #nadeBtn { --ring: #8bd17c; } #nadeBtn svg { width: 26px; height: 26px; } #nadeBtn small { font: 700 12px var(--mono); color: #c8f0b8; margin-top: -2px; }
@@ -867,6 +869,7 @@ body.spectating .wpn, body.spectating .vit, body.spectating #cross, body.spectat
     <div id="adsBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg><span>AIM</span></div>
     <div id="swapBtn" class="tbtn touch-only" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg><small></small></div>
     <div id="finBars" hidden></div>
+    <div id="recap" hidden></div>
     <div id="specTag" hidden></div>
     <div id="micBtn" class="tbtn" hidden>🎙</div>
     <div id="vcTalk" hidden></div>
@@ -3802,6 +3805,7 @@ function botDamage(id, dmg, src) {
 }
 function takeDamage(dmg, src) {
   if (hcore) dmg *= 3;
+  try { if (P.alive && !(P.prot > 0) && !T.win && mode === 'tdm') { const L = P.dlog || (P.dlog = {}); const r = L[src || '?'] || (L[src || '?'] = { d: 0, n: 0 }); r.d += Math.min(dmg, P.hp); r.n++; } } catch (e) {}
   if (S.god && isAdmin()) return;
   if (!P.alive || T.win || P.prot > 0 || mode !== 'tdm') return;
   P.hp -= dmg; P.lastHurt = 0; hurtT = 0.35; sfx.hurt(); haptic('hurt'); P.shake = Math.max(P.shake, 0.25);
@@ -3812,10 +3816,12 @@ function takeDamage(dmg, src) {
     if (T.isHost) onDeath(myPeer, src, P.team);
     hud.death.hidden = false;
     if (src) popCard(src, null, 'KILLED BY', 'killer', 0);
+    try { showRecap(src); } catch (e) {}
   }
   updHud();
 }
 function respawnPlayer() {
+  P.dlog = {}; try { $('recap').hidden = true; } catch (e) {}
   const sp = spawnPoint(P.team);
   P.pos.set(sp.x, 1.6, sp.z); P.yaw = gg ? Math.atan2(sp.x, sp.z) : P.team === 'b' ? 0 : Math.PI; P.pitch = 0;
   const want = gg ? GG_GUNS[Math.min(GG_GUNS.length - 1, T.gg[myPeer] || 0)] : loadout;
@@ -4054,7 +4060,7 @@ function netTick(dt) {
     T.sendT = 0.05; T.beat = (T.beat + 1) % 1000;
     const keys = Object.keys(T.myDm);
     if (keys.length > 24) keys.forEach(k => { if (!BOT_NAMES[k] && !hs.some(h => h.peer === k)) delete T.myDm[k]; });
-    const pr = { lk: LOOK, qc: QC.msg, pg: QC.ping, n: playerName, tm: P.team, x: r2(P.pos.x), z: r2(P.pos.z), y: r2(P.yaw), p: r2(P.pitch), j: r2(P.jy), c: P.crouch || P.slideT > 0 ? 1 : 0, h: Math.round(P.hp), a: P.alive ? 1 : 0, d: P.deaths, kb: P.killer || null, sh: P.shots, dm: T.myDm, mv: T.win ? (myVote || null) : null, sk: mySkin, pt: party || null, rk: rankIdx(), bn: IDN.bn, em: IDN.em, t: T.beat };
+    const pr = { gw: P.w, lk: LOOK, qc: QC.msg, pg: QC.ping, n: playerName, tm: P.team, x: r2(P.pos.x), z: r2(P.pos.z), y: r2(P.yaw), p: r2(P.pitch), j: r2(P.jy), c: P.crouch || P.slideT > 0 ? 1 : 0, h: Math.round(P.hp), a: P.alive ? 1 : 0, d: P.deaths, kb: P.killer || null, sh: P.shots, dm: T.myDm, mv: T.win ? (myVote || null) : null, sk: mySkin, pt: party || null, rk: rankIdx(), bn: IDN.bn, em: IDN.em, t: T.beat };
     if (T.isHost) Object.assign(pr, { ob: gg ? { g: T.gg, w: T.ggWin || '' } : dom ? DOM.flags.map(f => [r2(f.x), r2(f.z), r2(f.p), f.owner || '']) : snd ? sndPack() : kcf ? KCF.tags.map(t => [t.id, r2(t.x), r2(t.z), t.team]) : hpt ? [HPT.i, r2(HPT.t), HPT.spots.map(p => [r2(p.x), r2(p.z)])] : null, hb: T.bots.map(b => [b.id, r2(b.x), r2(b.z), r2(b.yaw), Math.round(b.hp), b.alive ? 1 : 0, b.shots]), hd: T.hd, hk: T.hk, sc: [T.sc.b, T.sc.r], ep: T.ep, w: T.win || null, wt: r2(T.winT), kf: T.kf, mp: curMap, st: T.st });
     else Object.assign(pr, { ob: null, hb: null, hd: null, hk: null, sc: null, ep: null, w: null, wt: null, kf: null, mp: null, st: null });
     if (SPV) troom.presence({ spec: 1, n: playerName }).catch(() => {}); else troom.presence(pr).catch(() => {});
@@ -4113,6 +4119,7 @@ function showTab(name) {
 }
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
 function showMenu(which) {
+  try { $('recap').hidden = true; } catch (e) {}
   if (which === 'main') { SPV = null; document.body.classList.remove('spectating'); }
   try { closePW(false); } catch (e) {}
   document.body.classList.remove('hardcore');
@@ -5694,6 +5701,21 @@ async function cwReward() {
 }
 setInterval(() => { try { if (CLOUD.user && state !== 'play') cwReward(); } catch (e) {} }, 60000);
 setTimeout(() => { try { cwReward(); } catch (e) {} }, 12000);
+
+/* ---------- v141: death recap ---------- */
+function showRecap(src) {
+  const el = $('recap'); if (!el || mode !== 'tdm') return; const L = P.dlog || {}; el.textContent = '';
+  const h = (T.humans || []).find(q => q.peer === src), ke = T.ents.get(src), gw = h && h.pr && WEAPONS[h.pr.gw] ? WEAPONS[h.pr.gw].name : ke && ke.kind === 'bot' ? 'Bot rifle' : '';
+  const dist = ke ? Math.round(Math.hypot(ke.rx - P.pos.x, ke.rz - P.pos.z)) : null;
+  const add = (cls, txt) => { const d = document.createElement('div'); d.className = cls; d.textContent = txt; el.appendChild(d); return d; };
+  add('rh', 'DEATH RECAP');
+  add('rk', src ? 'Killed by ' + nameOf(src) + (gw ? ' · ' + gw : '') + (dist != null ? ' · ' + dist + ' m' : '') : 'Killed in action');
+  const rows = Object.entries(L).sort((a, b) => b[1].d - a[1].d).slice(0, 4), tot = rows.reduce((n, r) => n + r[1].d, 0) || 1;
+  for (const [id, r] of rows) { const row = document.createElement('div'); row.className = 'rr'; const a = document.createElement('span'); a.textContent = (id === '?' ? 'Explosion / other' : nameOf(id)); const b = document.createElement('i'); b.textContent = Math.round(r.d) + ' dmg · ' + r.n + ' hit' + (r.n > 1 ? 's' : ''); row.append(a, b); el.appendChild(row);
+    const bar = document.createElement('div'); bar.className = 'bar'; const bb = document.createElement('b'); bb.style.width = Math.round(r.d / tot * 100) + '%'; bar.appendChild(bb); el.appendChild(bar); }
+  if (!rows.length) add('rr', 'No damage details for this one.');
+  el.hidden = false;
+}
 /* ---------- custom HUD layout (drag + resize touch buttons) ---------- */
 const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn', 'inspBtn'];
 function applyHudLayout() {
