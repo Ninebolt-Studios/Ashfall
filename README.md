@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v127)](https://ninebolt-studios.github.io/Ashfall/?v=127)
+## ▶️ [PLAY NOW — latest version (v128)](https://ninebolt-studios.github.io/Ashfall/?v=128)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=127
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=128
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,6 +20,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v128** | https://ninebolt-studios.github.io/Ashfall/?v=128 | **iPad Smooth mode:** a new **Smooth** graphics setting (Settings → Graphics → Quality) made for iPads and phones: lower resolution, no shadows and no extra effects, so the game stays fast and doesn't freeze. New installs on touch devices start in Smooth, and iPad players who aren't using it get a one-time "Lag or freezing on iPad?" card with a Turn on button |
 | **v127** | https://ninebolt-studios.github.io/Ashfall/?v=127 | **Account loading fix:** when you sign in and pick your account’s progress, the game could save the iPad’s old progress again in the split second before it restarted, so your account didn’t come back. Saving is now paused during that moment, so your account always loads |
 | **v126** | https://ninebolt-studios.github.io/Ashfall/?v=126 | **Clearer sign-in:** if the email has no account (or the password is wrong) it now says so and tells you to check the spelling or tap Create account; if an account had no saved progress yet it tells you, so you know you may have used a different email before; and when your account and your iPad have different progress, the "which progress do you want to keep?" choice now pops up in the middle of the screen instead of hiding at the bottom of the Career tab |
 | **v125** | https://ninebolt-studios.github.io/Ashfall/?v=125 | **Freeze fixes for the iPad app:** the app no longer hangs on a blank screen when Wi-Fi is slow (it opens the saved copy after 4 seconds); if the iPad drops the 3D view because memory runs low, the game restarts itself instead of freezing (your progress is always saved); each soldier is now drawn with far fewer pieces (about 105 → 42) so matches are lighter on the iPad, and removed soldiers free their memory |
