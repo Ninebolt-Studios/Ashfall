@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261120173931',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120174122',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -554,6 +554,8 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 .msgrid #zmbBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #8acd4a55, transparent 60%), linear-gradient(160deg, #14260a 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #zmbBtn::after { content: '🧟'; }
 .msgrid #siegeBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #6ac8ff55, transparent 60%), linear-gradient(160deg, #0a2030 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #siegeBtn::after { content: '🛸'; }
 .msgrid #rangeBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #e8d07055, transparent 60%), linear-gradient(160deg, #2a2408 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #rangeBtn::after { content: '🎯'; }
+.msgrid #hcBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #8a101066, transparent 60%), linear-gradient(160deg, #1a0606 0%, rgba(10,11,12,.92) 70%) !important; } #menu .msgrid #hcBtn::after { content: '💀'; }
+body.hardcore #radar, body.hardcore .wpn, body.hardcore #cross, body.hardcore .vit, body.hardcore #streakTag { display: none !important; }
 .msgrid #snowBtn { background: radial-gradient(ellipse 90% 70% at 85% 20%, #e8443a66, transparent 60%), linear-gradient(160deg, #0e3a24 0%, rgba(10,11,12,.92) 70%) !important; border-color: #e8443a !important; } #menu .msgrid #snowBtn::after { content: '☃️'; }
 #xmasCard { margin-bottom: 14px; padding: 14px 16px; border-radius: 6px; border: 1px solid rgba(255,255,255,.12); border-left: 4px solid #e8443a; background: linear-gradient(120deg, rgba(14,90,42,.55), rgba(140,20,20,.45)); }
 #xmasCard[hidden] { display: none; } #xmasCard .xh { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; } #xmasCard b.t { font: 700 20px var(--display); letter-spacing: .06em; }
@@ -978,6 +980,11 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
             <span class="mode-name">Snowball Fight</span>
             <span class="mode-desc">Christmas event · limited time! 5v5 with snowballs only: 2 hits to knock someone out, 1 to the head. First to 30.</span>
             <span class="chips"><span class="chip">Event</span><span class="chip">Online</span><span class="chip">Team</span></span>
+          </button>
+          <button class="mode" id="hcBtn" type="button">
+            <span class="mode-name">Hardcore</span>
+            <span class="mode-desc">5v5 Team Battle with almost no HUD (no minimap, ammo count or crosshair) and 3× damage: a couple of bullets drop anyone. First to 50.</span>
+            <span class="chips"><span class="chip">Online</span><span class="chip">No HUD</span><span class="chip">3× damage</span></span>
           </button>
           <button class="mode" id="hpBtn" type="button">
             <span class="mode-name">Hardpoint</span>
@@ -3731,12 +3738,14 @@ function showFeed(list) {
   }
 }
 function botDamage(id, dmg, src) {
+  if (hcore) dmg *= 3;
   const b = T.botMap[id];
   if (!b || !b.alive || T.win) return;
   b.hp -= dmg;
   if (b.hp <= 0) { b.hp = 0; b.alive = false; b.respawn = 3; onDeath(id, src, b.team); }
 }
 function takeDamage(dmg, src) {
+  if (hcore) dmg *= 3;
   if (S.god && isAdmin()) return;
   if (!P.alive || T.win || P.prot > 0 || mode !== 'tdm') return;
   P.hp -= dmg; P.lastHurt = 0; hurtT = 0.35; sfx.hurt(); haptic('hurt'); P.shake = Math.max(P.shake, 0.25);
@@ -4047,6 +4056,7 @@ function showTab(name) {
 }
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
 function showMenu(which) {
+  document.body.classList.remove('hardcore');
   try { if (FIN) { scene.remove(FIN.me.g); scene.remove(FIN.vic.g); FIN = null; } $('finBars').hidden = true; $('hud').style.visibility = ''; } catch (e) {}
   window.__dlBusy = false; setTimeout(() => { try { window.__dlUpd && window.__dlUpd(); } catch (e) {} }, 1500);
   try { $('rangeHud').hidden = true; TUT.on = false; $('tutBox').hidden = true; $('rangeGun').hidden = false; $('tutNote').hidden = !!store.get('tutDone', false) || !!store.get('tutSkip', false) || (C && C.kills > 20); } catch (e) {}
@@ -4072,7 +4082,7 @@ function fixViewport() {
 window.addEventListener('orientationchange', () => setTimeout(fixViewport, 300));
 if (window.visualViewport) window.visualViewport.addEventListener('resize', () => { if (state === 'play') setTimeout(fixViewport, 100); });
 function hideMenu() {
-  window.__dlBusy = true;
+  window.__dlBusy = true; document.body.classList.toggle('hardcore', hcore && mode === 'tdm');
   try { if (MOP.sol) MOP.sol.g.visible = false; if (MOP.light) MOP.light.visible = false; } catch (e) {}
   fixViewport(); resize();
   const ns=document.getElementById('netstat'); if(ns)ns.hidden=true;
@@ -5014,7 +5024,7 @@ codeIn.addEventListener('input', () => { matchCode = codeIn.value.replace(/[^a-z
 /* ---------- flow ---------- */
 /* ---------- mode select pop-up ---------- */
 (function () {
-  const mp = ['snowBtn', 'tdmBtn', 'rankedBtn', 'domBtn', 'sndBtn', 'kcfBtn', 'hpBtn', 'ggBtn', 'duelBtn'], solo = ['zmbBtn', 'siegeBtn', 'rangeBtn'];
+  const mp = ['snowBtn', 'tdmBtn', 'rankedBtn', 'hcBtn', 'domBtn', 'sndBtn', 'kcfBtn', 'hpBtn', 'ggBtn', 'duelBtn'], solo = ['zmbBtn', 'siegeBtn', 'rangeBtn'];
   mp.forEach(id => { const b = $(id); if (b) $('mselMp').appendChild(b); }); solo.forEach(id => { const b = $(id); if (b) $('mselSolo').appendChild(b); });
   const mf = $('mapList'); if (mf) { $('mselMaps').appendChild(mf); const fld = document.querySelector('#playMain .modes'); if (fld) fld.hidden = true; }
   document.querySelectorAll('#playMain .field').forEach(f => { if (!f.querySelector('input,select') && f.textContent.includes('Map (used')) f.hidden = true; });
@@ -5105,7 +5115,7 @@ function stepTut(dt) {
 })();
 
 /* ---------- v121: Christmas event · Snowball Fight + holiday challenges ---------- */
-var snowb = false;
+var snowb = false, hcore = false;
 const SNOWB = { list: [], cd: 0 };
 const snowMat = new THREE.MeshStandardMaterial({ color: 0xf6f9ff, roughness: 0.85, envMapIntensity: 0.6 }), snowGeo = new THREE.SphereGeometry(0.11, 12, 9);
 const snowHand = new THREE.Mesh(new THREE.SphereGeometry(0.032, 14, 10), snowMat); snowHand.position.set(0.15, -0.12, -0.45); snowHand.visible = false; camera.add(snowHand);
@@ -5175,7 +5185,7 @@ function renderXmas() {
 
 /* ---------- v122: private matches (the code carries the settings) ---------- */
 var PRIV = null;
-const PV_MODES = [['t', '', 'Team Battle'], ['d', 'dom', 'Domination'], ['s', 'snd', 'Search & Destroy'], ['k', 'kcf', 'Kill Confirmed'], ['h', 'hpt', 'Hardpoint'], ['g', 'gg', 'Gun Game'], ['w', 'snow', 'Snowball Fight']];
+const PV_MODES = [['t', '', 'Team Battle'], ['d', 'dom', 'Domination'], ['s', 'snd', 'Search & Destroy'], ['k', 'kcf', 'Kill Confirmed'], ['h', 'hpt', 'Hardpoint'], ['g', 'gg', 'Gun Game'], ['c', 'hc', 'Hardcore'], ['w', 'snow', 'Snowball Fight']];
 const PV_LEN = { s: 0.6, n: 1, l: 1.5 };
 function privParse(code) {
   const m = /^p[a-z0-9]{4}-([a-z])([0-9a-z])([snl])([oenha])$/.exec((code || '').trim().toLowerCase()); if (!m) return null;
@@ -5544,7 +5554,7 @@ function startRange() {
   banner('FIRING RANGE', 'Targets at 10, 25, 50 and 80 m. Tap Next gun to switch.', 3);
 }
 function startSiege() {
-  ensureAudio(); leaveBattle(); clearSiege(); snowb = false; clearSnow(); zmb = false; hpt = false; kcf = false; dom = false; snd = false; rng = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
+  ensureAudio(); leaveBattle(); clearSiege(); snowb = false; hcore = false; document.body.classList.remove('hardcore'); clearSnow(); zmb = false; hpt = false; kcf = false; dom = false; snd = false; rng = false; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
   mode = 'siege'; duel = false; buildMap(selMap); equip(loadout);
   Object.assign(P, { yaw: 0, pitch: 0, hp: 100, alive: true, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, prot: 0, downed: false, out: false });
   P.pos.set(0, 1.6, 9); if (insideSolid(P.pos, 0.6)) { const o = randomOpenPoint(); P.pos.set(o.x, 1.6, o.z); }
@@ -5557,9 +5567,10 @@ async function startTDM(isDuel, isRanked, obj, priv) {
   if (isDuel && !party) { const pm = $('partyMsg'); pm.textContent = 'Duel 1v1 needs a party. Tap Create party and send the code to your friend, or type their code and tap Join.'; pm.style.color = 'var(--accent)'; $('partyBox').scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
   ensureAudio(); clearSiege(); lockPointer();
   duel = !!isDuel; SCORE_LIMIT = duel ? 7 : 65;
-  const btn = obj === 'gg' ? $('ggBtn') : obj === 'dom' ? $('domBtn') : obj === 'snd' ? $('sndBtn') : obj === 'kcf' ? $('kcfBtn') : obj === 'hpt' ? $('hpBtn') : obj === 'snow' ? $('snowBtn') : duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = obj ? btn.querySelector('.mode-desc') : duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
+  const btn = obj === 'gg' ? $('ggBtn') : obj === 'dom' ? $('domBtn') : obj === 'snd' ? $('sndBtn') : obj === 'kcf' ? $('kcfBtn') : obj === 'hpt' ? $('hpBtn') : obj === 'snow' ? $('snowBtn') : obj === 'hc' ? $('hcBtn') : duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = obj ? btn.querySelector('.mode-desc') : duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
   btn.disabled = true; mode = 'tdm'; hpt = obj === 'hpt'; kcf = obj === 'kcf'; dom = obj === 'dom'; snd = obj === 'snd'; rng = false; gg = obj === 'gg'; zmb = false; if (gg) { SCORE_LIMIT = 1e9; T.gg = {}; T.ggWin = ''; } if (dom || hpt) SCORE_LIMIT = 150; if (snd) SCORE_LIMIT = 4; if (kcf) SCORE_LIMIT = 50; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
   resetTDM(); ranked = !!isRanked && !duel && !obj; snowb = obj === 'snow'; if (snowb) SCORE_LIMIT = 30; clearSnow();
+  hcore = obj === 'hc'; if (hcore) SCORE_LIMIT = 50; document.body.classList.toggle('hardcore', hcore);
   if (PRIV && !gg) SCORE_LIMIT = Math.max(obj === 'snd' ? 2 : 10, Math.round(SCORE_LIMIT * PRIV.len));
   if (obj === 'gg') { gg = true; SCORE_LIMIT = 1e9; T.gg = {}; T.ggWin = ''; }
   if (room) {
@@ -5579,7 +5590,7 @@ async function startTDM(isDuel, isRanked, obj, priv) {
   newMatchLocal();
   state = 'play'; hideMenu(); updHud();
   const others = counts.b + counts.r;
-  if (obj) banner(({ gg: 'GUN GAME · ', dom: 'DOMINATION · ', snd: 'SEARCH & DESTROY · ', kcf: 'KILL CONFIRMED · ', hpt: 'HARDPOINT · ', snow: '☃️ SNOWBALL FIGHT · ' })[obj] + MAPS[curMap].name.toUpperCase(), (others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest · ' : 'No other players online · bots fill every slot · ') + ({ gg: 'every elimination = next gun', dom: 'capture A, B and C', snd: 'first to 4 rounds', kcf: 'grab the dog tags', hpt: 'hold the hill', snow: 'snowballs only · first to 30' })[obj], 4);
+  if (obj) banner(({ gg: 'GUN GAME · ', dom: 'DOMINATION · ', snd: 'SEARCH & DESTROY · ', kcf: 'KILL CONFIRMED · ', hpt: 'HARDPOINT · ', snow: '☃️ SNOWBALL FIGHT · ', hc: '💀 HARDCORE · ' })[obj] + MAPS[curMap].name.toUpperCase(), (others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest · ' : 'No other players online · bots fill every slot · ') + ({ gg: 'every elimination = next gun', dom: 'capture A, B and C', snd: 'first to 4 rounds', kcf: 'grab the dog tags', hpt: 'hold the hill', snow: 'snowballs only · first to 30', hc: 'no HUD · 3× damage · first to 50' })[obj], 4);
   else if (duel) banner(TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? 'Rival found · first to ' + SCORE_LIMIT : 'Waiting for a rival — share code “' + (matchCode || 'open') + '”. First to ' + SCORE_LIMIT + '.', 4);
   else banner((ranked ? 'RANKED · ' + rankBadge(rankIdx()) + ' ' : '') + TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest' : 'No other players online · bots fill every slot', 3);
   if (PRIV) banner('🔒 PRIVATE · ' + PRIV.label.toUpperCase() + ' · ' + MAPS[curMap].name.toUpperCase(), 'Code ' + PRIV.code.toUpperCase() + ' · ' + (others > 0 ? others + ' friend' + (others > 1 ? 's' : '') + ' here' : 'share the code so friends can join') + (PRIV.bots === 'o' ? ' · no bots' : ''), 4.5);
@@ -5888,6 +5899,7 @@ $('domBtn').addEventListener('click', () => { if (!$('domBtn').disabled) startTD
 $('sndBtn').addEventListener('click', () => { if (!$('sndBtn').disabled) startTDM(false, false, 'snd'); });
 $('rangeBtn').addEventListener('click', startRange);
 $('kcfBtn').addEventListener('click', () => { if (!$('kcfBtn').disabled) startTDM(false, false, 'kcf'); });
+$('hcBtn').addEventListener('click', () => { if (!$('hcBtn').disabled) startTDM(false, false, 'hc'); });
 $('hpBtn').addEventListener('click', () => { if (!$('hpBtn').disabled) startTDM(false, false, 'hpt'); });
 $('rangeGun').addEventListener('click', () => { const ks = Object.keys(WEAPONS).filter(k => weaponOwned(k)); RNG.gunI = (RNG.gunI + 1) % ks.length; equip(ks[RNG.gunI]); P.res = 999; updHud(); $('rangeTxt').textContent = WEAPONS[ks[RNG.gunI]].name; });
 $('rankedBtn').addEventListener('click', () => { if (!$('rankedBtn').disabled) startTDM(false, true); });
