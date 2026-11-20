@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v143)](https://ninebolt-studios.github.io/Ashfall/?v=143)
+## ▶️ [PLAY NOW — latest version (v144)](https://ninebolt-studios.github.io/Ashfall/?v=144)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=143
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=144
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,6 +20,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v144** | https://ninebolt-studios.github.io/Ashfall/?v=144 | **Party leader picks the mode:** whoever **creates** the party is the leader. Whatever they start (Team Battle, Ranked, Hardcore, Domination, S&D, Kill Confirmed, Hardpoint, Gun Game, Snowball Fight, a Private match, Duel or Zombies), everyone in the party is pulled into the same game automatically, on the same team. If a member is in the middle of another match they get a heads-up and join as soon as they pause or finish |
 | **v143** | https://ninebolt-studios.github.io/Ashfall/?v=143 | **Duel 1v1 fixed + bug fixes + faster:** Duel no longer needs a party: tap Duel 1v1 and you get matched with anyone else in Duel (or your party member if you're in a party), and if nobody shows up in ~12 s you fight a bot until a real player joins. Before, tapping Duel without a party silently did nothing because the message was hidden behind the mode menu. Also: maps are now drawn with far fewer pieces (~37% fewer draw calls in a match), menus run at 30 FPS on iPads/phones to save battery, snowballs no longer fly at double speed, Z no longer pings and fires a kill streak at the same time (tap T to ping), and the touch weapon-swap button no longer sits under the ping/chat buttons |
 | **v142** | https://ninebolt-studios.github.io/Ashfall/?v=142 | **Better hit feedback:** bullets now kick up a **red mist** when they hit an enemy (bigger on headshots) and a **dust puff** when they hit walls and the ground, headshots make a sharp metallic **ping**, and every kill flashes a big red **✕** in the middle of the screen with a punchy confirm sound. Smooth mode shows fewer puffs to stay fast |
 | **v141** | https://ninebolt-studios.github.io/Ashfall/?v=141 | **Death recap:** when you die in a multiplayer match, a panel shows who killed you, with what gun and from how far, plus every enemy who hurt you that life with their damage and number of hits (and a bar for each). It goes away when you redeploy |

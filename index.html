@@ -98,7 +98,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261120210215',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120210722',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -3430,6 +3430,7 @@ function zAtmosphere() { // dark, foggy night on whichever map you picked
   sky.material.color.setHex(0x1a2420); sun.intensity = 0.3; sun.color.setHex(0x9ab0a0); hemi.intensity = 0.4; hemi.color.setHex(0x5a7060); renderer.toneMappingExposure = 0.95; zmbAtmo = true;
 }
 function startZombies() {
+  partyAnnounce({ k: 'zmb', r: FOLLOW.room || '' });
   ensureAudio(); leaveBattle(); clearSiege(); POWS.forEach(p => scene.remove(p.m)); POWS.length = 0;
   mode = 'siege'; duel = false; zmb = true; buildMap(selMap); zAtmosphere(); equip('pst');
   Object.assign(P, { yaw: 0, pitch: 0, hp: 100, alive: true, vx: 0, vz: 0, jy: 0, jvy: 0, crouch: false, ads: false, stamina: 100, kick: 0, bloom: 0, prot: 0, lastHurt: 99 });
@@ -4587,7 +4588,7 @@ function renderParty() {
   for (const p of partyPeers) if (!p.sameTab && p.presence && p.presence.n) names.push(String(p.presence.n).slice(0, 16) + (p.presence.st && p.presence.st !== 'menu' ? ' · in game' : ''));
   for (const n of names) { const c = document.createElement('span'); c.className = 'chip' + (n.endsWith('(you)') ? '' : ' hot'); c.textContent = n; box.appendChild(c); }
   const pm = $('partyMsg'); pm.style.color = '';
-  if (names.length > 1) { pm.textContent = 'Party connected ✓ — ' + (names.length) + ' here. Both tap Duel 1v1 to fight each other, or Team Battle to play on the same team.'; return; }
+  if (names.length > 1) { pm.textContent = 'Party connected ✓ — ' + (names.length) + ' here. ' + (PLEAD ? 'You lead: whatever mode you start, your party joins you automatically.' : 'The party leader picks the mode: you join their game automatically.'); return; }
   const st = (window.__dsStat && window.__dsStat.state) || (room ? 'connecting' : 'offline');
   if (!room || st === 'offline') pm.textContent = 'Offline. The party code still works once you are back online.';
   else if (st === 'no-webrtc') { pm.style.color = 'var(--accent)'; pm.textContent = 'This browser cannot make online connections. Open the game in Safari or Chrome.'; }
@@ -4603,15 +4604,15 @@ async function enterParty(code) {
   try { proom = await Promise.race([room.join('party-' + party.toLowerCase()), sleep(6000).then(() => null)]); } catch (e) { proom = null; }
   if (proom && party === code) partyPresence();
 }
-function partyPresence() { if (proom) proom.presence({ n: playerName, st: state === 'play' || state === 'paused' ? mode : 'menu', sk: mySkin }).catch(() => {}); }
+function partyPresence() { if (proom) proom.presence({ n: playerName, st: state === 'play' || state === 'paused' ? mode : 'menu', sk: mySkin, lead: PLEAD ? 1 : 0, go: PLEAD ? PGO : null }).catch(() => {}); }
 async function leavePartyRoom() { if (proom) { const r = proom; proom = null; try { await r.leave(); } catch (e) {} } }
 setInterval(() => {
   if (!proom) return;
   try { partyPeers = proom.peers() || []; } catch (e) { partyPeers = []; }
-  partyPresence(); if (state !== 'play') renderParty();
+  partyPresence(); if (state !== 'play') renderParty(); try { partyFollow(); } catch (e) {}
 }, 1500);
-$('partyCreate').addEventListener('click', () => { let c = ''; for (let i = 0; i < 5; i++) c += PARTY_CH[Math.floor(Math.random() * PARTY_CH.length)]; enterParty(c); });
-$('partyJoin').addEventListener('click', () => enterParty($('partyIn').value));
+$('partyCreate').addEventListener('click', () => { PLEAD = true; store.set('partyLead', true); let c = ''; for (let i = 0; i < 5; i++) c += PARTY_CH[Math.floor(Math.random() * PARTY_CH.length)]; enterParty(c); });
+$('partyJoin').addEventListener('click', () => { PLEAD = false; store.set('partyLead', false); enterParty($('partyIn').value); });
 $('partyIn').addEventListener('keydown', e => { if (e.key === 'Enter') enterParty($('partyIn').value); e.stopPropagation(); });
 $('partyLeave').addEventListener('click', async () => { await leavePartyRoom(); party = ''; store.set('party', ''); partyPeers = []; renderParty(); $('partyMsg').textContent = 'You left the party.'; });
 $('partyCopy').addEventListener('click', () => { const b = $('partyCopy'); try { navigator.clipboard.writeText(party).then(() => { b.textContent = 'Copied'; setTimeout(() => b.textContent = 'Copy', 1500); }, () => {}); } catch (e) {} });
@@ -5357,7 +5358,8 @@ function dmgEnemy(e, dm) {
 async function coopJoin() {
   Object.assign(COOP, { on: false, room: null, host: true, mates: {}, kl: [], kseq: 0, kseen: 0, hu: {}, huSeen: 0, zd: {}, zh: {}, zdSeen: {}, rv: {}, rvT: {}, rvSeen: {}, cl: [], clSeen: {}, go: 0, wave: 0, hostId: '', reps: {}, rpk: {}, jt: Date.now() });
   if (!room) return;
-  let r = null; try { r = await Promise.race([room.join('zmb-' + (matchCode || 'main')), sleep(6000).then(() => null)]); } catch (e) { r = null; }
+  COOP.roomName = FOLLOW.room && FOLLOW.room.startsWith('zmb-') ? FOLLOW.room : 'zmb-' + (matchCode || 'main'); FOLLOW.room = '';
+  let r = null; try { r = await Promise.race([room.join(COOP.roomName), sleep(6000).then(() => null)]); } catch (e) { r = null; }
   if (!r || !zmb || mode !== 'siege' || state === 'menu') { try { r && r.leave(); } catch (e) {} return; }
   COOP.room = r; COOP.on = true; coopSend();
 }
@@ -5757,6 +5759,34 @@ function showRecap(src) {
   if (!rows.length) add('rr', 'No damage details for this one.');
   el.hidden = false;
 }
+
+/* ---------- v144: the party leader picks the mode; party members follow them in automatically ---------- */
+var PGO = null, PLEAD = !!store.get('partyLead', false), FOLLOW = { room: '', seen: 0, pending: null };
+function partyAnnounce(o) {
+  if (!party || !PLEAD) return;
+  setTimeout(() => { // after the match has picked its room
+    const rn = o.k === 'zmb' ? (COOP.roomName || 'zmb-' + (matchCode || 'main')) : (T.roomName || '');
+    PGO = Object.assign({ s: Date.now(), r: rn }, o, { r: rn }); partyPresence();
+  }, o.k === 'zmb' ? 300 : 2500);
+}
+function partyFollow() {
+  if (!party || !proom || PLEAD || SPV) return;
+  const lead = (partyPeers || []).find(p => !p.sameTab && p.presence && p.presence.lead);
+  const go = lead && lead.presence.go; if (!go || !go.s || !go.r) return;
+  if (go.s <= FOLLOW.seen) return;
+  if (!lead.presence.st || lead.presence.st === 'menu') { FOLLOW.seen = go.s; return; } // leader already left that game
+  // already in that exact game? nothing to do
+  const inSame = state === 'play' && ((go.k === 'zmb' && zmb && COOP.roomName === go.r) || (go.k === 'tdm' && mode === 'tdm' && T.roomName === go.r));
+  if (inSame) { FOLLOW.seen = go.s; return; }
+  if (state === 'play') { if (FOLLOW.pending !== go.s) { FOLLOW.pending = go.s; banner('PARTY', String(lead.presence.n || 'Your leader').slice(0, 16) + ' started a game · pause or finish to join them', 3.5); } return; }
+  FOLLOW.seen = go.s; const nm = String(lead.presence.n || 'your leader').slice(0, 16);
+  try { closeModeSel(); } catch (e) {}
+  if (state === 'paused') { try { leaveBattle(); clearSiege(); } catch (e) {} state = 'menu'; }
+  if (go.k === 'zmb') { FOLLOW.room = go.r; startZombies(); banner('FOLLOWING ' + nm.toUpperCase(), 'Joined their Zombies game', 3); return; }
+  if (go.c) { const pv = privParse(go.c); if (pv) { startTDM(false, false, pv.obj, pv); return; } }
+  FOLLOW.room = go.d ? '' : go.r;
+  startTDM(!!go.d, !!go.rk, go.o || undefined).then(() => { FOLLOW.room = ''; banner('FOLLOWING ' + nm.toUpperCase(), 'You joined your party leader’s game', 3); });
+}
 /* ---------- custom HUD layout (drag + resize touch buttons) ---------- */
 const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn', 'inspBtn'];
 function applyHudLayout() {
@@ -5891,6 +5921,7 @@ function startSiege() {
   state = 'play'; hideMenu(); updHud(); lockPointer();
 }
 async function startTDM(isDuel, isRanked, obj, priv, spec) {
+  if (!spec) partyAnnounce({ k: 'tdm', d: isDuel ? 1 : 0, rk: isRanked ? 1 : 0, o: (priv && priv.obj) || obj || '', c: priv ? priv.code : '', r: FOLLOW.room || '' });
   SPV = spec || null; try { $('specTag').hidden = true; } catch (e) {}
   try { if (S.voice !== 'off') vcApply(); } catch (e) {}
   PRIV = priv || null; if (PRIV) { isDuel = false; isRanked = false; obj = PRIV.obj; }
@@ -5904,7 +5935,7 @@ async function startTDM(isDuel, isRanked, obj, priv, spec) {
   if (obj === 'gg') { gg = true; SCORE_LIMIT = 1e9; T.gg = {}; T.ggWin = ''; }
   if (room) {
     desc.textContent = duel ? 'Finding your rival…' : 'Joining the battle…';
-    const rn = SPV ? SPV.room : duel ? (party ? 'duel-p-' + party.toLowerCase() : 'duel-' + (matchCode || 'main')) : ranked ? 'ranked-main' : (obj ? obj + '-' : 'battle-') + (PRIV ? PRIV.code : matchCode || 'main'); T.roomName = duel ? '' : rn;
+    const rn = SPV ? SPV.room : FOLLOW.room ? FOLLOW.room : duel ? (party ? 'duel-p-' + party.toLowerCase() : 'duel-' + (matchCode || 'main')) : ranked ? 'ranked-main' : (obj ? obj + '-' : 'battle-') + (PRIV ? PRIV.code : matchCode || 'main'); T.roomName = rn;
     try { troom = await Promise.race([room.join(rn), sleep(6000).then(() => null)]); } catch (e) { troom = null; }
     if (troom) await sleep(1200);
   }
