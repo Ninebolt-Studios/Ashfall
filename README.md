@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v129)](https://ninebolt-studios.github.io/Ashfall/?v=129)
+## ▶️ [PLAY NOW — latest version (v130)](https://ninebolt-studios.github.io/Ashfall/?v=130)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=129
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=130
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,6 +20,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v130** | https://ninebolt-studios.github.io/Ashfall/?v=130 | **Secondary weapons:** pick a secondary in **Loadout → Secondary** (P9 Sidearm, D50 Hand Cannon or Vektor PDW) and swap between your two guns in a match: **Q**, **1 / 2** or the **mouse wheel** on keyboard, **Ⓨ / Triangle** on controller (ping moved to R3), or the new **swap button** on touch. Each gun keeps its own ammo. Off in Gun Game, Snowball Fight, Zombies and the Firing Range |
 | **v129** | https://ninebolt-studios.github.io/Ashfall/?v=129 | **Operator customization:** new **Operator look** section in Loadout: pick your skin tone (6 tones), beard or clean shaven, face mask on/off, headgear (helmet, cap or none) and glove colour (black, tan, olive). Your operator in the menu changes right away, and other players see your look online (Team Battle, all modes and co-op Zombies) |
 | **v128** | https://ninebolt-studios.github.io/Ashfall/?v=128 | **iPad Smooth mode:** a new **Smooth** graphics setting (Settings → Graphics → Quality) made for iPads and phones: lower resolution, no shadows and no extra effects, so the game stays fast and doesn't freeze. New installs on touch devices start in Smooth, and iPad players who aren't using it get a one-time "Lag or freezing on iPad?" card with a Turn on button |
 | **v127** | https://ninebolt-studios.github.io/Ashfall/?v=127 | **Account loading fix:** when you sign in and pick your account’s progress, the game could save the iPad’s old progress again in the split second before it restarted, so your account didn’t come back. Saving is now paused during that moment, so your account always loads |
