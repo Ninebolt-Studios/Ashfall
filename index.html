@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261120172935',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120173540',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -739,6 +739,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #adsBtn { --ring: var(--accent); } #adsBtn svg { width: 28px; height: 28px; }
 #reloadBtn { --ring: #6aa8e0; } #jumpBtn, #crouchBtn, #slideBtn { --ring: rgba(239,232,214,.6); }
 #swapBtn { width: 86px; height: 40px; border-radius: 12px; right: calc(max(16px, env(safe-area-inset-right, 0px)) + 112px); bottom: calc(212px + env(safe-area-inset-bottom, 0px)); display: grid; place-items: center; align-content: center; gap: 0; --ring: #e8c86a; } #swapBtn[hidden] { display: none; } #swapBtn svg { width: 18px; height: 18px; } #swapBtn small { font: 700 8px var(--display); letter-spacing: .06em; white-space: nowrap; max-width: 80px; overflow: hidden; text-overflow: ellipsis; }
+#knifeBtn { width: 48px; height: 48px; right: calc(max(16px, env(safe-area-inset-right, 0px)) + 34px); bottom: calc(276px + env(safe-area-inset-bottom, 0px)); display: grid; place-items: center; --ring: #d8d8d8; }
 #nadeBtn { --ring: #8bd17c; } #nadeBtn svg { width: 26px; height: 26px; } #nadeBtn small { font: 700 12px var(--mono); color: #c8f0b8; margin-top: -2px; }
 #nadeBtn.off { opacity: .4; filter: grayscale(1); }
 .tbtn.ks { --ring: #ff9a5a; } .tbtn.ks svg { width: 30px; height: 30px; color: #ffd0a0; }
@@ -848,6 +849,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
     <div id="nadeBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="11" cy="15" rx="6" ry="7"/><path d="M8 8h6v-3H8z"/><path d="M14 6l4 3"/><circle cx="18" cy="4" r="2"/><path d="M6 15h10M11 9v13"/></svg><small id="nadeN">2</small></div>
     <div id="adsBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg><span>AIM</span></div>
     <div id="swapBtn" class="tbtn touch-only" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg><small></small></div>
+    <div id="knifeBtn" class="tbtn touch-only"><span style="font-size:20px">🔪</span></div>
     <div id="reloadBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 3v5h5"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 21v-5h-5"/></svg><span>RELOAD</span></div>
     <div id="fireBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><path d="M12 1v6M12 17v6M1 12h6M17 12h6"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg><span>FIRE</span><small>drag to aim</small></div>
   </div>
@@ -1510,6 +1512,8 @@ const WEAPONS = {
   snp: { name: 'Kestrel .338', cls: 'Sniper rifle', mag: 5, rate: 1.25, dmg: 92, head: 2.5, r0: 80, r1: 140, fall: 0.85, spread: 0.0012, hip: 0.05, move: 0.06, recoil: 0.05, reload: 3.0, zoom: 4, mob: 0.9, snd: 'snp', stats: [1, 0.1, 1, 0.2] },
   pst: { name: 'P9 Sidearm', cls: 'Pistol', mag: 15, rate: 0.15, dmg: 28, head: 2, r0: 15, r1: 40, fall: 0.55, spread: 0.008, move: 0.01, recoil: 0.016, reload: 1.3, zoom: 1.25, mob: 1.1, snd: 'pst', stats: [0.45, 0.5, 0.4, 1] },
   br:  { name: 'MK17 Battle Rifle', cls: 'Battle rifle', mag: 20, rate: 0.16, dmg: 42, head: 2, r0: 35, r1: 78, fall: 0.72, spread: 0.006, move: 0.022, recoil: 0.021, reload: 2.2, zoom: 1.8, mob: 0.95, snd: 'ar', stats: [0.78, 0.4, 0.82, 0.5] },
+  xbow: { name: 'Talon Crossbow', cls: 'Crossbow', mag: 1, rate: 0.6, dmg: 105, head: 2, r0: 60, r1: 120, fall: 0.9, spread: 0.002, hip: 0.02, move: 0.02, recoil: 0.035, reload: 1.5, zoom: 2.2, mob: 1, snd: 'dmr', stats: [0.95, 0.15, 0.85, 0.7] },
+  rpg: { name: 'M3 Launcher', cls: 'Rocket launcher', mag: 1, rate: 1, dmg: 0, head: 1, r0: 100, r1: 150, fall: 1, spread: 0.004, move: 0.02, recoil: 0.06, reload: 3.2, zoom: 1.4, mob: 0.9, snd: 'snp', rocket: true, stats: [1, 0.05, 0.7, 0.3] },
   pdw: { name: 'Vektor PDW', cls: 'Machine pistol', mag: 40, rate: 0.055, dmg: 14, head: 1.6, r0: 10, r1: 28, fall: 0.45, spread: 0.014, move: 0.01, recoil: 0.006, reload: 1.5, zoom: 1.25, mob: 1.14, snd: 'smg', stats: [0.3, 1.0, 0.28, 0.95] },
   sc7: { name: 'SC-7 Scythe', cls: 'Premium SMG', mag: 42, rate: 0.058, dmg: 20, head: 1.9, r0: 16, r1: 42, fall: 0.55, spread: 0.009, move: 0.009, recoil: 0.0065, reload: 1.6, zoom: 1.35, mob: 1.12, snd: 'smg', stats: [0.48, 0.96, 0.5, 0.94], premium: 2 },
   vx:  { name: 'VX-9 Tempest', cls: 'Premium rifle', mag: 36, rate: 0.085, dmg: 27, head: 2.1, r0: 36, r1: 75, fall: 0.7, spread: 0.006, move: 0.016, recoil: 0.0085, reload: 1.9, zoom: 1.6, mob: 1.03, snd: 'ar', stats: [0.72, 0.74, 0.84, 0.8], premium: 1 },
@@ -2347,6 +2351,22 @@ function buildGunParts(key, grp) {
     PF([[0.05, y - 0.03], [0.02, y - 0.05], [0.07, y - 0.19], [0.13, y - 0.17], [0.09, y - 0.03]], 0.052, GM.fde); trig(0.02, y - 0.065);
     B(0.014, 0.03, 0.02, 0, 0.085, -0.355, GM.metal); B(0.03, 0.025, 0.02, 0, 0.085, 0.04, GM.metal); B(0.01, 0.03, 0.02, 0, y + 0.05, 0.06, GM.metal).rotation.x = -0.6;
     Object.assign(W, { muzzleZ: -0.37, opticY: 0.085, my: 0.03, hip: [0.14, -0.13, -0.4] });
+  } else if (key === 'rpg') { // v131: shoulder-fired launcher
+    const y = 0.06;
+    Cy(0.05, 0.95, 0, y, -0.15, GM.fde); Cy(0.058, 0.07, 0, y, -0.62, GM.metal); Cy(0.06, 0.06, 0, y, 0.34, GM.metal, 0.05);
+    grip(0.02, y - 0.05, GM.poly); trig(-0.02, y - 0.08); PF([[-0.2, y - 0.05], [-0.26, y - 0.05], [-0.25, y - 0.17], [-0.2, y - 0.17]], 0.04, GM.poly);
+    const war = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.16, 12), GM.fde); war.rotation.x = -Math.PI / 2; war.position.set(0, y, -0.73); grp.add(war);
+    B(0.03, 0.06, 0.08, 0.05, y + 0.06, -0.1, GM.metal); B(0.012, 0.03, 0.012, 0, y + 0.07, -0.42, GM.metal);
+    Object.assign(W, { muzzleZ: -0.68, opticY: 0.13, my: y, hip: [0.2, -0.14, -0.42] });
+  } else if (key === 'xbow') { // v131: crossbow
+    const y = 0.03;
+    PF([[0.45, y - 0.02], [0.45, y + 0.02], [-0.42, y + 0.025], [-0.45, y - 0.01], [-0.3, y - 0.04], [0.1, y - 0.04], [0.2, y - 0.1], [0.45, y - 0.1]], 0.05, GM.poly);
+    grip(0.06, y - 0.03, GM.poly); trig(0.02, y - 0.07);
+    for (const sd of [-1, 1]) { const limb = B(0.32, 0.02, 0.03, sd * 0.17, y + 0.01, -0.4, GM.metal); limb.rotation.y = sd * 0.25; }
+    const str = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.004, 0.004), GM.metal); str.position.set(0, y + 0.015, -0.2); grp.add(str);
+    Cy(0.006, 0.5, 0, y + 0.035, -0.3, GM.brass); const tip = new THREE.Mesh(new THREE.ConeGeometry(0.012, 0.05, 8), GM.metal); tip.rotation.x = -Math.PI / 2; tip.position.set(0, y + 0.035, -0.57); grp.add(tip);
+    scope(0.1, -0.02, 0.26, 0.026); B(0.025, 0.04, 0.025, 0, 0.07, -0.02, GM.metal);
+    Object.assign(W, { muzzleZ: -0.56, opticY: 0.1, my: y + 0.035 });
   } else if (key === 'vx') {
     const o = rifle({ my: 0.01, opticY: 0.172, muzzleZ: -0.97, rear0: 0.16, recvF: -0.28, hgEnd: -0.62, magZ: -0.07, mag: 'curved', magLen: 0.2, stock: 'fixed', stockEnd: 0.56, hg: 'rail', br: 0.02, muzzle: 'brake', optic: 'holo', opticZ: 0.02 });
     const gold = VXM.gold, glow = VXM.glow;
@@ -2551,10 +2571,10 @@ let state = 'menu', mode = 'siege';
 const input = { mx: 0, mz: 0, fire: false, keys: {}, looked: 0, ldx: 0, ldy: 0, jump: false };
 const ray = new THREE.Raycaster();
 const tmpV = new THREE.Vector3(), tmpV2 = new THREE.Vector3();
-const reserveOf = k => { let z = false; try { z = zmb; } catch (e) {} return magOf(k) * (z ? 5 : 3); }; // spare bullets you carry: 3 extra mags (5 in Zombies)
+const reserveOf = k => { let z = false; try { z = zmb; } catch (e) {} if (k === 'rpg') return z ? 6 : 2; if (k === 'xbow') return z ? 30 : 12; return magOf(k) * (z ? 5 : 3); }; // spare bullets you carry: 3 extra mags (5 in Zombies)
 function equip(key) { P.w = key; P.ammo = magOf(key); P.res = reserveOf(key); P.reloading = 0; P.bag = {}; buildGun(key); applyCamo(); }
 // v130: secondary weapon slot
-const SECONDARIES = ['pst', 'rev', 'pdw'];
+const SECONDARIES = ['pst', 'rev', 'pdw', 'rpg'];
 let secondary = SECONDARIES.includes(store.get('secondary', 'pst')) ? store.get('secondary', 'pst') : 'pst';
 function canSwap() { return state === 'play' && P.alive && !P.downed && !gg && !snowb && !(mode === 'siege' && (zmb || rng)) && mode !== 'menu'; }
 function swapWeapon() {
@@ -5349,6 +5369,42 @@ function renderLook() {
   row('Gloves', 4, [[0, 'Black'], [1, 'Tan'], [2, 'Olive']]);
 }
 try { renderLook(); } catch (e) {}
+/* ---------- v131: rockets and the knife ---------- */
+const ROCKETS = [];
+function fireRocket() {
+  const d = new THREE.Vector3(); camera.getWorldDirection(d); const from = camera.getWorldPosition(new THREE.Vector3()).addScaledVector(d, 0.8).add(new THREE.Vector3(0, -0.12, 0));
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.07, 0.5, 8), new THREE.MeshStandardMaterial({ color: 0x4a4c3a, emissive: 0xff6a1a, emissiveIntensity: 0.3 }));
+  m.position.copy(from); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d); scene.add(m);
+  ROCKETS.push({ m, v: d.multiplyScalar(48), life: 3 });
+  try { noise(0.5, 0.5, 600); tone(90, 0.4, 'sawtooth', 0.12, 40); } catch (e) {} haptic('boom'); P.shake = Math.max(P.shake, 0.3);
+}
+function stepRockets(dt) {
+  for (let i = ROCKETS.length - 1; i >= 0; i--) {
+    const r = ROCKETS[i], p = r.m.position; r.life -= dt; p.addScaledVector(r.v, dt); if (Math.random() < 0.8) spark(p.clone(), 0xffa040, 2);
+    let hit = r.life <= 0 || p.y <= 0.1 || (p.y < 5 && nadeSolid({ x: p.x, y: p.y, z: p.z }));
+    if (!hit) { if (mode === 'siege') { for (const e of enemies) if (e.g.position.distanceTo(p) < 1.2) { hit = true; break; } } else for (const e of T.ents.values()) if (e.alive && isFoe(e) && Math.hypot(e.rx - p.x, e.rz - p.z) < 0.9 && p.y < 2.1) { hit = true; break; } }
+    if (hit) { scene.remove(r.m); r.m.geometry.dispose(); ROCKETS.splice(i, 1); nadeBlast(p.x, Math.max(0, p.y), p.z); }
+  }
+}
+// knife: quick melee on E (keyboard), R3 (controller) or the knife button (touch)
+const knifeMesh = (() => { const g = new THREE.Group(); const bl = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.035, 0.2), new THREE.MeshStandardMaterial({ color: 0xc8ccd2, metalness: 0.9, roughness: 0.25 })); bl.position.z = -0.12; g.add(bl);
+  const hd = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.04, 0.1), new THREE.MeshStandardMaterial({ color: 0x1c1d1f, roughness: 0.8 })); g.add(hd); g.visible = false; camera.add(g); return g; })();
+function knifeAttack() {
+  if (state !== 'play' || !P.alive || P.downed || (P.knifeT || 0) > 0 || (mode === 'tdm' && T.win) || snowb) return;
+  P.knifeT = 0.55; P.ads = false; try { noise(0.12, 0.2, 2200, 'bandpass', 2); } catch (e) {}
+  const fx = -Math.sin(P.yaw), fz = -Math.cos(P.yaw); let best = null, bd = 2.3;
+  const cand = mode === 'siege' ? enemies.map(e => ({ x: e.g.position.x, z: e.g.position.z, e })) : [...T.ents.values()].filter(e => e.alive && isFoe(e)).map(e => ({ x: e.rx, z: e.rz, e }));
+  for (const c of cand) { const dx = c.x - P.pos.x, dz = c.z - P.pos.z, d = Math.hypot(dx, dz); if (d < bd && (dx * fx + dz * fz) / (d || 1) > 0.55) { bd = d; best = c; } }
+  if (!best) return;
+  const e = best.e; hitMarker('kill'); try { sfx.hit(); } catch (er) {} spark(new THREE.Vector3(best.x, 1.2, best.z), 0x8a1010, 10);
+  if (mode === 'siege') { if (e.kind === 'zombie' && !(e.rep && COOP.on && !COOP.host)) hitZombie(e, 400, false); else dmgEnemy(e, 400); return; }
+  if (e.v) e.v.flashT = 0.06; if (e.kind === 'bot' && T.isHost) botDamage(e.id, 200, myPeer); else T.myDm[e.id] = (T.myDm[e.id] || 0) + 200;
+}
+function stepKnife(dt) {
+  if ((P.knifeT || 0) <= 0) { knifeMesh.visible = false; return; }
+  P.knifeT -= dt; const t = 1 - P.knifeT / 0.55; knifeMesh.visible = true;
+  knifeMesh.position.set(0.25 - t * 0.4, -0.16 + Math.sin(t * Math.PI) * 0.06, -0.38); knifeMesh.rotation.set(-0.2, 0.9 - t * 1.6, 0.3);
+}
 /* ---------- custom HUD layout (drag + resize touch buttons) ---------- */
 const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn', 'inspBtn'];
 function applyHudLayout() {
@@ -5848,6 +5904,7 @@ const muzzle = new THREE.Vector3();
 function fire() {
   if (snowb && mode === 'tdm') { throwSnowball(); return; }
   const w = W();
+  if (w.rocket) { if (!P.alive || P.reloading > 0 || P.cooldown > 0 || (mode === 'tdm' && T.win)) return; if (P.ammo <= 0) { sfx.empty(); P.cooldown = 0.25; startReload(); return; } P.ammo--; P.cooldown = w.rate; P.kick += 0.08; fireRocket(); updHud(); if (P.ammo <= 0) setTimeout(() => startReload(), 350); return; }
   if (!P.alive || P.reloading > 0 || P.cooldown > 0 || (mode === 'tdm' && T.win)) return;
   if (P.ammo <= 0) { sfx.empty(); P.cooldown = 0.25; startReload(); return; }
   P.ammo--; P.cooldown = w.rate; P.shots++;
@@ -5913,6 +5970,7 @@ window.addEventListener('keydown', ev => {
   if (ev.code === 'Tab') { ev.preventDefault(); boardHold = true; if (T.bdT !== undefined) T.bdT = 0; }
   if (state === 'play') {
     if (ev.code === 'KeyR') startReload();
+    if (ev.code === 'KeyE') knifeAttack();
     if ((ev.code === 'KeyQ' || ((ev.code === 'Digit1' || ev.code === 'Digit2') && $('qcPanel').hidden && !(mode === 'tdm' && T.win))) && !(ev.code === 'Digit1' && P.w === loadout) && !(ev.code === 'Digit2' && P.w !== loadout)) swapWeapon();
     if (ev.code === 'KeyG') throwNade();
     if (ev.code === 'KeyB' && zmb) zBuyGun();
@@ -5968,6 +6026,7 @@ function onTouchStart(ev) {
     if (el.closest('#fireBtn')) { fireId = t.identifier; fireX = t.clientX; fireY = t.clientY; input.fire = true; fireBtn.classList.add('on'); continue; }
     if (el.closest('#reloadBtn')) { startReload(); continue; }
     if (el.closest('#swapBtn')) { swapWeapon(); continue; }
+    if (el.closest('#knifeBtn')) { knifeAttack(); continue; }
     if (el.closest('#jumpBtn')) { input.jump = true; continue; }
     if (el.closest('#nadeBtn')) { throwNade(); continue; }
     if (el.closest('#zBuy')) { zBuyGun(); continue; }
@@ -6076,8 +6135,8 @@ function pollPad(dt) {
     if (down(3)) swapWeapon();
     if (down(4)) try { throwNade(); } catch (e) {}
     if (down(10)) GP.sprint = !GP.sprint;
-    if (down(11)) doPing();
-    if (down(12)) sendQc(0); if (down(15)) sendQc(2); if (down(13)) sendQc(1); if (down(14)) sendQc(4);
+    if (down(11)) knifeAttack();
+    if (down(12)) sendQc(0); if (down(15)) sendQc(2); if (down(13)) doPing(); if (down(14)) sendQc(4);
     if (down(5)) { try { const k = document.querySelector('.tbtn.ks:not([hidden])'); if (k) k.click(); } catch (e) {} }
   } else { GP.mx = GP.mz = 0; if (GP.fire) { GP.fire = false; input.fire = false; } }
   if (Math.hypot(GP.mx, GP.mz) < 0.3) GP.sprint = false;
@@ -6201,7 +6260,7 @@ function stepPlayer(dt) {
   P.lastYaw = P.yaw; P.lastPitch = P.pitch;
   P.sway += (clamp(dyaw * idt2 * 0.012 * motion, -0.05, 0.05) * (1 - P.adsT * 0.8) - P.sway) * ks;
   P.swayY += (clamp(-dpit * idt2 * 0.012 * motion, -0.04, 0.04) * (1 - P.adsT * 0.8) - P.swayY) * ks;
-  gun.visible = P.alive && !(optic && optic !== 'irons' && P.adsT > 0.5) && !(snowb && mode === 'tdm');
+  gun.visible = P.alive && !(optic && optic !== 'irons' && P.adsT > 0.5) && !(snowb && mode === 'tdm') && !((P.knifeT || 0) > 0);
   try { snowHand.visible = snowb && mode === 'tdm' && P.alive && SNOWB.cd <= 0.25; } catch (e) {}
   P.cooldown = Math.max(0, P.cooldown - dt); if (P.swapT > 0) P.swapT = Math.max(0, P.swapT - dt);
   if (P.flashT > 0) { P.flashT -= dt; if (P.flashT <= 0) { flash.visible = false; flashLight.intensity = 0; } }
@@ -6332,7 +6391,7 @@ function loop() {
   // iPad browsers don't always report toolbar size changes, so check the visible size ourselves
   sizeT -= raw; if (sizeT <= 0) { sizeT = 0.5; const vh = appH(), cv = document.getElementById('view').clientHeight; if (vh !== lastAppH || Math.abs(cv - vh) > 2 || window.innerWidth !== lastAppW) resize(); }
   stepBulletFx(dt); stepFX(dt);
-  if (state === 'play') { stepNades(dt); stepSalvage(dt); stepMissile(dt); try { stepKS(dt); } catch (e) {} try { stepSnow(dt); } catch (e) {} if (scanT > 0) scanT = Math.max(0, scanT - dt); updStreak(); }
+  if (state === 'play') { stepNades(dt); stepSalvage(dt); stepMissile(dt); try { stepKS(dt); stepRockets(dt); stepKnife(dt); } catch (e) {} try { stepSnow(dt); } catch (e) {} if (scanT > 0) scanT = Math.max(0, scanT - dt); updStreak(); }
   if (state === 'play' || (state === 'paused' && mode === 'tdm')) fx(dt);
   radarT -= dt; if (state === 'play' && S.radar && radarT <= 0) { radarT = 0.1; drawRadar(); if (window.scrollY || (document.scrollingElement && document.scrollingElement.scrollTop)) fixViewport(); }
   renderer.render(scene, camera);
