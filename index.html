@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261120172721',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120172935',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -738,6 +738,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #fireBtn.on { background: radial-gradient(circle at 50% 35%, rgba(255,90,64,.6), rgba(90,14,8,.85) 75%) !important; }
 #adsBtn { --ring: var(--accent); } #adsBtn svg { width: 28px; height: 28px; }
 #reloadBtn { --ring: #6aa8e0; } #jumpBtn, #crouchBtn, #slideBtn { --ring: rgba(239,232,214,.6); }
+#swapBtn { width: 86px; height: 40px; border-radius: 12px; right: calc(max(16px, env(safe-area-inset-right, 0px)) + 112px); bottom: calc(212px + env(safe-area-inset-bottom, 0px)); display: grid; place-items: center; align-content: center; gap: 0; --ring: #e8c86a; } #swapBtn[hidden] { display: none; } #swapBtn svg { width: 18px; height: 18px; } #swapBtn small { font: 700 8px var(--display); letter-spacing: .06em; white-space: nowrap; max-width: 80px; overflow: hidden; text-overflow: ellipsis; }
 #nadeBtn { --ring: #8bd17c; } #nadeBtn svg { width: 26px; height: 26px; } #nadeBtn small { font: 700 12px var(--mono); color: #c8f0b8; margin-top: -2px; }
 #nadeBtn.off { opacity: .4; filter: grayscale(1); }
 .tbtn.ks { --ring: #ff9a5a; } .tbtn.ks svg { width: 30px; height: 30px; color: #ffd0a0; }
@@ -846,6 +847,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
     <div id="coopTip" hidden></div>
     <div id="nadeBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="11" cy="15" rx="6" ry="7"/><path d="M8 8h6v-3H8z"/><path d="M14 6l4 3"/><circle cx="18" cy="4" r="2"/><path d="M6 15h10M11 9v13"/></svg><small id="nadeN">2</small></div>
     <div id="adsBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg><span>AIM</span></div>
+    <div id="swapBtn" class="tbtn touch-only" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg><small></small></div>
     <div id="reloadBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 3v5h5"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 21v-5h-5"/></svg><span>RELOAD</span></div>
     <div id="fireBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><path d="M12 1v6M12 17v6M1 12h6M17 12h6"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg><span>FIRE</span><small>drag to aim</small></div>
   </div>
@@ -1015,6 +1017,8 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
 
     <section class="pane" id="pane-loadout" hidden>
       <div class="weapons" id="weaponList"></div>
+      <h3 class="subh">Secondary <small style="font-weight:500;letter-spacing:0;text-transform:none;opacity:.7">· swap with Q / 1-2 / mouse wheel, Ⓨ on controller, or the swap button</small></h3>
+      <div class="weapons" id="secList"></div>
       <p class="tip">Your weapon changes the next time you spawn.</p>
       <h3 class="subh" id="attHead">Attachments</h3>
       <div class="perks" id="attList"></div>
@@ -2548,7 +2552,22 @@ const input = { mx: 0, mz: 0, fire: false, keys: {}, looked: 0, ldx: 0, ldy: 0, 
 const ray = new THREE.Raycaster();
 const tmpV = new THREE.Vector3(), tmpV2 = new THREE.Vector3();
 const reserveOf = k => { let z = false; try { z = zmb; } catch (e) {} return magOf(k) * (z ? 5 : 3); }; // spare bullets you carry: 3 extra mags (5 in Zombies)
-function equip(key) { P.w = key; P.ammo = magOf(key); P.res = reserveOf(key); P.reloading = 0; buildGun(key); applyCamo(); }
+function equip(key) { P.w = key; P.ammo = magOf(key); P.res = reserveOf(key); P.reloading = 0; P.bag = {}; buildGun(key); applyCamo(); }
+// v130: secondary weapon slot
+const SECONDARIES = ['pst', 'rev', 'pdw'];
+let secondary = SECONDARIES.includes(store.get('secondary', 'pst')) ? store.get('secondary', 'pst') : 'pst';
+function canSwap() { return state === 'play' && P.alive && !P.downed && !gg && !snowb && !(mode === 'siege' && (zmb || rng)) && mode !== 'menu'; }
+function swapWeapon() {
+  if (!canSwap() || (P.swapT || 0) > 0) return;
+  const other = P.w === loadout ? (secondary !== loadout ? secondary : null) : loadout; if (!other || !WEAPONS[other]) return;
+  P.bag = P.bag || {}; P.bag[P.w] = { a: P.ammo, r: P.res };
+  const keep = P.bag; P.w = other; buildGun(other); applyCamo(); P.bag = keep;
+  const b = P.bag[other]; P.ammo = b ? b.a : magOf(other); P.res = b ? b.r : reserveOf(other); P.reloading = 0; P.ads = false;
+  P.swapT = 0.45; P.cooldown = Math.max(P.cooldown || 0, 0.45); P.inspT = 0;
+  try { tone(520, 0.05, 'triangle', 0.06); tone(380, 0.06, 'triangle', 0.05, null, 0.12); } catch (e) {}
+  updHud(); updSwapBtn();
+}
+function updSwapBtn() { const b = $('swapBtn'); if (!b) return; const ok = canSwap(); b.hidden = !ok; if (ok) b.querySelector('small').textContent = (WEAPONS[P.w === loadout ? secondary : loadout] || {}).name || ''; }
 
 /* pooled effects */
 const sparkGeo = new THREE.BoxGeometry(0.06, 0.06, 0.06);
@@ -2995,7 +3014,8 @@ function updHud() {
   hud.hp.style.width = hp + '%'; hud.hpNum.textContent = hp;
   hud.hp.style.background = P.hp > 60 ? 'linear-gradient(90deg, #5fc95a, #b8e86a)' : P.hp > 30 ? 'linear-gradient(90deg, #e0a030, #f2d050)' : 'linear-gradient(90deg, #d8352a, #f06a4a)';
   hud.ammo.innerHTML = snowb && mode === 'tdm' ? '∞' : P.ammo + '<small> / ' + (P.res || 0) + '</small>';
-  hud.wName.textContent = snowb && mode === 'tdm' ? 'Snowball' : W().name;
+  hud.wName.textContent = (snowb && mode === 'tdm' ? 'Snowball' : W().name) + (canSwap() && secondary !== loadout ? (P.w === loadout ? ' · 1' : ' · 2') : '');
+  try { updSwapBtn(); } catch (e) {}
   hud.reload.textContent = P.reloading > 0 ? 'RELOADING' : P.ammo === 0 && !(P.res > 0) ? 'NO AMMO' : P.ammo === 0 ? 'RELOAD' : P.ammo <= magOf(P.w) * 0.25 && !(P.res > 0) ? 'LAST MAG' : P.ammo <= magOf(P.w) * 0.25 ? 'LOW AMMO' : '';
   if (mode === 'siege') { hud.score.textContent = score.toLocaleString(); hud.wave.textContent = wave; }
   else { hud.score.textContent = P.kills; hud.kd.textContent = 'Deaths ' + P.matchDeaths; }
@@ -4089,7 +4109,15 @@ function renderLoadout() {
     b.addEventListener('click', () => { loadout = key; store.set('loadout', key); renderLoadout(); if (state === 'menu' || state === 'over') equip(key); });
     box.appendChild(b);
   }
-  renderSkins(); renderTitles();
+  renderSecondary(); renderSkins(); renderTitles();
+}
+function renderSecondary() {
+  const box = $('secList'); if (!box) return; box.textContent = '';
+  for (const key of SECONDARIES) { const w = WEAPONS[key]; if (!w || !weaponOwned(key)) continue;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'wcard'; b.setAttribute('aria-pressed', String(secondary === key));
+    b.innerHTML = `<div class="wtop"><span class="wname"></span><span class="equipped">EQUIPPED</span></div><span class="wcls"></span>${PREV[key] ? `<img alt="" src="${PREV[key]}">` : '<span class="ph"></span>'}`;
+    b.querySelector('.wname').textContent = w.name; b.querySelector('.wcls').textContent = w.cls + ' · secondary';
+    b.addEventListener('click', () => { secondary = key; store.set('secondary', key); renderSecondary(); }); box.appendChild(b); }
 }
 function swatchCard(label, colors, pressed, locked, lockTxt, onPick) {
   const b = document.createElement('button'); b.type = 'button'; b.className = 'skin'; b.setAttribute('aria-pressed', String(pressed));
@@ -4769,7 +4797,7 @@ function renderSettings() {
   }
 }
 $('resetSettings').addEventListener('click', () => { Object.assign(S, DEF); saveS(); renderSettings(); applyQuality(); applySettings(); });
-const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'streaks', 'look', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase', 'cfriends', 'clan'];
+const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'streaks', 'look', 'secondary', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase', 'cfriends', 'clan'];
 function makeBackup() {
   const data = {}; for (const k of ACCT_KEYS) { const v = store.get(k, null); if (v !== null) data[k] = v; }
   try { return 'DL1.' + btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/=+$/, ''); } catch (e) { return ''; }
@@ -5885,6 +5913,7 @@ window.addEventListener('keydown', ev => {
   if (ev.code === 'Tab') { ev.preventDefault(); boardHold = true; if (T.bdT !== undefined) T.bdT = 0; }
   if (state === 'play') {
     if (ev.code === 'KeyR') startReload();
+    if ((ev.code === 'KeyQ' || ((ev.code === 'Digit1' || ev.code === 'Digit2') && $('qcPanel').hidden && !(mode === 'tdm' && T.win))) && !(ev.code === 'Digit1' && P.w === loadout) && !(ev.code === 'Digit2' && P.w !== loadout)) swapWeapon();
     if (ev.code === 'KeyG') throwNade();
     if (ev.code === 'KeyB' && zmb) zBuyGun();
     if (ev.code === 'KeyZ') doPing();
@@ -5903,6 +5932,7 @@ window.addEventListener('keydown', ev => {
 window.addEventListener('keyup', ev => { input.keys[ev.code] = false; if (ev.code === 'Tab') boardHold = false; });
 let dragLook = false, lastMX = 0, lastMY = 0;
 canvas.addEventListener('contextmenu', ev => ev.preventDefault());
+window.addEventListener('wheel', ev => { if (state === 'play' && !isTouch && Math.abs(ev.deltaY) > 20) swapWeapon(); }, { passive: true });
 canvas.addEventListener('mousedown', ev => {
   if (state !== 'play' || isTouch) return;
   if (!document.pointerLockElement) { lockPointer(); dragLook = true; lastMX = ev.clientX; lastMY = ev.clientY; }
@@ -5937,6 +5967,7 @@ function onTouchStart(ev) {
     { const tb = el.closest('.tbtn'); if (tb) { tb.classList.add('press'); setTimeout(() => tb.classList.remove('press'), 150); haptic(tb.id === 'fireBtn' ? 'fire' : 'tap', true); } }
     if (el.closest('#fireBtn')) { fireId = t.identifier; fireX = t.clientX; fireY = t.clientY; input.fire = true; fireBtn.classList.add('on'); continue; }
     if (el.closest('#reloadBtn')) { startReload(); continue; }
+    if (el.closest('#swapBtn')) { swapWeapon(); continue; }
     if (el.closest('#jumpBtn')) { input.jump = true; continue; }
     if (el.closest('#nadeBtn')) { throwNade(); continue; }
     if (el.closest('#zBuy')) { zBuyGun(); continue; }
@@ -6042,10 +6073,10 @@ function pollPad(dt) {
     if (down(0)) input.jump = true;
     if (down(1)) { if (!(P.sprinting && startSlide())) P.crouch = !P.crouch; }
     if (down(2)) startReload();
-    if (down(3)) doPing();
+    if (down(3)) swapWeapon();
     if (down(4)) try { throwNade(); } catch (e) {}
     if (down(10)) GP.sprint = !GP.sprint;
-    if (down(11)) startInspect();
+    if (down(11)) doPing();
     if (down(12)) sendQc(0); if (down(15)) sendQc(2); if (down(13)) sendQc(1); if (down(14)) sendQc(4);
     if (down(5)) { try { const k = document.querySelector('.tbtn.ks:not([hidden])'); if (k) k.click(); } catch (e) {} }
   } else { GP.mx = GP.mz = 0; if (GP.fire) { GP.fire = false; input.fire = false; } }
@@ -6172,11 +6203,11 @@ function stepPlayer(dt) {
   P.swayY += (clamp(-dpit * idt2 * 0.012 * motion, -0.04, 0.04) * (1 - P.adsT * 0.8) - P.swayY) * ks;
   gun.visible = P.alive && !(optic && optic !== 'irons' && P.adsT > 0.5) && !(snowb && mode === 'tdm');
   try { snowHand.visible = snowb && mode === 'tdm' && P.alive && SNOWB.cd <= 0.25; } catch (e) {}
-  P.cooldown = Math.max(0, P.cooldown - dt);
+  P.cooldown = Math.max(0, P.cooldown - dt); if (P.swapT > 0) P.swapT = Math.max(0, P.swapT - dt);
   if (P.flashT > 0) { P.flashT -= dt; if (P.flashT <= 0) { flash.visible = false; flashLight.intensity = 0; } }
   if (P.reloading > 0) { P.reloading -= dt; if (P.reloading <= 0) { P.reloading = 0; const take = Math.min(magOf(P.w) - P.ammo, P.res || 0); P.ammo += take; P.res = (P.res || 0) - take; updHud(); } }
   if (input.fire || (S.auto && onTarget)) fire();
-  const rT = W().reload, dip = P.reloading > 0 ? Math.sin((rT - P.reloading) / rT * Math.PI) * 0.22 : 0;
+  const rT = W().reload, dip = (P.reloading > 0 ? Math.sin((rT - P.reloading) / rT * Math.PI) * 0.22 : 0) + (P.swapT > 0 ? Math.min(1, P.swapT / 0.45 * 1.6) * 0.3 : 0);
   const hb = (1 - P.adsT) * motion, sprintTilt = sprint ? 1 : 0;
   gun.position.set(
     THREE.MathUtils.lerp(GUN_HIP.x, GUN_ADS.x, P.adsT) + Math.cos(P.bob * 0.5) * 0.012 * moveAmt * hb + P.sway,
