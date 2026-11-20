@@ -98,7 +98,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261120175947',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120180142',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -1314,6 +1314,9 @@ const CAMOS = {
   platinum: { name: 'Platinum', c: [0xd8dde4, 0x8a929c, 0xffffff], lvl: 25, metal: true, pat: 'facets' },
   obsidian2: { name: 'Obsidian Flame', c: [0x14121a, 0x05040a, 0xff5a2a], lvl: 50, metal: true, pat: 'cracks' },
   damascus: { name: 'Damascus', c: [0x9aa0a8, 0x3a3e46, 0xd0d4da], lvl: 75, metal: true, pat: 'stripes' },
+  inferno: { name: 'Inferno', c: [0xff5a0a, 0x2a0602, 0xffd24a], kills: 100, metal: true, pat: 'cracks', anim: 'flow' },
+  prismatic: { name: 'Prismatic', c: [0xff6ad0, 0x2a2a6a, 0x6afff0], kills: 250, metal: true, pat: 'facets', anim: 'hue' },
+  singularity: { name: 'Singularity', c: [0x0a0418, 0x000000, 0x9a6aff], kills: 'all', metal: true, pat: 'stars', anim: 'flow' },
   darkmatter: { name: 'Dark Matter', c: [0x2a0a5a, 0x05020c, 0xc04aff], lvl: 100, metal: true, pat: 'stars' },
   // shop crate camos (work on every gun)
   olive:   { name: 'Olive Drab', c: [0x6a7040, 0x3a4020, 0x8a9058], crate: 'common' },
@@ -1523,7 +1526,9 @@ const WLV_KILLS = [0, 5, 12, 20, 30, 42, 56, 72, 90, 110];
 for (let L = 11; L <= 100; L++) WLV_KILLS.push(WLV_KILLS[L - 2] + 20 + Math.floor((L - 10) * 1.2));
 const WLV_MAX = WLV_KILLS.length;
 function wLevel(w) { const n = WL[w] || 0; let l = 1; for (let i = 1; i < WLV_MAX; i++) if (n >= WLV_KILLS[i]) l = i + 1; return l; }
-function camoOwned(k, w) { const d = CAMOS[k]; if (!d) return false; return d.lvl ? wLevel(w) >= d.lvl : bpOwned('camo', k); }
+function camoOwned(k, w) { const d = CAMOS[k]; if (!d) return false; if (d.kills) return d.kills === 'all' ? masteredAll() : (WL[w] || 0) >= d.kills; return d.lvl ? wLevel(w) >= d.lvl : bpOwned('camo', k); }
+// v140: mastery camos: Inferno (100 kills with a gun), Prismatic (250), Singularity (100 kills with every standard gun)
+function masteredAll() { return Object.keys(WEAPONS).filter(k => !WEAPONS[k].premium).every(k => (WL[k] || 0) >= 100); }
 function camoOf(w) { const k = WCAMO[w] !== undefined ? WCAMO[w] : myCamo; return CAMOS[k] && camoOwned(k, w) ? k : 'none'; }
 let myTitle = String(store.get('title', '') || '');
 let party = String(store.get('party', '') || '').replace(/[^A-Z0-9]/gi, '').slice(0, 6).toUpperCase();
@@ -2252,11 +2257,19 @@ function applyCamo(force) {
     GM.metal.metalness = c.metal ? 0.85 : 0.3; GM.poly.metalness = c.metal ? 0.85 : 0; GM.fde.metalness = c.metal ? 0.85 : 0;
     GM.metal.roughness = c.metal ? 0.28 : 0.55; GM.poly.roughness = c.metal ? 0.28 : 0.8; GM.fde.roughness = c.metal ? 0.28 : 0.8;
   }
+  { const d = CAMOS[k], an = !!(d && d.anim) && !(!force && bpActive(P.w)); mats.forEach(m => { m.emissiveMap = an ? m.map : null; m.emissive.setHex(an ? 0xffffff : 0x000000); m.emissiveIntensity = an ? 0.45 : 0; }); CAMO_ANIM.k = an ? k : ''; }
   if (!force && bpActive(P.w)) { const d = BP_DEFS[P.w];
     GM.poly.map = GM_ORIG.poly; GM.fde.map = GM_ORIG.fde; GM.metal.map = GM_ORIG.metal;
     GM.poly.color.setHex(d.a).convertSRGBToLinear(); GM.fde.color.setHex(d.a).convertSRGBToLinear(); GM.metal.color.setHex(d.b).convertSRGBToLinear();
     GM.metal.metalness = d.metal ? 0.95 : 0.7; GM.metal.roughness = d.metal ? 0.25 : 0.4; GM.poly.roughness = 0.6; GM.fde.roughness = 0.6; }
   mats.forEach(m => { m.needsUpdate = true; });
+}
+const CAMO_ANIM = { k: '', t: 0 };
+function stepCamoAnim(dt) {
+  if (!CAMO_ANIM.k) return; const d = CAMOS[CAMO_ANIM.k]; if (!d) return; CAMO_ANIM.t += dt; const t = CAMO_ANIM.t, tex = GM.metal.map;
+  if (tex && d.anim === 'flow') { tex.offset.x = (t * 0.05) % 1; tex.offset.y = (t * 0.02) % 1; }
+  if (d.anim === 'hue') [GM.poly, GM.fde, GM.metal].forEach((m, i) => m.color.setHSL((t * 0.08 + i * 0.1) % 1, 0.7, 0.7));
+  const pulse = 0.35 + Math.sin(t * 2.2) * 0.15; [GM.poly, GM.fde, GM.metal].forEach(m => { m.emissiveIntensity = pulse; });
 }
 const HOLO_GLASS = new THREE.MeshBasicMaterial({ color: 0x9ad8ff, transparent: true, opacity: 0.16, depthWrite: false });
 const SCM = { copper: new THREE.MeshStandardMaterial({ color: 0xb8673a, roughness: 0.3, metalness: 0.9 }), glow: new THREE.MeshBasicMaterial({ color: 0xff8a2a, toneMapped: false }) };
@@ -4280,7 +4293,7 @@ function renderSkins() {
   }
   const w = loadout, cur = camoOf(w);
   $('camoHead').textContent = 'Weapon camo · ' + WEAPONS[w].name + ' · Level ' + wLevel(w);
-  for (const [k, d] of Object.entries(CAMOS)) cb.appendChild(swatchCard(d.name, k === 'none' ? [0x2a2c2e, 0x55595d, 0x8a7a5a] : d.c.map(c => c === 0xffffff ? 0x555a5e : c), cur === k, !camoOwned(k, w), d.crate ? (d.only ? 'Vault crate' : 'Shop crate') : d.season && d.season !== SEASON ? 'Season ' + d.season + ' pass' : d.lvl ? 'Gun level ' + d.lvl : 'Pass tier ' + unlockTier('camo', k),
+  for (const [k, d] of Object.entries(CAMOS)) cb.appendChild(swatchCard(d.name, k === 'none' ? [0x2a2c2e, 0x55595d, 0x8a7a5a] : d.c.map(c => c === 0xffffff ? 0x555a5e : c), cur === k, !camoOwned(k, w), d.crate ? (d.only ? 'Vault crate' : 'Shop crate') : d.season && d.season !== SEASON ? 'Season ' + d.season + ' pass' : d.kills ? (d.kills === 'all' ? 'Mastery: 100 kills with every gun (' + Object.keys(WEAPONS).filter(q => !WEAPONS[q].premium && (WL[q] || 0) >= 100).length + '/' + Object.keys(WEAPONS).filter(q => !WEAPONS[q].premium).length + ')' : d.kills + ' kills with this gun (' + (WL[w] || 0) + ')') : d.lvl ? 'Gun level ' + d.lvl : 'Pass tier ' + unlockTier('camo', k),
     () => { WCAMO[w] = k; store.set('wcamo', WCAMO); if (P.w === w) applyCamo(); renderSkins(); }));
 }
 function ownedTitles() { const l = [''].concat(BP.owned.filter(k => k.startsWith('title:')).map(k => k.slice(6))); for (const [t, r] of Object.entries(BP_REWARDS)) if (r[0] === 'title' && bpTier() >= +t && !l.includes(r[1])) l.push(r[1]); if (everPremium()) l.push('VIP'); return l; }
@@ -6693,7 +6706,7 @@ function loop() {
   // iPad browsers don't always report toolbar size changes, so check the visible size ourselves
   sizeT -= raw; if (sizeT <= 0) { sizeT = 0.5; const vh = appH(), cv = document.getElementById('view').clientHeight; if (vh !== lastAppH || Math.abs(cv - vh) > 2 || window.innerWidth !== lastAppW) resize(); }
   stepBulletFx(dt); stepFX(dt);
-  if (state === 'play') { stepNades(dt); stepSalvage(dt); stepMissile(dt); try { stepKS(dt); stepRockets(dt); stepKnife(dt); } catch (e) {} try { stepSnow(dt); } catch (e) {} if (scanT > 0) scanT = Math.max(0, scanT - dt); updStreak(); }
+  if (state === 'play') { stepNades(dt); stepSalvage(dt); stepMissile(dt); try { stepKS(dt); stepRockets(dt); stepKnife(dt); stepCamoAnim(dt); } catch (e) {} try { stepSnow(dt); } catch (e) {} if (scanT > 0) scanT = Math.max(0, scanT - dt); updStreak(); }
   if (state === 'play' || (state === 'paused' && mode === 'tdm')) fx(dt);
   radarT -= dt; if (state === 'play' && S.radar && radarT <= 0) { radarT = 0.1; drawRadar(); if (window.scrollY || (document.scrollingElement && document.scrollingElement.scrollTop)) fixViewport(); }
   renderer.render(scene, camera);
