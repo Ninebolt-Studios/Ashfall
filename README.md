@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v132)](https://ninebolt-studios.github.io/Ashfall/?v=132)
+## ▶️ [PLAY NOW — latest version (v133)](https://ninebolt-studios.github.io/Ashfall/?v=133)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=132
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=133
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,6 +20,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v133** | https://ninebolt-studios.github.io/Ashfall/?v=133 | **Hardcore mode:** a new 💀 Hardcore tile in Multiplayer: 5v5 Team Battle online (bots fill in) with **3× damage** for everyone and almost no HUD: no minimap, health bar, ammo count, streak counter or crosshair. First to 50. Also available as a mode in Private matches |
 | **v132** | https://ninebolt-studios.github.io/Ashfall/?v=132 | **Finishing moves:** knife an enemy **from behind** in any multiplayer mode and you get a short cinematic takedown: the camera swings out to third person with black movie bars, your operator (with your look) takes them down and they drop. You're protected while it plays, and it's worth +50 XP |
 | **v131** | https://ninebolt-studios.github.io/Ashfall/?v=131 | **New weapons + knife:** **M3 Launcher** (rocket launcher secondary: one rocket per shot, 2 spare, big blast radius), **Talon Crossbow** (primary: one-shot bolt, built-in scope) and a **quick knife** in every mode: **E** on keyboard, **R3** on controller (ping moved to D-pad down) or the 🔪 button on touch. A knife hit is an instant kill up close |
 | **v130** | https://ninebolt-studios.github.io/Ashfall/?v=130 | **Secondary weapons:** pick a secondary in **Loadout → Secondary** (P9 Sidearm, D50 Hand Cannon or Vektor PDW) and swap between your two guns in a match: **Q**, **1 / 2** or the **mouse wheel** on keyboard, **Ⓨ / Triangle** on controller (ping moved to R3), or the new **swap button** on touch. Each gun keeps its own ammo. Off in Gun Game, Snowball Fight, Zombies and the Firing Range |
