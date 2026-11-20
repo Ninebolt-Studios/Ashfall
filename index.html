@@ -98,7 +98,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261120180539',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120210215',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -744,7 +744,7 @@ body.hardcore #radar, body.hardcore .wpn, body.hardcore #cross, body.hardcore .v
 #fireBtn.on { background: radial-gradient(circle at 50% 35%, rgba(255,90,64,.6), rgba(90,14,8,.85) 75%) !important; }
 #adsBtn { --ring: var(--accent); } #adsBtn svg { width: 28px; height: 28px; }
 #reloadBtn { --ring: #6aa8e0; } #jumpBtn, #crouchBtn, #slideBtn { --ring: rgba(239,232,214,.6); }
-#swapBtn { width: 86px; height: 40px; border-radius: 12px; right: calc(max(16px, env(safe-area-inset-right, 0px)) + 112px); bottom: calc(212px + env(safe-area-inset-bottom, 0px)); display: grid; place-items: center; align-content: center; gap: 0; --ring: #e8c86a; } #swapBtn[hidden] { display: none; } #swapBtn svg { width: 18px; height: 18px; } #swapBtn small { font: 700 8px var(--display); letter-spacing: .06em; white-space: nowrap; max-width: 80px; overflow: hidden; text-overflow: ellipsis; }
+#swapBtn { width: 86px; height: 40px; border-radius: 12px; right: calc(max(16px, env(safe-area-inset-right, 0px)) + 196px); bottom: calc(226px + env(safe-area-inset-bottom, 0px)); display: grid; place-items: center; align-content: center; gap: 0; --ring: #e8c86a; } #swapBtn[hidden] { display: none; } #swapBtn svg { width: 18px; height: 18px; } #swapBtn small { font: 700 8px var(--display); letter-spacing: .06em; white-space: nowrap; max-width: 80px; overflow: hidden; text-overflow: ellipsis; }
 #pingWheel { position: fixed; inset: 0; z-index: 20; background: radial-gradient(circle at 50% 50%, rgba(0,0,0,.55) 0, rgba(0,0,0,.2) 220px, transparent 300px); pointer-events: auto; } #pingWheel[hidden] { display: none; }
 #pingWheel .pw { position: absolute; transform: translate(-50%, -50%); width: 92px; height: 64px; border-radius: 12px; border: 1px solid rgba(255,255,255,.25); background: rgba(14,15,17,.85); color: #fff; display: grid; place-items: center; align-content: center; gap: 2px; cursor: pointer; } #pingWheel .pw b { font-size: 22px; } #pingWheel .pw span { font: 700 10px var(--display); letter-spacing: .06em; }
 #pingWheel .pw.on { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset, 0 0 18px rgba(0,0,0,.5); transform: translate(-50%, -50%) scale(1.08); }
@@ -977,7 +977,7 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
           </button>
           <button class="mode" id="duelBtn" type="button">
             <span class="mode-name">Duel 1v1</span>
-            <span class="mode-desc" id="duelDesc">Face your party member one on one. No bots, first to 7 eliminations. Make a party first and send your friend the code.</span>
+            <span class="mode-desc" id="duelDesc">One on one, first to 7. With a party you face your party member; without one you get matched with anyone else in Duel (or a bot while you wait).</span>
             <span class="chips"><span class="chip hot">Online</span><span class="chip">1 v 1</span><span class="chip">Party</span></span>
           </button>
           <button class="mode" id="ggBtn" type="button">
@@ -2149,6 +2149,25 @@ function buildMap(id) {
       const t = k % 4; if (t === 0) { crate([x, z]); crate([x + 1.5, z]); } else if (t === 1) bags([x, z, 4, 0.9]); else if (t === 2) addBox(x, z, 0.6, 4, 1.3, M.conc, 4, 4); else addBox(x, z, 6.1, 2.44, 2.6, M.cont[k % 3], 6.1, 2.6); }
   }
   decorate(THEME);
+  try { mergeMapMeshes(); } catch (e) {}
+}
+// v143: a map is hundreds of separate boxes; merge the plain ones that share a material into one mesh each (same look, far fewer draw calls)
+function mergeMapMeshes() {
+  const buckets = new Map();
+  for (const m of mapGroup.children) {
+    if (!m.isMesh || m.children.length || m.userData.keep || m.userData.sharedGeo || !m.geometry || !m.geometry.attributes.uv || !m.geometry.attributes.normal || Array.isArray(m.material) || m.material.transparent) continue;
+    const k = m.material.uuid + '|' + (m.castShadow ? 1 : 0) + (m.receiveShadow ? 1 : 0); if (!buckets.has(k)) buckets.set(k, []); buckets.get(k).push(m);
+  }
+  for (const list of buckets.values()) {
+    if (list.length < 2) continue;
+    let n = 0; const geos = list.map(m => { m.updateMatrix(); const g = (m.geometry.index ? m.geometry.toNonIndexed() : m.geometry.clone()).applyMatrix4(m.matrix); n += g.attributes.position.count; return g; });
+    const pos = new Float32Array(n * 3), nor = new Float32Array(n * 3), uv = new Float32Array(n * 2); let o = 0;
+    for (const g of geos) { pos.set(g.attributes.position.array, o * 3); nor.set(g.attributes.normal.array, o * 3); uv.set(g.attributes.uv.array, o * 2); o += g.attributes.position.count; g.dispose(); }
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('normal', new THREE.BufferAttribute(nor, 3)); geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); geo.computeBoundingSphere(); geo.computeBoundingBox();
+    const mm = new THREE.Mesh(geo, list[0].material); mm.castShadow = list[0].castShadow; mm.receiveShadow = list[0].receiveShadow;
+    for (const m of list) { mapGroup.remove(m); m.geometry.dispose(); const i = solids.indexOf(m); if (i >= 0) solids.splice(i, 1); }
+    mapGroup.add(mm); solids.push(mm);
+  }
 }
 
 function collide(p, r, feet = 0) {
@@ -3722,7 +3741,11 @@ function makeBot(id, from) {
   T.bots.push(b); T.botMap[id] = b; return b;
 }
 function ensureRoster(hs) {
-  if (duel) { for (const id in T.botMap) { T.bots.splice(T.bots.indexOf(T.botMap[id]), 1); delete T.botMap[id]; } return; }
+  if (duel) { // v143: no bots once a real rival is here; if nobody comes for 12 s, fight one bot until someone joins
+    const wantBot = hs.length < 2 && (T.duelWait || 0) > 12, bid = (P.team === 'b' ? 'r' : 'b') + '0';
+    for (const id in T.botMap) if (!wantBot || id !== bid) { T.bots.splice(T.bots.indexOf(T.botMap[id]), 1); delete T.botMap[id]; }
+    if (wantBot && !T.botMap[bid]) { makeBot(bid); banner('NO RIVAL YET', 'Fighting a bot until a real player joins your duel', 3); }
+    return; }
   const counts = { b: 0, r: 0 }; hs.forEach(h => counts[h.pr.tm]++);
   for (const team of ['b', 'r']) {
     const need = PRIV && PRIV.bots === 'o' ? 0 : Math.max(0, TEAM_SIZE - counts[team]);
@@ -3970,13 +3993,13 @@ function renderEnts(dt) {
 function updNetStat(hs){
   const el = document.getElementById('netstat');
   const rivals = hs.length - 1;
-  const waiting = troom && state === 'play' && (duel ? rivals < 1 : (rivals < 1 && false));
+  const waiting = troom && state === 'play' && (duel ? rivals < 1 && !(T.duelWait > 12) : false);
   if (!waiting || !troom){ el.hidden = true; return; }
   const st = (window.__dsStat && window.__dsStat.state) || 'connecting';
-  let msg, sub = 'Code: ' + (matchCode || 'open');
+  let msg, sub = party ? 'Party ' + party + ' · your party member must tap Duel 1v1 too' : 'Anyone who taps Duel 1v1 will be matched with you';
   if (st === 'no-webrtc'){ msg = 'Online play not supported here'; sub = 'Try another browser'; }
   else if (st === 'matched'){ el.hidden = true; return; }
-  else if (st === 'hosting'){ msg = 'Waiting for your rival…'; sub = 'They must enter code “' + (matchCode || 'open') + '”'; }
+  else if (st === 'hosting'){ msg = 'Waiting for your rival…'; }
   else if (st === 'joining' || st === 'server' || st === 'connecting'){ msg = 'Linking up…'; }
   else if (st && st.indexOf('error') === 0){ msg = 'Connection blocked'; sub = (window.__dsStat.err || '') + ' · your network may block P2P — try cellular'; }
   else { msg = 'Connecting…'; }
@@ -3995,6 +4018,7 @@ function netTick(dt) {
   const wasHost = T.isHost;
   T.isHost = !!(host && host.me); T.hostPeer = host ? host.peer : null;
   if (T.isHost && !wasHost) becomeHost();
+  if (duel) T.duelWait = hs.length < 2 ? (T.duelWait || 0) + dt : 0;
   if (duel) {
     const opp = hs.find(h => !h.me);
     if (opp) { const want = myPeer < opp.peer ? 'b' : 'r'; if (P.team !== want) { P.team = want; respawnPlayer(); banner('RIVAL FOUND', TEAM_NAME[P.team] + ' · first to ' + SCORE_LIMIT, 2.5); } }
@@ -5870,18 +5894,17 @@ async function startTDM(isDuel, isRanked, obj, priv, spec) {
   SPV = spec || null; try { $('specTag').hidden = true; } catch (e) {}
   try { if (S.voice !== 'off') vcApply(); } catch (e) {}
   PRIV = priv || null; if (PRIV) { isDuel = false; isRanked = false; obj = PRIV.obj; }
-  if (isDuel && !party) { const pm = $('partyMsg'); pm.textContent = 'Duel 1v1 needs a party. Tap Create party and send the code to your friend, or type their code and tap Join.'; pm.style.color = 'var(--accent)'; $('partyBox').scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
   ensureAudio(); clearSiege(); lockPointer();
   duel = !!isDuel; SCORE_LIMIT = duel ? 7 : 65;
   const btn = obj === 'gg' ? $('ggBtn') : obj === 'dom' ? $('domBtn') : obj === 'snd' ? $('sndBtn') : obj === 'kcf' ? $('kcfBtn') : obj === 'hpt' ? $('hpBtn') : obj === 'snow' ? $('snowBtn') : obj === 'hc' ? $('hcBtn') : duel ? $('duelBtn') : isRanked ? $('rankedBtn') : $('tdmBtn'), desc = obj ? btn.querySelector('.mode-desc') : duel ? $('duelDesc') : isRanked ? $('rankedDesc') : $('tdmDesc'), oldDesc = desc.textContent;
   btn.disabled = true; mode = 'tdm'; hpt = obj === 'hpt'; kcf = obj === 'kcf'; dom = obj === 'dom'; snd = obj === 'snd'; rng = false; gg = obj === 'gg'; zmb = false; if (gg) { SCORE_LIMIT = 1e9; T.gg = {}; T.ggWin = ''; } if (dom || hpt) SCORE_LIMIT = 150; if (snd) SCORE_LIMIT = 4; if (kcf) SCORE_LIMIT = 50; zDouble = 0; POWS.forEach(p => scene.remove(p.m)); POWS.length = 0; equip(loadout);
-  resetTDM(); ranked = !!isRanked && !duel && !obj; snowb = obj === 'snow'; if (snowb) SCORE_LIMIT = 30; clearSnow();
+  resetTDM(); T.duelWait = 0; ranked = !!isRanked && !duel && !obj; snowb = obj === 'snow'; if (snowb) SCORE_LIMIT = 30; clearSnow();
   hcore = obj === 'hc'; if (hcore) SCORE_LIMIT = 50; document.body.classList.toggle('hardcore', hcore);
   if (PRIV && !gg) SCORE_LIMIT = Math.max(obj === 'snd' ? 2 : 10, Math.round(SCORE_LIMIT * PRIV.len));
   if (obj === 'gg') { gg = true; SCORE_LIMIT = 1e9; T.gg = {}; T.ggWin = ''; }
   if (room) {
     desc.textContent = duel ? 'Finding your rival…' : 'Joining the battle…';
-    const rn = SPV ? SPV.room : duel ? 'duel-p-' + party.toLowerCase() : ranked ? 'ranked-main' : (obj ? obj + '-' : 'battle-') + (PRIV ? PRIV.code : matchCode || 'main'); T.roomName = duel ? '' : rn;
+    const rn = SPV ? SPV.room : duel ? (party ? 'duel-p-' + party.toLowerCase() : 'duel-' + (matchCode || 'main')) : ranked ? 'ranked-main' : (obj ? obj + '-' : 'battle-') + (PRIV ? PRIV.code : matchCode || 'main'); T.roomName = duel ? '' : rn;
     try { troom = await Promise.race([room.join(rn), sleep(6000).then(() => null)]); } catch (e) { troom = null; }
     if (troom) await sleep(1200);
   }
@@ -5898,7 +5921,7 @@ async function startTDM(isDuel, isRanked, obj, priv, spec) {
   state = 'play'; hideMenu(); updHud();
   const others = counts.b + counts.r;
   if (obj) banner(({ gg: 'GUN GAME · ', dom: 'DOMINATION · ', snd: 'SEARCH & DESTROY · ', kcf: 'KILL CONFIRMED · ', hpt: 'HARDPOINT · ', snow: '☃️ SNOWBALL FIGHT · ', hc: '💀 HARDCORE · ' })[obj] + MAPS[curMap].name.toUpperCase(), (others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest · ' : 'No other players online · bots fill every slot · ') + ({ gg: 'every elimination = next gun', dom: 'capture A, B and C', snd: 'first to 4 rounds', kcf: 'grab the dog tags', hpt: 'hold the hill', snow: 'snowballs only · first to 30', hc: 'no HUD · 3× damage · first to 50' })[obj], 4);
-  else if (duel) banner(TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? 'Rival found · first to ' + SCORE_LIMIT : 'Waiting for a rival — share code “' + (matchCode || 'open') + '”. First to ' + SCORE_LIMIT + '.', 4);
+  else if (duel) banner(TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? 'Rival found · first to ' + SCORE_LIMIT : 'Looking for a rival… (a bot steps in after a few seconds) · first to ' + SCORE_LIMIT, 4);
   else banner((ranked ? 'RANKED · ' + rankBadge(rankIdx()) + ' ' : '') + TEAM_NAME[P.team] + ' · ' + MAPS[curMap].name.toUpperCase(), others > 0 ? others + ' other player' + (others > 1 ? 's' : '') + ' here · bots fill the rest' : 'No other players online · bots fill every slot', 3);
   if (PRIV) banner('🔒 PRIVATE · ' + PRIV.label.toUpperCase() + ' · ' + MAPS[curMap].name.toUpperCase(), 'Code ' + PRIV.code.toUpperCase() + ' · ' + (others > 0 ? others + ' friend' + (others > 1 ? 's' : '') + ' here' : 'share the code so friends can join') + (PRIV.bots === 'o' ? ' · no bots' : ''), 4.5);
 }
@@ -6326,7 +6349,6 @@ window.addEventListener('keydown', ev => {
     if ((ev.code === 'KeyQ' || ((ev.code === 'Digit1' || ev.code === 'Digit2') && $('qcPanel').hidden && !(mode === 'tdm' && T.win))) && !(ev.code === 'Digit1' && P.w === loadout) && !(ev.code === 'Digit2' && P.w !== loadout)) swapWeapon();
     if (ev.code === 'KeyG') throwNade();
     if (ev.code === 'KeyB' && zmb) zBuyGun();
-    if (ev.code === 'KeyZ') doPing();
     if (ev.code === 'KeyI') startInspect();
     if (ev.code === 'KeyX') $('qcPanel').hidden = !$('qcPanel').hidden;
     if (!$('qcPanel').hidden && /^Digit[1-7]$/.test(ev.code)) sendQc(+ev.code.slice(5) - 1);
@@ -6699,8 +6721,10 @@ function stepDust(dt) {
     if (x - P.pos.x > 12) x -= 24; if (x - P.pos.x < -12) x += 24; if (z - P.pos.z > 12) z -= 24; if (z - P.pos.z < -12) z += 24; if (y < 0.2) y = 4; if (y > 4.5) y = 0.3; a.setXYZ(i, x, y, z); }
   a.needsUpdate = true;
 }
+let menuSkip = false;
 function loop() {
   requestAnimationFrame(loop);
+  if (state === 'menu' && isTouch && (menuSkip = !menuSkip)) return; // v143: menus run at 30 FPS on phones/iPads (cooler, saves battery)
   if (aoDirty) rebuildAO();
   const raw = clock.getDelta(), dt = Math.min(raw, 0.05);
   try { stepDust(dt); } catch (e) {}
@@ -6739,7 +6763,6 @@ function loop() {
     if (Math.abs(camera.fov - baseFov) > 0.01) { camera.fov = baseFov; camera.updateProjectionMatrix(); }
   }
   if (mode === 'tdm') renderEnts(dt);
-  stepSnow(dt);
   achT -= raw; if (achT <= 0) { achT = 1; checkAch(); }
   musT -= raw; if (musT <= 0) { musT = 0.5; if (actx && !musicTimer && state !== 'play') startMusic(); updMusic(); }
   // iPad browsers don't always report toolbar size changes, so check the visible size ourselves
