@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261120172500',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120172721',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -517,7 +517,10 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #tutBox .tbar { height: 4px; background: rgba(255,255,255,.15); border-radius: 2px; margin-top: 8px; overflow: hidden; } #tutBox .tbar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
 #tutBox button { pointer-events: auto; float: right; margin-top: 6px; font: 700 11px var(--display); letter-spacing: .12em; color: #fff; background: transparent; border: 1px solid rgba(255,255,255,.3); border-radius: 6px; padding: 4px 8px; }
 #tutNote { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 10px 14px; border-left: 4px solid var(--accent); background: rgba(var(--accent-rgb, 242,169,59), .14); border-radius: 4px; }
-#tutNote[hidden] { display: none; } #smoothNote { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 10px 14px; border-left: 4px solid #5fb0ff; background: rgba(95,176,255,.12); border-radius: 4px; } #smoothNote[hidden] { display: none; } #smoothNote b { font: 700 15px var(--display); letter-spacing: .06em; } #tutNote b { font: 700 15px var(--display); letter-spacing: .06em; }
+#tutNote[hidden] { display: none; }
+#lookBox .lrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 6px 0 10px; } #lookBox .lrow > span { width: 100%; }
+#lookBox button { min-width: 44px; height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.05); color: inherit; font: 600 13px var(--body); cursor: pointer; }
+#lookBox button[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset; } #lookBox button.sw { width: 40px; padding: 0; } #smoothNote { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 10px 14px; border-left: 4px solid #5fb0ff; background: rgba(95,176,255,.12); border-radius: 4px; } #smoothNote[hidden] { display: none; } #smoothNote b { font: 700 15px var(--display); letter-spacing: .06em; } #tutNote b { font: 700 15px var(--display); letter-spacing: .06em; }
 .pbig { display: grid; gap: 6px; text-align: left; padding: 22px 20px; min-height: 120px; align-content: end; cursor: pointer; color: #fff; border-radius: 4px; border: 1px solid rgba(255,255,255,.1); border-left: 4px solid var(--accent); background: linear-gradient(160deg, rgba(var(--accent-rgb, 242,169,59), .18), rgba(10,11,12,.85) 60%); transition: transform .15s, background .15s; }
 .pbig.go { background: linear-gradient(160deg, rgba(var(--accent-rgb, 242,169,59), .55), rgba(10,11,12,.85) 70%); }
 .pbig b { font: 700 28px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; } .pbig span { font: 500 13px var(--body); color: rgba(239,232,214,.7); }
@@ -1025,6 +1028,8 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
       <div class="ccprev" id="ccPrev"></div>
       <span class="label">Banners</span><div class="ccgrid" id="bnList"></div>
       <span class="label">Emblems</span><div class="ccgrid em" id="emList"></div>
+      <h3 class="subh">Operator look</h3>
+      <div id="lookBox"></div>
       <h3 class="subh">Operator skin</h3>
       <div class="skins" id="skinList"></div>
       <h3 class="subh" id="camoHead">Weapon camo</h3>
@@ -3430,6 +3435,7 @@ const HUM = (() => {
     eyeW: new THREE.MeshStandardMaterial({ color: 0xe8e4dc, roughness: 0.3 }), iris: new THREE.MeshStandardMaterial({ color: 0x1a120c, roughness: 0.2 }),
     lip: new THREE.MeshStandardMaterial({ color: 0x6a3a30, roughness: 0.7 }), gaiter: new THREE.MeshStandardMaterial({ color: 0x3a3a32, bumpMap: fabricTex, bumpScale: 0.004, roughness: 1 }),
     sole: new THREE.MeshStandardMaterial({ color: 0x0c0c0c, roughness: 1 }),
+    gloves: [gloveMat, ...[0x8a7350, 0x4a5236].map(c => new THREE.MeshStandardMaterial({ color: new THREE.Color(c).convertSRGBToLinear(), roughness: 0.8, envMapIntensity: 0.22 }))],
   };
 })();
 // gear was mirroring the bright sky and looked almost white: keep reflections subtle
@@ -3472,7 +3478,10 @@ function makeSoldier(team, ent) {
     const m = mk(SG2.box, mat, parent, (pa.x + pb.x) / 2, (pa.y + pb.y) / 2, (pa.z + pb.z) / 2, w, L, w, part, shadow); m.quaternion.setFromUnitVectors(_up, d.normalize()); return m; };
   // v124: human proportions, a real face and varied looks (skin tone, beard or face mask) per operator
   let hh = 7; for (const ch of String((ent && (ent.id || ent.n || ent.name)) || Math.random())) hh = (hh * 31 + ch.charCodeAt(0)) >>> 0;
-  const skinM = HUM.skin[hh % HUM.skin.length], hairM = HUM.hair[(hh >>> 4) % HUM.hair.length], masked = (hh >>> 7) % 3 === 0, beard = !masked && (hh >>> 9) % 3 !== 0;
+  const lk = ent && typeof ent.lk === 'string' ? ent.lk.split(',').map(Number) : null; // v129: your own look (tone-beard-mask-headgear-gloves)
+  const pick = (i, auto) => lk && lk[i] >= 0 ? lk[i] : auto;
+  const skinM = HUM.skin[pick(0, hh % HUM.skin.length) % HUM.skin.length], hairM = HUM.hair[(hh >>> 4) % HUM.hair.length];
+  const masked = !!pick(2, (hh >>> 7) % 3 === 0 ? 1 : 0), beard = !masked && !!pick(1, (hh >>> 9) % 3 !== 0 ? 1 : 0), headgear = pick(3, 0), gloveM = HUM.gloves[pick(4, 0) % HUM.gloves.length];
   const up = new THREE.Group(); up.position.y = 0.92; g.add(up);
   mk(HUM.torso, SM.torso, up, 0, -0.05, 0, 0.56, 0.68, 0.36);                     // shaped torso: hips, waist, chest, shoulders
   mk(SG2.box, SM.torso, up, 0, 0.0, 0, 0.36, 0.2, 0.25);                          // pelvis
@@ -3508,10 +3517,17 @@ function makeSoldier(team, ent) {
     if (beard) { mk(SG2.box, hairM, hd, 0, -0.075, -0.026, 0.152, 0.075, 0.152, 'head', false); mk(SG2.box, hairM, hd, 0, -0.055, -0.107, 0.05, 0.012, 0.014, 'head', false); }
   }
   // helmet, headset, goggles pushed up
-  mk(SG2.helm, SM.helm, hd, 0, 0.0, 0.008, 0.128, 0.15, 0.138, 'head');
-  mk(SG2.cyl, SM.helm, hd, 0, 0.004, 0.008, 0.131, 0.016, 0.141, 'head', false);
-  mk(SG2.box, strapMat, hd, 0, 0.1, -0.11, 0.045, 0.04, 0.03, 'head', false);     // NVG mount
-  { const gg2 = mk(SG2.box, gogMat, hd, 0, 0.06, -0.122, 0.15, 0.04, 0.035, 'head', false); gg2.rotation.x = -0.35; } // goggles pushed up
+  if (headgear === 0) {
+    mk(SG2.helm, SM.helm, hd, 0, 0.0, 0.008, 0.128, 0.15, 0.138, 'head');
+    mk(SG2.cyl, SM.helm, hd, 0, 0.004, 0.008, 0.131, 0.016, 0.141, 'head', false);
+    mk(SG2.box, strapMat, hd, 0, 0.1, -0.11, 0.045, 0.04, 0.03, 'head', false);     // NVG mount
+    { const gg2 = mk(SG2.box, gogMat, hd, 0, 0.06, -0.122, 0.15, 0.04, 0.035, 'head', false); gg2.rotation.x = -0.35; } // goggles pushed up
+  } else if (headgear === 1) { // ball cap
+    mk(SG2.helm, SM.helm, hd, 0, 0.028, 0.006, 0.112, 0.105, 0.122, 'head');
+    { const br = mk(SG2.box, SM.helm, hd, 0, 0.03, -0.13, 0.15, 0.012, 0.09, 'head', false); br.rotation.x = 0.12; }
+  } else { // no headgear: short hair
+    mk(SG2.helm, hairM, hd, 0, 0.012, 0.008, 0.106, 0.12, 0.118, 'head');
+  }
   [-1, 1].forEach(sd => { const e = mk(SG2.cyl, padMat, hd, sd * 0.108, -0.005, 0.005, 0.045, 0.04, 0.05, 'head', false); e.rotation.z = Math.PI / 2; });
   { const mic = mk(SG2.box, strapMat, hd, -0.09, -0.05, -0.06, 0.01, 0.01, 0.1, 'head', false); mic.rotation.y = -0.6; }
   // arms: shoulders, tapered upper arms and forearms, gloved hands on the rifle
@@ -3520,8 +3536,8 @@ function makeSoldier(team, ent) {
   [shR, shL].forEach(sh => mk(SG2.sph, SM.torso, up, sh[0], sh[1], sh[2], 0.085, 0.08, 0.09, 'body', false));
   const limb = (a, b2, w, mat) => { const m = seg(up, a, b2, w, mat); m.geometry = HUM.limb; return m; };
   limb(shR, elR, 0.11, SM.torso); limb(elR, hR, 0.095, SM.torso); limb(shL, elL, 0.11, SM.torso); limb(elL, hL, 0.095, SM.torso);
-  [[elR, hR], [elL, hL]].forEach(([e2, h2]) => { const t = 0.72, c = e2.map((v, i) => v + (h2[i] - v) * t); limb(c, h2, 0.085, gloveMat); }); // glove cuffs
-  [hR, hL].forEach((h2, i) => { mk(SG2.box, gloveMat, up, h2[0], h2[1], h2[2], 0.075, 0.06, 0.09, 'body', false); mk(SG2.box, gloveMat, up, h2[0] + (i ? 0.02 : -0.02), h2[1] - 0.04, h2[2] - 0.01, 0.06, 0.05, 0.07, 'body', false); });
+  [[elR, hR], [elL, hL]].forEach(([e2, h2]) => { const t = 0.72, c = e2.map((v, i) => v + (h2[i] - v) * t); limb(c, h2, 0.085, gloveM); }); // glove cuffs
+  [hR, hL].forEach((h2, i) => { mk(SG2.box, gloveM, up, h2[0], h2[1], h2[2], 0.075, 0.06, 0.09, 'body', false); mk(SG2.box, gloveM, up, h2[0] + (i ? 0.02 : -0.02), h2[1] - 0.04, h2[2] - 0.01, 0.06, 0.05, 0.07, 'body', false); });
   const band = seg(up, [0.255, 0.42, -0.04], [0.262, 0.36, -0.075], 0.125, bandMat, 'body', false); // team armband
   // rifle
   mk(SG2.box, sGunMat, up, 0.1, 0.37, -0.42, 0.06, 0.09, 0.4);
@@ -3783,9 +3799,9 @@ function botStep(b, dt, targets) {
 function syncEnt(id, kind, team, s) {
   const now = performance.now();
   let e = T.ents.get(id);
-  const sk = SKINS[s.sk] ? s.sk : 'std';
-  if (e && (e.team !== team || e.sk !== sk)) { removeEnt(e); e = null; }
-  if (!e) { e = { id, kind, team, sk, x: s.x, z: s.z, yaw: s.yaw, hp: s.hp, alive: s.alive, shots: s.shots, rx: s.x, rz: s.z, ryaw: s.yaw, walk: 0, vx: 0, vz: 0, t: now, jy: 0, ry: 0, c: 0, rc: 0 }; e.v = makeSoldier(team, e); T.ents.set(id, e); }
+  const sk = SKINS[s.sk] ? s.sk : 'std', lk = typeof s.lk === 'string' && s.lk.length < 30 ? s.lk : undefined;
+  if (e && (e.team !== team || e.sk !== sk || e.lk !== lk)) { removeEnt(e); e = null; }
+  if (!e) { e = { id, kind, team, sk, lk, x: s.x, z: s.z, yaw: s.yaw, hp: s.hp, alive: s.alive, shots: s.shots, rx: s.x, rz: s.z, ryaw: s.yaw, walk: 0, vx: 0, vz: 0, t: now, jy: 0, ry: 0, c: 0, rc: 0 }; e.v = makeSoldier(team, e); T.ents.set(id, e); }
   if (e.alive && !s.alive) { spark(new THREE.Vector3(e.rx, 1.1, e.rz), 0x7a1a12, 16); }
   if (!e.alive && s.alive) { e.rx = s.x; e.rz = s.z; }
   if (s.shots > e.shots && s.alive && (kind === 'human' || !T.isHost)) {
@@ -3908,7 +3924,7 @@ function netTick(dt) {
   if (!T.win && T.prevWin) myVote = null;
   T.prevWin = T.win;
   updVote(hs);
-  for (const h of hs) if (!h.me) syncEnt(h.peer, 'human', h.pr.tm, { x: +h.pr.x || 0, z: +h.pr.z || 0, yaw: +h.pr.y || 0, hp: +h.pr.h || 0, alive: !!h.pr.a, shots: +h.pr.sh || 0, pitch: +h.pr.p || 0, jy: +h.pr.j || 0, c: !!h.pr.c, sk: h.pr.sk });
+  for (const h of hs) if (!h.me) syncEnt(h.peer, 'human', h.pr.tm, { x: +h.pr.x || 0, z: +h.pr.z || 0, yaw: +h.pr.y || 0, hp: +h.pr.h || 0, alive: !!h.pr.a, shots: +h.pr.sh || 0, pitch: +h.pr.p || 0, jy: +h.pr.j || 0, c: !!h.pr.c, sk: h.pr.sk, lk: h.pr.lk });
   if (T.isHost) T.bots.forEach(b => syncEnt(b.id, 'bot', b.team, { x: b.x, z: b.z, yaw: b.yaw, hp: b.hp, alive: b.alive, shots: b.shots, sk: botSkin(b.id) }));
   else if (T.lastHb) T.lastHb.forEach(r => { if (Array.isArray(r) && BOT_NAMES[r[0]]) syncEnt(r[0], 'bot', r[0][0], { x: +r[1] || 0, z: +r[2] || 0, yaw: +r[3] || 0, hp: +r[4] || 0, alive: !!r[5], shots: +r[6] || 0, sk: botSkin(r[0]) }); });
   for (const e of [...T.ents.values()]) if (e.seen !== T.frame) removeEnt(e);
@@ -3930,7 +3946,7 @@ function netTick(dt) {
     T.sendT = 0.05; T.beat = (T.beat + 1) % 1000;
     const keys = Object.keys(T.myDm);
     if (keys.length > 24) keys.forEach(k => { if (!BOT_NAMES[k] && !hs.some(h => h.peer === k)) delete T.myDm[k]; });
-    const pr = { qc: QC.msg, pg: QC.ping, n: playerName, tm: P.team, x: r2(P.pos.x), z: r2(P.pos.z), y: r2(P.yaw), p: r2(P.pitch), j: r2(P.jy), c: P.crouch || P.slideT > 0 ? 1 : 0, h: Math.round(P.hp), a: P.alive ? 1 : 0, d: P.deaths, kb: P.killer || null, sh: P.shots, dm: T.myDm, mv: T.win ? (myVote || null) : null, sk: mySkin, pt: party || null, rk: rankIdx(), bn: IDN.bn, em: IDN.em, t: T.beat };
+    const pr = { lk: LOOK, qc: QC.msg, pg: QC.ping, n: playerName, tm: P.team, x: r2(P.pos.x), z: r2(P.pos.z), y: r2(P.yaw), p: r2(P.pitch), j: r2(P.jy), c: P.crouch || P.slideT > 0 ? 1 : 0, h: Math.round(P.hp), a: P.alive ? 1 : 0, d: P.deaths, kb: P.killer || null, sh: P.shots, dm: T.myDm, mv: T.win ? (myVote || null) : null, sk: mySkin, pt: party || null, rk: rankIdx(), bn: IDN.bn, em: IDN.em, t: T.beat };
     if (T.isHost) Object.assign(pr, { ob: gg ? { g: T.gg, w: T.ggWin || '' } : dom ? DOM.flags.map(f => [r2(f.x), r2(f.z), r2(f.p), f.owner || '']) : snd ? sndPack() : kcf ? KCF.tags.map(t => [t.id, r2(t.x), r2(t.z), t.team]) : hpt ? [HPT.i, r2(HPT.t), HPT.spots.map(p => [r2(p.x), r2(p.z)])] : null, hb: T.bots.map(b => [b.id, r2(b.x), r2(b.z), r2(b.yaw), Math.round(b.hp), b.alive ? 1 : 0, b.shots]), hd: T.hd, hk: T.hk, sc: [T.sc.b, T.sc.r], ep: T.ep, w: T.win || null, wt: r2(T.winT), kf: T.kf, mp: curMap, st: T.st });
     else Object.assign(pr, { ob: null, hb: null, hd: null, hk: null, sc: null, ep: null, w: null, wt: null, kf: null, mp: null, st: null });
     troom.presence(pr).catch(() => {});
@@ -4753,7 +4769,7 @@ function renderSettings() {
   }
 }
 $('resetSettings').addEventListener('click', () => { Object.assign(S, DEF); saveS(); renderSettings(); applyQuality(); applySettings(); });
-const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'streaks', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase', 'cfriends', 'clan'];
+const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'streaks', 'look', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase', 'cfriends', 'clan'];
 function makeBackup() {
   const data = {}; for (const k of ACCT_KEYS) { const v = store.get(k, null); if (v !== null) data[k] = v; }
   try { return 'DL1.' + btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/=+$/, ''); } catch (e) { return ''; }
@@ -4965,10 +4981,10 @@ const MOP = { sol: null, key: '', t: 0, light: null };
 function stepMenuOp(dt) {
   const want = state === 'menu' && innerWidth >= 820 && $('msel') && $('msel').hidden;
   if (!want) { if (MOP.sol) MOP.sol.g.visible = false; return; }
-  const key = mySkin + '|' + loadout;
+  const key = mySkin + '|' + loadout + '|' + LOOK;
   if (!MOP.sol || MOP.key !== key) {
     if (MOP.sol) { camera.remove(MOP.sol.g); freeSoldier(MOP.sol); }
-    MOP.sol = makeSoldier(P.team || 'b', { sk: mySkin, n: playerName }); MOP.key = key; if (MOP.sol.mark) MOP.sol.mark.visible = false;
+    MOP.sol = makeSoldier(P.team || 'b', { sk: mySkin, n: playerName, lk: LOOK }); MOP.key = key; if (MOP.sol.mark) MOP.sol.mark.visible = false;
     MOP.sol.g.traverse(o => { if (o.isMesh) { o.castShadow = false; o.frustumCulled = false; } });
     camera.add(MOP.sol.g);
     if (!MOP.light) { MOP.light = new THREE.PointLight(0xffe2c0, 1.4, 9); MOP.light.position.set(2.2, 1.2, -2.6); camera.add(MOP.light); }
@@ -5145,6 +5161,8 @@ function renderPriv() {
 })();
 
 /* ---------- v123: co-op Zombies online (host runs the horde; shared waves, own points, revives) ---------- */
+var LOOK = (() => { const l = store.get('look', null); return typeof l === 'string' && /^-?\d+(,-?\d+){4}$/.test(l) ? l : '-1,-1,-1,0,0'; })();
+const lookArr = () => LOOK.split(',').map(Number);
 var COOP = { on: false, room: null, host: true, me: 'me', jt: 0, mates: {}, zid: 1, kl: [], kseq: 0, kseen: 0, hu: {}, huSeen: 0, zd: {}, zh: {}, zdSeen: {}, rv: {}, rvT: {}, rvSeen: {}, cl: [], clSeen: {}, go: 0, wave: 0, sendT: 0, hostId: '', reps: {}, rpk: {}, banT: 0 };
 function coopMateCount() { return Object.keys(COOP.mates).length; }
 function coopTargets() {
@@ -5174,13 +5192,13 @@ function coopLeave() {
 const cr2 = v => Math.round(v * 100) / 100;
 function coopSend() {
   if (!COOP.room) return;
-  const pr = { zc: 1, jt: COOP.jt, n: playerName, sk: mySkin, x: cr2(P.pos.x), z: cr2(P.pos.z), y: cr2(P.yaw), dn: P.out ? 2 : P.downed ? 1 : 0, zd: COOP.zd, zh: COOP.zh, rv: COOP.rv, cl: COOP.cl, pts: score };
+  const pr = { zc: 1, jt: COOP.jt, n: playerName, sk: mySkin, lk: LOOK, x: cr2(P.pos.x), z: cr2(P.pos.z), y: cr2(P.yaw), dn: P.out ? 2 : P.downed ? 1 : 0, zd: COOP.zd, zh: COOP.zh, rv: COOP.rv, cl: COOP.cl, pts: score };
   if (COOP.host) pr.zs = { w: wave, z: enemies.filter(e => e.kind === 'zombie').map(e => [e.zid, cr2(e.g.position.x), cr2(e.g.position.z), cr2(e.g.rotation.y), e.runner ? 1 : 0, cr2(e.rise || 0)]),
     pk: pickups.map(p => [p.id, cr2(p.m.position.x), cr2(p.m.position.z)]), pw: POWS.map(p => [p.id, cr2(p.m.position.x), cr2(p.m.position.z), p.k]), kl: COOP.kl, hu: COOP.hu, go: COOP.go };
   try { COOP.room.presence(pr); } catch (e) {}
 }
 function coopMateMesh(id, pr) {
-  const sol = makeSoldier('b', { sk: pr.sk || 'std' }); if (sol.mark) sol.mark.visible = false; scene.add(sol.g);
+  const sol = makeSoldier('b', { sk: pr.sk || 'std', id: id, lk: typeof pr.lk === 'string' ? pr.lk : undefined }); if (sol.mark) sol.mark.visible = false; scene.add(sol.g);
   const c = document.createElement('canvas'); c.width = 256; c.height = 64; const cx = c.getContext('2d'); cx.fillStyle = '#9fe08a'; cx.font = '700 34px sans-serif'; cx.textAlign = 'center'; cx.fillText(String(pr.n || 'Player').slice(0, 14), 128, 44);
   const tag = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthTest: false })); tag.scale.set(1.6, 0.4, 1); scene.add(tag);
   return { sol, tag, x: pr.x || 0, z: pr.z || 0, yaw: 0, walk: 0, n: pr.n || 'Player', dn: 0, pts: 0 };
@@ -5290,6 +5308,19 @@ function coopClientStep(dt) {
   $('smoothOn').addEventListener('click', () => { S.quality = 'smooth'; saveS(); applyQuality(); try { applySettings(); } catch (e) {} store.set('smoothAsk', true); n.hidden = true; try { renderSettings(); } catch (e) {} });
   $('smoothNo').addEventListener('click', () => { store.set('smoothAsk', true); n.hidden = true; });
 })();
+function renderLook() {
+  const box = $('lookBox'); if (!box) return; box.textContent = ''; const a = lookArr();
+  const row = (label, i, opts) => { const r = document.createElement('div'); r.className = 'lrow'; const l = document.createElement('span'); l.className = 'label'; l.textContent = label; r.appendChild(l);
+    opts.forEach(([v, txt, col]) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-pressed', String(a[i] === v)); if (col) { b.className = 'sw'; b.style.background = col; b.title = txt; } else b.textContent = txt;
+      b.addEventListener('click', () => { const n = lookArr(); n[i] = v; LOOK = n.join(','); store.set('look', LOOK); renderLook(); }); r.appendChild(b); });
+    box.appendChild(r); };
+  row('Skin tone', 0, [[-1, 'Random'], ...['#e2b896', '#c99572', '#a87455', '#7e5238', '#5a3a26', '#f0cdb0'].map((c, k) => [k, 'Tone ' + (k + 1), c])]);
+  row('Beard', 1, [[-1, 'Random'], [0, 'Clean shaven'], [1, 'Beard']]);
+  row('Face mask', 2, [[-1, 'Random'], [0, 'No mask'], [1, 'Mask']]);
+  row('Headgear', 3, [[0, 'Helmet'], [1, 'Cap'], [2, 'None']]);
+  row('Gloves', 4, [[0, 'Black'], [1, 'Tan'], [2, 'Olive']]);
+}
+try { renderLook(); } catch (e) {}
 /* ---------- custom HUD layout (drag + resize touch buttons) ---------- */
 const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn', 'inspBtn'];
 function applyHudLayout() {
