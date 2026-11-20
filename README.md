@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v138)](https://ninebolt-studios.github.io/Ashfall/?v=138)
+## ▶️ [PLAY NOW — latest version (v139)](https://ninebolt-studios.github.io/Ashfall/?v=139)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=138
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=139
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,6 +20,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v139** | https://ninebolt-studios.github.io/Ashfall/?v=139 | **Weapon blueprints:** every standard gun now has a special **blueprint** version with its own name, colours and glowing accents, for example M7 Rifle “Reaper” (black and red), K9 SMG “Venom”, P9 “Royal” (gold), Kestrel “Phantom”, Talon Crossbow “Nightwing” and M3 Launcher “Doomsday”. Get the gun to **level 5** to unlock it, then pick it in **Loadout → Blueprint**. The name shows on your HUD |
 | **v138** | https://ninebolt-studios.github.io/Ashfall/?v=138 | **Clan Wars:** a weekly war between clans, shown in **Career → Clan**: the top 5 clans this week by total eliminations, your clan's rank and the time left. When the week ends (Monday), members of the #1 clan get **◎ 1,000 and the “Clan War Champions” title**, #2 get ◎ 500 and #3 get ◎ 250 (paid the next time you open the game signed in). Needs a clan tag and an account |
 | **v137** | https://ninebolt-studios.github.io/Ashfall/?v=137 | **Spectate friends:** when a friend from your friend-code list (Career → Friends) is in a multiplayer match, a **👁 Watch** button appears next to their name. Tap it to join their match as a spectator: the camera follows them from behind, you don't take a player slot, and if more people are playing you can tap/click the bar at the bottom to watch someone else. Pause to leave |
 | **v136** | https://ninebolt-studios.github.io/Ashfall/?v=136 | **Voice chat:** talk to your team in online matches and co-op Zombies. Turn it on in **Settings → Voice chat**: **Push to talk** (hold **N** on keyboard, or tap the 🎙 button on touch to talk and tap again to stop) or **Open mic**. The game asks for your microphone the first time. You only hear your own team (everyone in co-op Zombies, your rival in a Duel), and the name of whoever is talking shows on the left. Audio goes straight between players, not through a server |

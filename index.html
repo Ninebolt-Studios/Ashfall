@@ -98,7 +98,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261120175752',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120175947',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -1051,6 +1051,8 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
       <p class="tip">Your weapon changes the next time you spawn.</p>
       <h3 class="subh" id="attHead">Attachments</h3>
       <div class="perks" id="attList"></div>
+      <h3 class="subh">Blueprint</h3>
+      <div class="perks" id="bpList"></div>
       <h3 class="subh">Wildcard</h3>
       <div class="perks" id="wcList"></div>
       <h3 class="subh" id="perkHead">Perks</h3>
@@ -2250,6 +2252,10 @@ function applyCamo(force) {
     GM.metal.metalness = c.metal ? 0.85 : 0.3; GM.poly.metalness = c.metal ? 0.85 : 0; GM.fde.metalness = c.metal ? 0.85 : 0;
     GM.metal.roughness = c.metal ? 0.28 : 0.55; GM.poly.roughness = c.metal ? 0.28 : 0.8; GM.fde.roughness = c.metal ? 0.28 : 0.8;
   }
+  if (!force && bpActive(P.w)) { const d = BP_DEFS[P.w];
+    GM.poly.map = GM_ORIG.poly; GM.fde.map = GM_ORIG.fde; GM.metal.map = GM_ORIG.metal;
+    GM.poly.color.setHex(d.a).convertSRGBToLinear(); GM.fde.color.setHex(d.a).convertSRGBToLinear(); GM.metal.color.setHex(d.b).convertSRGBToLinear();
+    GM.metal.metalness = d.metal ? 0.95 : 0.7; GM.metal.roughness = d.metal ? 0.25 : 0.4; GM.poly.roughness = 0.6; GM.fde.roughness = 0.6; }
   mats.forEach(m => { m.needsUpdate = true; });
 }
 const HOLO_GLASS = new THREE.MeshBasicMaterial({ color: 0x9ad8ff, transparent: true, opacity: 0.16, depthWrite: false });
@@ -2420,7 +2426,19 @@ function buildGun(key) {
   if (hasAtt(key, 'supp')) { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.26, 12), GM.metal); m.rotation.x = Math.PI / 2; m.position.set(0, info.my, info.muzzleZ - 0.12); gun.add(m); flash.position.z = info.muzzleZ - 0.26; }
   if (hasAtt(key, 'laser')) { const m = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.03, 0.08), GM.metal); m.position.set(0.05, info.my - 0.03, info.muzzleZ + 0.2); gun.add(m); const dot = new THREE.Mesh(new THREE.SphereGeometry(0.008, 6, 4), new THREE.MeshBasicMaterial({ color: 0xff2020, toneMapped: false })); dot.position.set(0.05, info.my - 0.03, info.muzzleZ + 0.155); gun.add(dot); }
   GUN_ADS.set(0, -info.opticY * GUN_SCALE, key === 'pst' ? -0.32 : -0.3);
+  if (bpActive(key)) { const d = BP_DEFS[key], gm = new THREE.MeshBasicMaterial({ color: d.g, toneMapped: false }), L = Math.abs(info.muzzleZ) * 0.55;
+    for (const sd of [-1, 1]) { const st = new THREE.Mesh(new THREE.BoxGeometry(0.006, 0.012, L), gm); st.position.set(sd * 0.04, info.my + 0.005, info.muzzleZ * 0.45); gun.add(st); }
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.03, 0.005, 6, 16), gm); ring.position.set(0, info.my, info.muzzleZ + 0.02); gun.add(ring); }
 }
+// v139: weapon blueprints: a named, recoloured version of each gun with glowing accents, unlocked at weapon level 5
+const BP_DEFS = { ar: { n: 'Reaper', a: 0x1c1c1e, b: 0x3a0c0c, g: 0xff2a2a }, smg: { n: 'Venom', a: 0x1e2c16, b: 0x0e160c, g: 0x7aff3a }, sg: { n: 'Hellfire', a: 0x2c160a, b: 0x1c0c06, g: 0xff7a1a },
+  lmg: { n: 'Juggernaut', a: 0x2c2c32, b: 0x16161c, g: 0xffd24a }, dmr: { n: 'Arctic Fox', a: 0xdfe8ef, b: 0x8a9aa8, g: 0x6ad8ff }, snp: { n: 'Phantom', a: 0x121218, b: 0x1c1c2c, g: 0xb06aff },
+  pst: { n: 'Royal', a: 0x2c1c0a, b: 0xd8aa48, g: 0xffe08a, metal: true }, br: { n: 'Warden', a: 0x3a3a2a, b: 0x22221a, g: 0x6affc8 }, pdw: { n: 'Neon Rush', a: 0x121a22, b: 0x0c0c12, g: 0xff3ad0 },
+  rev: { n: 'Outlaw', a: 0x4a2a14, b: 0x9a9a9a, g: 0xffb06a, metal: true }, xbow: { n: 'Nightwing', a: 0x0c0c0c, b: 0x1a1a1a, g: 0x3affd8 }, rpg: { n: 'Doomsday', a: 0x3a1a0a, b: 0x222222, g: 0xff3a1a } };
+const BP_LV = 5;
+const WBP = Object.assign({}, store.get('wbp', {}));
+function bpUnlocked(w) { return !!BP_DEFS[w] && wLevel(w) >= BP_LV; }
+function bpActive(w) { return !!WBP[w] && bpUnlocked(w); }
 gun.scale.setScalar(GUN_SCALE);
 // Loadout pictures: the real in-game models, rendered once with a small second renderer
 function renderPreviews() {
@@ -3062,7 +3080,7 @@ function updHud() {
   hud.hp.style.width = hp + '%'; hud.hpNum.textContent = hp;
   hud.hp.style.background = P.hp > 60 ? 'linear-gradient(90deg, #5fc95a, #b8e86a)' : P.hp > 30 ? 'linear-gradient(90deg, #e0a030, #f2d050)' : 'linear-gradient(90deg, #d8352a, #f06a4a)';
   hud.ammo.innerHTML = snowb && mode === 'tdm' ? '∞' : P.ammo + '<small> / ' + (P.res || 0) + '</small>';
-  hud.wName.textContent = (snowb && mode === 'tdm' ? 'Snowball' : W().name) + (canSwap() && secondary !== loadout ? (P.w === loadout ? ' · 1' : ' · 2') : '');
+  hud.wName.textContent = (snowb && mode === 'tdm' ? 'Snowball' : W().name + (bpActive(P.w) ? ' “' + BP_DEFS[P.w].n + '”' : '')) + (canSwap() && secondary !== loadout ? (P.w === loadout ? ' · 1' : ' · 2') : '');
   try { updSwapBtn(); } catch (e) {}
   hud.reload.textContent = P.reloading > 0 ? 'RELOADING' : P.ammo === 0 && !(P.res > 0) ? 'NO AMMO' : P.ammo === 0 ? 'RELOAD' : P.ammo <= magOf(P.w) * 0.25 && !(P.res > 0) ? 'LAST MAG' : P.ammo <= magOf(P.w) * 0.25 ? 'LOW AMMO' : '';
   if (mode === 'siege') { hud.score.textContent = score.toLocaleString(); hud.wave.textContent = wave; }
@@ -4193,7 +4211,16 @@ function perkCard(it, pressed, onPick) {
   b.innerHTML = '<span class="pi"></span><b></b><small></small>'; b.children[0].textContent = it.i; b.children[1].textContent = it.n; b.children[2].textContent = it.d;
   b.addEventListener('click', onPick); return b;
 }
+function renderBlueprint() {
+  const box = $('bpList'); if (!box) return; box.textContent = ''; const w = loadout, d = BP_DEFS[w];
+  if (!d) { const s2 = document.createElement('span'); s2.className = 'amsg'; s2.textContent = 'This gun has no blueprint.'; box.appendChild(s2); return; }
+  const sw = '#' + d.g.toString(16).padStart(6, '0');
+  box.appendChild(perkCard({ i: '✦', n: 'Standard', d: 'The normal look (camos work).' }, !WBP[w], () => { delete WBP[w]; store.set('wbp', WBP); if (P.w === w) { buildGun(w); applyCamo(); } renderBlueprint(); }));
+  const c = perkCard({ i: '◆', n: WEAPONS[w].name + ' “' + d.n + '”', d: bpUnlocked(w) ? 'Custom colours with glowing accents.' : 'Reach level ' + BP_LV + ' with the ' + WEAPONS[w].name + ' to unlock (now level ' + wLevel(w) + ').' }, bpActive(w), () => { if (!bpUnlocked(w)) return; WBP[w] = 1; store.set('wbp', WBP); if (P.w === w) { buildGun(w); applyCamo(); } renderBlueprint(); });
+  c.querySelector('.pi').style.color = sw; c.querySelector('.pi').style.textShadow = '0 0 10px ' + sw; if (!bpUnlocked(w)) c.classList.add('locked'); box.appendChild(c);
+}
 function renderAtts() {
+  try { renderBlueprint(); } catch (e) {}
   const w = loadout, lv = wLevel(w), box = $('attList'); box.textContent = '';
   const cur = Array.isArray(WATT[w]) ? WATT[w] : [];
   $('attHead').textContent = 'Attachments · ' + WEAPONS[w].name + ' (level ' + lv + ') · up to 2';
@@ -4860,7 +4887,7 @@ function renderSettings() {
   }
 }
 $('resetSettings').addEventListener('click', () => { Object.assign(S, DEF); saveS(); renderSettings(); applyQuality(); applySettings(); });
-const ACCT_KEYS = ['cwClaimed', 'name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'streaks', 'look', 'secondary', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase', 'cfriends', 'clan'];
+const ACCT_KEYS = ['cwClaimed', 'name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'streaks', 'look', 'secondary', 'wbp', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase', 'cfriends', 'clan'];
 function makeBackup() {
   const data = {}; for (const k of ACCT_KEYS) { const v = store.get(k, null); if (v !== null) data[k] = v; }
   try { return 'DL1.' + btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/=+$/, ''); } catch (e) { return ''; }
@@ -5774,7 +5801,7 @@ function stepRange(dt) {
   P.res = 999; // unlimited ammo
 }
 function startRange() {
-  startSiege(); rng = true; buildRange(); P.pos.set(0, 1.6, 4); P.yaw = 0; P.pitch = 0;
+  startSiege(); rng = true; try { updSwapBtn(); } catch (e) {} buildRange(); P.pos.set(0, 1.6, 4); P.yaw = 0; P.pitch = 0;
   $('rangeHud').hidden = false; $('rangeTxt').textContent = 'Shoot a target'; try { $('waveTag').hidden = true; } catch (e) {}
   banner('FIRING RANGE', 'Targets at 10, 25, 50 and 80 m. Tap Next gun to switch.', 3);
 }
