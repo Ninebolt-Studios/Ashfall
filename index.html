@@ -98,7 +98,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261120175449',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120175752',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -520,6 +520,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #tutBox button { pointer-events: auto; float: right; margin-top: 6px; font: 700 11px var(--display); letter-spacing: .12em; color: #fff; background: transparent; border: 1px solid rgba(255,255,255,.3); border-radius: 6px; padding: 4px 8px; }
 #tutNote { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 10px 14px; border-left: 4px solid var(--accent); background: rgba(var(--accent-rgb, 242,169,59), .14); border-radius: 4px; }
 #tutNote[hidden] { display: none; }
+#cwBox { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.1); } #cwList .cwr { display: grid; grid-template-columns: 28px 1fr auto; gap: 8px; padding: 4px 0; font: 600 14px var(--body); } #cwList .cwr.me { color: var(--accent); } #cwList .cwr b { font-family: var(--display); }
 #lookBox .lrow { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 6px 0 10px; } #lookBox .lrow > span { width: 100%; }
 #lookBox button { min-width: 44px; height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.05); color: inherit; font: 600 13px var(--body); cursor: pointer; }
 #lookBox button[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset; } #lookBox button.sw { width: 40px; padding: 0; } #smoothNote { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 10px 14px; border-left: 4px solid #5fb0ff; background: rgba(95,176,255,.12); border-radius: 4px; } #smoothNote[hidden] { display: none; } #smoothNote b { font: 700 15px var(--display); letter-spacing: .06em; } #tutNote b { font: 700 15px var(--display); letter-spacing: .06em; }
@@ -1177,6 +1178,7 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
         <span class="amsg">Pick a 2-4 letter clan tag. It shows next to your name and puts your eliminations on the Clans leaderboard. Friends who use the same tag are in your clan.</span>
         <div class="prow"><input type="text" id="clanIn" maxlength="4" autocomplete="off" spellcheck="false" placeholder="TAG" aria-label="Clan tag" style="text-transform:uppercase;width:110px;font:700 16px var(--mono);color:var(--ink);background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 10px"><button class="btn go" id="clanSave" type="button">Save tag</button><button class="btn ghost" id="clanLeave" type="button">Leave clan</button></div>
         <span class="amsg" id="clanMsg"></span>
+        <div id="cwBox"><span class="label">⚔️ Clan Wars · this week</span><div id="cwList" class="amsg">Sign in to see this week’s clan war.</div><span class="amsg" id="cwInfo">Every elimination you get this week counts for your clan. When the week ends (Monday), the #1 clan’s members get ◎ 1,000 and the “Clan War Champions” title; #2 get ◎ 500 and #3 get ◎ 250.</span></div>
       </div>
       <div class="acct" id="prestigeBox">
         <span class="label">⭐ Player level &amp; Prestige</span>
@@ -4070,7 +4072,7 @@ let menuMode = 'main';
 function showTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.tab === name)));
   ['play', 'loadout', 'pass', 'shop', 'settings', 'career'].forEach(n => { $('pane-' + n).hidden = n !== name; });
-  if (name === 'career') { renderCareer(); cloudUI(); glbLoad(); try { friendsRefresh(); } catch (e) {} }
+  if (name === 'career') { renderCareer(); cloudUI(); glbLoad(); try { friendsRefresh(); cwLoad(); } catch (e) {} }
   if (name === 'settings') renderAdmin();
   if (name === 'play') { try { renderRank(); renderProfile(); } catch (e) {} }
   if (name === 'pass') renderPass();
@@ -4538,7 +4540,7 @@ function cloudInit() {
   CLOUD.ready = loadJs(base + 'firebase-app-compat.js').then(() => Promise.all([loadJs(base + 'firebase-auth-compat.js'), loadJs(base + 'firebase-firestore-compat.js')])).then(() => {
     const app = firebase.apps && firebase.apps.length ? firebase.app() : firebase.initializeApp(FB_CFG);
     CLOUD.auth = firebase.auth(); CLOUD.db = firebase.firestore();
-    CLOUD.auth.onAuthStateChanged(u => { CLOUD.user = u || null; store.set('cloudOn', !!u); cloudUI(); if (u) { cloudSync(true); presencePut(); friendsRefresh(); } });
+    CLOUD.auth.onAuthStateChanged(u => { CLOUD.user = u || null; store.set('cloudOn', !!u); cloudUI(); if (u) { cloudSync(true); presencePut(); friendsRefresh(); setTimeout(() => { try { cwReward(); } catch (e) {} }, 4000); } });
     return true;
   }).catch(e => { CLOUD.ready = null; cloudMsg('Could not reach the account server. Check your internet and try again.'); throw e; });
   return CLOUD.ready;
@@ -4858,7 +4860,7 @@ function renderSettings() {
   }
 }
 $('resetSettings').addEventListener('click', () => { Object.assign(S, DEF); saveS(); renderSettings(); applyQuality(); applySettings(); });
-const ACCT_KEYS = ['name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'streaks', 'look', 'secondary', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase', 'cfriends', 'clan'];
+const ACCT_KEYS = ['cwClaimed', 'name', 'settings', 'career', 'pass', 'skin', 'camo', 'title', 'loadout', 'wlv', 'wcamo', 'lb', 'wallet', 'daily', 'ach', 'perks', 'streaks', 'look', 'secondary', 'watt', 'rank', 'friends', 'ident', 'econ', 'weekBase', 'cfriends', 'clan'];
 function makeBackup() {
   const data = {}; for (const k of ACCT_KEYS) { const v = store.get(k, null); if (v !== null) data[k] = v; }
   try { return 'DL1.' + btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/=+$/, ''); } catch (e) { return ''; }
@@ -5620,6 +5622,38 @@ function stepSpectate(dt) {
   if (tag.dataset.nm !== nm + list.length) { tag.dataset.nm = nm + list.length; tag.innerHTML = ''; tag.append('👁 Watching ' + nm); const sm = document.createElement('small'); sm.textContent = (list.length > 1 ? (isTouch ? 'Tap' : 'Click') + ' here to watch someone else · ' : '') + 'pause to leave'; tag.appendChild(sm); }
 }
 $('specTag').addEventListener('click', () => { if (!SPV) return; const list = specTargets(); if (list.length < 2) return; const cur = list.findIndex(h => String(h.pr.n || '') === SPV.name); const nx = list[(cur + 1) % list.length]; SPV.name = String(nx.pr.n || ''); });
+
+/* ---------- v138: Clan Wars: weekly clan totals + rewards for the top 3 clans ---------- */
+async function cwBoard(week) {
+  await cloudInit();
+  const sn = await CLOUD.db.collection('lbw_' + week).orderBy('kills', 'desc').limit(300).get(), agg = {};
+  sn.docs.forEach(d => { const v = d.data() || {}, c = String(v.clan || '').toUpperCase().slice(0, 4); if (!c) return; (agg[c] = agg[c] || { k: 0, n: 0 }); agg[c].k += +v.kills || 0; agg[c].n++; });
+  return Object.entries(agg).filter(([, a]) => a.k > 0).sort((a, b) => b[1].k - a[1].k);
+}
+async function cwLoad() {
+  const box = $('cwList'); if (!box) return;
+  if (!CLOUD.user) { box.textContent = 'Sign in (☁️ Account) to see this week’s clan war.'; return; }
+  try {
+    const rows = await cwBoard(weekNum()); box.textContent = '';
+    const end = Date.UTC(2026, 0, 5) + (weekNum() + 1) * 7 * 864e5, ms = end - Date.now();
+    const top = rows.slice(0, 5); const mi = rows.findIndex(r => r[0] === myClan);
+    if (!top.length) box.textContent = 'No clan has eliminations yet this week. Set a tag and be first!';
+    top.forEach(([c, a], i) => { const r = document.createElement('div'); r.className = 'cwr' + (c === myClan ? ' me' : ''); r.innerHTML = '<b></b><span></span><span></span>'; r.children[0].textContent = ['🥇', '🥈', '🥉', '4', '5'][i]; r.children[1].textContent = '[' + c + '] · ' + a.n + ' member' + (a.n > 1 ? 's' : ''); r.children[2].textContent = a.k.toLocaleString() + ' elims'; box.appendChild(r); });
+    const f = document.createElement('div'); f.style.marginTop = '6px'; f.textContent = (myClan ? (mi >= 0 ? 'Your clan [' + myClan + '] is #' + (mi + 1) + ' with ' + rows[mi][1].k.toLocaleString() + ' eliminations.' : 'Your clan [' + myClan + '] has no eliminations yet this week.') : 'You are not in a clan yet: set a tag above.') + ' Ends in ' + Math.floor(ms / 864e5) + 'd ' + Math.floor(ms / 36e5) % 24 + 'h.'; box.appendChild(f);
+  } catch (e) { box.textContent = e && e.code === 'permission-denied' ? 'Clan Wars needs the leaderboard database rules.' : 'Could not load the clan war. Tap Career again to retry.'; }
+}
+async function cwReward() {
+  if (!CLOUD.user || !myClan) return; const last = weekNum() - 1; if (store.get('cwClaimed', -1) >= last) return;
+  try {
+    const rows = await cwBoard(last); store.set('cwClaimed', last);
+    const i = rows.findIndex(r => r[0] === myClan); if (i < 0 || i > 2) return;
+    const coins = [1000, 500, 250][i]; addCoins(coins);
+    if (i === 0 && !BP.owned.includes('title:Clan War Champions')) { BP.owned.push('title:Clan War Champions'); store.set('pass', BP); }
+    banner('⚔️ CLAN WARS · #' + (i + 1), 'Your clan [' + myClan + '] placed #' + (i + 1) + ' last week · +◎ ' + coins + (i === 0 ? ' + “Clan War Champions” title' : ''), 5);
+  } catch (e) {}
+}
+setInterval(() => { try { if (CLOUD.user && state !== 'play') cwReward(); } catch (e) {} }, 60000);
+setTimeout(() => { try { cwReward(); } catch (e) {} }, 12000);
 /* ---------- custom HUD layout (drag + resize touch buttons) ---------- */
 const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn', 'inspBtn'];
 function applyHudLayout() {
