@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v133)](https://ninebolt-studios.github.io/Ashfall/?v=133)
+## ▶️ [PLAY NOW — latest version (v134)](https://ninebolt-studios.github.io/Ashfall/?v=134)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=133
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=134
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,6 +20,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v134** | https://ninebolt-studios.github.io/Ashfall/?v=134 | **Zombies upgrades:** 4 **wall-buy** guns around the start (K9 SMG ◎1,000, H12 Breacher ◎1,250, M7 Rifle ◎1,500, MK17 ◎1,750; ammo for the gun you hold is half price), a locked **bunker** you open for ◎750 with **Iron Brew** inside (◎2,500: take 35% less damage) and a **Max Ammo** crate (◎750), plus a **Boss Zombie** (the Brute: huge, tough, hits hard, worth 1,000 points) every 10th wave. Walk up to anything buyable and press **B** (or tap the buy button, which changes to show what you're next to). Works in co-op too |
 | **v133** | https://ninebolt-studios.github.io/Ashfall/?v=133 | **Hardcore mode:** a new 💀 Hardcore tile in Multiplayer: 5v5 Team Battle online (bots fill in) with **3× damage** for everyone and almost no HUD: no minimap, health bar, ammo count, streak counter or crosshair. First to 50. Also available as a mode in Private matches |
 | **v132** | https://ninebolt-studios.github.io/Ashfall/?v=132 | **Finishing moves:** knife an enemy **from behind** in any multiplayer mode and you get a short cinematic takedown: the camera swings out to third person with black movie bars, your operator (with your look) takes them down and they drop. You're protected while it plays, and it's worth +50 XP |
 | **v131** | https://ninebolt-studios.github.io/Ashfall/?v=131 | **New weapons + knife:** **M3 Launcher** (rocket launcher secondary: one rocket per shot, 2 spare, big blast radius), **Talon Crossbow** (primary: one-shot bolt, built-in scope) and a **quick knife** in every mode: **E** on keyboard, **R3** on controller (ping moved to D-pad down) or the 🔪 button on touch. A knife hit is an instant kill up close |

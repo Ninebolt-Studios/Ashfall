@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261120174122',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120174433',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -707,6 +707,7 @@ body.hardcore #radar, body.hardcore .wpn, body.hardcore #cross, body.hardcore .v
 #zBuy { --ring: #c08aff; width: 70px; height: 70px; left: max(16px, env(safe-area-inset-left, 0px)); bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
 #zBuy small { font: 700 11px var(--mono); color: #e0c8ff; }
 #zBuy.off { opacity: .45; }
+#zPrompt { position: absolute; left: 50%; bottom: calc(150px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); font: 700 14px var(--display); letter-spacing: .08em; color: #f2e6c8; background: rgba(10,10,10,.7); border: 1px solid rgba(242,200,75,.5); border-radius: 8px; padding: 8px 14px; pointer-events: none; white-space: nowrap; } #zPrompt[hidden] { display: none; }
 #coopTip { position: absolute; left: 50%; top: calc(96px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); font: 700 13px var(--display); letter-spacing: .1em; color: #e8f0e0; text-shadow: 0 1px 6px #000; text-align: center; white-space: pre-line; pointer-events: none; }
 #coopTip .dn { color: #ff6a4a; font-size: 16px; }
 #zPow { position: absolute; left: 50%; top: calc(70px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); font: 700 14px var(--display); letter-spacing: .14em; color: #f2c84b; text-shadow: 0 1px 6px #000; }
@@ -849,6 +850,7 @@ body.hardcore #radar, body.hardcore .wpn, body.hardcore #cross, body.hardcore .v
     <div id="zBuy" class="tbtn" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M3 12h18M12 8v12M8 8l4-4 4 4"/></svg><span>CRATE</span><small>◎ 1,500</small></div>
     <div id="zPow" hidden></div>
     <div id="coopTip" hidden></div>
+    <div id="zPrompt" hidden></div>
     <div id="nadeBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="11" cy="15" rx="6" ry="7"/><path d="M8 8h6v-3H8z"/><path d="M14 6l4 3"/><circle cx="18" cy="4" r="2"/><path d="M6 15h10M11 9v13"/></svg><small id="nadeN">2</small></div>
     <div id="adsBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg><span>AIM</span></div>
     <div id="swapBtn" class="tbtn touch-only" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg><small></small></div>
@@ -3266,7 +3268,7 @@ let zmb = false, zmbAtmo = false, zDouble = 0;
 const POWS = [];
 const ZM = { skins: [0x7a9a5a, 0x8aa070, 0x6a8a6a, 0x9aa080].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.9 })),
   cloth: [0x3a3020, 0x2a3040, 0x40302a, 0x30302a].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 1 })),
-  eye: new THREE.MeshBasicMaterial({ color: 0xffe040, toneMapped: false }), blood: new THREE.MeshStandardMaterial({ color: 0x5a0a08, roughness: 0.8 }) };
+  eye: new THREE.MeshBasicMaterial({ color: 0xffe040, toneMapped: false }), bossEye: new THREE.MeshBasicMaterial({ color: 0xff2010, toneMapped: false }), blood: new THREE.MeshStandardMaterial({ color: 0x5a0a08, roughness: 0.8 }) };
 function zSpawnPoint() {
   const tg = coopTargets(), c = tg[Math.random() * tg.length | 0] || { x: P.pos.x, z: P.pos.z };
   for (let i = 0; i < 40; i++) { const a = Math.random() * Math.PI * 2, d = 20 + Math.random() * 18, x = clamp(c.x + Math.cos(a) * d, -HALF + 2, HALF - 2), z = clamp(c.z + Math.sin(a) * d, -HALF + 2, HALF - 2);
@@ -3302,7 +3304,9 @@ function killZombie(e, head, by) {
   if (e.rep && COOP.on && !COOP.host) { dmgEnemy(e, 9999); return; }
   spark(new THREE.Vector3(e.g.position.x, 1.2, e.g.position.z), 0x6a1010, 16);
   if (by && COOP.on) { COOP.kl.push([++COOP.kseq, by, head ? 1 : 0]); if (COOP.kl.length > 30) COOP.kl.shift(); }
-  else { try { sfx.kill(); noise(0.4, 0.15, 300); } catch (er) {} hitMarker('kill');
+  if (e.boss && !(by && COOP.on)) { zPts(1000); banner('BOSS DOWN', '+1,000 points', 3); addCoins(100); }
+  else if (e.boss && by && COOP.on) COOP.kl[COOP.kl.length - 1].push(1);
+  if (!(by && COOP.on)) { try { sfx.kill(); noise(0.4, 0.15, 300); } catch (er) {} hitMarker('kill');
   C.zKills = (C.zKills || 0) + 1; zPts(head ? 100 : 60); addXP(12); addWeaponKill(); addCoins(10); onMyKill(!!head); if (hasPerk('salvager')) salvageDrop(e.g.position.x, e.g.position.z); }
   if (Math.random() < 0.06) zDropPower(e.g.position);
   else if (Math.random() < (P.hp < 60 ? 0.14 : 0.07)) dropPickup(e.g.position);
@@ -3323,8 +3327,11 @@ function zPickup(k) {
   else if (k === 'double') zDouble = 30;
   else { for (const e of [...enemies]) if (Math.hypot(e.g.position.x - P.pos.x, e.g.position.z - P.pos.z) < 45) { explosionFX(e.g.position.x, 0, e.g.position.z, 0.6); killZombie(e, false); } zPts(400); }
 }
-function updZBuy() { const b = $('zBuy'); if (b) b.classList.toggle('off', score < 1500); }
+function updZBuy() { const b = $('zBuy'); if (!b) return; const it = zmb ? zNear() : null, cost = it ? it.cost : 1500;
+  b.classList.toggle('off', score < cost); b.querySelector('span').textContent = it ? it.short : 'CRATE'; b.querySelector('small').textContent = '◎ ' + cost.toLocaleString();
+  const pr = $('zPrompt'); if (pr) { pr.hidden = !it || state !== 'play'; if (it) pr.textContent = (isTouch ? 'Tap ' + it.short : 'B') + ' · ' + it.label + ' · ◎ ' + cost.toLocaleString() + (score < cost ? ' (not enough points)' : ''); } }
 function zBuyGun() {
+  if (zmb && state === 'play' && P.alive && zInteract()) return;
   if (!zmb || state !== 'play' || !P.alive || score < 1500) return;
   score -= 1500; updHud(); updZBuy();
   const pool = Object.keys(WEAPONS).filter(k => !WEAPONS[k].premium && k !== P.w), k = pool[Math.random() * pool.length | 0];
@@ -3344,14 +3351,14 @@ function startZombies() {
   score = 0; wave = 0; betweenWaves = 2; toSpawn = 0; P.nades = nadesPerLife(); updNade(); P.ks = {}; clearKS(); updKS(); P.streak = 0; P.mCoins = 0; scanT = 0;
   state = 'play'; hideMenu(); updHud(); updZBuy(); lockPointer();
   banner('ZOMBIES · ' + MAPS[curMap].name.toUpperCase(), 'You start with a pistol. Earn points and open the Mystery Crate (◎ 1,500) for a better gun.', 4);
-  P.downed = false; P.out = false; coopJoin();
+  P.downed = false; P.out = false; P.brew = false; try { zSetup(); } catch (e) {} coopJoin();
 }
 function stepZombies(dt) {
   if (COOP.on) { coopTick(dt); if (state !== 'play') return; if (!COOP.host) { coopClientStep(dt); return; } }
   if (toSpawn === 0 && enemies.length === 0) { betweenWaves -= dt; if (betweenWaves <= 0) {
     coopWaveStart(wave + 1);
     if (wave > 0) { addXP(40); dailyProgress('waves', 1); P.nades = Math.min(nadesPerLife() + 1, (P.nades || 0) + 1); updNade(); }
-    wave++; toSpawn = 5 + wave * 3; spawnTimer = 0; banner('WAVE ' + wave, wave === 1 ? 'They are coming…' : 'Zombies get tougher and faster', 2.5);
+    wave++; toSpawn = 5 + wave * 3; spawnTimer = 0; if (wave % 10 === 0) try { zBoss(); } catch (e) {} banner('WAVE ' + wave, wave === 1 ? 'They are coming…' : 'Zombies get tougher and faster', 2.5);
     try { tone(110, 1.2, 'sawtooth', 0.06, 70); tone(82, 1.4, 'sine', 0.12, 55, 0.2); } catch (e) {} updHud(); } }
   if (toSpawn > 0) { spawnTimer -= dt; if (spawnTimer <= 0 && enemies.length < Math.min(24, 8 + wave)) { makeZombie(); toSpawn--; spawnTimer = Math.max(0.4, 1.6 - wave * 0.08); if (toSpawn === 0) betweenWaves = 6; } }
   if (zDouble > 0) { zDouble -= dt; $('zPow').hidden = false; $('zPow').textContent = '2X POINTS · ' + Math.ceil(zDouble) + 's'; } else if (!$('zPow').hidden) $('zPow').hidden = true;
@@ -3373,7 +3380,7 @@ function stepZombies(dt) {
     e.armL.rotation.x = -0.2 + Math.sin(e.t * 3) * 0.15; e.armR.rotation.x = -0.1 - Math.sin(e.t * 3) * 0.15;
     if (Math.random() < dt * 0.15 && dist < 20) try { tone(70 + Math.random() * 40, 0.6, 'sawtooth', 0.025 * (1 - dist / 20), 50); } catch (er) {}
     e.cd -= dt;
-    if (dist < 1.25 && e.cd <= 0 && !tgt.none) { e.cd = 0.9; e.armL.rotation.x = e.armR.rotation.x = -0.9; const dmz = e.runner ? 22 : 28;
+    if (dist < 1.25 && e.cd <= 0 && !tgt.none) { e.cd = 0.9; e.armL.rotation.x = e.armR.rotation.x = -0.9; const dmz = e.boss ? 55 : e.runner ? 22 : 28;
       if (tgt.peer) { COOP.hu[tgt.peer] = (COOP.hu[tgt.peer] || 0) + dmz; } else if (P.alive) { siegeHurt(dmz, g.position.x, g.position.z); if (state !== 'play') return; } }
   }
   for (let i = POWS.length - 1; i >= 0; i--) { const pw = POWS[i]; pw.life -= dt; pw.m.rotation.y += dt * 2; pw.m.position.y = 1 + Math.sin(pw.life * 3) * 0.15; pw.m.visible = pw.life > 5 || Math.sin(pw.life * 12) > 0;
@@ -3389,6 +3396,7 @@ function stepZombies(dt) {
 function siegeHurt(dmg, sx, sz) {
   if (S.god && isAdmin()) return;
   if (P.downed || P.out) return;
+  if (zmb && P.brew) dmg *= 0.65;
   haptic('hurt');
   if (sx != null) showDmgDir(sx, sz);
   P.lastHurt = 0; P.shake = Math.max(P.shake, 0.25); P.hp -= dmg; hurtT = 0.35; sfx.hurt(); updHud();
@@ -5254,7 +5262,7 @@ const cr2 = v => Math.round(v * 100) / 100;
 function coopSend() {
   if (!COOP.room) return;
   const pr = { zc: 1, jt: COOP.jt, n: playerName, sk: mySkin, lk: LOOK, x: cr2(P.pos.x), z: cr2(P.pos.z), y: cr2(P.yaw), dn: P.out ? 2 : P.downed ? 1 : 0, zd: COOP.zd, zh: COOP.zh, rv: COOP.rv, cl: COOP.cl, pts: score };
-  if (COOP.host) pr.zs = { w: wave, z: enemies.filter(e => e.kind === 'zombie').map(e => [e.zid, cr2(e.g.position.x), cr2(e.g.position.z), cr2(e.g.rotation.y), e.runner ? 1 : 0, cr2(e.rise || 0)]),
+  if (COOP.host) pr.zs = { w: wave, z: enemies.filter(e => e.kind === 'zombie').map(e => [e.zid, cr2(e.g.position.x), cr2(e.g.position.z), cr2(e.g.rotation.y), e.runner ? 1 : 0, cr2(e.rise || 0), e.boss ? 1 : 0]),
     pk: pickups.map(p => [p.id, cr2(p.m.position.x), cr2(p.m.position.z)]), pw: POWS.map(p => [p.id, cr2(p.m.position.x), cr2(p.m.position.z), p.k]), kl: COOP.kl, hu: COOP.hu, go: COOP.go };
   try { COOP.room.presence(pr); } catch (e) {}
 }
@@ -5301,7 +5309,7 @@ function coopTick(dt) {
   const hp = !COOP.host && zp.find(p => p.peer === hostId), zs = hp && hp.presence.zs;
   if (zs) {
     const hu = (zs.hu || {})[COOP.me] || 0; if (hu > COOP.huSeen) { const d = hu - COOP.huSeen; COOP.huSeen = hu; siegeHurt(d); if (state !== 'play') return; }
-    for (const k of zs.kl || []) if (k[0] > COOP.kseen) { COOP.kseen = k[0]; if (k[1] === COOP.me) { try { sfx.kill(); } catch (e) {} hitMarker('kill'); C.zKills = (C.zKills || 0) + 1; zPts(k[2] ? 100 : 60); addXP(12); addWeaponKill(); addCoins(10); onMyKill(!!k[2]); } }
+    for (const k of zs.kl || []) if (k[0] > COOP.kseen) { COOP.kseen = k[0]; if (k[1] === COOP.me) { if (k[3]) { zPts(1000); banner('BOSS DOWN', '+1,000 points', 3); addCoins(100); } try { sfx.kill(); } catch (e) {} hitMarker('kill'); C.zKills = (C.zKills || 0) + 1; zPts(k[2] ? 100 : 60); addXP(12); addWeaponKill(); addCoins(10); onMyKill(!!k[2]); } }
     if (zs.w !== wave && zs.w > 0) coopWaveStart(zs.w);
     COOP.snap = zs;
     if (zs.go && state === 'play') { siegeOver(); return; }
@@ -5336,9 +5344,9 @@ function coopWaveStart(n) {
 function coopClientStep(dt) {
   const zs = COOP.snap; if (!zs) return;
   const live = {};
-  for (const [id, x, z, ry, rn, rs] of zs.z || []) {
+  for (const [id, x, z, ry, rn, rs, bs] of zs.z || []) {
     live[id] = 1; let e = enemies.find(q => q.zid === id);
-    if (!e) e = makeZombie({ id, x, z, r: rn, rs });
+    if (!e) { e = makeZombie({ id, x, z, r: rn, rs }); if (bs) zMakeBoss(e); }
     const g = e.g, mv = Math.hypot(x - g.position.x, z - g.position.z); e.t += dt;
     g.position.x += (x - g.position.x) * Math.min(1, dt * 10); g.position.z += (z - g.position.z) * Math.min(1, dt * 10); g.position.y = -1.6 * rs; g.rotation.y = ry;
     const sw = Math.sin(e.t * e.speed * 2.6) * 0.5 * Math.min(1, mv * 10); e.hipL.rotation.x = sw; e.hipR.rotation.x = -sw;
@@ -5447,6 +5455,76 @@ function stepKnife(dt) {
   P.knifeT -= dt; const t = 1 - P.knifeT / 0.55; knifeMesh.visible = true;
   knifeMesh.position.set(0.25 - t * 0.4, -0.16 + Math.sin(t * Math.PI) * 0.06, -0.38); knifeMesh.rotation.set(-0.2, 0.9 - t * 1.6, 0.3);
 }
+
+/* ---------- v134: Zombies upgrades: wall-buys, a locked bunker (Iron Brew + ammo) and boss zombies ---------- */
+const ZUP = { walls: [], door: null, brew: null, ammo: null, t: 0 };
+const WALLBUY = [['smg', 1000], ['sg', 1250], ['ar', 1500], ['br', 1750]];
+function zFree(cx, cz, hw, hd) { for (let x = -hw; x <= hw; x += 1) for (let z = -hd; z <= hd; z += 1) if (insideSolid({ x: cx + x, z: cz + z }, 0.6)) return false; return Math.abs(cx) + hw < HALF - 3 && Math.abs(cz) + hd < HALF - 3; }
+function zLabel(text, x, y, z, col) {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 96; const g = c.getContext('2d'); g.fillStyle = 'rgba(0,0,0,.6)'; g.fillRect(0, 0, 512, 96); g.fillStyle = col || '#f2c84b'; g.font = '700 46px sans-serif'; g.textAlign = 'center'; g.fillText(text, 256, 64);
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true })); sp.position.set(x, y, z); sp.scale.set(2.4, 0.45, 1); mapGroup.add(sp); return sp;
+}
+function zSetup() {
+  ZUP.walls = []; ZUP.door = null; ZUP.brew = null; ZUP.ammo = null;
+  // wall-buys: free-standing boards on a ring around the start
+  let k = 0;
+  for (let a = 0; a < Math.PI * 2 && k < WALLBUY.length; a += Math.PI / 9) for (const r of [13, 18, 24]) {
+    if (k >= WALLBUY.length) break; const x = Math.cos(a + k) * r, z = 9 + Math.sin(a + k) * r;
+    if (!zFree(x, z, 1.6, 1.6)) continue;
+    const [w, cost] = WALLBUY[k++], yaw = Math.atan2(x, z - 9);
+    const board = addBox(x, z, 2.2, 0.3, 2.1, M.conc, 4, 4); board.rotation.y = yaw;
+    const sil = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.22, 0.05), new THREE.MeshStandardMaterial({ color: 0xe8c860, emissive: 0x8a6a10, emissiveIntensity: 0.6 }));
+    sil.position.set(x - Math.sin(yaw) * 0.18, 1.3, z - Math.cos(yaw) * 0.18); sil.rotation.y = yaw; mapGroup.add(sil);
+    zLabel(WEAPONS[w].name + ' · ◎ ' + cost, x, 2.55, z);
+    ZUP.walls.push({ w, cost, x, z });
+    break;
+  }
+  // the bunker: a walled room with one locked door; inside are Iron Brew and an ammo crate
+  outer: for (const r of [26, 32, 38, 20, 44]) for (let a = 0; a < Math.PI * 2; a += Math.PI / 8) {
+    const cx = Math.round(Math.cos(a) * r), cz = Math.round(9 + Math.sin(a) * r);
+    if (!zFree(cx, cz, 5, 5)) continue;
+    const h = 3, t = 0.4, s2 = 4, gap = 2.4, seg = (2 * s2 - gap) / 2;
+    addBox(cx, cz - s2, 2 * s2, t, h, M.conc, 4, 4); addBox(cx - s2, cz, t, 2 * s2, h, M.conc, 4, 4); addBox(cx + s2, cz, t, 2 * s2, h, M.conc, 4, 4);
+    addBox(cx - s2 + seg / 2, cz + s2, seg, t, h, M.conc, 4, 4); addBox(cx + s2 - seg / 2, cz + s2, seg, t, h, M.conc, 4, 4);
+    addBox(cx, cz, 2 * s2 + t, 2 * s2 + t, 0.3, M.conc, 4, 4, { y: h, collide: false });
+    const door = addBox(cx, cz + s2, gap, 0.25, h - 0.2, M.metal, 2, 2); const db = boxes[boxes.length - 1];
+    ZUP.door = { m: door, b: db, x: cx, z: cz + s2 + 0.8, cost: 750, open: false, lbl: zLabel('Bunker · ◎ 750', cx, h + 0.6, cz + s2 + 0.3, '#ffd27a') };
+    const brew = addBox(cx - 2.6, cz - 2.6, 0.9, 0.9, 2, new THREE.MeshStandardMaterial({ color: 0x7a1010, emissive: 0xff2a1a, emissiveIntensity: 0.35, roughness: 0.4 }), 1, 1);
+    ZUP.brew = { x: cx - 2.6, z: cz - 1.8, cost: 2500 }; zLabel('Iron Brew · ◎ 2500', cx - 2.6, 2.5, cz - 2.6, '#ff8a7a');
+    const am = makeAmmoBox(); am.scale.setScalar(1.4); am.position.set(cx + 2.4, 0.3, cz - 2.4); mapGroup.add(am);
+    ZUP.ammo = { x: cx + 2.4, z: cz - 1.8, cost: 750 }; zLabel('Max Ammo · ◎ 750', cx + 2.4, 1.6, cz - 2.4, '#8af08a');
+    break outer;
+  }
+}
+function zNear() {
+  if (!P.alive || P.downed) return null; const px = P.pos.x, pz = P.pos.z, near = (o, r) => o && Math.hypot(o.x - px, o.z - pz) < r;
+  for (const w of ZUP.walls) if (near(w, 2.4)) { const own = P.w === w.w; return { kind: 'wall', w, cost: own ? Math.round(w.cost / 2) : w.cost, short: own ? 'AMMO' : 'BUY', label: own ? WEAPONS[w.w].name + ' ammo' : 'Buy ' + WEAPONS[w.w].name }; }
+  if (ZUP.door && !ZUP.door.open && near(ZUP.door, 2.6)) return { kind: 'door', cost: ZUP.door.cost, short: 'OPEN', label: 'Open the bunker' };
+  if (ZUP.door && ZUP.door.open && ZUP.brew && !P.brew && near(ZUP.brew, 1.8)) return { kind: 'brew', cost: ZUP.brew.cost, short: 'BREW', label: 'Iron Brew (take 35% less damage)' };
+  if (ZUP.door && ZUP.door.open && near(ZUP.ammo, 1.8)) return { kind: 'ammo', cost: ZUP.ammo.cost, short: 'AMMO', label: 'Max ammo + grenades' };
+  return null;
+}
+function zInteract() {
+  const it = zNear(); if (!it) return false;
+  if (score < it.cost) { banner('NOT ENOUGH POINTS', '◎ ' + it.cost.toLocaleString() + ' needed', 1.5); return true; }
+  score -= it.cost; updHud();
+  if (it.kind === 'wall') { if (P.w === it.w.w) { P.ammo = magOf(P.w); P.res = reserveOf(P.w); } else equip(it.w.w); banner(it.label.toUpperCase(), '', 1.5); }
+  else if (it.kind === 'door') { const d = ZUP.door; d.open = true; mapGroup.remove(d.m); const i = boxes.indexOf(d.b); if (i >= 0) boxes.splice(i, 1); const j = solids.indexOf(d.m); if (j >= 0) solids.splice(j, 1); if (d.lbl) mapGroup.remove(d.lbl); banner('BUNKER OPEN', 'Iron Brew and Max Ammo inside', 2.5); }
+  else if (it.kind === 'brew') { P.brew = true; banner('IRON BREW', 'You take 35% less damage for the rest of the game', 3); }
+  else if (it.kind === 'ammo') { P.ammo = magOf(P.w); P.res = reserveOf(P.w); P.reloading = 0; P.nades = nadesPerLife() + 1; updNade(); banner('MAX AMMO', '', 1.5); }
+  try { tone(660, 0.1, 'triangle', 0.12); tone(990, 0.15, 'triangle', 0.1, null, 0.08); } catch (e) {}
+  updHud(); updZBuy(); return true;
+}
+function zMakeBoss(e) {
+  e.boss = true; e.g.scale.setScalar(1.7); e.radius = 0.75; e.speed *= 0.72; e.hp = 3000 + wave * 250;
+  e.g.traverse(o => { if (o.isMesh && o.material === ZM.eye) o.material = ZM.bossEye; });
+}
+function zBoss() {
+  const e = makeZombie(); zMakeBoss(e);
+  banner('☠ BOSS ZOMBIE', 'The Brute is coming · worth 1,000 points', 3.5);
+  try { tone(55, 2, 'sawtooth', 0.12, 35); noise(1.2, 0.4, 120); } catch (er) {}
+}
+setInterval(() => { try { if (zmb && state === 'play') updZBuy(); else if ($('zPrompt')) $('zPrompt').hidden = true; } catch (e) {} }, 200);
 /* ---------- custom HUD layout (drag + resize touch buttons) ---------- */
 const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn', 'inspBtn'];
 function applyHudLayout() {
