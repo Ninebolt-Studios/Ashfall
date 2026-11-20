@@ -98,7 +98,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261120180337',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120180539',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -756,6 +756,8 @@ body:not(.is-touch) #micBtn { top: auto; bottom: 18px; right: auto; left: 160px;
 body.spectating .wpn, body.spectating .vit, body.spectating #cross, body.spectating .tbtn, body.spectating #stick { display: none !important; }
 #recap { position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(225px + env(safe-area-inset-top, 0px)); width: min(320px, calc(100vw - 32px)); background: rgba(10,10,12,.82); border: 1px solid rgba(255,255,255,.15); border-left: 4px solid #e8443a; border-radius: 8px; padding: 10px 14px; font: 600 13px var(--body); color: #efe8d6; pointer-events: none; } #recap[hidden] { display: none; }
 #recap .rh { font: 700 12px var(--display); letter-spacing: .14em; color: #ff8a7a; margin-bottom: 6px; } #recap .rk { font: 700 16px var(--display); letter-spacing: .04em; margin-bottom: 6px; } #recap .rr { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 2px 0; } #recap .rr i { font-style: normal; opacity: .7; } #recap .bar { height: 3px; background: rgba(255,255,255,.12); margin: 2px 0 4px; } #recap .bar b { display: block; height: 100%; background: #e8443a; }
+#killX { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(.4); font: 900 64px var(--display); color: #ff3a2a; text-shadow: 0 0 12px rgba(255,40,20,.8), 0 0 2px #000; opacity: 0; pointer-events: none; z-index: 6; }
+#killX.go { animation: killx .45s ease-out; } @keyframes killx { 0% { opacity: 1; transform: translate(-50%, -50%) scale(1.4); } 30% { opacity: 1; transform: translate(-50%, -50%) scale(.9); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05); } }
 #finBars { position: fixed; inset: 0; pointer-events: none; z-index: 5; } #finBars::before, #finBars::after { content: ''; position: absolute; left: 0; right: 0; height: 11vh; background: #000; } #finBars::before { top: 0; } #finBars::after { bottom: 0; } #finBars[hidden] { display: none; }
 #knifeBtn { width: 48px; height: 48px; right: calc(max(16px, env(safe-area-inset-right, 0px)) + 34px); bottom: calc(276px + env(safe-area-inset-bottom, 0px)); display: grid; place-items: center; --ring: #d8d8d8; }
 #nadeBtn { --ring: #8bd17c; } #nadeBtn svg { width: 26px; height: 26px; } #nadeBtn small { font: 700 12px var(--mono); color: #c8f0b8; margin-top: -2px; }
@@ -869,6 +871,7 @@ body.spectating .wpn, body.spectating .vit, body.spectating #cross, body.spectat
     <div id="adsBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg><span>AIM</span></div>
     <div id="swapBtn" class="tbtn touch-only" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg><small></small></div>
     <div id="finBars" hidden></div>
+    <div id="killX">✕</div>
     <div id="recap" hidden></div>
     <div id="specTag" hidden></div>
     <div id="micBtn" class="tbtn" hidden>🎙</div>
@@ -3138,7 +3141,21 @@ function haptic(kind, inGesture) {
     try { if (!hapSwitch) { const l = document.createElement('label'), c = document.createElement('input'); c.type = 'checkbox'; c.setAttribute('switch', ''); l.appendChild(c); l.style.cssText = 'position:fixed;left:-99px;top:-99px;opacity:0;pointer-events:none'; document.body.appendChild(l); hapSwitch = l; } hapSwitch.click(); } catch (e) {}
   }
 }
-function hitMarker(kind) { if (kind === 'kill') haptic('kill'); else haptic('hit'); hud.hit.className = kind || ''; hitT = kind === 'kill' ? 0.3 : 0.12; }
+function hitMarker(kind) { if (kind === 'kill') haptic('kill'); else haptic('hit'); hud.hit.className = kind || ''; hitT = kind === 'kill' ? 0.3 : 0.12;
+  if (kind === 'kill') { const x = $('killX'); if (x) { x.classList.remove('go'); void x.offsetWidth; x.classList.add('go'); } try { tone(180, 0.12, 'sine', 0.12, 90); tone(1200, 0.06, 'triangle', 0.06, null, 0.04); } catch (e) {} } }
+// v142: hit feedback: blood mist / dust puffs where bullets land
+const PUFF = { pool: [], i: 0, tex: null };
+function hitPuff(pos, color, sc = 1) {
+  if (lowQ() && Math.random() < 0.5) return;
+  if (!PUFF.tex) PUFF.tex = canvasTex(64, 64, (g, w) => { const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,255,255,0.9)'); gr.addColorStop(0.5, 'rgba(255,255,255,0.35)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); });
+  for (let k = 0; k < 3; k++) {
+    let p = PUFF.pool[PUFF.i]; if (!p) { p = { sp: new THREE.Sprite(new THREE.SpriteMaterial({ map: PUFF.tex, transparent: true, depthWrite: false })), life: 0 }; scene.add(p.sp); PUFF.pool[PUFF.i] = p; }
+    PUFF.i = (PUFF.i + 1) % 30;
+    p.sp.material.color.setHex(color); p.sp.position.set(pos.x + (Math.random() - .5) * 0.15, pos.y + (Math.random() - .5) * 0.15, pos.z + (Math.random() - .5) * 0.15);
+    p.life = p.max = 0.35 + Math.random() * 0.2; p.sc = (0.25 + Math.random() * 0.2) * sc; p.vy = 0.3 + Math.random() * 0.4; p.sp.visible = true;
+  }
+}
+function stepPuffs(dt) { for (const p of PUFF.pool) { if (!p || p.life <= 0) continue; p.life -= dt; const u = 1 - p.life / p.max; p.sp.scale.setScalar(p.sc * (0.6 + u * 2)); p.sp.material.opacity = 0.75 * (1 - u); p.sp.position.y += p.vy * dt; if (p.life <= 0) p.sp.visible = false; } }
 const scv = $('scopeCv'), sctx = scv.getContext('2d'); let scopeKey = '';
 function drawScope(optic, t){
   const magnified = optic === 'scope' || optic === 'sniper';
@@ -6262,8 +6279,8 @@ function fire() {
       const part = h.object.userData.part, mul = ent.kind === 'drone' ? 1 : part === 'head' ? w.head : part === 'leg' ? 0.75 : 1;
       if (part === 'head' && ent.kind !== 'drone') headHit = true;
       dmgTo.set(ent, (dmgTo.get(ent) || 0) + w.dmg * fall * mul);
-      spark(h.point, ent.kind === 'drone' ? 0xffd27a : 0x8a1c12, i < 3 ? 6 : 2);
-    } else { spark(h.point, ent ? 0xcfc3a5 : 0xd9c9a3, i < 3 ? 4 : 1); if (!ent && i < 4) bulletHole(h); }
+      spark(h.point, ent.kind === 'drone' ? 0xffd27a : 0x8a1c12, i < 3 ? 6 : 2); if (i < 3 && ent.kind !== 'drone') hitPuff(h.point, part === 'head' ? 0xb01a12 : 0x7a1410, part === 'head' ? 1.3 : 1);
+    } else { spark(h.point, ent ? 0xcfc3a5 : 0xd9c9a3, i < 3 ? 4 : 1); if (!ent && i < 4) bulletHole(h); if (i < 2) hitPuff(h.point, 0xc8b89a, 0.7); }
   }
   for (const [ent, raw] of dmgTo) {
     const dmg = Math.round(raw);
@@ -6275,7 +6292,7 @@ function fire() {
     if (ent.kind === 'bot' && T.isHost) botDamage(ent.id, dmg, myPeer);
     else T.myDm[ent.id] = (T.myDm[ent.id] || 0) + dmg;
     ent.hp -= dmg;
-    if (headHit) { sfx.head(); C.heads++; P.lastHead = performance.now(); } else sfx.hit();
+    if (headHit) { sfx.head(); try { tone(2600, 0.05, 'triangle', 0.07); tone(3400, 0.04, 'sine', 0.05, null, 0.03); } catch (e) {} C.heads++; P.lastHead = performance.now(); } else sfx.hit();
     hitMarker(ent.hp <= 0 ? 'kill' : headHit ? 'head' : '');
   }
   // recoil: part stays as climb, part is a kick that recovers
@@ -6728,7 +6745,7 @@ function loop() {
   // iPad browsers don't always report toolbar size changes, so check the visible size ourselves
   sizeT -= raw; if (sizeT <= 0) { sizeT = 0.5; const vh = appH(), cv = document.getElementById('view').clientHeight; if (vh !== lastAppH || Math.abs(cv - vh) > 2 || window.innerWidth !== lastAppW) resize(); }
   stepBulletFx(dt); stepFX(dt);
-  if (state === 'play') { stepNades(dt); stepSalvage(dt); stepMissile(dt); try { stepKS(dt); stepRockets(dt); stepKnife(dt); stepCamoAnim(dt); } catch (e) {} try { stepSnow(dt); } catch (e) {} if (scanT > 0) scanT = Math.max(0, scanT - dt); updStreak(); }
+  if (state === 'play') { stepNades(dt); stepSalvage(dt); stepMissile(dt); try { stepKS(dt); stepRockets(dt); stepKnife(dt); stepCamoAnim(dt); stepPuffs(dt); } catch (e) {} try { stepSnow(dt); } catch (e) {} if (scanT > 0) scanT = Math.max(0, scanT - dt); updStreak(); }
   if (state === 'play' || (state === 'paused' && mode === 'tdm')) fx(dt);
   radarT -= dt; if (state === 'play' && S.radar && radarT <= 0) { radarT = 0.1; drawRadar(); if (window.scrollY || (document.scrollingElement && document.scrollingElement.scrollTop)) fixViewport(); }
   renderer.render(scene, camera);

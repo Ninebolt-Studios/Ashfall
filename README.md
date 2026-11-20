@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v141)](https://ninebolt-studios.github.io/Ashfall/?v=141)
+## ▶️ [PLAY NOW — latest version (v142)](https://ninebolt-studios.github.io/Ashfall/?v=142)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=141
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=142
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,6 +20,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v142** | https://ninebolt-studios.github.io/Ashfall/?v=142 | **Better hit feedback:** bullets now kick up a **red mist** when they hit an enemy (bigger on headshots) and a **dust puff** when they hit walls and the ground, headshots make a sharp metallic **ping**, and every kill flashes a big red **✕** in the middle of the screen with a punchy confirm sound. Smooth mode shows fewer puffs to stay fast |
 | **v141** | https://ninebolt-studios.github.io/Ashfall/?v=141 | **Death recap:** when you die in a multiplayer match, a panel shows who killed you, with what gun and from how far, plus every enemy who hurt you that life with their damage and number of hits (and a bar for each). It goes away when you redeploy |
 | **v140** | https://ninebolt-studios.github.io/Ashfall/?v=140 | **Mastery camos (animated):** three new camos that move and glow on your gun: **Inferno** (flowing lava cracks: 100 kills with that gun), **Prismatic** (colour-shifting crystal: 250 kills with that gun) and **Singularity** (a swirling dark galaxy: get 100 kills with **every** standard gun). Find them in Loadout → camos for each gun, with your progress shown on the locked ones |
 | **v139** | https://ninebolt-studios.github.io/Ashfall/?v=139 | **Weapon blueprints:** every standard gun now has a special **blueprint** version with its own name, colours and glowing accents, for example M7 Rifle “Reaper” (black and red), K9 SMG “Venom”, P9 “Royal” (gold), Kestrel “Phantom”, Talon Crossbow “Nightwing” and M3 Launcher “Doomsday”. Get the gun to **level 5** to unlock it, then pick it in **Loadout → Blueprint**. The name shows on your HUD |
