@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261120173540',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120173931',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -739,6 +739,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #adsBtn { --ring: var(--accent); } #adsBtn svg { width: 28px; height: 28px; }
 #reloadBtn { --ring: #6aa8e0; } #jumpBtn, #crouchBtn, #slideBtn { --ring: rgba(239,232,214,.6); }
 #swapBtn { width: 86px; height: 40px; border-radius: 12px; right: calc(max(16px, env(safe-area-inset-right, 0px)) + 112px); bottom: calc(212px + env(safe-area-inset-bottom, 0px)); display: grid; place-items: center; align-content: center; gap: 0; --ring: #e8c86a; } #swapBtn[hidden] { display: none; } #swapBtn svg { width: 18px; height: 18px; } #swapBtn small { font: 700 8px var(--display); letter-spacing: .06em; white-space: nowrap; max-width: 80px; overflow: hidden; text-overflow: ellipsis; }
+#finBars { position: fixed; inset: 0; pointer-events: none; z-index: 5; } #finBars::before, #finBars::after { content: ''; position: absolute; left: 0; right: 0; height: 11vh; background: #000; } #finBars::before { top: 0; } #finBars::after { bottom: 0; } #finBars[hidden] { display: none; }
 #knifeBtn { width: 48px; height: 48px; right: calc(max(16px, env(safe-area-inset-right, 0px)) + 34px); bottom: calc(276px + env(safe-area-inset-bottom, 0px)); display: grid; place-items: center; --ring: #d8d8d8; }
 #nadeBtn { --ring: #8bd17c; } #nadeBtn svg { width: 26px; height: 26px; } #nadeBtn small { font: 700 12px var(--mono); color: #c8f0b8; margin-top: -2px; }
 #nadeBtn.off { opacity: .4; filter: grayscale(1); }
@@ -849,6 +850,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
     <div id="nadeBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="11" cy="15" rx="6" ry="7"/><path d="M8 8h6v-3H8z"/><path d="M14 6l4 3"/><circle cx="18" cy="4" r="2"/><path d="M6 15h10M11 9v13"/></svg><small id="nadeN">2</small></div>
     <div id="adsBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg><span>AIM</span></div>
     <div id="swapBtn" class="tbtn touch-only" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg><small></small></div>
+    <div id="finBars" hidden></div>
     <div id="knifeBtn" class="tbtn touch-only"><span style="font-size:20px">🔪</span></div>
     <div id="reloadBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 3v5h5"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 21v-5h-5"/></svg><span>RELOAD</span></div>
     <div id="fireBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><path d="M12 1v6M12 17v6M1 12h6M17 12h6"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg><span>FIRE</span><small>drag to aim</small></div>
@@ -4045,6 +4047,7 @@ function showTab(name) {
 }
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
 function showMenu(which) {
+  try { if (FIN) { scene.remove(FIN.me.g); scene.remove(FIN.vic.g); FIN = null; } $('finBars').hidden = true; $('hud').style.visibility = ''; } catch (e) {}
   window.__dlBusy = false; setTimeout(() => { try { window.__dlUpd && window.__dlUpd(); } catch (e) {} }, 1500);
   try { $('rangeHud').hidden = true; TUT.on = false; $('tutBox').hidden = true; $('rangeGun').hidden = false; $('tutNote').hidden = !!store.get('tutDone', false) || !!store.get('tutSkip', false) || (C && C.kills > 20); } catch (e) {}
   document.body.classList.remove('ingame');
@@ -5398,7 +5401,36 @@ function knifeAttack() {
   if (!best) return;
   const e = best.e; hitMarker('kill'); try { sfx.hit(); } catch (er) {} spark(new THREE.Vector3(best.x, 1.2, best.z), 0x8a1010, 10);
   if (mode === 'siege') { if (e.kind === 'zombie' && !(e.rep && COOP.on && !COOP.host)) hitZombie(e, 400, false); else dmgEnemy(e, 400); return; }
+  if (!FIN && mode === 'tdm') { const fx2 = -Math.sin(e.ryaw), fz2 = -Math.cos(e.ryaw), tx = P.pos.x - e.rx, tz = P.pos.z - e.rz, tl = Math.hypot(tx, tz) || 1; if ((fx2 * tx + fz2 * tz) / tl < -0.3) { startFinisher(e); return; } }
   if (e.v) e.v.flashT = 0.06; if (e.kind === 'bot' && T.isHost) botDamage(e.id, 200, myPeer); else T.myDm[e.id] = (T.myDm[e.id] || 0) + 200;
+}
+// v132: finishing move: knife an enemy from behind for a short third-person takedown
+let FIN = null;
+function startFinisher(e) {
+  if (e.kind === 'bot' && T.isHost) botDamage(e.id, 300, myPeer); else T.myDm[e.id] = (T.myDm[e.id] || 0) + 300;
+  const me = makeSoldier(P.team, { sk: mySkin, lk: LOOK, n: playerName }), vic = makeSoldier(e.team, { sk: e.sk, lk: e.lk, id: e.id });
+  [me, vic].forEach(v => { if (v.mark) v.mark.visible = false; });
+  const yaw = e.ryaw, bx = e.rx + Math.sin(yaw) * 0.75, bz = e.rz + Math.cos(yaw) * 0.75; // stand right behind them
+  me.g.position.set(bx, 0, bz); me.g.rotation.y = yaw; vic.g.position.set(e.rx, 0, e.rz); vic.g.rotation.y = yaw;
+  FIN = { t: 0, me, vic, yaw, x: (bx + e.rx) / 2, z: (bz + e.rz) / 2, px: bx, pz: bz, side: Math.random() < 0.5 ? 1 : -1 };
+  P.pos.set(bx, 1.6, bz); P.prot = Math.max(P.prot || 0, 2.2); P.ads = false;
+  $('finBars').hidden = false; $('hud').style.visibility = 'hidden'; banner('FINISHER', '+50 XP', 1.6); addXP(50);
+  try { tone(140, 0.5, 'sawtooth', 0.05, 60); noise(0.25, 0.3, 1600, 'bandpass', 1.5, 0.55); } catch (er) {}
+}
+function stepFinisher(dt) {
+  if (!FIN) return false;
+  const f = FIN; f.t += dt; const t = f.t;
+  P.pos.set(f.px, 1.6, f.pz); P.vx = P.vz = 0;
+  // attacker grabs and strikes; victim drops forward
+  f.me.up.rotation.x = -Math.min(0.35, t * 1.2) + (t > 0.55 ? Math.min(0.5, (t - 0.55) * 4) * Math.exp(-(t - 0.55) * 3) : 0);
+  if (t > 0.6) { const k = Math.min(1, (t - 0.6) / 0.55); f.vic.g.rotation.x = k * k * 1.45; f.vic.g.position.y = 0.05 * k; f.vic.up.rotation.x = -k * 0.3; }
+  else f.vic.up.rotation.x = Math.sin(t * 20) * 0.03;
+  // cinematic camera from the side
+  const a = f.yaw + f.side * (Math.PI / 2 + 0.35) + t * 0.18 * f.side, r = 2.9;
+  camera.position.set(f.x + Math.sin(a) * r, 1.55, f.z + Math.cos(a) * r); camera.lookAt(f.x, 1.0, f.z);
+  gun.visible = false; knifeMesh.visible = false; P.knifeT = 0;
+  if (t >= 1.7) { $('hud').style.visibility = ''; scene.remove(f.me.g); scene.remove(f.vic.g); freeSoldier(f.me); freeSoldier(f.vic); FIN = null; $('finBars').hidden = true; }
+  return true;
 }
 function stepKnife(dt) {
   if ((P.knifeT || 0) <= 0) { knifeMesh.visible = false; return; }
@@ -6373,7 +6405,7 @@ function loop() {
         else if (dpr < DPR_MAX) { dpr = Math.min(DPR_MAX, dpr + 0.1); renderer.setPixelRatio(dpr); resize(); } }
     }
     else if (S.uncap && dpr !== DPR_MAX) { dpr = DPR_MAX; renderer.setPixelRatio(dpr); resize(); }
-    stepPlayer(dt);
+    stepPlayer(dt); try { stepFinisher(dt); } catch (e) { FIN = null; }
     if (mode === 'siege') { if (zmb) stepZombies(dt); else stepSiege(dt); } else netTick(dt);
   } else if (state === 'paused' && mode === 'tdm') {
     netTick(dt);
