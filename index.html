@@ -96,7 +96,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261119164654',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120172500',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -517,7 +517,7 @@ body.ingame.hq #view { filter: contrast(1.07) saturate(1.1); }
 #tutBox .tbar { height: 4px; background: rgba(255,255,255,.15); border-radius: 2px; margin-top: 8px; overflow: hidden; } #tutBox .tbar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
 #tutBox button { pointer-events: auto; float: right; margin-top: 6px; font: 700 11px var(--display); letter-spacing: .12em; color: #fff; background: transparent; border: 1px solid rgba(255,255,255,.3); border-radius: 6px; padding: 4px 8px; }
 #tutNote { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 10px 14px; border-left: 4px solid var(--accent); background: rgba(var(--accent-rgb, 242,169,59), .14); border-radius: 4px; }
-#tutNote[hidden] { display: none; } #tutNote b { font: 700 15px var(--display); letter-spacing: .06em; }
+#tutNote[hidden] { display: none; } #smoothNote { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 10px 14px; border-left: 4px solid #5fb0ff; background: rgba(95,176,255,.12); border-radius: 4px; } #smoothNote[hidden] { display: none; } #smoothNote b { font: 700 15px var(--display); letter-spacing: .06em; } #tutNote b { font: 700 15px var(--display); letter-spacing: .06em; }
 .pbig { display: grid; gap: 6px; text-align: left; padding: 22px 20px; min-height: 120px; align-content: end; cursor: pointer; color: #fff; border-radius: 4px; border: 1px solid rgba(255,255,255,.1); border-left: 4px solid var(--accent); background: linear-gradient(160deg, rgba(var(--accent-rgb, 242,169,59), .18), rgba(10,11,12,.85) 60%); transition: transform .15s, background .15s; }
 .pbig.go { background: linear-gradient(160deg, rgba(var(--accent-rgb, 242,169,59), .55), rgba(10,11,12,.85) 70%); }
 .pbig b { font: 700 28px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; } .pbig span { font: 500 13px var(--body); color: rgba(239,232,214,.7); }
@@ -882,6 +882,7 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
         <button class="pbig" type="button" data-msel="range"><b>Firing Range</b><span>Practice targets, try every gun</span></button>
         <button class="pbig" type="button" data-msel="tut"><b>Training</b><span>1-minute tutorial: move, aim, shoot, grenades, slide</span></button>
       </div>
+      <div id="smoothNote" class="tutn" hidden><div><b>Lag or freezing on iPad?</b><div class="hint">Turn on Smooth mode: lighter graphics so the game stays fast. You can change it any time in Settings → Graphics.</div></div><div class="btnrow"><button class="btn go" id="smoothOn" type="button">Turn on Smooth</button><button class="btn ghost" id="smoothNo" type="button">No thanks</button></div></div>
       <div id="tutNote" hidden><div><b>New to Ashfall?</b><div class="hint">Take the 1-minute training and earn 250 coins.</div></div><div class="btnrow"><button class="btn go" id="tutGo" type="button">Start training</button><button class="btn ghost" id="tutSkip" type="button">Skip</button></div></div>
       <details id="privBox"><summary>🔒 Private match <small>pick the mode, map and bots, then share the code</small></summary>
         <div class="pgrid">
@@ -1212,7 +1213,7 @@ const store = {
   frozen: false, // v127: set right after loading a save, so nothing on the old page can overwrite it before the reload
 };
 const DEF = { haptics: true, assistStr: isTouch ? 0.6 : 0, music: 0.7, botDiff: 'adaptive', sens: 1.2, adsSens: 0.8, invertY: false, assist: isTouch, auto: isTouch, holdAds: true, lefty: false,
-  quality: isTouch ? 'medium' : 'high', fov: 72, motion: true, fps: false, uncap: false, volume: 0.8, steps: true, xhColor: 'white', xhSize: 1, radar: true };
+  quality: isTouch ? 'smooth' : 'high', fov: 72, motion: true, fps: false, uncap: false, volume: 0.8, steps: true, xhColor: 'white', xhSize: 1, radar: true };
 const S = Object.assign({}, DEF, store.get('settings', {}));
 if (!store.get('musicUp', false)) { if (S.music === 0.45) { S.music = 0.7; const sv = store.get('settings', null); if (sv) { sv.music = 0.7; store.set('settings', sv); } } store.set('musicUp', true); } // old default -> new louder default
 { const raw = store.get('settings', {}) || {}; if (raw.assistStr == null && raw.assist === false) S.assistStr = 0; } // keep old 'off' choice
@@ -1571,16 +1572,17 @@ scene.add(sun); scene.add(sun.target);
 
 let perfLvl = 0; // 60 FPS guard: 0 = full quality, 1 = smaller shadow map, 2 = no shadows
 const fogMul = () => S.quality === 'ultra' ? 1.35 : 1;
+const lowQ = () => S.quality === 'low' || S.quality === 'smooth'; // v128: Smooth = lightest mode for iPads
 function applyQuality() {
   const q = S.quality;
-  DPR_MAX = Math.min(window.devicePixelRatio || 1, q === 'ultra' ? 2.5 : q === 'high' ? 2 : q === 'medium' ? 1.5 : 1);
+  DPR_MAX = Math.min(window.devicePixelRatio || 1, q === 'ultra' ? 2.5 : q === 'high' ? 2 : q === 'medium' ? 1.5 : q === 'smooth' ? 0.8 : 1);
   dpr = DPR_MAX; renderer.setPixelRatio(dpr); perfLvl = 0;
   applyShadows();
   if (curMap && MAPS[curMap]) scene.fog.far = MAPS[curMap].fogF * fogMul();
   resize();
 }
 function applyShadows() {
-  const q = S.quality, sh = q !== 'low' && perfLvl < 2;
+  const q = S.quality, sh = !lowQ() && perfLvl < 2;
   let size = q === 'ultra' ? 4096 : q === 'high' ? 2048 : 1024; if (perfLvl >= 1) size = Math.max(512, size / 2);
   sun.shadow.radius = q === 'ultra' ? 3 : 1;
   if (sun.shadow.mapSize.x !== size) { sun.shadow.mapSize.set(size, size); if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; } }
@@ -4688,7 +4690,7 @@ const SETTINGS_UI = [
   ] },
   { sec: 'Graphics', items: [
     { k: 'botDiff', type: 'choice', label: 'Bot difficulty', options: [['adaptive', 'Adaptive'], ['easy', 'Easy'], ['normal', 'Normal'], ['hard', 'Hard']], hint: 'Adaptive bots get easier when you are struggling and tougher when you are doing really well' },
-    { k: 'quality', type: 'choice', label: 'Quality', options: [['low', 'Low'], ['medium', 'Medium'], ['high', 'High'], ['ultra', 'Ultra']], hint: 'Ultra adds sharper, softer-edged shadows, higher resolution and a longer view distance. Every level holds 60 FPS by lowering resolution, then shadow detail, only when needed' },
+    { k: 'quality', type: 'choice', label: 'Quality', options: [['smooth', 'Smooth'], ['low', 'Low'], ['medium', 'Medium'], ['high', 'High'], ['ultra', 'Ultra']], hint: 'Smooth is the lightest mode for iPads and phones: lower resolution, no shadows and no extra effects, so it stays smooth and does not freeze. Ultra adds sharper, softer-edged shadows, higher resolution and a longer view distance. Every level holds 60 FPS by lowering resolution, then shadow detail, only when needed' },
     { k: 'fov', type: 'range', label: 'Field of view', min: 60, max: 95, step: 1, fmt: v => v + '°' },
     { k: 'motion', type: 'toggle', label: 'Camera motion', hint: 'Head bob, weapon sway, lean and screen shake' },
     { k: 'fps', type: 'toggle', label: 'Show frame rate' },
@@ -5282,6 +5284,12 @@ function coopClientStep(dt) {
   }
   if (zDouble > 0) { zDouble -= dt; $('zPow').hidden = false; $('zPow').textContent = '2X POINTS · ' + Math.ceil(zDouble) + 's'; } else if (!$('zPow').hidden) $('zPow').hidden = true;
 }
+(function () { // v128: offer Smooth mode once to touch players who are not using it
+  const n = $('smoothNote'); if (!n) return;
+  n.hidden = !(isTouch && S.quality !== 'smooth' && !store.get('smoothAsk', false));
+  $('smoothOn').addEventListener('click', () => { S.quality = 'smooth'; saveS(); applyQuality(); try { applySettings(); } catch (e) {} store.set('smoothAsk', true); n.hidden = true; try { renderSettings(); } catch (e) {} });
+  $('smoothNo').addEventListener('click', () => { store.set('smoothAsk', true); n.hidden = true; });
+})();
 /* ---------- custom HUD layout (drag + resize touch buttons) ---------- */
 const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn', 'inspBtn'];
 function applyHudLayout() {
@@ -6199,7 +6207,7 @@ const aoMat = new THREE.MeshBasicMaterial({ map: aoTex, color: 0x000000, transpa
 const aoGeo = new THREE.PlaneGeometry(1, 1); aoGeo.rotateX(-Math.PI / 2); aoGeo.userData = {};
 function rebuildAO() {
   aoDirty = false; if (aoMesh) { mapGroup.remove(aoMesh); aoMesh.dispose && aoMesh.dispose(); aoMesh = null; }
-  if (S.quality === 'low' || !AO_LIST.length) return;
+  if (lowQ() || !AO_LIST.length) return;
   const n = AO_LIST.length / 4, im = new THREE.InstancedMesh(aoGeo, aoMat, n), m4 = new THREE.Matrix4();
   for (let k = 0; k < n; k++) { const x = AO_LIST[k * 4], z = AO_LIST[k * 4 + 1], w = AO_LIST[k * 4 + 2], d = AO_LIST[k * 4 + 3]; m4.makeScale(w + 1.1, 1, d + 1.1); m4.setPosition(x, 0.015, z); im.setMatrixAt(k, m4); }
   im.renderOrder = 1; im.userData.sharedGeo = true; im.frustumCulled = false; aoMesh = im; mapGroup.add(im);
@@ -6210,7 +6218,7 @@ const DUST = (() => { const n = 160, g = new THREE.BufferGeometry(), pos = new F
   const m = new THREE.PointsMaterial({ size: 0.06, map: new THREE.CanvasTexture(c), transparent: true, opacity: 0.55, depthWrite: false, sizeAttenuation: true });
   const p = new THREE.Points(g, m); p.frustumCulled = false; scene.add(p); return p; })();
 function stepDust(dt) {
-  const show = state === 'play' && S.quality !== 'low' && !zmbAtmo; DUST.visible = show; if (!show) return;
+  const show = state === 'play' && !lowQ() && !zmbAtmo; DUST.visible = show; if (!show) return;
   const a = DUST.geometry.attributes.position, t = performance.now() * 0.0003;
   for (let i = 0; i < a.count; i++) { let x = a.getX(i) + Math.sin(t + i) * dt * 0.15, y = a.getY(i) + Math.cos(t * 1.3 + i) * dt * 0.08, z = a.getZ(i) + dt * 0.12;
     if (x - P.pos.x > 12) x -= 24; if (x - P.pos.x < -12) x += 24; if (z - P.pos.z > 12) z -= 24; if (z - P.pos.z < -12) z += 24; if (y < 0.2) y = 4; if (y > 4.5) y = 0.3; a.setXYZ(i, x, y, z); }
@@ -6232,13 +6240,13 @@ function loop() {
   if (state === 'play') {
     ftAvg += (Math.min(raw, 0.1) * 1000 - ftAvg) * 0.05; resT += raw;
     // 60 FPS guard: if frames take longer than ~18 ms, lower resolution first, then shadow detail; win them back when there is headroom
-    const floor = Math.min(DPR_MAX, S.quality === 'ultra' || S.quality === 'high' ? 1 : 0.8);
+    const floor = Math.min(DPR_MAX, S.quality === 'ultra' || S.quality === 'high' ? 1 : S.quality === 'smooth' ? 0.6 : 0.8);
     perfCool -= raw;
     if (!S.uncap && resT > 1) {
       resT = 0;
       if (ftAvg > 18.2) { goodN = 0; perfCool = 8;
         if (dpr > floor + 0.01) { dpr = Math.max(floor, dpr - 0.15); renderer.setPixelRatio(dpr); resize(); }
-        else if (perfLvl < 2 && S.quality !== 'low') { perfLvl++; applyShadows(); } }
+        else if (perfLvl < 2 && !lowQ()) { perfLvl++; applyShadows(); } }
       else if (ftAvg < 17.3 && perfCool <= 0 && ++goodN >= 3) { goodN = 0;
         if (perfLvl > 0) { perfLvl--; applyShadows(); }
         else if (dpr < DPR_MAX) { dpr = Math.min(DPR_MAX, dpr + 0.1); renderer.setPixelRatio(dpr); resize(); } }
