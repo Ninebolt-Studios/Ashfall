@@ -58,7 +58,7 @@ function matchRoom(hubId){
     });
     emit();
   }
-  function connectHub(){ setStat('joining'); S.peer=new Peer(undefined,{debug:0,config:ICE});
+  function connectHub(){ setStat('joining'); S.peer=new Peer(undefined,{debug:0,config:ICE}); onCall(S.peer);
     S.peer.on('open',function(id){ S.id=id; S.peers[S.id]=S.pr;
       S.conn=S.peer.connect(hubId,{reliable:true,serialization:'json'});
       S.conn.on('open',function(){ setStat('server'); });
@@ -71,7 +71,8 @@ function matchRoom(hubId){
     S.peer.on('error',function(e){ setStat('error', e&&e.type||'peer'); reconnect(2500); });
   }
   function reconnect(ms){ if(S.dead)return; try{if(S.peer)S.peer.destroy();}catch(e){} try{if(S.hub&&S.hub!==S.peer)S.hub.destroy();}catch(e){} S.peer=null; S.hub=null; S.conn=null; S.isHub=false; S.conns={}; setTimeout(claim, ms||700); }
-  function claim(){ if(S.dead)return; var settled=false; setStat('connecting'); S.hub=new Peer(hubId,{debug:0,config:ICE});
+  function onCall(p){ try{ p.on('call',function(c){ try{ if(window.__dlOnCall) window.__dlOnCall(c); else c.close(); }catch(e){} }); }catch(e){} }
+  function claim(){ if(S.dead)return; var settled=false; setStat('connecting'); S.hub=new Peer(hubId,{debug:0,config:ICE}); onCall(S.hub);
     S.hub.on('open',function(){ settled=true; S.peer=S.hub; startHub(); });
     S.hub.on('disconnected',function(){ try{S.hub.reconnect();}catch(e){} });
     S.hub.on('error',function(e){
@@ -90,13 +91,14 @@ function matchRoom(hubId){
     peers:function(){ ensure(); return snap(); },
     presence:function(o){ S.pr=o||{}; ensure(); return Promise.resolve(); },
     join:function(sub){ return Promise.resolve(matchRoom('dustline-'+String(sub))); },
+    call:function(id,stream){ try{ return S.peer&&S.id ? S.peer.call(id,stream,{metadata:{v:1}}) : null; }catch(e){ return null; } },
     leave:function(){ S.dead=true; clearInterval(S.timer); setStat('idle'); setTimeout(function(){ try{if(S.peer)S.peer.destroy();}catch(e){} },200); return Promise.resolve(); }
   };
 }
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261120174723',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261120175050',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -746,6 +748,9 @@ body.hardcore #radar, body.hardcore .wpn, body.hardcore #cross, body.hardcore .v
 #pingWheel .pw { position: absolute; transform: translate(-50%, -50%); width: 92px; height: 64px; border-radius: 12px; border: 1px solid rgba(255,255,255,.25); background: rgba(14,15,17,.85); color: #fff; display: grid; place-items: center; align-content: center; gap: 2px; cursor: pointer; } #pingWheel .pw b { font-size: 22px; } #pingWheel .pw span { font: 700 10px var(--display); letter-spacing: .06em; }
 #pingWheel .pw.on { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset, 0 0 18px rgba(0,0,0,.5); transform: translate(-50%, -50%) scale(1.08); }
 #pingWheel .pwc { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font: 700 13px var(--display); letter-spacing: .1em; color: #fff; text-transform: uppercase; text-shadow: 0 1px 4px #000; }
+#micBtn { width: 48px; height: 48px; font-size: 22px; display: grid; place-items: center; position: fixed; right: calc(150px + env(safe-area-inset-right, 0px)); top: calc(306px + env(safe-area-inset-top, 0px)); z-index: 7; pointer-events: auto; } #micBtn[hidden] { display: none; } #micBtn.on { background: rgba(60,180,90,.7); box-shadow: 0 0 14px rgba(80,255,120,.6); }
+body:not(.is-touch) #micBtn { top: auto; bottom: 18px; right: auto; left: 160px; width: auto; height: 32px; padding: 0 10px; font: 700 12px var(--display); }
+#vcTalk { position: fixed; left: 16px; top: calc(230px + env(safe-area-inset-top, 0px)); z-index: 6; font: 700 12px var(--display); letter-spacing: .06em; color: #9fe8a8; text-shadow: 0 1px 4px #000; pointer-events: none; white-space: pre-line; } #vcTalk[hidden] { display: none; }
 #finBars { position: fixed; inset: 0; pointer-events: none; z-index: 5; } #finBars::before, #finBars::after { content: ''; position: absolute; left: 0; right: 0; height: 11vh; background: #000; } #finBars::before { top: 0; } #finBars::after { bottom: 0; } #finBars[hidden] { display: none; }
 #knifeBtn { width: 48px; height: 48px; right: calc(max(16px, env(safe-area-inset-right, 0px)) + 34px); bottom: calc(276px + env(safe-area-inset-bottom, 0px)); display: grid; place-items: center; --ring: #d8d8d8; }
 #nadeBtn { --ring: #8bd17c; } #nadeBtn svg { width: 26px; height: 26px; } #nadeBtn small { font: 700 12px var(--mono); color: #c8f0b8; margin-top: -2px; }
@@ -859,6 +864,8 @@ body.hardcore #radar, body.hardcore .wpn, body.hardcore #cross, body.hardcore .v
     <div id="adsBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg><span>AIM</span></div>
     <div id="swapBtn" class="tbtn touch-only" hidden><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg><small></small></div>
     <div id="finBars" hidden></div>
+    <div id="micBtn" class="tbtn" hidden>🎙</div>
+    <div id="vcTalk" hidden></div>
     <div id="pingWheel" hidden></div>
     <div id="knifeBtn" class="tbtn touch-only"><span style="font-size:20px">🔪</span></div>
     <div id="reloadBtn" class="tbtn touch-only"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 3v5h5"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 21v-5h-5"/></svg><span>RELOAD</span></div>
@@ -1239,7 +1246,7 @@ const store = {
   set(k, v) { if (store.frozen) return; try { localStorage.setItem('dl-' + k, JSON.stringify(v)); } catch (e) {} },
   frozen: false, // v127: set right after loading a save, so nothing on the old page can overwrite it before the reload
 };
-const DEF = { haptics: true, assistStr: isTouch ? 0.6 : 0, music: 0.7, botDiff: 'adaptive', sens: 1.2, adsSens: 0.8, invertY: false, assist: isTouch, auto: isTouch, holdAds: true, lefty: false,
+const DEF = { voice: 'off', haptics: true, assistStr: isTouch ? 0.6 : 0, music: 0.7, botDiff: 'adaptive', sens: 1.2, adsSens: 0.8, invertY: false, assist: isTouch, auto: isTouch, holdAds: true, lefty: false,
   quality: isTouch ? 'smooth' : 'high', fov: 72, motion: true, fps: false, uncap: false, volume: 0.8, steps: true, xhColor: 'white', xhSize: 1, radar: true };
 const S = Object.assign({}, DEF, store.get('settings', {}));
 if (!store.get('musicUp', false)) { if (S.music === 0.45) { S.music = 0.7; const sv = store.get('settings', null); if (sv) { sv.music = 0.7; store.set('settings', sv); } } store.set('musicUp', true); } // old default -> new louder default
@@ -3356,7 +3363,7 @@ function startZombies() {
   score = 0; wave = 0; betweenWaves = 2; toSpawn = 0; P.nades = nadesPerLife(); updNade(); P.ks = {}; clearKS(); updKS(); P.streak = 0; P.mCoins = 0; scanT = 0;
   state = 'play'; hideMenu(); updHud(); updZBuy(); lockPointer();
   banner('ZOMBIES · ' + MAPS[curMap].name.toUpperCase(), 'You start with a pistol. Earn points and open the Mystery Crate (◎ 1,500) for a better gun.', 4);
-  P.downed = false; P.out = false; P.brew = false; try { zSetup(); } catch (e) {} coopJoin();
+  P.downed = false; P.out = false; P.brew = false; try { zSetup(); } catch (e) {} coopJoin(); try { if (S.voice !== 'off') vcApply(); } catch (e) {}
 }
 function stepZombies(dt) {
   if (COOP.on) { coopTick(dt); if (state !== 'play') return; if (!COOP.host) { coopClientStep(dt); return; } }
@@ -4788,6 +4795,7 @@ const SETTINGS_UI = [
     { k: 'uncap', type: 'toggle', label: 'Unlock frame rate', hint: 'Runs at your screen\'s full refresh rate (up to 120Hz on ProMotion devices) with no auto-downscaling. Browsers still can\'t render faster than your screen\'s refresh rate.' },
   ] },
   { sec: 'Audio', items: [
+    { k: 'voice', type: 'choice', label: 'Voice chat', options: [['off', 'Off'], ['ptt', 'Push to talk'], ['open', 'Open mic']], hint: 'Talk to your team in online matches and co-op Zombies. Push to talk: hold N on keyboard, or tap the 🎙 button on touch to talk and tap again to stop. The game asks for your microphone the first time.' },
     { k: 'volume', type: 'range', label: 'Master volume', min: 0, max: 1, step: 0.05, fmt: v => Math.round(v * 100) + '%' },
     { k: 'music', type: 'range', label: 'Menu music', min: 0, max: 1, step: 0.05, fmt: v => Math.round(v * 100) + '%', hint: 'Music plays in the menus and fades out when a match starts' },
     { k: 'steps', type: 'toggle', label: 'Footsteps' },
@@ -4832,7 +4840,7 @@ function renderSettings() {
         const seg = document.createElement('div'); seg.className = 'seg'; seg.id = id; seg.setAttribute('role', 'group');
         for (const [v, l] of it.options) {
           const b = document.createElement('button'); b.type = 'button'; b.textContent = l; b.setAttribute('aria-pressed', String(S[it.k] === v));
-          b.addEventListener('click', () => { S[it.k] = v; saveS(); seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); if (it.k === 'quality') applyQuality(); applySettings(); });
+          b.addEventListener('click', () => { S[it.k] = v; saveS(); seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); if (it.k === 'quality') applyQuality(); if (it.k === 'voice') vcApply(); applySettings(); });
           seg.appendChild(b);
         }
         row.appendChild(seg);
@@ -5531,6 +5539,55 @@ function zBoss() {
   try { tone(55, 2, 'sawtooth', 0.12, 35); noise(1.2, 0.4, 120); } catch (er) {}
 }
 setInterval(() => { try { if (zmb && state === 'play') updZBuy(); else if ($('zPrompt')) $('zPrompt').hidden = true; } catch (e) {} }, 200);
+
+/* ---------- v136: voice chat (peer-to-peer audio with your team) ---------- */
+const VC = { stream: null, asking: false, out: {}, inc: {}, ptt: false, touchOn: false, meters: {} };
+function vcRoom() { return mode === 'tdm' ? troom : (zmb && COOP.room) ? COOP.room : null; }
+function vcStop() { for (const c of Object.values(VC.out)) try { c.close(); } catch (e) {} VC.out = {}; for (const r of Object.values(VC.inc)) { try { r.call.close(); } catch (e) {} r.el.remove(); } VC.inc = {}; }
+async function vcApply() {
+  if (S.voice === 'off') { vcStop(); if (VC.stream) { VC.stream.getTracks().forEach(t => t.stop()); VC.stream = null; } vcUI(); return; }
+  if (VC.stream || VC.asking) { vcUI(); return; }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { banner('VOICE CHAT', 'This browser can\'t use the microphone', 2.5); return; }
+  VC.asking = true;
+  try { VC.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); }
+  catch (e) { banner('MICROPHONE BLOCKED', 'Allow the microphone for this site/app to use voice chat', 3); }
+  VC.asking = false; vcUI();
+}
+function vcTalking() { return !!VC.stream && (S.voice === 'open' || (S.voice === 'ptt' && (VC.ptt || VC.touchOn))); }
+function vcUI() {
+  const b = $('micBtn'); if (!b) return; const show = S.voice !== 'off' && state === 'play' && !!vcRoom();
+  b.hidden = !show; b.classList.toggle('on', vcTalking()); if (!isTouch) b.textContent = '🎙 ' + (S.voice === 'open' ? 'OPEN MIC' : vcTalking() ? 'TALKING' : 'HOLD N');
+  if (VC.stream) VC.stream.getAudioTracks().forEach(t => { t.enabled = vcTalking(); });
+}
+window.__dlOnCall = call => {
+  if (S.voice === 'off') { try { call.close(); } catch (e) {} return; }
+  try { call.answer(); } catch (e) { return; }
+  call.on('stream', st => {
+    const old = VC.inc[call.peer]; if (old) { try { old.call.close(); } catch (e) {} old.el.remove(); }
+    const el = document.createElement('audio'); el.autoplay = true; el.playsInline = true; el.srcObject = st; el.volume = Math.min(1, (S.volume == null ? 0.8 : S.volume) + 0.2); document.body.appendChild(el); el.play().catch(() => {});
+    VC.inc[call.peer] = { call, el, st };
+    try { const ac = (typeof actx !== 'undefined' && actx) || null; if (ac) { const src = ac.createMediaStreamSource(st), an = ac.createAnalyser(); an.fftSize = 256; src.connect(an); VC.meters[call.peer] = an; } } catch (e) {}
+  });
+  call.on('close', () => { const r = VC.inc[call.peer]; if (r && r.call === call) { r.el.remove(); delete VC.inc[call.peer]; delete VC.meters[call.peer]; } });
+};
+function vcTick() {
+  vcUI();
+  const r = vcRoom(); if (!r || !VC.stream || S.voice === 'off' || state === 'menu') { if (!r) vcStop(); $('vcTalk').hidden = true; return; }
+  let peers = []; try { peers = r.peers() || []; } catch (e) {}
+  const mine = peers.find(p => p.sameTab), myTeam = mine && mine.presence ? mine.presence.tm : P.team;
+  const want = new Set(peers.filter(p => !p.sameTab && p.presence && (zmb || p.presence.tm === myTeam || duel)).map(p => p.peer));
+  for (const id of want) if (!VC.out[id] && r.call) { const c = r.call(id, VC.stream); if (c) { VC.out[id] = c; c.on('close', () => { if (VC.out[id] === c) delete VC.out[id]; }); c.on('error', () => { if (VC.out[id] === c) delete VC.out[id]; }); } }
+  for (const id of Object.keys(VC.out)) if (!want.has(id)) { try { VC.out[id].close(); } catch (e) {} delete VC.out[id]; }
+  // who is talking
+  const names = []; const buf = new Uint8Array(128);
+  for (const [id, an] of Object.entries(VC.meters)) { an.getByteTimeDomainData(buf); let pk = 0; for (const v of buf) pk = Math.max(pk, Math.abs(v - 128)); if (pk > 10) { const p = peers.find(q => q.peer === id); names.push('🔊 ' + String((p && p.presence && p.presence.n) || 'Teammate').slice(0, 16)); } }
+  $('vcTalk').hidden = !names.length; $('vcTalk').textContent = names.join('\n');
+}
+setInterval(() => { try { vcTick(); } catch (e) {} }, 400);
+window.addEventListener('keydown', ev => { if (ev.code === 'KeyN' && !isTyping(ev)) { VC.ptt = true; vcUI(); } });
+window.addEventListener('keyup', ev => { if (ev.code === 'KeyN') { VC.ptt = false; vcUI(); } });
+function micToggle() { if (!VC.stream) { vcApply(); return; } if (S.voice === 'ptt') { VC.touchOn = !VC.touchOn; vcUI(); } }
+$('micBtn').addEventListener('click', () => { if (!isTouch) micToggle(); });
 /* ---------- custom HUD layout (drag + resize touch buttons) ---------- */
 const HUD_IDS = ['fireBtn', 'adsBtn', 'crouchBtn', 'reloadBtn', 'jumpBtn', 'slideBtn', 'nadeBtn', 'pingBtn', 'qcBtn', 'inspBtn'];
 function applyHudLayout() {
@@ -5665,6 +5722,7 @@ function startSiege() {
   state = 'play'; hideMenu(); updHud(); lockPointer();
 }
 async function startTDM(isDuel, isRanked, obj, priv) {
+  try { if (S.voice !== 'off') vcApply(); } catch (e) {}
   PRIV = priv || null; if (PRIV) { isDuel = false; isRanked = false; obj = PRIV.obj; }
   if (isDuel && !party) { const pm = $('partyMsg'); pm.textContent = 'Duel 1v1 needs a party. Tap Create party and send the code to your friend, or type their code and tap Join.'; pm.style.color = 'var(--accent)'; $('partyBox').scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
   ensureAudio(); clearSiege(); lockPointer();
@@ -6179,6 +6237,7 @@ function onTouchStart(ev) {
     if (el.closest('#nadeBtn')) { throwNade(); continue; }
     if (el.closest('#zBuy')) { zBuyGun(); continue; }
     if (el.closest('#pingBtn')) { openPW(); continue; }
+    if (el.closest('#micBtn')) { micToggle(); continue; }
     if (el.closest('#inspBtn')) { startInspect(); continue; }
     if (el.closest('#qcBtn')) { $('qcPanel').hidden = !$('qcPanel').hidden; continue; }
     { const qb = el.closest('[data-qc]'); if (qb) { sendQc(+qb.dataset.qc); continue; } }
