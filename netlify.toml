@@ -1,0 +1,4 @@
+# Netlify: publish the Ninebolt Studios website (the studio/ folder) as the whole site
+[build]
+  publish = "studio"
+  command = ""
