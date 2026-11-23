@@ -8,9 +8,11 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v144)](https://ninebolt-studios.github.io/Ashfall/?v=144)
+## ▶️ [PLAY NOW — latest version (v145)](https://ninebolt-studios.github.io/Ashfall/?v=145)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=144
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=145
+
+🌐 **Ninebolt Studios website:** https://ninebolt-studios.github.io/Ashfall/studio/
 
 If the game looks like an older version, open the latest link above (the `?v=` number makes your browser load the newest copy).
 
@@ -20,6 +22,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v145** | https://ninebolt-studios.github.io/Ashfall/?v=145 | **THE BIG ONE (15 updates in one):** **Battle Royale-lite** (you vs 10 bots, one life, loot crates, shrinking purple circle) with drivable **quad bikes and jeeps** (E / 🔪 to get in and out) · **Prop Hunt** (hunt bots disguised as props, then hide as one) · **wall-running** along tall walls and **slide-jumps** · **Duel rematch** button · **smarter bots** (take cover when hurt, flank, throw grenades, call out enemies on your minimap) · **final kill cam** at the end of every match · enemies now **fall over** when killed, plus muzzle-flash lighting on High/Ultra · Zombies **Power Forge** (◎5,000 in the bunker: 2× damage + bigger mag) and a hidden **Easter egg** (3 radio parts → the Warden final boss → “Warden Slayer” title) · **party chat** in the menu · **Open matches** browser for private matches · **Prestige shop** (2 tokens per Prestige for exclusive skins, camos and a title) · **operator missions** (Veteran and Legend versions of every skin) · **Season 3** ready: Premium code `NEON26` (from Nov 27), **NX-3 Voltline** premium battle rifle, Neon Runner and Grid Ghost pass skins · seasons and weekly boards now reset at **midnight Central time** · new **Ninebolt Studios website** at https://ninebolt-studios.github.io/Ashfall/studio/ |
 | **v144** | https://ninebolt-studios.github.io/Ashfall/?v=144 | **Party leader picks the mode:** whoever **creates** the party is the leader. Whatever they start (Team Battle, Ranked, Hardcore, Domination, S&D, Kill Confirmed, Hardpoint, Gun Game, Snowball Fight, a Private match, Duel or Zombies), everyone in the party is pulled into the same game automatically, on the same team. If a member is in the middle of another match they get a heads-up and join as soon as they pause or finish |
 | **v143** | https://ninebolt-studios.github.io/Ashfall/?v=143 | **Duel 1v1 fixed + bug fixes + faster:** Duel no longer needs a party: tap Duel 1v1 and you get matched with anyone else in Duel (or your party member if you're in a party), and if nobody shows up in ~12 s you fight a bot until a real player joins. Before, tapping Duel without a party silently did nothing because the message was hidden behind the mode menu. Also: maps are now drawn with far fewer pieces (~37% fewer draw calls in a match), menus run at 30 FPS on iPads/phones to save battery, snowballs no longer fly at double speed, Z no longer pings and fires a kill streak at the same time (tap T to ping), and the touch weapon-swap button no longer sits under the ping/chat buttons |
 | **v142** | https://ninebolt-studios.github.io/Ashfall/?v=142 | **Better hit feedback:** bullets now kick up a **red mist** when they hit an enemy (bigger on headshots) and a **dust puff** when they hit walls and the ground, headshots make a sharp metallic **ping**, and every kill flashes a big red **✕** in the middle of the screen with a punchy confirm sound. Smooth mode shows fewer puffs to stay fast |
@@ -247,13 +250,13 @@ Crates hold shop-only operator skins (Sand Viper, Copperhead, Midnight, Royal Gu
 ## Seasons
 > **Current Premium code (Season 2): `SCYTHE26`**. Enter it on the **Pass** tab.
 
-**Season 2** runs Nov 16–26. From **Season 3 (Nov 27)** a **new season starts every week** (Fridays). Each season has its own **color scheme**, **map decorations**, and a new season camo at tier 60. Everything you unlocked in earlier seasons stays yours.
+**Season 2** runs Nov 16–26. From **Season 3 (Nov 27)** a **new season starts every week** (Fridays at midnight Central time, Omaha). Each season has its own **color scheme**, **map decorations**, and a new season camo at tier 60. Everything you unlocked in earlier seasons stays yours.
 
 | Season | Dates (2026) | Theme | Premium code | Premium weapon |
 |---|---|---|---|---|
 | 1 | until Nov 15 | Dust Storm (50 tiers) | `DUSTVIP` | VX-9 Tempest rifle |
 | 2 | **Nov 16–26 (live now)** | Harvest: pumpkins and hay bales | **`SCYTHE26`** | SC-7 Scythe SMG |
-| 3 | Nov 27–Dec 3 | Neon Grid: glowing neon posts | added the day before | added the day before |
+| 3 | Nov 27–Dec 3 | Neon Grid: glowing neon posts · pass skins Neon Runner (tier 35) and Grid Ghost (tier 65) | `NEON26` (works from Nov 27) | NX-3 Voltline battle rifle |
 | 4 | Dec 4–10 | Frostbite: ice crystals and snowfall | added the day before | added the day before |
 | 5 | Dec 11–17 | Midnight: floating violet orbs | added the day before | added the day before |
 | 6 | Dec 18–24 | **Christmas:** snow on every map, decorated trees with presents, snowmen, candy canes | added the day before | added the day before |
