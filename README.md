@@ -349,4 +349,4 @@ Open the **Settings** tab to change look and aiming sensitivity, **aim assist st
 - `js/online.js`: online play (PeerJS rooms, matchmaking, voice)
 - `css/style.css`: all the styling
 - `sw.js`: offline support so the game works without internet
-- `tools/release.py`: Python release helper. It checks the scripts and bumps the version stamps so players always get the newest files (`python3 tools/release.py`)
+- `tools/release.py`: Python release helper. It checks the scripts and bumps the version stamps, which also triggers the in-game auto-updater for everyone (`python3 tools/release.py`)
