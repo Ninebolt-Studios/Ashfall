@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v148)](https://ninebolt-studios.github.io/Ashfall/?v=148)
+## ▶️ [PLAY NOW — latest version (v149)](https://ninebolt-studios.github.io/Ashfall/?v=149)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=148
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=149
 
 🌐 **Ninebolt Studios website:** https://ninebolt-studios.github.io/Ninebolt-Studios-Website/
 
@@ -23,6 +23,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v149** | https://ninebolt-studios.github.io/Ashfall/?v=149 | **Real JavaScript project:** Ashfall's code now lives in proper files: `js/game.js` (the game), `js/online.js` (online play) and `css/style.css` (styling) instead of everything packed into one HTML page, plus a Python release tool (`tools/release.py`) that checks the code and makes sure everyone gets the newest files. Same game, same saves: it just loads from real JavaScript files now |
 | **v148** | https://ninebolt-studios.github.io/Ashfall/?v=148 | **Phone + small iPad menu fix:** on a sideways phone or a small iPad, the right side of the Play page (Join party, Claim daily reward, the challenge rewards, lobby Refresh) was cut off the screen. It all fits now: a slimmer side menu, mode tiles in 2 columns at those sizes, and a compact header on short screens so you see more of the menu |
 | **v147** | https://ninebolt-studios.github.io/Ashfall/?v=147 | **One account for every Ninebolt game:** your Ashfall account now also signs you in to our other games, and saving Ashfall progress never touches the other games' saves (and the other way round) |
 | **v146** | https://ninebolt-studios.github.io/Ashfall/?v=146 | **Icon fix:** the Ninebolt Studios icon had cream-coloured corners showing behind its rounded square, both on the studio website and next to “A Ninebolt Studios game” in the menu. It now has clean transparent corners everywhere |
@@ -341,3 +342,11 @@ Open the **Settings** tab to change look and aiming sensitivity, **aim assist st
 ## Notes
 - Online play connects players directly to each other. On some strict networks, such as certain school or cellular networks, two players may not be able to connect. When that happens, each player still gets a full match against bots.
 - Career stats (wins, eliminations, K/D and best wave) are saved on your own device.
+
+## 🗂️ How the code is organised
+- `index.html`: just the page layout (menus, HUD, buttons). It loads everything else
+- `js/game.js`: the whole game in JavaScript (three.js 3D engine)
+- `js/online.js`: online play (PeerJS rooms, matchmaking, voice)
+- `css/style.css`: all the styling
+- `sw.js`: offline support so the game works without internet
+- `tools/release.py`: Python release helper. It checks the scripts and bumps the version stamps so players always get the newest files (`python3 tools/release.py`)
