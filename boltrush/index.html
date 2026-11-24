@@ -8,7 +8,10 @@
 <meta name="theme-color" content="#12131a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" href="../studio/ninebolt-icon-round.png">
+<link rel="icon" href="boltrush-192.png">
+<link rel="apple-touch-icon" href="boltrush-touch.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="Boltrush">
 <style>
   :root { --bolt: #ffd23f; --ink: #f2efe8; --dim: rgba(242,239,232,.7); --panel: rgba(14,15,22,.86); --line: rgba(242,239,232,.14); --hot: #ff4f6d; --cy: #3ae0ff; }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -104,7 +107,7 @@
     <div class="card"><h3>Track</h3><div class="row" id="trackList"></div><div class="best" id="bestTxt"></div></div>
     <div class="card"><h3>Mode</h3><div class="row" id="modeList"></div></div>
     <div class="card"><h3>Garage</h3><div class="cars" id="carList"></div><div class="row" id="paintList" style="margin-top:10px"></div></div>
-    <div class="row" style="justify-content:space-between"><button class="go alt" id="ctrlBtn" type="button" style="width:auto">🎮 Controls</button><a class="go alt" style="width:auto;text-decoration:none;text-align:center" href="https://ninebolt-studios.github.io/Ashfall/studio/">Ninebolt Studios ↗</a></div>
+    <div class="row" style="justify-content:space-between"><button class="go alt" id="ctrlBtn" type="button" style="width:auto">🎮 Controls</button><button class="go alt hide" id="appBtn" type="button" style="width:auto">📲 Get the app</button><a class="go alt" style="width:auto;text-decoration:none;text-align:center" href="https://ninebolt-studios.github.io/Ashfall/studio/">Ninebolt Studios ↗</a></div>
   </div>
 </div>
 
@@ -683,9 +686,15 @@ $('restartBtn').onclick = () => startRace(); $('resumeBtn').onclick = togglePaus
 $('ctrlBtn').onclick = () => $('ctrlOv').classList.remove('hide'); $('ctrlClose').onclick = () => $('ctrlOv').classList.add('hide');
 document.addEventListener('visibilitychange', () => { if (document.hidden && state === 'race') togglePause(); });
 
+// installable app: iPhone/iPad gets the home-screen profile, Android/desktop gets the browser's install prompt
+const standalone = matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches || navigator.standalone, iOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+let installEv = null; if (!standalone && iOS) $('appBtn').classList.remove('hide');
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEv = e; if (!standalone) $('appBtn').classList.remove('hide'); });
+$('appBtn').onclick = () => { if (installEv) { installEv.prompt(); installEv = null; $('appBtn').classList.add('hide'); } else location.href = 'Boltrush.mobileconfig'; };
 buildTrack(SAVE.track); showGarageCar(); renderMenu(); loop();
 window.__br = { get R() { return R; }, get state() { return state; }, input, SAVE, startRace, get TR() { return TR; }, stepRace: dt => stepRace(dt), aiControl: (c, dt) => aiControl(c, dt), useItem: c => useItem(c), giveItem: c => giveItem(c), spinOut: (c, d) => spinOut(c, d), TUT };
 })();
 </script>
+<script>/* offline + installable app */ try { if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {})); } catch (e) {}</script>
 </body>
 </html>
