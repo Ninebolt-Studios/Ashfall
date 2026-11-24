@@ -98,7 +98,7 @@ function matchRoom(hubId){
 window.claude={ use:function(n){ return Promise.resolve(n==='room' ? stubRoom() : null); } };
 })();
 </script>
-<script>(function(){var B='20261124142738',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script>(function(){var B='20261124143815',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
@@ -4722,7 +4722,7 @@ const localTrivial = () => !store.get('name', '') && !(C.kills > 0) && !(BP.xp >
 async function cloudPut(code, h, prev) {
   let hist = (prev && Array.isArray(prev.hist)) ? prev.hist.slice(0, 3) : [];
   if (prev && prev.code && progOf(prev.code) > progOf(code)) hist = [prev.code, ...hist].slice(0, 3); // never lose a bigger save
-  await CLOUD.db.collection('saves').doc(CLOUD.user.uid).set({ code, hash: h, at: Date.now(), name: playerName, v: 1, hist });
+  await CLOUD.db.collection('saves').doc(CLOUD.user.uid).set({ code, hash: h, at: Date.now(), name: playerName, v: 1, hist }, { merge: true }); // merge: keeps Boltrush progress (br) in the same doc
   store.set('cloudLocal', h); store.set('cloudSeen', h); store.set('cloudAt', Date.now()); cloudUI();
   glbPut(); presencePut();
 }
