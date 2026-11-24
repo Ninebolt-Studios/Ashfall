@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v147)](https://ninebolt-studios.github.io/Ashfall/?v=147)
+## ▶️ [PLAY NOW — latest version (v148)](https://ninebolt-studios.github.io/Ashfall/?v=148)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=147
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=148
 
 🌐 **Ninebolt Studios website:** https://ninebolt-studios.github.io/Ashfall/studio/
 
@@ -24,6 +24,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v148** | https://ninebolt-studios.github.io/Ashfall/?v=148 | **🏁 Boltrush v2** (https://ninebolt-studios.github.io/Ashfall/boltrush/): **collisions** are way better (cars bump with real weight, throw **sparks**, and side hits make cars **spin out** 💥), **⚡ item boxes** (🚀 turbo · ⚡ shock the car ahead · 🛡️ shield; press **E**, Ⓨ or the ⚡ button), **ramps** for **BIG AIR** (lands give nitro), **cones and barrels** that go flying, **drift combos** (×2…×5 multiplier, paid out as bonus coins), **slipstream** (tuck in behind a car for extra speed), **skid marks + tyre smoke**, nicer graphics (gradient sky, reflective clearcoat paint, glowing lights) and a **9-step tutorial** that pays **◎ 250** the first time |
 | **v147** | https://ninebolt-studios.github.io/Ashfall/?v=147 | **Boltrush is out + website upgrades:** Ninebolt's second game, **Boltrush**, an arcade racer: race 7 rivals or do time trials on 3 tracks (Neon Harbor, Dust Canyon, Frost Peak), drift to charge nitro, hit boost pads, earn coins to unlock 4 cars and 8 paints. Works with keyboard, controller and touch. Play: https://ninebolt-studios.github.io/Ashfall/boltrush/ · The studio website now has a Boltrush card and can be hosted on Netlify for free (netlify.toml included) |
 | **v146** | https://ninebolt-studios.github.io/Ashfall/?v=146 | **Icon fix:** the Ninebolt Studios icon had cream-coloured corners showing behind its rounded square, both on the studio website and next to “A Ninebolt Studios game” in the menu. It now has clean transparent corners everywhere |
 | **v145** | https://ninebolt-studios.github.io/Ashfall/?v=145 | **THE BIG ONE (15 updates in one):** **Battle Royale-lite** (you vs 10 bots, one life, loot crates, shrinking purple circle) with drivable **quad bikes and jeeps** (E / 🔪 to get in and out) · **Prop Hunt** (hunt bots disguised as props, then hide as one) · **wall-running** along tall walls and **slide-jumps** · **Duel rematch** button · **smarter bots** (take cover when hurt, flank, throw grenades, call out enemies on your minimap) · **final kill cam** at the end of every match · enemies now **fall over** when killed, plus muzzle-flash lighting on High/Ultra · Zombies **Power Forge** (◎5,000 in the bunker: 2× damage + bigger mag) and a hidden **Easter egg** (3 radio parts → the Warden final boss → “Warden Slayer” title) · **party chat** in the menu · **Open matches** browser for private matches · **Prestige shop** (2 tokens per Prestige for exclusive skins, camos and a title) · **operator missions** (Veteran and Legend versions of every skin) · **Season 3** ready: Premium code `NEON26` (from Nov 27), **NX-3 Voltline** premium battle rifle, Neon Runner and Grid Ghost pass skins · seasons and weekly boards now reset at **midnight Central time** · new **Ninebolt Studios website** at https://ninebolt-studios.github.io/Ashfall/studio/ |
