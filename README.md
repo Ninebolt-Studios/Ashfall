@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v148)](https://ninebolt-studios.github.io/Ashfall/?v=148)
+## ▶️ [PLAY NOW — latest version (v149)](https://ninebolt-studios.github.io/Ashfall/?v=149)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=148
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=149
 
 🌐 **Ninebolt Studios website:** https://ninebolt-studios.github.io/Ashfall/studio/
 
@@ -24,6 +24,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v149** | https://ninebolt-studios.github.io/Ashfall/?v=149 | **📲 Boltrush app:** Boltrush now has its own app icon and installs like Ashfall: on iPhone/iPad tap **📲 Get the app** in the Boltrush menu (or on the Ninebolt website) for a full-screen home-screen app, and on Android/PC it uses the browser's install prompt. It also works **offline** now with its own save cache (and no longer mixes with Ashfall's offline copy). Website: the hero no longer pushes Ashfall. It now has a **Get the apps** section with both games |
 | **v148** | https://ninebolt-studios.github.io/Ashfall/?v=148 | **🏁 Boltrush v2** (https://ninebolt-studios.github.io/Ashfall/boltrush/): **collisions** are way better (cars bump with real weight, throw **sparks**, and side hits make cars **spin out** 💥), **⚡ item boxes** (🚀 turbo · ⚡ shock the car ahead · 🛡️ shield; press **E**, Ⓨ or the ⚡ button), **ramps** for **BIG AIR** (lands give nitro), **cones and barrels** that go flying, **drift combos** (×2…×5 multiplier, paid out as bonus coins), **slipstream** (tuck in behind a car for extra speed), **skid marks + tyre smoke**, nicer graphics (gradient sky, reflective clearcoat paint, glowing lights) and a **9-step tutorial** that pays **◎ 250** the first time |
 | **v147** | https://ninebolt-studios.github.io/Ashfall/?v=147 | **Boltrush is out + website upgrades:** Ninebolt's second game, **Boltrush**, an arcade racer: race 7 rivals or do time trials on 3 tracks (Neon Harbor, Dust Canyon, Frost Peak), drift to charge nitro, hit boost pads, earn coins to unlock 4 cars and 8 paints. Works with keyboard, controller and touch. Play: https://ninebolt-studios.github.io/Ashfall/boltrush/ · The studio website now has a Boltrush card and can be hosted on Netlify for free (netlify.toml included) |
 | **v146** | https://ninebolt-studios.github.io/Ashfall/?v=146 | **Icon fix:** the Ninebolt Studios icon had cream-coloured corners showing behind its rounded square, both on the studio website and next to “A Ninebolt Studios game” in the menu. It now has clean transparent corners everywhere |
