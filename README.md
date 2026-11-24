@@ -4,7 +4,7 @@
 
 **A free tactical arena shooter you play in your browser (formerly Dustline). No download, no account, no app store.**
 
-<a href="https://ninebolt-studios.github.io/Ashfall/"><img src="studio/ninebolt-dark.png" alt="Ninebolt Studios" width="320"></a>
+<a href="https://ninebolt-studios.github.io/Ashfall/"><img src="studio/ninebolt-logo-clear.png" alt="Ninebolt Studios" width="320"></a>
 
 *A Ninebolt Studios game.*
 
