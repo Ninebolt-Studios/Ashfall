@@ -267,7 +267,7 @@ function isForged(k) { try { return !!(zmb && P.forged && P.forged[k]); } catch 
 const dayKey = (t = Date.now()) => { const d = new Date(t); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
 const DAILY = Object.assign({ day: '', streak: 0, claimed: '', ch: [] }, store.get('daily', {}));
 if (!Array.isArray(DAILY.ch)) DAILY.ch = [];
-const DAILY_COINS = [50, 75, 100, 150, 200, 250, 300];
+const DAILY_COINS = [50, 75, 100, 150, 200, 250, 400];
 const CH_XP = [
   { k: 'kills', n: 15, t: 'Get 15 eliminations', xp: 1500 }, { k: 'kills', n: 30, t: 'Get 30 eliminations', xp: 2500 },
   { k: 'heads', n: 5, t: 'Get 5 headshot eliminations', xp: 1500 }, { k: 'wins', n: 1, t: 'Win a Team Battle or Duel', xp: 2000 },
@@ -3283,8 +3283,9 @@ function renderDaily() {
   const can = DAILY.claimed !== dayKey(), y = dayKey(Date.now() - 864e5);
   const next = can ? (DAILY.claimed === y ? DAILY.streak + 1 : 1) : DAILY.streak, amt = DAILY_COINS[Math.min(Math.max(next, 1), 7) - 1];
   $('dailyStreak').textContent = 'Day ' + Math.max(next, 1) + (next >= 7 ? ' 🔥' : '');
-  $('dailyRwTxt').textContent = can ? 'Login reward: ◎ ' + amt + ' coins. Come back every day for more (up to 300).' : 'Claimed ◎ ' + amt + ' today. Come back tomorrow for ◎ ' + DAILY_COINS[Math.min(next + 1, 7) - 1] + '.';
+  $('dailyRwTxt').textContent = can ? 'Login reward: ◎ ' + amt + ' coins. Come back every day for bigger rewards (up to 400).' : 'Claimed ◎ ' + amt + ' today. Come back tomorrow for ◎ ' + DAILY_COINS[Math.min(next + 1, 7) - 1] + '.';
   const b = $('dailyClaim'); b.disabled = !can; b.textContent = can ? 'Claim ◎ ' + amt : 'Claimed ✓';
+  const day = ((Math.max(next, 1) - 1) % 7) + 1; $('dailyRow').innerHTML = DAILY_COINS.map((c, i) => '<div class="' + (i + 1 < day || (!can && i + 1 === day) ? 'got' : i + 1 === day ? 'now' : '') + '">D' + (i + 1) + '<br>' + c + '</div>').join('');
   const now = new Date(), mid = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1), ms = mid - now;
   $('dailyReset').textContent = 'New challenges in ' + Math.floor(ms / 36e5) + 'h ' + Math.floor(ms / 6e4) % 60 + 'm';
   const box = $('dailyCh'); box.textContent = '';
@@ -3825,13 +3826,22 @@ const ACHS = [
   { id: 'fr5', i: '🤝', n: 'Squad', d: 'Add 5 friends', c: 150, t: () => FRIENDS.length >= 5 },
   { id: 'supp', i: '🔇', n: 'Silent Operator', d: 'Equip a Suppressor on any gun', c: 150, t: () => Object.values(WATT).some(l => Array.isArray(l) && l.includes('supp')) },
 ];
+const ACHQ = []; let achBusy = false;
+function achPop(ico, name, sub) {
+  let el = document.getElementById('achPop');
+  if (!el) { el = document.createElement('div'); el.id = 'achPop'; el.className = 'achpop'; el.innerHTML = '<i></i><div><b>ACHIEVEMENT UNLOCKED</b><span></span><small></small></div>'; document.body.appendChild(el); }
+  if (ico) ACHQ.push([ico, name, sub]); if (achBusy || !ACHQ.length) return; achBusy = true;
+  const [i, n, s] = ACHQ.shift(); el.children[0].textContent = i; el.querySelector('span').textContent = n; el.querySelector('small').textContent = s;
+  requestAnimationFrame(() => el.classList.add('show')); try { sfx.head(); } catch (e) {}
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => { achBusy = false; achPop(); }, 500); }, 3000);
+}
 function checkAch() {
   const got = [];
   for (const a of ACHS) { if (ACH[a.id]) continue; let ok = false; try { ok = a.t(); } catch (e) {} if (ok) { ACH[a.id] = Date.now(); got.push(a); } }
   if (!got.length) return;
   store.set('ach', ACH);
   got.forEach(a => addCoins(a.c));
-  banner('ACHIEVEMENT', got.map(a => a.i + ' ' + a.n + ' +◎' + a.c).join(' · '), 3.5);
+  got.forEach(a => achPop(a.i, a.n, a.d + ' · +◎ ' + a.c));
   if (!$('pane-career').hidden) renderAch();
 }
 function renderAch() {

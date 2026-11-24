@@ -717,3 +717,12 @@ body.spectating .wpn, body.spectating .vit, body.spectating #cross, body.spectat
 @keyframes nbIn { from { opacity: 0; transform: scale(.94) translateY(8px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
 .nbcred { display: flex; align-items: center; gap: 6px; margin: 4px 0 0; font-size: 11px; letter-spacing: .08em; color: rgba(243,240,232,.6); }
 .nbcred img { width: 16px; height: 16px; border-radius: 4px; }
+
+/* daily streak row + achievement pop-up (matches the other Ninebolt games) */
+.dstreak { display: flex; gap: 5px; margin: 8px 0 4px; }
+.dstreak div { flex: 1; text-align: center; padding: 6px 2px; border-radius: 6px; background: rgba(255,255,255,.05); font: 700 11px/1.3 var(--display, system-ui); color: rgba(239,232,214,.55); letter-spacing: .04em; }
+.dstreak div.got { background: rgba(106,255,122,.12); color: #6aff7a; }
+.dstreak div.now { background: rgba(var(--accent-rgb, 242,169,59), .22); color: var(--accent, #f2a93b); outline: 1px solid var(--accent, #f2a93b); }
+.achpop { position: fixed; left: 50%; top: calc(max(10px, env(safe-area-inset-top)) + 6px); transform: translate(-50%, -140%); z-index: 9000; display: flex; gap: 12px; align-items: center; padding: 10px 16px 10px 12px; border-radius: 10px; background: rgba(12,13,14,.95); border: 1px solid var(--accent, #f2a93b); box-shadow: 0 12px 40px rgba(0,0,0,.55); transition: transform .45s cubic-bezier(.2,.9,.25,1.2); pointer-events: none; max-width: calc(100vw - 24px); }
+.achpop.show { transform: translate(-50%, 0); }
+.achpop i { font-style: normal; font-size: 30px; } .achpop b { display: block; font: 700 11px var(--display, system-ui); letter-spacing: .2em; color: var(--accent, #f2a93b); } .achpop span { font: 700 16px var(--display, system-ui); color: #fff; letter-spacing: .04em; } .achpop small { display: block; color: rgba(255,255,255,.6); font: 600 12px system-ui; }
