@@ -16,15 +16,15 @@
 <link rel="manifest" href="manifest.webmanifest">
 <style>html,body{margin:0;background:#0f110d}</style>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="js/online.js?v=20261124164810"></script>
-<script>(function(){var B='20261124164810',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
+<script src="js/online.js?v=20261124195256"></script>
+<script>(function(){var B='20261124195256',want='';function go(){if(!want||window.__dlBusy)return;if(sessionStorage.getItem('ds-rl')===want)return;sessionStorage.setItem('ds-rl',want);location.replace(location.pathname+'?v='+want+location.hash);}function ck(){try{fetch(location.pathname+'?c='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():''}).then(function(t){var m=t.match(/var B='(\d+)'/);if(m&&m[1]!==B){want=m[1];go();}}).catch(function(){});}catch(e){}}ck();document.addEventListener('visibilitychange',function(){if(!document.hidden)ck();});window.addEventListener('pageshow',function(e){if(e.persisted)ck();});setInterval(ck,600000);window.__dlUpd=go;})();</script>
 </head>
 <body>
 <title>Ashfall</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
-<link rel="stylesheet" href="css/style.css?v=20261124164810">
+<link rel="stylesheet" href="css/style.css?v=20261124195256">
 
 <div id="oddsBox" hidden><div class="ob"><div class="obh"><span class="rvname" id="oddsTitle"></span><button class="btn ghost" id="oddsClose" type="button">Close</button></div><div class="pmsg" id="oddsNote"></div><div id="oddsList"></div></div></div>
 <div id="reveal" hidden><div class="rv" id="rvBox"><div class="rvimg" id="rvImg"></div><div class="rvrar" id="rvRar"></div><div class="rvname" id="rvName"></div><div class="pmsg" id="rvMsg"></div><div class="btnrow"><button class="btn go" id="rvEquip" type="button">Equip</button><button class="btn ghost" id="rvClose" type="button">Close</button></div></div></div>
@@ -184,6 +184,7 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
         <div class="daily" id="dailyBox">
           <div class="dhead"><span class="label">Daily</span><span class="pmsg" id="dailyReset"></span></div>
           <div class="dreward"><div><b id="dailyStreak">Day 1</b><span class="pmsg" id="dailyRwTxt"></span></div><button class="btn go" id="dailyClaim" type="button">Claim</button></div>
+          <div class="dstreak" id="dailyRow"></div>
           <div id="dailyCh"></div>
         </div>
         <div class="field"><span class="label">Map (used for Holdout and for new Team Battles)</span><div class="maps" id="mapList"></div></div>
@@ -477,7 +478,7 @@ if(img.complete&&img.naturalWidth)show();else{img.addEventListener('load',show);
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="js/game.js?v=20261124164810"></script>
+<script src="js/game.js?v=20261124195256"></script>
 
 <script>/* offline support */ try { if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {})); } catch (e) {}</script>
 </body>

@@ -8,9 +8,9 @@
 
 *A Ninebolt Studios game.*
 
-## ▶️ [PLAY NOW — latest version (v149)](https://ninebolt-studios.github.io/Ashfall/?v=149)
+## ▶️ [PLAY NOW — latest version (v150)](https://ninebolt-studios.github.io/Ashfall/?v=150)
 
-**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=149
+**Latest:** https://ninebolt-studios.github.io/Ashfall/?v=150
 
 🌐 **Ninebolt Studios website:** https://ninebolt-studios.github.io/Ninebolt-Studios-Website/
 
@@ -23,6 +23,7 @@ Open **[Ashfall.mobileconfig](https://ninebolt-studios.github.io/Ashfall/Ashfall
 ### Version history
 | Version | Link | What's new |
 |---|---|---|
+| **v150** | https://ninebolt-studios.github.io/Ashfall/?v=150 | **Daily reward polish:** the daily card now shows your 7-day streak (D1 to D7) like the other Ninebolt games, day 7 now pays ◎ 400, and achievements pop in one at a time with an **Achievement unlocked** slide-in instead of a text banner. The Ninebolt website now has a **profile + leaderboards** section that shows your Ashfall stats next to the other games |
 | **v149** | https://ninebolt-studios.github.io/Ashfall/?v=149 | **Real JavaScript project:** Ashfall's code now lives in proper files: `js/game.js` (the game), `js/online.js` (online play) and `css/style.css` (styling) instead of everything packed into one HTML page, plus a Python release tool (`tools/release.py`) that checks the code and makes sure everyone gets the newest files. Same game, same saves: it just loads from real JavaScript files now |
 | **v148** | https://ninebolt-studios.github.io/Ashfall/?v=148 | **Phone + small iPad menu fix:** on a sideways phone or a small iPad, the right side of the Play page (Join party, Claim daily reward, the challenge rewards, lobby Refresh) was cut off the screen. It all fits now: a slimmer side menu, mode tiles in 2 columns at those sizes, and a compact header on short screens so you see more of the menu |
 | **v147** | https://ninebolt-studios.github.io/Ashfall/?v=147 | **One account for every Ninebolt game:** your Ashfall account now also signs you in to our other games, and saving Ashfall progress never touches the other games' saves (and the other way round) |
